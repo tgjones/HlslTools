@@ -10,7 +10,7 @@ before_build:
   - ps: Vsix-TokenReplacement src\HlslTools\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
 
 build_script:
-  - nuget restore -Verbosity quiet
+  - nuget restore src/HlslTools.sln -Verbosity quiet
   - msbuild src/HlslTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 after_test:
