@@ -1,0 +1,120 @@
+//======================================================================
+//
+//      HIGH DYNAMIC RANGE RENDERING DEMONSTRATION
+//      Written by Jack Hoxley, November 2005
+//
+//======================================================================
+
+
+
+//------------------------------------------------------------------
+//  GLOBAL VARIABLES
+//------------------------------------------------------------------
+float4      tcLumOffsets[4];                // The offsets used by GreyScaleDownSample()
+float4      tcDSOffsets[9];                 // The offsets used by DownSample()
+sampler     s0  :   register( s0 );         // The first texture
+
+
+
+//------------------------------------------------------------------
+//  DEBUG LUMINANCE DISPLAY
+//------------------------------------------------------------------
+float4 LuminanceDisplay( in float2 t : TEXCOORD0 ) : COLOR0
+{
+
+    // Acquire the luminance from the texture
+        float4 l = tex2D( s0, t );
+        
+    // Compute a simple scalar, due to the values being > 1.0f
+    // the output is often all white, so just to make it a little
+    // more informative we can apply a scalar to bring it closer
+    // to the 0..1 range
+        float scalar = 1.0f;
+        
+    // Only the RED and GREEN channels have anything stored in them, but
+    // we're not interested in the maximum value, so we just use the red
+    // channel:
+        return float4( l.r * scalar, l.r * scalar, l.r * scalar, 1.0f );
+        
+}
+    
+
+//------------------------------------------------------------------
+//  This entry point performs the basic first-pass when measuring
+//  luminance of the HDR render target. It samples the HDR target
+//  multiple times so as to compensate for the down-sampling and
+//  subsequent loss of data.
+//------------------------------------------------------------------
+float4 GreyScaleDownSample( in float2 t : TEXCOORD0 ) : COLOR0
+{
+
+    // Compute the average of the 4 necessary samples
+        float average = 0.0f;
+        float maximum = -1e20;
+        float4 color = 0.0f;
+        float3 WEIGHT = float3( 0.299f, 0.587f, 0.114f );
+        
+        for( int i = 0; i < 4; i++ )
+        {
+            color = tex2D( s0, t + float2( tcLumOffsets[i].x, tcLumOffsets[i].y ) );
+            
+            // There are a number of ways we can try and convert the RGB value into
+            // a single luminance value:
+            
+            // 1. Do a very simple mathematical average:
+            //float GreyValue = dot( color.rgb, float3( 0.33f, 0.33f, 0.33f ) );
+            
+            // 2. Perform a more accurately weighted average:
+            //float GreyValue = dot( color.rgb, WEIGHT );
+            
+            // 3. Take the maximum value of the incoming, same as computing the
+            //    brightness/value for an HSV/HSB conversion:
+            float GreyValue = max( color.r, max( color.g, color.b ) );
+            
+            // 4. Compute the luminance component as per the HSL colour space:
+            //float GreyValue = 0.5f * ( max( color.r, max( color.g, color.b ) ) + min( color.r, min( color.g, color.b ) ) );
+            
+            // 5. Use the magnitude of the colour
+            //float GreyValue = length( color.rgb );
+                        
+            maximum = max( maximum, GreyValue );
+            average += (0.25f * log( 1e-5 + GreyValue )); //1e-5 necessary to stop the singularity at GreyValue=0
+        }
+        
+        average = exp( average );
+        
+    // Output the luminance to the render target
+        return float4( average, maximum, 0.0f, 1.0f );
+        
+}
+    
+    
+    
+//------------------------------------------------------------------
+//  This entry point will, using a 3x3 set of reads will downsample
+//  from one luminance map to another.
+//------------------------------------------------------------------
+float4 DownSample( in float2 t : TEXCOORD0 ) : COLOR0
+{
+    
+    // Compute the average of the 10 necessary samples
+        float4 color = 0.0f;
+        float maximum = -1e20;
+        float average = 0.0f;
+        
+        for( int i = 0; i < 9; i++ )
+        {
+            color = tex2D( s0, t + float2( tcDSOffsets[i].x, tcDSOffsets[i].y ) );
+            average += color.r;
+            maximum = max( maximum, color.g );
+        }
+        
+    // We've just taken 9 samples from the
+    // high resolution texture, so compute the
+    // actual average that is written to the
+    // lower resolution texture (render target).
+        average /= 9.0f;
+        
+    // Return the new average luminance
+        return float4( average, maximum, 0.0f, 1.0f );
+}

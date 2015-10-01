@@ -1,0 +1,30 @@
+//-----------------------------------------------------------------------------
+// File: HLSLwithoutEffects.psh
+//
+// Desc: The pixel shader file for the HLSLWithoutFX sample.  It contains a pixel 
+//		 shader which passes the color from the vertex shader through.
+// 
+// Copyright (c) Microsoft Corporation. All rights reserved.
+//-----------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// Vertex shader output structure
+//-----------------------------------------------------------------------------
+struct VS_OUTPUT
+{
+    float4 Position   : SV_Position;   // vertex position 
+    float4 Diffuse    : COLOR0;     // vertex diffuse color
+};
+
+
+//-----------------------------------------------------------------------------
+// Name: main
+// Type: Pixel shader                                      
+// Desc: Passes the input color through
+//-----------------------------------------------------------------------------
+float4 main( VS_OUTPUT input ) : SV_Target
+{
+	return input.Diffuse;
+}
+
+

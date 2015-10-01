@@ -1,0 +1,16 @@
+version: 1.0.{build}
+os: Visual Studio 2015
+
+install:
+  - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
+
+before_build:
+  - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
+  - ps: Vsix-TokenReplacement src\HlslTools.VisualStudio\HlslToolsPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: Vsix-TokenReplacement src\HlslTools\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+
+build_script:
+  - msbuild /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+
+after_test:
+  - ps: Vsix-PushArtifacts | Vsix-PublishToGallery

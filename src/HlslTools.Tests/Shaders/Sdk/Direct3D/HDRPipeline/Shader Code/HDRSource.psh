@@ -1,0 +1,31 @@
+//======================================================================
+//
+//      HIGH DYNAMIC RANGE RENDERING DEMONSTRATION
+//      Written by Jack Hoxley, October 2005
+//
+//======================================================================
+
+
+
+//------------------------------------------------------------------
+//  GLOBAL VARIABLES
+//------------------------------------------------------------------
+float HDRScalar = 3.0f;         // Constant exposed to the application. 
+                                // Larger values will generate a brighter colour.
+
+
+
+//------------------------------------------------------------------
+//  SHADER ENTRY POINT
+//------------------------------------------------------------------
+float4 main( in float4 c : COLOR ) : COLOR
+{
+
+    return float4( 
+                    c.r * HDRScalar,
+                    c.g * HDRScalar,
+                    c.b * HDRScalar,
+                    1.0f
+                );
+                
+}

@@ -1,0 +1,141 @@
+//======================================================================
+//
+//      HIGH DYNAMIC RANGE RENDERING DEMONSTRATION
+//      Written by Jack Hoxley, November 2005
+//
+//======================================================================
+
+
+
+//------------------------------------------------------------------
+//  GLOBAL VARIABLES
+//------------------------------------------------------------------
+float fBrightPassThreshold;             // Values greater than this are accepted for the bright pass
+float4 tcDownSampleOffsets[16];         // The sampling offsets used by 'DownSample' and 'BrightPass'
+
+float HBloomWeights[9];                 // Description of the sampling distribution used by
+float HBloomOffsets[9];                 // the HorizontalBlur() function
+
+float VBloomWeights[9];                 // Description of the sampling distribution used by
+float VBloomOffsets[9];                 // the VerticalBlur() function
+
+sampler tex0 : register( s0 );          // Whatever texture is set using IDirect3DDevice9::SetTexture( 0, ... )
+
+
+
+//------------------------------------------------------------------
+// BRIGHT PASS AND 2x2 DOWN-SAMPLING PIXEL SHADER
+//
+// performs the 2x2 down sample, and then accepts any pixels
+// that are greater or equal to the configured threshold
+//------------------------------------------------------------------
+float4 BrightPass( in float2 t : TEXCOORD0 ) : COLOR
+{
+    
+    float4 average = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+    // load in and combine the 4 samples from the source HDR texture
+        for( int i = 0; i < 4; i++ )
+        {
+            average += tex2D( tex0, t + float2( tcDownSampleOffsets[i].x, tcDownSampleOffsets[i].y ) );
+        }
+            
+        average *= 0.25f;
+
+    // Determine the brightness of this particular pixel. As with the luminance calculations
+    // there are 4 possible variations on this calculation:
+    
+    // 1. Do a very simple mathematical average:
+        //float luminance = dot( average.rgb, float3( 0.33f, 0.33f, 0.33f ) );
+    
+    // 2. Perform a more accurately weighted average:
+        //float luminance = dot( average.rgb, float3( 0.299f, 0.587f, 0.114f ) );
+    
+    // 3. Take the maximum value of the incoming, same as computing the
+    //    brightness/value for an HSV/HSB conversion:
+        float luminance = max( average.r, max( average.g, average.b ) );
+    
+    // 4. Compute the luminance component as per the HSL colour space:
+        //float luminance = 0.5f * ( max( average.r, max( average.g, average.b ) ) + min( average.r, min( average.g, average.b ) ) );
+    
+    // 5. Use the magnitude of the colour
+        //float luminance = length( average.rgb );
+            
+    // Determine whether this pixel passes the test...
+        if( luminance < fBrightPassThreshold )
+            average = float4( 0.0f, 0.0f, 0.0f, 1.0f );
+    
+    // Write the colour to the bright-pass render target
+        return average;
+    
+}
+    
+    
+    
+//------------------------------------------------------------------
+// 4x4 DOWN-SAMPLING PIXEL SHADER
+//
+// Samples the input texture 16x according to the provided offsets
+// and then writes the average to the output texture
+//------------------------------------------------------------------
+float4 DownSample( in float2 t : TEXCOORD0 ) : COLOR
+{
+    
+    float4 average = { 0.0f, 0.0f, 0.0f, 0.0f };
+
+    for( int i = 0; i < 16; i++ )
+    {
+        average += tex2D( tex0, t + float2(tcDownSampleOffsets[i].x, tcDownSampleOffsets[i].y) );
+    }
+        
+    average *= ( 1.0f / 16.0f );
+
+    return average;
+    
+}
+    
+    
+    
+//------------------------------------------------------------------
+// HORIZONTAL BLUR
+//
+// Takes 9 samples from the down-sampled texture (4 either side and
+// one central) biased by the provided weights. Different weight
+// distributions will give more subtle/pronounced blurring.
+//------------------------------------------------------------------
+float4 HorizontalBlur( in float2 t : TEXCOORD0 ) : COLOR
+{
+
+    float4 color = { 0.0f, 0.0f, 0.0f, 0.0f };
+    
+    for( int i = 0; i < 9; i++ )
+    {
+        color += (tex2D( tex0, t + float2( HBloomOffsets[i], 0.0f ) ) * HBloomWeights[i] );
+    }
+        
+    return float4( color.rgb, 1.0f );
+    
+}
+    
+    
+    
+//------------------------------------------------------------------
+// VERTICAL BLUR
+//
+// Takes 9 samples from the down-sampled texture (4 above/below and
+// one central) biased by the provided weights. Different weight
+// distributions will give more subtle/pronounced blurring.
+//------------------------------------------------------------------
+float4 VerticalBlur( in float2 t : TEXCOORD0 ) : COLOR
+{
+
+    float4 color = { 0.0f, 0.0f, 0.0f, 0.0f };
+    
+    for( int i = 0; i < 9; i++ )
+    {
+        color += (tex2D( tex0, t + float2( 0.0f, VBloomOffsets[i] ) ) * VBloomWeights[i] );
+    }
+        
+    return float4( color.rgb, 1.0f );
+    
+}

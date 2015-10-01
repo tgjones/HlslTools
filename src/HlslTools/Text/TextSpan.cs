@@ -1,0 +1,98 @@
+﻿using System;
+
+namespace HlslTools.Text
+{
+    public struct TextSpan : IEquatable<TextSpan>
+    {
+        public static readonly TextSpan None = new TextSpan(null, -1, 0);
+
+        public TextSpan(string filename, int start, int length)
+        {
+            IsInRootFile = filename == null;
+            Filename = filename;
+            Start = start;
+            End = Start + length;
+            Length = length;
+        }
+
+        public readonly bool IsInRootFile;
+        public readonly string Filename;
+        public readonly int Start;
+        public readonly int End;
+        public readonly int Length;
+
+        public static TextSpan FromBounds(string filename, int start, int end)
+        {
+            if (end < start)
+                throw new ArgumentOutOfRangeException();
+            var length = end - start;
+            return new TextSpan(filename, start, length);
+        }
+
+        public bool Contains(int position)
+        {
+            return Start <= position && position < End;
+        }
+
+        public bool ContainsOrTouches(int position)
+        {
+            return Contains(position) || position == End;
+        }
+
+        public bool Contains(TextSpan textSpan)
+        {
+            return Start <= textSpan.Start && textSpan.End <= End;
+        }
+
+        public bool OverlapsWith(TextSpan span)
+        {
+            var maxStart = Math.Max(Start, span.Start);
+            var minEnd = Math.Min(End, span.End);
+            return maxStart < minEnd;
+        }
+
+        public bool IntersectsWith(TextSpan span)
+        {
+            return span.Start <= End && span.End >= Start;
+        }
+
+        public bool Equals(TextSpan other)
+        {
+            return Start == other.Start &&
+                   Length == other.Length;
+        }
+
+        public override bool Equals(object obj)
+        {
+            var other = obj as TextSpan?;
+            return other != null && Equals(other.Value);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (Start * 397) ^ Length;
+            }
+        }
+
+        public static bool operator ==(TextSpan left, TextSpan right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(TextSpan left, TextSpan right)
+        {
+            return !left.Equals(right);
+        }
+
+        public override string ToString()
+        {
+            var result = Filename;
+            if (!string.IsNullOrEmpty(result))
+                result += " ";
+            result += $"[{Start},{End})";
+            return result;
+        }
+    }
+}
