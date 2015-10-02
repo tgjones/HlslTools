@@ -17,7 +17,7 @@ These are the changes to each version that has been released on the official Vis
 
 ## 0.9
 
-**[todo]**
+**2015-10-02**
 
 - [x] Syntax highlighting
 - [x] Navigation bar
