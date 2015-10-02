@@ -2,6 +2,8 @@
 
 A Visual Studio extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
 
+[![Build status](https://ci.appveyor.com/api/projects/status/4ykbwleeg5c8o1l4?svg=true)](https://ci.appveyor.com/project/tgjones/hlsltools)
+
 Download the extension at the [VS Gallery]() or get the [nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-953d-3fdea1891737/).
 
 See the [changelog](CHANGELOG.md) for changes and roadmap.

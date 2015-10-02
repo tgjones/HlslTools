@@ -55,6 +55,10 @@ namespace HlslTools.VisualStudio.Parsing
                 {
                     return;
                 }
+                catch (ObjectDisposedException)
+                {
+                    return;
+                }
                 _hasWork.Reset();
 
                 lock (_lockObject)
