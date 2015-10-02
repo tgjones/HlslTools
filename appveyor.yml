@@ -13,5 +13,9 @@ build_script:
   - nuget restore src/HlslTools.sln -Verbosity quiet
   - msbuild src/HlslTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
+test_script:
+  - nunit-console src/HlslTools.Tests/bin/Release/HlslTools.Tests.dll
+  - nunit-console-x86 src/HlslTools.VisualStudio.Tests/bin/Release/HlslTools.VisualStudio.Tests.dll
+
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
