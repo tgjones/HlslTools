@@ -5,14 +5,14 @@
     <DisplayName>HLSL Tools for Visual Studio</DisplayName>
     <Description xml:space="preserve">Enhanced support for editing HLSL in Visual Studio</Description>
     <MoreInfo>https://github.com/tgjones/HlslTools</MoreInfo>
-	<License>Resources\LICENSE</License>
-	<ReleaseNotes>https://github.com/tgjones/HlslTools/blob/master/CHANGELOG.md</ReleaseNotes>
+    <License>Resources\LICENSE</License>
+    <ReleaseNotes>https://github.com/tgjones/HlslTools/blob/master/CHANGELOG.md</ReleaseNotes>
     <Icon>Resources\icon.png</Icon>
-	<PreviewImage>Resources\preview.png</PreviewImage>
-	<Tags>HLSL, shader, Direct3D</Tags>
+    <PreviewImage>Resources\preview.png</PreviewImage>
+    <Tags>HLSL, shader, Direct3D</Tags>
   </Metadata>
   <Installation InstalledByMsi="false">
-    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[12.0,15.0)" />
+    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[12.0,15.0)" />
   </Installation>
   <Dependencies>
     <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
