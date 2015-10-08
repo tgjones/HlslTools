@@ -482,7 +482,10 @@ namespace HlslTools.Parser
                 case SyntaxKind.MultiplyExpression:
                     return EvaluateInt(((BinaryExpressionSyntax)expr).Left) * EvaluateInt(((BinaryExpressionSyntax)expr).Right);
                 case SyntaxKind.DivideExpression:
-                    return EvaluateInt(((BinaryExpressionSyntax)expr).Left) / EvaluateInt(((BinaryExpressionSyntax)expr).Right);
+                    var divisor = EvaluateInt(((BinaryExpressionSyntax) expr).Right);
+                    return (divisor != 0)
+                        ? EvaluateInt(((BinaryExpressionSyntax) expr).Left) / divisor
+                        : int.MaxValue;
                 case SyntaxKind.IdentifierName:
                     var id = ((IdentifierNameSyntax)expr).Name.Text;
                     return IsDirectiveDefined(id);
