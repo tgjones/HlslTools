@@ -22,6 +22,7 @@ namespace HlslTools.Syntax
         internal override SourceRange FullSourceRange => SourceRange.Union(OriginalToken.FullSourceRange, ArgumentList.FullSourceRange);
 
         public override DefineDirectiveTriviaSyntax DefineDirective => Directive;
+        public override SyntaxToken NameToken => OriginalToken;
         public override TextSpan Span => TextSpan.FromBounds(OriginalToken.Span.Filename, OriginalToken.Span.Start, ArgumentList.CloseParenToken.Span.End);
 
         public override IEnumerable<SyntaxNode> OriginalNodes

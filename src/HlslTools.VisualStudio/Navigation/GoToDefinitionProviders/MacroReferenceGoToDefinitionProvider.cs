@@ -10,13 +10,18 @@ namespace HlslTools.VisualStudio.Navigation.GoToDefinitionProviders
     {
         protected override TextSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, SyntaxToken node)
         {
-            if (!node.SourceRange.ContainsOrTouches(position))
+            if (node.MacroReference == null)
                 return null;
 
-            if (!node.Span.IsInRootFile)
+            var nameToken = node.MacroReference.NameToken;
+
+            if (!nameToken.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            return node.MacroReference?.DefineDirective.MacroName.Span;
+            if (!nameToken.Span.IsInRootFile)
+                return null;
+
+            return node.MacroReference.DefineDirective.MacroName.Span;
         }
     }
 }

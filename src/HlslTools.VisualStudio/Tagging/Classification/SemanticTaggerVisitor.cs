@@ -119,7 +119,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 
         private void CreateTag(SyntaxToken token, IClassificationType classificationType)
         {
-            if (token == null || !token.Span.IsInRootFile)
+            if (token == null || !token.Span.IsInRootFile || token.MacroReference != null)
                 return;
 
             var snapshotSpan = new SnapshotSpan(_snapshot, token.Span.Start, token.Span.Length);

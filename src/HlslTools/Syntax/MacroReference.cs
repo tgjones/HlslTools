@@ -11,6 +11,7 @@ namespace HlslTools.Syntax
         internal abstract SourceRange FullSourceRange { get; }
 
         public abstract DefineDirectiveTriviaSyntax DefineDirective { get; }
+        public abstract SyntaxToken NameToken { get; }
         public abstract TextSpan Span { get; }
 
         public abstract IEnumerable<SyntaxNode> OriginalNodes { get; }

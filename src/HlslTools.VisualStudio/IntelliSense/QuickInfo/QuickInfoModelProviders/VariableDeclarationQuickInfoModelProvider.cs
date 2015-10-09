@@ -18,6 +18,9 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
                 if (!declarator.Identifier.Span.IsInRootFile)
                     continue;
 
+                if (declarator.Identifier.MacroReference != null)
+                    continue;
+
                 string kind;
                 switch (node.Parent.Kind)
                 {

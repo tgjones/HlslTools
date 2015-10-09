@@ -49,9 +49,17 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             foreach (var trivia in token.LeadingTrivia)
                 ClassifyTrivia(trivia);
 
-            var kind = GetClassificationForToken(token);
-            if (kind != null)
-                AddClassification(token, kind);
+            if (token.MacroReference != null)
+            {
+                foreach (var node in token.MacroReference.OriginalNodes)
+                    ClassifyNodeOrToken(node);
+            }
+            else
+            {
+                var kind = GetClassificationForToken(token);
+                if (kind != null)
+                    AddClassification(token, kind);
+            }
 
             foreach (var trivia in token.TrailingTrivia)
                 ClassifyTrivia(trivia);
