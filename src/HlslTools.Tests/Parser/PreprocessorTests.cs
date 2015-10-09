@@ -680,6 +680,40 @@ float bar;
                 new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
+        [Test]
+        public void TestError()
+        {
+            const string text = @"
+#error This is a compilation ""error""
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.ErrorDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"This is a compilation ""error""" });
+        }
+
+        [Test]
+        public void TestPragma()
+        {
+            const string text = @"
+#pragma def(vs_4_0, c0, 0, 1, 2, 3)
+#pragma message ""Debugging flag set""
+#pragma warning(once: 1000)
+#pragma pack_matrix(row_major)
+#pragma something custom
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"def(vs_4_0, c0, 0, 1, 2, 3)" },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"message ""Debugging flag set""" },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"warning(once: 1000)" },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"pack_matrix(row_major)" },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"something custom" });
+        }
+
         #region Test helpers
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(string text)

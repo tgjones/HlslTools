@@ -552,4 +552,70 @@ namespace HlslTools.Syntax
             return visitor.VisitLineDirectiveTrivia(this);
         }
     }
+
+    public sealed class ErrorDirectiveTriviaSyntax : DirectiveTriviaSyntax
+    {
+        private readonly SyntaxToken _hashToken;
+        private readonly SyntaxToken _endOfDirectiveToken;
+
+        public readonly SyntaxToken ErrorKeyword;
+        public readonly List<SyntaxToken> TokenString;
+
+        public ErrorDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken errorKeyword, List<SyntaxToken> tokenString, SyntaxToken endOfDirectiveToken, bool isActive)
+            : base(SyntaxKind.ErrorDirectiveTrivia)
+        {
+            RegisterChildNode(out _hashToken, hashToken);
+            RegisterChildNode(out ErrorKeyword, errorKeyword);
+            RegisterChildNodes(out TokenString, tokenString);
+            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
+            IsActive = isActive;
+        }
+
+        public override SyntaxToken HashToken => _hashToken;
+        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
+        public override bool IsActive { get; }
+
+        public override void Accept(SyntaxVisitor visitor)
+        {
+            visitor.VisitErrorDirectiveTrivia(this);
+        }
+
+        public override T Accept<T>(SyntaxVisitor<T> visitor)
+        {
+            return visitor.VisitErrorDirectiveTrivia(this);
+        }
+    }
+
+    public sealed class PragmaDirectiveTriviaSyntax : DirectiveTriviaSyntax
+    {
+        private readonly SyntaxToken _hashToken;
+        private readonly SyntaxToken _endOfDirectiveToken;
+
+        public readonly SyntaxToken PragmaKeyword;
+        public readonly List<SyntaxToken> TokenString;
+
+        public PragmaDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken pragmaKeyword, List<SyntaxToken> tokenString, SyntaxToken endOfDirectiveToken, bool isActive)
+            : base(SyntaxKind.PragmaDirectiveTrivia)
+        {
+            RegisterChildNode(out _hashToken, hashToken);
+            RegisterChildNode(out PragmaKeyword, pragmaKeyword);
+            RegisterChildNodes(out TokenString, tokenString);
+            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
+            IsActive = isActive;
+        }
+
+        public override SyntaxToken HashToken => _hashToken;
+        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
+        public override bool IsActive { get; }
+
+        public override void Accept(SyntaxVisitor visitor)
+        {
+            visitor.VisitPragmaDirectiveTrivia(this);
+        }
+
+        public override T Accept<T>(SyntaxVisitor<T> visitor)
+        {
+            return visitor.VisitPragmaDirectiveTrivia(this);
+        }
+    }
 }

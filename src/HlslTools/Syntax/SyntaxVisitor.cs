@@ -467,6 +467,16 @@ namespace HlslTools.Syntax
             DefaultVisit(node);
         }
 
+        public virtual void VisitErrorDirectiveTrivia(ErrorDirectiveTriviaSyntax node)
+        {
+            DefaultVisit(node);
+        }
+
+        public virtual void VisitPragmaDirectiveTrivia(PragmaDirectiveTriviaSyntax node)
+        {
+            DefaultVisit(node);
+        }
+
         public virtual void VisitBadDirectiveTrivia(BadDirectiveTriviaSyntax node)
         {
             DefaultVisit(node);
@@ -948,6 +958,16 @@ namespace HlslTools.Syntax
         }
 
         public virtual T VisitLineDirectiveTrivia(LineDirectiveTriviaSyntax node)
+        {
+            return DefaultVisit(node);
+        }
+
+        public virtual T VisitErrorDirectiveTrivia(ErrorDirectiveTriviaSyntax node)
+        {
+            return DefaultVisit(node);
+        }
+
+        public virtual T VisitPragmaDirectiveTrivia(PragmaDirectiveTriviaSyntax node)
         {
             return DefaultVisit(node);
         }

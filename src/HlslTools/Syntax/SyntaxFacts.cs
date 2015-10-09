@@ -212,6 +212,18 @@ namespace HlslTools.Syntax
                     return "undef";
                 case SyntaxKind.LineKeyword:
                     return "line";
+                case SyntaxKind.ErrorKeyword:
+                    return "error";
+                case SyntaxKind.PragmaKeyword:
+                    return "pragma";
+                case SyntaxKind.DefKeyword:
+                    return "def";
+                case SyntaxKind.MessageKeyword:
+                    return "message";
+                case SyntaxKind.PackMatrixKeyword:
+                    return "pack_matrix";
+                case SyntaxKind.WarningKeyword:
+                    return "warning";
                 case SyntaxKind.ConstantBufferKeyword:
                     return "ConstantBuffer";
 
@@ -1518,6 +1530,8 @@ namespace HlslTools.Syntax
                 case SyntaxKind.UndefKeyword:
                 case SyntaxKind.IncludeKeyword:
                 case SyntaxKind.LineKeyword:
+                case SyntaxKind.ErrorKeyword:
+                case SyntaxKind.PragmaKeyword:
                     return true;
 
                 default:
@@ -2141,6 +2155,18 @@ namespace HlslTools.Syntax
                     return SyntaxKind.IncludeKeyword;
                 case "line":
                     return SyntaxKind.LineKeyword;
+                case "error":
+                    return SyntaxKind.ErrorKeyword;
+                case "pragma":
+                    return SyntaxKind.PragmaKeyword;
+                case "def":
+                    return SyntaxKind.DefKeyword;
+                case "message":
+                    return SyntaxKind.MessageKeyword;
+                case "pack_matrix":
+                    return SyntaxKind.PackMatrixKeyword;
+                case "warning":
+                    return SyntaxKind.WarningKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -2161,6 +2187,12 @@ namespace HlslTools.Syntax
                 case SyntaxKind.UndefKeyword:
                 case SyntaxKind.IncludeKeyword:
                 case SyntaxKind.LineKeyword:
+                case SyntaxKind.ErrorKeyword:
+                case SyntaxKind.PragmaKeyword:
+                case SyntaxKind.DefKeyword:
+                case SyntaxKind.MessageKeyword:
+                case SyntaxKind.PackMatrixKeyword:
+                case SyntaxKind.WarningKeyword:
                     return true;
 
                 default:

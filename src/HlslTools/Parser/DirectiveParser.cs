@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.Linq;
 using HlslTools.Diagnostics;
 using HlslTools.Syntax;
-using HlslTools.Text;
 
 namespace HlslTools.Parser
 {
@@ -49,6 +48,10 @@ namespace HlslTools.Parser
                     return ParseIncludeDirective(hash, MatchContextual(SyntaxKind.IncludeKeyword), isActive);
                 case SyntaxKind.LineKeyword:
                     return ParseLineDirective(hash, MatchContextual(SyntaxKind.LineKeyword), isActive);
+                case SyntaxKind.ErrorKeyword:
+                    return ParseErrorDirective(hash, MatchContextual(SyntaxKind.ErrorKeyword), isActive);
+                case SyntaxKind.PragmaKeyword:
+                    return ParsePragmaDirective(hash, MatchContextual(SyntaxKind.PragmaKeyword), isActive);
                 default:
                     var id = Match(SyntaxKind.IdentifierToken);
                     var end = ParseEndOfDirective(ignoreErrors: true);
@@ -242,6 +245,28 @@ namespace HlslTools.Parser
             var eod = ParseEndOfDirective(line.IsMissing || !isActive);
 
             return new LineDirectiveTriviaSyntax(hash, keyword, line, filename, eod, isActive);
+        }
+
+        private ErrorDirectiveTriviaSyntax ParseErrorDirective(SyntaxToken hash, SyntaxToken keyword, bool isActive)
+        {
+            var body = new List<SyntaxToken>();
+            while (Current.Kind != SyntaxKind.EndOfDirectiveToken)
+                body.Add(NextToken());
+
+            var eod = ParseEndOfDirective(false);
+
+            return new ErrorDirectiveTriviaSyntax(hash, keyword, body, eod, isActive);
+        }
+
+        private PragmaDirectiveTriviaSyntax ParsePragmaDirective(SyntaxToken hash, SyntaxToken keyword, bool isActive)
+        {
+            var body = new List<SyntaxToken>();
+            while (Current.Kind != SyntaxKind.EndOfDirectiveToken)
+                body.Add(NextToken());
+
+            var eod = ParseEndOfDirective(false);
+
+            return new PragmaDirectiveTriviaSyntax(hash, keyword, body, eod, isActive);
         }
 
         private ExpressionSyntax ParseDirectiveExpression()

@@ -87,7 +87,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 
         private IClassificationType GetClassificationForToken(SyntaxToken token)
         {
-            if (token.Kind == SyntaxKind.IdentifierToken)
+            if (token.Kind == SyntaxKind.IdentifierToken && token.ContextualKind == SyntaxKind.IdentifierToken)
                 return _classificationService.Identifier;
 
             if (IsInPreprocessorDirective(token) && (token.Kind == SyntaxKind.HashToken || token.ContextualKind.IsPreprocessorKeyword()))
