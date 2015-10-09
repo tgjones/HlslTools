@@ -32,7 +32,7 @@ namespace HlslTools.VisualStudio.ErrorList
                 Category = TaskCategory.CodeSense,
                 ErrorCategory = TaskErrorCategory.Error,
                 Priority = TaskPriority.Normal,
-                Document = span.Filename
+                Document = span.Filename ?? _textDocument.FilePath
             };
 
             task.Navigate += OnTaskNavigate;
