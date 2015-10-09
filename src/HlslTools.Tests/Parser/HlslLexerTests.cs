@@ -55,15 +55,28 @@ namespace HlslTools.Tests.Parser
             Assert.That(allTokens[3].SourceRange, Is.EqualTo(new SourceRange(new SourceLocation(9), 0)));
         }
 
-        [Test]
-        public void TestNumericHexLiteral()
+        [TestCase("0x123", 0x123)]
+        public void TestIntegerLiterals(string text, int value)
         {
-            const int value = 0x123;
-            const string text = "0x123";
             var token = LexToken(text);
 
             Assert.NotNull(token);
             Assert.AreEqual(SyntaxKind.IntegerLiteralToken, token.Kind);
+            var errors = token.GetDiagnostics().ToArray();
+            Assert.AreEqual(0, errors.Length);
+            Assert.AreEqual(text, token.Text);
+            Assert.AreEqual(value, token.Value);
+        }
+
+        [TestCase("1.0", 1.0f)]
+        [TestCase("1.0f", 1.0f)]
+        [TestCase("1.0h", 1.0f)]
+        public void TestFloatLiterals(string text, float value)
+        {
+            var token = LexToken(text);
+
+            Assert.NotNull(token);
+            Assert.AreEqual(SyntaxKind.FloatLiteralToken, token.Kind);
             var errors = token.GetDiagnostics().ToArray();
             Assert.AreEqual(0, errors.Length);
             Assert.AreEqual(text, token.Text);

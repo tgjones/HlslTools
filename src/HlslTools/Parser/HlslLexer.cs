@@ -922,6 +922,8 @@ namespace HlslTools.Parser
 
                     case 'F':
                     case 'f':
+                    case 'H':
+                    case 'h':
                         if (hasHexModifier)
                             goto case '0';
                         hasFloatSuffix = true;
