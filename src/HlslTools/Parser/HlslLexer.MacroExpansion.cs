@@ -104,25 +104,32 @@ namespace HlslTools.Parser
 
         private List<SyntaxToken> ExpandNestedMacro(NestedMacroExpansionLexer lexer)
         {
-            var result = new List<SyntaxToken>();
+            var resultTemp = new List<SyntaxToken>();
 
             SyntaxToken token;
             while ((token = lexer.GetNextToken()) != null)
             {
-                // Do token pasting (##).
-                if (lexer.Peek(0) != null && lexer.Peek(0).Kind == SyntaxKind.HashHashToken
-                    && lexer.Peek(1) != null && lexer.Peek(1).Kind != SyntaxKind.HashHashToken)
-                {
-                    lexer.GetNextToken();
-                    var concatenatedText = token.Text + lexer.GetNextToken().Text;
-                    token = new HlslLexer(new StringText(concatenatedText)).Lex(LexerMode.Syntax);
-                }
-
                 List<SyntaxToken> expandedTokens;
                 if (TryExpandMacro(token, lexer, out expandedTokens))
-                    result.AddRange(expandedTokens);
+                    resultTemp.AddRange(expandedTokens);
                 else
-                    result.Add(token);
+                    resultTemp.Add(token);
+            }
+
+            // Do token pasting (##).
+            var result = new List<SyntaxToken>();
+            for (var i = 0; i < resultTemp.Count; i++)
+            {
+                if (i < resultTemp.Count - 2 && resultTemp[i + 1].Kind == SyntaxKind.HashHashToken && resultTemp[i + 2].Kind != SyntaxKind.HashHashToken)
+                {
+                    var concatenatedText = resultTemp[i].Text + resultTemp[i + 2].Text;
+                    result.Add(new HlslLexer(new StringText(concatenatedText)).Lex(LexerMode.Syntax));
+                    i += 2;
+                }
+                else
+                {
+                    result.Add(resultTemp[i]);
+                }
             }
 
             return result;

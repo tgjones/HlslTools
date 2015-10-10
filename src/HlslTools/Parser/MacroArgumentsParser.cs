@@ -7,7 +7,7 @@ namespace HlslTools.Parser
     internal sealed class MacroArgumentsParser : HlslParser
     {
         public MacroArgumentsParser(ILexer lexer)
-            : base(lexer, LexerMode.Syntax)
+            : base(lexer, LexerMode.MacroArguments)
         {
             
         }
