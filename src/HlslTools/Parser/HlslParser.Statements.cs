@@ -345,7 +345,7 @@ namespace HlslTools.Parser
 
         private ExpressionSyntax ParseVariableInitializer()
         {
-            _commaIsSeparatorStack.Push(true);
+            CommaIsSeparatorStack.Push(true);
 
             try
             {
@@ -359,7 +359,7 @@ namespace HlslTools.Parser
             }
             finally
             {
-                _commaIsSeparatorStack.Pop();
+                CommaIsSeparatorStack.Pop();
             }
         }
 

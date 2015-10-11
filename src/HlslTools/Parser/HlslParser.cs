@@ -27,16 +27,16 @@ namespace HlslTools.Parser
         // Set to true when parsing pass statements.
         private bool _allowGreaterThanTokenAroundRhsExpression;
 
-        // Set to true when parsing function calls, initializers, and variable declarations.
-        private Stack<bool> _commaIsSeparatorStack;
+        // Used when parsing function calls, initializers, and variable declarations.
+        protected Stack<bool> CommaIsSeparatorStack { get; private set; }
 
         public HlslParser(ILexer lexer, LexerMode mode = LexerMode.Syntax)
         {
             _lexer = lexer;
             _mode = mode;
 
-            _commaIsSeparatorStack = new Stack<bool>();
-            _commaIsSeparatorStack.Push(false);
+            CommaIsSeparatorStack = new Stack<bool>();
+            CommaIsSeparatorStack.Push(false);
         }
 
         protected SyntaxToken Current => Peek(0);
@@ -222,7 +222,7 @@ namespace HlslTools.Parser
         private ResetPoint GetResetPoint()
         {
             _scanStack.Push(true);
-            return new ResetPoint(_tokenIndex, _mode, _greaterThanTokenIsNotOperator, _commaIsSeparatorStack, _termState);
+            return new ResetPoint(_tokenIndex, _mode, _greaterThanTokenIsNotOperator, CommaIsSeparatorStack, _termState);
         }
 
         private void Reset(ref ResetPoint state)
@@ -232,7 +232,7 @@ namespace HlslTools.Parser
             _mode = state.Mode;
             _tokenIndex = state.TokenIndex;
             _greaterThanTokenIsNotOperator = state.GreaterThanTokenIsNotOperator;
-            _commaIsSeparatorStack = state.CommaIsSeparatorStack;
+            CommaIsSeparatorStack = state.CommaIsSeparatorStack;
             _termState = state.TermState;
         }
 
@@ -294,7 +294,7 @@ namespace HlslTools.Parser
 
             if (Current.Kind == SyntaxKind.OpenParenToken)
             {
-                _commaIsSeparatorStack.Push(true);
+                CommaIsSeparatorStack.Push(true);
 
                 try
                 {
@@ -318,7 +318,7 @@ namespace HlslTools.Parser
                 }
                 finally
                 {
-                    _commaIsSeparatorStack.Pop();
+                    CommaIsSeparatorStack.Pop();
                 }
             }
 

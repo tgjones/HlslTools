@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HlslTools.Syntax;
@@ -18,33 +19,46 @@ namespace HlslTools.Parser
 
             var arguments = new List<SyntaxNode>();
 
-            var currentArg = new List<SyntaxToken>();
-            var parenStack = 0;
-            while ((Current.Kind != SyntaxKind.CloseParenToken || parenStack > 0) && Current.Kind != SyntaxKind.EndOfFileToken)
-            {
-                switch (Current.Kind)
-                {
-                    case SyntaxKind.OpenParenToken:
-                        parenStack++;
-                        currentArg.Add(NextToken());
-                        break;
-                    case SyntaxKind.CloseParenToken:
-                        parenStack--;
-                        currentArg.Add(NextToken());
-                        break;
-                    case SyntaxKind.CommaToken:
-                        arguments.Add(new MacroArgumentSyntax(currentArg));
-                        currentArg = new List<SyntaxToken>();
-                        arguments.Add(Match(SyntaxKind.CommaToken));
-                        break;
-                    default:
-                        currentArg.Add(NextToken());
-                        break;
-                }
-            }
+            CommaIsSeparatorStack.Push(true);
 
-            if (currentArg.Any())
-                arguments.Add(new MacroArgumentSyntax(currentArg));
+            try
+            {
+                var currentArg = new List<SyntaxToken>();
+                var parenStack = 0;
+                while ((Current.Kind != SyntaxKind.CloseParenToken || parenStack > 0) && Current.Kind != SyntaxKind.EndOfFileToken)
+                {
+                    switch (Current.Kind)
+                    {
+                        case SyntaxKind.OpenParenToken:
+                            CommaIsSeparatorStack.Push(false);
+                            parenStack++;
+                            currentArg.Add(NextToken());
+                            break;
+                        case SyntaxKind.CloseParenToken:
+                            CommaIsSeparatorStack.Pop();
+                            parenStack--;
+                            currentArg.Add(NextToken());
+                            break;
+                        case SyntaxKind.CommaToken:
+                            if (CommaIsSeparatorStack.Peek() == false)
+                                goto default;
+                            arguments.Add(new MacroArgumentSyntax(currentArg));
+                            currentArg = new List<SyntaxToken>();
+                            arguments.Add(Match(SyntaxKind.CommaToken));
+                            break;
+                        default:
+                            currentArg.Add(NextToken());
+                            break;
+                    }
+                }
+
+                if (currentArg.Any())
+                    arguments.Add(new MacroArgumentSyntax(currentArg));
+            }
+            finally
+            {
+                CommaIsSeparatorStack.Pop();
+            }
 
             var argumentList = new SeparatedSyntaxList<MacroArgumentSyntax>(arguments);
 

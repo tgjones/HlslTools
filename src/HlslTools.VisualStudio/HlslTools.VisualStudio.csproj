@@ -315,6 +315,7 @@
     </Compile>
     <Compile Include="Editing\SmartIndenting\SmartIndent.cs" />
     <Compile Include="Editing\SmartIndenting\SmartIndentProvider.cs" />
+    <Compile Include="Parsing\BackgroundParserManager.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindow.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindowCommand.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml.cs">

@@ -66,7 +66,7 @@ namespace HlslTools.Parser
                     operatorType = ExpressionOperatorType.AssignmentExpression;
                     opKind = SyntaxFacts.GetAssignmentExpression(tk);
                 }
-                else if (tk == SyntaxKind.CommaToken && _commaIsSeparatorStack.Peek() == false)
+                else if (tk == SyntaxKind.CommaToken && CommaIsSeparatorStack.Peek() == false)
                 {
                     operatorType = ExpressionOperatorType.CompoundExpression;
                     opKind = SyntaxKind.CompoundExpression;
@@ -250,14 +250,14 @@ namespace HlslTools.Parser
 
                 try
                 {
-                    _commaIsSeparatorStack.Push(false);
+                    CommaIsSeparatorStack.Push(false);
                     var expression = ParseSubExpression(0);
                     var closeParen = Match(SyntaxKind.CloseParenToken);
                     return new ParenthesizedExpressionSyntax(openParen, expression, closeParen);
                 }
                 finally
                 {
-                    _commaIsSeparatorStack.Pop();
+                    CommaIsSeparatorStack.Pop();
                 }
             }
         }
@@ -304,7 +304,7 @@ namespace HlslTools.Parser
 
             if (atLeastOneArg || Current.Kind != closeKind)
             {
-                _commaIsSeparatorStack.Push(true);
+                CommaIsSeparatorStack.Push(true);
 
                 try
                 {
@@ -318,7 +318,7 @@ namespace HlslTools.Parser
                 }
                 finally
                 {
-                    _commaIsSeparatorStack.Pop();
+                    CommaIsSeparatorStack.Pop();
                 }
             }
 
