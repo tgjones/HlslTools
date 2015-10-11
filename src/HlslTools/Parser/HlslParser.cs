@@ -27,10 +27,16 @@ namespace HlslTools.Parser
         // Set to true when parsing pass statements.
         private bool _allowGreaterThanTokenAroundRhsExpression;
 
+        // Set to true when parsing function calls, initializers, and variable declarations.
+        private Stack<bool> _commaIsSeparatorStack;
+
         public HlslParser(ILexer lexer, LexerMode mode = LexerMode.Syntax)
         {
             _lexer = lexer;
             _mode = mode;
+
+            _commaIsSeparatorStack = new Stack<bool>();
+            _commaIsSeparatorStack.Push(false);
         }
 
         protected SyntaxToken Current => Peek(0);
@@ -197,12 +203,16 @@ namespace HlslTools.Parser
             public readonly LexerMode Mode;
             public readonly bool GreaterThanTokenIsNotOperator;
             public readonly TerminatorState TermState;
+            public readonly Stack<bool> CommaIsSeparatorStack;
 
-            internal ResetPoint(int tokenIndex, LexerMode mode, bool greaterThanTokenIsNotOperator, TerminatorState termState)
+            internal ResetPoint(
+                int tokenIndex, LexerMode mode, bool greaterThanTokenIsNotOperator,
+                Stack<bool> commaIsSeparatorStack, TerminatorState termState)
             {
                 TokenIndex = tokenIndex;
                 Mode = mode;
                 GreaterThanTokenIsNotOperator = greaterThanTokenIsNotOperator;
+                CommaIsSeparatorStack = new Stack<bool>(commaIsSeparatorStack);
                 TermState = termState;
             }
         }
@@ -212,7 +222,7 @@ namespace HlslTools.Parser
         private ResetPoint GetResetPoint()
         {
             _scanStack.Push(true);
-            return new ResetPoint(_tokenIndex, _mode, _greaterThanTokenIsNotOperator, _termState);
+            return new ResetPoint(_tokenIndex, _mode, _greaterThanTokenIsNotOperator, _commaIsSeparatorStack, _termState);
         }
 
         private void Reset(ref ResetPoint state)
@@ -222,6 +232,7 @@ namespace HlslTools.Parser
             _mode = state.Mode;
             _tokenIndex = state.TokenIndex;
             _greaterThanTokenIsNotOperator = state.GreaterThanTokenIsNotOperator;
+            _commaIsSeparatorStack = state.CommaIsSeparatorStack;
             _termState = state.TermState;
         }
 
@@ -283,23 +294,32 @@ namespace HlslTools.Parser
 
             if (Current.Kind == SyntaxKind.OpenParenToken)
             {
-                var openParen = Match(SyntaxKind.OpenParenToken);
+                _commaIsSeparatorStack.Push(true);
 
-                var argumentsList = new List<SyntaxNode>();
-                argumentsList.Add(ParseExpression());
-
-                while (Current.Kind == SyntaxKind.CommaToken)
+                try
                 {
-                    argumentsList.Add(Match(SyntaxKind.CommaToken));
+                    var openParen = Match(SyntaxKind.OpenParenToken);
+
+                    var argumentsList = new List<SyntaxNode>();
                     argumentsList.Add(ParseExpression());
+
+                    while (Current.Kind == SyntaxKind.CommaToken)
+                    {
+                        argumentsList.Add(Match(SyntaxKind.CommaToken));
+                        argumentsList.Add(ParseExpression());
+                    }
+
+                    var closeParen = Match(SyntaxKind.CloseParenToken);
+
+                    result = new AttributeArgumentListSyntax(
+                        openParen,
+                        new SeparatedSyntaxList<LiteralExpressionSyntax>(argumentsList),
+                        closeParen);
                 }
-
-                var closeParen = Match(SyntaxKind.CloseParenToken);
-
-                result = new AttributeArgumentListSyntax(
-                    openParen,
-                    new SeparatedSyntaxList<LiteralExpressionSyntax>(argumentsList),
-                    closeParen);
+                finally
+                {
+                    _commaIsSeparatorStack.Pop();
+                }
             }
 
             return result;

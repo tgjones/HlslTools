@@ -384,6 +384,15 @@ namespace HlslTools.Formatting
             Visit(node.ShaderFunction);
         }
 
+        public override void VisitCompoundExpression(CompoundExpressionSyntax node)
+        {
+            Visit(node.Left);
+
+            FormatCommaToken(node.CommaToken);
+
+            Visit(node.Right);
+        }
+
         public override void VisitConditionalExpression(ConditionalExpressionSyntax node)
         {
             Visit(node.Condition);
@@ -535,7 +544,8 @@ namespace HlslTools.Formatting
             if (node.Declaration != null)
                 Visit(node.Declaration);
 
-            FormatCommaSeparatedSyntaxList(node.Initializers);
+            if (node.Initializer != null)
+                Visit(node.Initializer);
 
             FormatToken(node.FirstSemicolonToken,
                 _options.Spacing.InsertSpaceBeforeSemicolonInForStatement
@@ -556,7 +566,8 @@ namespace HlslTools.Formatting
                     ? TrailingFormattingOperation.EnsureTrailingWhitespace
                     : TrailingFormattingOperation.RemoveTrailingWhitespace);
 
-            FormatCommaSeparatedSyntaxList(node.Incrementors);
+            if (node.Incrementor != null)
+                Visit(node.Incrementor);
 
             FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements);
 

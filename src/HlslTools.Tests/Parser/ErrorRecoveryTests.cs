@@ -309,7 +309,12 @@ namespace HlslTools.Tests.Parser
             Assert.That(sd.Body.Statements, Has.Count.EqualTo(1));
             Assert.That(sd.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ForStatement));
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
-            Assert.That(forStatement.Initializers, Has.Count.EqualTo(1));
+            Assert.That(forStatement.Initializer, Is.Not.Null);
+            Assert.That(forStatement.Initializer.Kind, Is.EqualTo(SyntaxKind.CompoundExpression));
+            var compExpr = (CompoundExpressionSyntax) forStatement.Initializer;
+            Assert.That(compExpr.Left.Kind, Is.EqualTo(SyntaxKind.SimpleAssignmentExpression));
+            Assert.That(compExpr.Right.IsMissing, Is.True);
+            Assert.That(compExpr.Right.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.False);
             Assert.That(sd.SemicolonToken, Is.Null);
             Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
@@ -331,7 +336,8 @@ namespace HlslTools.Tests.Parser
             Assert.That(sd.Body.Statements, Has.Count.EqualTo(1));
             Assert.That(sd.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ForStatement));
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
-            Assert.That(forStatement.Initializers, Has.Count.EqualTo(1));
+            Assert.That(forStatement.Initializer, Is.Not.Null);
+            Assert.That(forStatement.Initializer.Kind, Is.EqualTo(SyntaxKind.SimpleAssignmentExpression));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.False);
             Assert.That(sd.SemicolonToken, Is.Null);
             Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));

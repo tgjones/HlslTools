@@ -380,6 +380,7 @@ namespace HlslTools.Syntax
         ArrayInitializerExpression,
         StateInitializer,
         StateArrayInitializer,
+        CompoundExpression,
 
         // Binary expressions
         AddExpression,

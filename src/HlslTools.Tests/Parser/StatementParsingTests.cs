@@ -256,6 +256,7 @@ namespace HlslTools.Tests.Parser
             Assert.False(initializer.EqualsToken.IsMissing);
             Assert.NotNull(initializer.Value);
             Assert.AreEqual(SyntaxKind.ArrayInitializerExpression, initializer.Value.Kind);
+            Assert.AreEqual(2, ((ArrayInitializerExpressionSyntax) initializer.Value).Elements.Count);
             Assert.AreEqual("{b, c}", initializer.Value.ToString());
 
             Assert.NotNull(ds.SemicolonToken);
@@ -440,11 +441,11 @@ namespace HlslTools.Tests.Parser
             Assert.AreEqual(SyntaxKind.ForKeyword, fs.ForKeyword.Kind);
             Assert.NotNull(fs.OpenParenToken);
             Assert.Null(fs.Declaration);
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.IsNull(fs.Initializer);
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
-            Assert.AreEqual(0, fs.Incrementors.Count);
+            Assert.IsNull(fs.Incrementor);
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
         }
@@ -478,11 +479,11 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(initializer.Value);
             Assert.AreEqual("0", initializer.Value.ToString());
 
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.IsNull(fs.Initializer);
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
-            Assert.AreEqual(0, fs.Incrementors.Count);
+            Assert.IsNull(fs.Incrementor);
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
         }
@@ -525,11 +526,11 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(initializer.Value);
             Assert.AreEqual("1", initializer.Value.ToString());
 
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.IsNull(fs.Initializer);
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
-            Assert.AreEqual(0, fs.Incrementors.Count);
+            Assert.IsNull(fs.Incrementor);
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
         }
@@ -552,13 +553,14 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(fs.OpenParenToken);
 
             Assert.Null(fs.Declaration);
-            Assert.AreEqual(1, fs.Initializers.Count);
-            Assert.AreEqual("a = 0", fs.Initializers[0].ToString());
+            Assert.NotNull(fs.Initializer);
+            Assert.AreEqual(SyntaxKind.SimpleAssignmentExpression, fs.Initializer.Kind);
+            Assert.AreEqual("a = 0", fs.Initializer.ToString());
 
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
-            Assert.AreEqual(0, fs.Incrementors.Count);
+            Assert.IsNull(fs.Incrementor);
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
         }
@@ -581,14 +583,19 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(fs.OpenParenToken);
 
             Assert.Null(fs.Declaration);
-            Assert.AreEqual(2, fs.Initializers.Count);
-            Assert.AreEqual("a = 0", fs.Initializers[0].ToString());
-            Assert.AreEqual("b = 1", fs.Initializers[1].ToString());
+
+            Assert.NotNull(fs.Initializer);
+            Assert.AreEqual(SyntaxKind.CompoundExpression, fs.Initializer.Kind);
+            var compExpr = (CompoundExpressionSyntax) fs.Initializer;
+            Assert.AreEqual(SyntaxKind.SimpleAssignmentExpression, compExpr.Left.Kind);
+            Assert.AreEqual("a = 0", compExpr.Left.ToString());
+            Assert.AreEqual(SyntaxKind.SimpleAssignmentExpression, compExpr.Right.Kind);
+            Assert.AreEqual("b = 1", compExpr.Right.ToString());
 
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
-            Assert.AreEqual(0, fs.Incrementors.Count);
+            Assert.IsNull(fs.Incrementor);
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
         }
@@ -611,14 +618,14 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(fs.OpenParenToken);
 
             Assert.Null(fs.Declaration);
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.Null(fs.Initializer);
             Assert.NotNull(fs.FirstSemicolonToken);
 
             Assert.NotNull(fs.Condition);
             Assert.AreEqual("a", fs.Condition.ToString());
 
             Assert.NotNull(fs.SecondSemicolonToken);
-            Assert.AreEqual(0, fs.Incrementors.Count);
+            Assert.IsNull(fs.Incrementor);
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
         }
@@ -641,13 +648,14 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(fs.OpenParenToken);
 
             Assert.Null(fs.Declaration);
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.Null(fs.Initializer);
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
 
-            Assert.AreEqual(1, fs.Incrementors.Count);
-            Assert.AreEqual("a++", fs.Incrementors[0].ToString());
+            Assert.NotNull(fs.Incrementor);
+            Assert.AreEqual(SyntaxKind.PostIncrementExpression, fs.Incrementor.Kind);
+            Assert.AreEqual("a++", fs.Incrementor.ToString());
 
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
@@ -671,14 +679,18 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(fs.OpenParenToken);
 
             Assert.Null(fs.Declaration);
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.Null(fs.Initializer);
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.Null(fs.Condition);
             Assert.NotNull(fs.SecondSemicolonToken);
 
-            Assert.AreEqual(2, fs.Incrementors.Count);
-            Assert.AreEqual("a++", fs.Incrementors[0].ToString());
-            Assert.AreEqual("b++", fs.Incrementors[1].ToString());
+            Assert.NotNull(fs.Incrementor);
+            Assert.AreEqual(SyntaxKind.CompoundExpression, fs.Incrementor.Kind);
+            var compExpr = (CompoundExpressionSyntax) fs.Incrementor;
+            Assert.AreEqual(SyntaxKind.PostIncrementExpression, compExpr.Left.Kind);
+            Assert.AreEqual("a++", compExpr.Left.ToString());
+            Assert.AreEqual(SyntaxKind.PostIncrementExpression, compExpr.Right.Kind);
+            Assert.AreEqual("b++", compExpr.Right.ToString());
 
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);
@@ -713,7 +725,7 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(initializer.Value);
             Assert.AreEqual("0", initializer.Value.ToString());
 
-            Assert.AreEqual(0, fs.Initializers.Count);
+            Assert.Null(fs.Initializer);
 
             Assert.NotNull(fs.FirstSemicolonToken);
             Assert.NotNull(fs.Condition);
@@ -721,8 +733,9 @@ namespace HlslTools.Tests.Parser
 
             Assert.NotNull(fs.SecondSemicolonToken);
 
-            Assert.AreEqual(1, fs.Incrementors.Count);
-            Assert.AreEqual("a++", fs.Incrementors[0].ToString());
+            Assert.NotNull(fs.Incrementor);
+            Assert.AreEqual(SyntaxKind.PostIncrementExpression, fs.Incrementor.Kind);
+            Assert.AreEqual("a++", fs.Incrementor.ToString());
 
             Assert.NotNull(fs.CloseParenToken);
             Assert.NotNull(fs.Statement);

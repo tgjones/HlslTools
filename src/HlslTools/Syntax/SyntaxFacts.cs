@@ -1092,6 +1092,8 @@ namespace HlslTools.Syntax
         {
             switch (op)
             {
+                case SyntaxKind.CompoundExpression:
+                    return 1;
                 case SyntaxKind.SimpleAssignmentExpression:
                 case SyntaxKind.AddAssignmentExpression:
                 case SyntaxKind.SubtractAssignmentExpression:
@@ -1104,7 +1106,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.LeftShiftAssignmentExpression:
                 case SyntaxKind.RightShiftAssignmentExpression:
                 case SyntaxKind.ConditionalExpression:
-                    return 1;
+                    return 2;
                 case SyntaxKind.LogicalOrExpression:
                     return 3;
                 case SyntaxKind.LogicalAndExpression:

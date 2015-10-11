@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using HlslTools.Diagnostics;
 using HlslTools.Syntax;
@@ -10,6 +11,13 @@ namespace HlslTools.Parser
         public ExpressionSyntax ParseExpression()
         {
             return ParseSubExpression(0);
+        }
+
+        private enum ExpressionOperatorType
+        {
+            BinaryExpression,
+            AssignmentExpression,
+            CompoundExpression
         }
 
         private ExpressionSyntax ParseSubExpression(uint precedence)
@@ -42,20 +50,26 @@ namespace HlslTools.Parser
 
             while (true)
             {
-                // We either have a binary or assignment operator here, or we're finished.
+                // We either have a binary or assignment or compound operator here, or we're finished.
                 tk = Current.Kind;
 
-                var isAssignmentOperator = false;
+                ExpressionOperatorType operatorType;
                 if (SyntaxFacts.IsBinaryExpression(tk) 
                     && (!_greaterThanTokenIsNotOperator || tk != SyntaxKind.GreaterThanToken)
                     && ((tk != SyntaxKind.GreaterThanToken || !_allowGreaterThanTokenAroundRhsExpression) && Lookahead.Kind != SyntaxKind.SemiToken))
                 {
+                    operatorType = ExpressionOperatorType.BinaryExpression;
                     opKind = SyntaxFacts.GetBinaryExpression(tk);
                 }
                 else if (SyntaxFacts.IsAssignmentExpression(tk))
                 {
+                    operatorType = ExpressionOperatorType.AssignmentExpression;
                     opKind = SyntaxFacts.GetAssignmentExpression(tk);
-                    isAssignmentOperator = true;
+                }
+                else if (tk == SyntaxKind.CommaToken && _commaIsSeparatorStack.Peek() == false)
+                {
+                    operatorType = ExpressionOperatorType.CompoundExpression;
+                    opKind = SyntaxKind.CompoundExpression;
                 }
                 else
                 {
@@ -78,7 +92,7 @@ namespace HlslTools.Parser
                 var opToken = NextToken();
 
                 SyntaxToken lessThanToken = null;
-                if (isAssignmentOperator && _allowGreaterThanTokenAroundRhsExpression)
+                if (operatorType == ExpressionOperatorType.AssignmentExpression && _allowGreaterThanTokenAroundRhsExpression)
                     lessThanToken = NextTokenIf(SyntaxKind.LessThanToken);
 
                 var rightOperand = ParseSubExpression(newPrecedence);
@@ -87,10 +101,20 @@ namespace HlslTools.Parser
                 if (lessThanToken != null)
                     greaterThanToken = NextTokenIf(SyntaxKind.GreaterThanToken);
 
-                if (isAssignmentOperator)
-                    leftOperand = new AssignmentExpressionSyntax(opKind, leftOperand, opToken, lessThanToken, rightOperand, greaterThanToken);
-                else
-                    leftOperand = new BinaryExpressionSyntax(opKind, leftOperand, opToken, rightOperand);
+                switch (operatorType)
+                {
+                    case ExpressionOperatorType.BinaryExpression:
+                        leftOperand = new BinaryExpressionSyntax(opKind, leftOperand, opToken, rightOperand);
+                        break;
+                    case ExpressionOperatorType.AssignmentExpression:
+                        leftOperand = new AssignmentExpressionSyntax(opKind, leftOperand, opToken, lessThanToken, rightOperand, greaterThanToken);
+                        break;
+                    case ExpressionOperatorType.CompoundExpression:
+                        leftOperand = new CompoundExpressionSyntax(opKind, leftOperand, opToken, rightOperand);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
 
             var conditionalPrecedence = SyntaxFacts.GetOperatorPrecedence(SyntaxKind.ConditionalExpression);
@@ -126,7 +150,7 @@ namespace HlslTools.Parser
                     break;
                 case SyntaxKind.StringLiteralToken:
                 {
-                    var stringTokens = new List<SyntaxToken> { NextToken() };
+                    var stringTokens = new List<SyntaxToken> {NextToken()};
                     while (Current.Kind == SyntaxKind.StringLiteralToken)
                         stringTokens.Add(NextToken());
                     expr = new StringLiteralExpressionSyntax(stringTokens);
@@ -136,9 +160,7 @@ namespace HlslTools.Parser
                     expr = ParseCastOrParenthesizedExpression();
                     break;
                 default:
-                    if ((SyntaxFacts.IsPredefinedScalarType(tk) && tk != SyntaxKind.UnsignedKeyword && tk != SyntaxKind.VoidKeyword)
-                        || SyntaxFacts.IsPredefinedVectorType(tk)
-                        || SyntaxFacts.IsPredefinedMatrixType(tk))
+                    if ((SyntaxFacts.IsPredefinedScalarType(tk) && tk != SyntaxKind.UnsignedKeyword && tk != SyntaxKind.VoidKeyword) || SyntaxFacts.IsPredefinedVectorType(tk) || SyntaxFacts.IsPredefinedMatrixType(tk))
                     {
                         if (Lookahead.Kind == SyntaxKind.OpenParenToken)
                         {
@@ -164,7 +186,7 @@ namespace HlslTools.Parser
         {
             var type = ParseType(false);
 
-            return new NumericConstructorInvocationExpressionSyntax((NumericTypeSyntax)type, ParseParenthesizedArgumentList(true));
+            return new NumericConstructorInvocationExpressionSyntax((NumericTypeSyntax) type, ParseParenthesizedArgumentList(true));
         }
 
         private ExpressionSyntax ParsePostFixExpression(ExpressionSyntax expr)
@@ -181,10 +203,7 @@ namespace HlslTools.Parser
                         break;
 
                     case SyntaxKind.OpenBracketToken:
-                        expr = new ElementAccessExpressionSyntax(expr,
-                            Match(SyntaxKind.OpenBracketToken),
-                            ParseExpression(),
-                            Match(SyntaxKind.CloseBracketToken));
+                        expr = new ElementAccessExpressionSyntax(expr, Match(SyntaxKind.OpenBracketToken), ParseExpression(), Match(SyntaxKind.CloseBracketToken));
                         break;
 
                     case SyntaxKind.PlusPlusToken:
@@ -228,9 +247,18 @@ namespace HlslTools.Parser
             {
                 Reset(ref resetPoint);
                 var openParen = Match(SyntaxKind.OpenParenToken);
-                var expression = ParseSubExpression(0);
-                var closeParen = Match(SyntaxKind.CloseParenToken);
-                return new ParenthesizedExpressionSyntax(openParen, expression, closeParen);
+
+                try
+                {
+                    _commaIsSeparatorStack.Push(false);
+                    var expression = ParseSubExpression(0);
+                    var closeParen = Match(SyntaxKind.CloseParenToken);
+                    return new ParenthesizedExpressionSyntax(openParen, expression, closeParen);
+                }
+                finally
+                {
+                    _commaIsSeparatorStack.Pop();
+                }
             }
         }
 
@@ -263,8 +291,7 @@ namespace HlslTools.Parser
         {
             SyntaxToken leftParenToken, rightParenToken;
             SeparatedSyntaxList<ExpressionSyntax> arguments;
-            ParseArgumentList(SyntaxKind.OpenParenToken, SyntaxKind.CloseParenToken, atLeastOneArg,
-                out leftParenToken, out arguments, out rightParenToken);
+            ParseArgumentList(SyntaxKind.OpenParenToken, SyntaxKind.CloseParenToken, atLeastOneArg, out leftParenToken, out arguments, out rightParenToken);
 
             return new ArgumentListSyntax(leftParenToken, arguments, rightParenToken);
         }
@@ -277,12 +304,21 @@ namespace HlslTools.Parser
 
             if (atLeastOneArg || Current.Kind != closeKind)
             {
-                args.Add(ParseExpression());
+                _commaIsSeparatorStack.Push(true);
 
-                while (Current.Kind == SyntaxKind.CommaToken)
+                try
                 {
-                    args.Add(Match(SyntaxKind.CommaToken));
                     args.Add(ParseExpression());
+
+                    while (Current.Kind == SyntaxKind.CommaToken)
+                    {
+                        args.Add(Match(SyntaxKind.CommaToken));
+                        args.Add(ParseExpression());
+                    }
+                }
+                finally
+                {
+                    _commaIsSeparatorStack.Pop();
                 }
             }
 
@@ -324,11 +360,7 @@ namespace HlslTools.Parser
                 case SyntaxKind.CompileKeyword:
                     return true;
                 default:
-                    return SyntaxFacts.IsPrefixUnaryExpression(tk)
-                           || (SyntaxFacts.IsPredefinedType(Current) && tk != SyntaxKind.VoidKeyword && Lookahead.Kind == SyntaxKind.OpenParenToken)
-                           || SyntaxFacts.IsAnyUnaryExpression(tk)
-                           || SyntaxFacts.IsBinaryExpression(tk)
-                           || SyntaxFacts.IsAssignmentExpression(tk);
+                    return SyntaxFacts.IsPrefixUnaryExpression(tk) || (SyntaxFacts.IsPredefinedType(Current) && tk != SyntaxKind.VoidKeyword && Lookahead.Kind == SyntaxKind.OpenParenToken) || SyntaxFacts.IsAnyUnaryExpression(tk) || SyntaxFacts.IsBinaryExpression(tk) || SyntaxFacts.IsAssignmentExpression(tk);
             }
         }
 

@@ -130,6 +130,7 @@
     <Compile Include="Symbols\SymbolSet.cs" />
     <Compile Include="Syntax\AnnotationsSyntax.cs" />
     <Compile Include="Syntax\CompileExpressionSyntax.cs" />
+    <Compile Include="Syntax\CompoundExpressionSyntax.cs" />
     <Compile Include="Syntax\DeclarationNameSyntax.cs" />
     <Compile Include="Syntax\FunctionLikeMacroReference.cs" />
     <Compile Include="Syntax\IdentifierDeclarationNameSyntax.cs" />

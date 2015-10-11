@@ -252,6 +252,11 @@ namespace HlslTools.Syntax
             DefaultVisit(node);
         }
 
+        public virtual void VisitCompoundExpression(CompoundExpressionSyntax node)
+        {
+            DefaultVisit(node);
+        }
+
         public virtual void VisitConditionalExpression(ConditionalExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -743,6 +748,11 @@ namespace HlslTools.Syntax
         }
 
         public virtual T VisitBinaryExpression(BinaryExpressionSyntax node)
+        {
+            return DefaultVisit(node);
+        }
+
+        public virtual T VisitCompoundExpression(CompoundExpressionSyntax node)
         {
             return DefaultVisit(node);
         }

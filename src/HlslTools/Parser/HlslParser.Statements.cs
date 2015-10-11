@@ -345,12 +345,21 @@ namespace HlslTools.Parser
 
         private ExpressionSyntax ParseVariableInitializer()
         {
-            switch (Current.Kind)
+            _commaIsSeparatorStack.Push(true);
+
+            try
             {
-                case SyntaxKind.OpenBraceToken:
-                    return ParseArrayInitializer();
-                default:
-                    return ParseExpression();
+                switch (Current.Kind)
+                {
+                    case SyntaxKind.OpenBraceToken:
+                        return ParseArrayInitializer();
+                    default:
+                        return ParseExpression();
+                }
+            }
+            finally
+            {
+                _commaIsSeparatorStack.Pop();
             }
         }
 
@@ -603,8 +612,8 @@ namespace HlslTools.Parser
             var openParen = Match(SyntaxKind.OpenParenToken);
 
             var resetPoint = GetResetPoint();
-            var initializers = new List<SyntaxNode>();
-            var incrementors = new List<SyntaxNode>();
+            ExpressionSyntax initializer = null;
+            ExpressionSyntax incrementor = null;
 
             // Here can be either a declaration or an expression statement list.  Scan
             // for a declaration first.
@@ -622,7 +631,7 @@ namespace HlslTools.Parser
                 // Not a type followed by an identifier, so it must be an expression list.
                 Reset(ref resetPoint);
                 if (Current.Kind != SyntaxKind.SemiToken)
-                    ParseForStatementExpressionList(ref openParen, initializers);
+                    initializer = ParseExpression();
             }
 
             var semi = Match(SyntaxKind.SemiToken);
@@ -634,52 +643,14 @@ namespace HlslTools.Parser
             var semi2 = Match(SyntaxKind.SemiToken);
 
             if (Current.Kind != SyntaxKind.CloseParenToken)
-                ParseForStatementExpressionList(ref semi2, incrementors);
+                incrementor = ParseExpression();
 
             var closeParen = Match(SyntaxKind.CloseParenToken);
             var statement = ParseEmbeddedStatement();
 
             return new ForStatementSyntax(attributes, @for, openParen, decl,
-                new SeparatedSyntaxList<ExpressionSyntax>(initializers), 
-                semi, condition, semi2, 
-                new SeparatedSyntaxList<ExpressionSyntax>(incrementors),
-                closeParen, statement);
-        }
-
-        private void ParseForStatementExpressionList(ref SyntaxToken startToken, List<SyntaxNode> list)
-        {
-            while (Current.Kind != SyntaxKind.SemiToken && Current.Kind != SyntaxKind.CloseParenToken)
-            {
-                if (IsPossibleExpression())
-                {
-                    list.Add(ParseExpression());
-                    if (Current.Kind != SyntaxKind.SemiToken)
-                    {
-                        if (Current.Kind == SyntaxKind.CommaToken)
-                        {
-                            list.Add(Match(SyntaxKind.CommaToken));
-                        }
-                        else
-                        {
-                            var action = SkipBadTokens(
-                                p => p.Current.Kind != SyntaxKind.CommaToken,
-                                p => p.IsTerminator() || p.Current.Kind == SyntaxKind.CloseParenToken,
-                                SyntaxKind.CommaToken);
-                            if (action == PostSkipAction.Abort)
-                                break;
-                        }
-                    }
-                }
-                else
-                {
-                    var action = SkipBadTokens(
-                        p => !p.IsPossibleExpression() && p.Current.Kind != SyntaxKind.CloseParenToken,
-                        p => p.IsTerminator(),
-                        SyntaxKind.SemiToken);
-                    if (action == PostSkipAction.Abort)
-                        break;
-                }
-            }
+                initializer, semi, condition, semi2, 
+                incrementor, closeParen, statement);
         }
 
         private void ParseStatements(List<StatementSyntax> statements, bool stopOnSwitchSections)

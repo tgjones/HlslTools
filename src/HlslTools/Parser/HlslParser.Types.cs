@@ -123,12 +123,14 @@ namespace HlslTools.Parser
             ExpressionSyntax controlPoints;
             try
             {
+                _commaIsSeparatorStack.Push(true);
                 _greaterThanTokenIsNotOperator = true;
                 controlPoints = ParseExpression();
             }
             finally
             {
                 _greaterThanTokenIsNotOperator = false;
+                _commaIsSeparatorStack.Pop();
             }
 
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
@@ -199,12 +201,14 @@ namespace HlslTools.Parser
                 ExpressionSyntax samples;
                 try
                 {
+                    _commaIsSeparatorStack.Push(true);
                     _greaterThanTokenIsNotOperator = true;
                     samples = ParseExpression();
                 }
                 finally
                 {
                     _greaterThanTokenIsNotOperator = false;
+                    _commaIsSeparatorStack.Pop();
                 }
 
                 arguments.Add(comma);

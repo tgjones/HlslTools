@@ -343,9 +343,38 @@ namespace HlslTools.Tests.Parser
             Assert.AreEqual(SyntaxKind.ElementAccessExpression, parenExp.Expression.Kind);
         }
 
+        [Test]
+        public void TestCommaOperator()
+        {
+            var text = "a = 0, b = 1, c(1, 2, (3, 2))";
+            var expr = ParseExpression(text);
+
+            Assert.NotNull(expr);
+            Assert.AreEqual(SyntaxKind.CompoundExpression, expr.Kind);
+
+            var compoundExp = (CompoundExpressionSyntax)expr;
+            Assert.AreEqual(SyntaxKind.CompoundExpression, compoundExp.Left.Kind);
+            Assert.AreEqual(SyntaxKind.InvocationExpression, compoundExp.Right.Kind);
+
+            var invocationExpr = (InvocationExpressionSyntax) compoundExp.Right;
+            Assert.AreEqual(3, invocationExpr.ArgumentList.Arguments.Count);
+            Assert.AreEqual("1", invocationExpr.ArgumentList.Arguments[0].ToString());
+            Assert.AreEqual("2", invocationExpr.ArgumentList.Arguments[1].ToString());
+            Assert.AreEqual("(3, 2)", invocationExpr.ArgumentList.Arguments[2].ToString());
+
+            var leftCompoundExp = (CompoundExpressionSyntax)compoundExp.Left;
+            Assert.AreEqual(SyntaxKind.SimpleAssignmentExpression, leftCompoundExp.Left.Kind);
+            Assert.AreEqual(SyntaxKind.SimpleAssignmentExpression, leftCompoundExp.Right.Kind);
+        }
+
         private static ExpressionSyntax ParseExpression(string text)
         {
-            return SyntaxFactory.ParseExpression(text);
+            var expression = SyntaxFactory.ParseExpression(text);
+
+            Assert.AreEqual(0, expression.GetDiagnostics().Count());
+            Assert.AreEqual(text, expression.ToString());
+
+            return expression;
         }
     }
 }
