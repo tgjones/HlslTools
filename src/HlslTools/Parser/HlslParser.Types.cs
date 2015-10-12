@@ -465,6 +465,8 @@ namespace HlslTools.Parser
 
         protected IdentifierNameSyntax ParseIdentifier()
         {
+            if (_allowLinearAsIdentifier && Current.Kind == SyntaxKind.LinearKeyword)
+                return new IdentifierNameSyntax(Match(SyntaxKind.LinearKeyword).WithKind(SyntaxKind.IdentifierToken));
             return new IdentifierNameSyntax(Match(SyntaxKind.IdentifierToken));
         }
 

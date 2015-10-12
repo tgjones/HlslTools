@@ -160,6 +160,9 @@ namespace HlslTools.Parser
                     expr = ParseCastOrParenthesizedExpression();
                     break;
                 default:
+                    if (_allowLinearAsIdentifier && tk == SyntaxKind.LinearKeyword)
+                        goto case SyntaxKind.IdentifierToken;
+
                     if ((SyntaxFacts.IsPredefinedScalarType(tk) && tk != SyntaxKind.UnsignedKeyword && tk != SyntaxKind.VoidKeyword) || SyntaxFacts.IsPredefinedVectorType(tk) || SyntaxFacts.IsPredefinedMatrixType(tk))
                     {
                         if (Lookahead.Kind == SyntaxKind.OpenParenToken)
