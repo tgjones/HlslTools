@@ -74,7 +74,7 @@ namespace HlslTools.Parser
 
             var end = _charReader.Position;
             var kind = _kind;
-            var span = TextSpan.FromBounds(Text.Filename, _start, end);
+            var span = TextSpan.FromBounds(Text, _start, end);
             var text = Text.GetText(span);
             var diagnostics = _diagnostics.ToImmutableArray();
 

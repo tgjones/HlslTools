@@ -122,15 +122,9 @@ namespace HlslTools.Text
             get { return _text; }
         }
 
-        public TextSpan Span
-        {
-            get { return new TextSpan(_text.Filename, _start, _length); }
-        }
+        public TextSpan Span => new TextSpan(_text, _start, _length);
 
-        public int LineNumber
-        {
-            get { return _text.GetLineNumberFromPosition(_start); }
-        }
+        public int LineNumber => _text.GetLineNumberFromPosition(_start);
 
         public string GetText()
         {

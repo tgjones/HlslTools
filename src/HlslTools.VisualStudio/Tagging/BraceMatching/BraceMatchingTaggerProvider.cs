@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Composition;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -15,10 +16,14 @@ namespace HlslTools.VisualStudio.Tagging.BraceMatching
         [Import]
         public BraceMatcher BraceMatcher { get; set; }
 
+        [Import]
+        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
+
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<BraceMatchingTagger, T>(buffer,
-                () => new BraceMatchingTagger(buffer.GetBackgroundParser(), textView, BraceMatcher));
+                () => new BraceMatchingTagger(buffer.GetBackgroundParser(SourceTextFactory), textView, BraceMatcher),
+                SourceTextFactory);
         }
     }
 }

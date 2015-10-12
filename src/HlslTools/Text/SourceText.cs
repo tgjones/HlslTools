@@ -11,7 +11,7 @@
 
         public string GetText(int position, int length)
         {
-            return GetText(new TextSpan(Filename, position, length));
+            return GetText(new TextSpan(this, position, length));
         }
 
         public string GetText()

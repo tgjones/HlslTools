@@ -156,10 +156,10 @@ namespace HlslTools.Parser
         {
             var missingTokenSourceRange = new SourceRange(Current.FullSourceRange.Start, 0);
 
-            var missingTokenSpan = new TextSpan(Current.Span.Filename, Current.Span.Start, 0);
+            var missingTokenSpan = new TextSpan(Current.Span.SourceText, Current.Span.Start, 0);
             var leadingLocatedTrivia = Current.LeadingTrivia.OfType<LocatedNode>().FirstOrDefault();
             if (leadingLocatedTrivia != null)
-                missingTokenSpan = new TextSpan(leadingLocatedTrivia.Span.Filename, leadingLocatedTrivia.Span.Start, 0);
+                missingTokenSpan = new TextSpan(leadingLocatedTrivia.Span.SourceText, leadingLocatedTrivia.Span.Start, 0);
             
             var diagnosticSpan = GetDiagnosticTextSpanForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
@@ -186,7 +186,7 @@ namespace HlslTools.Parser
             {
                 var previousToken = _tokens[_tokenIndex - 1];
                 if (previousToken.TrailingTrivia.Any(x => x.Kind == SyntaxKind.EndOfLineTrivia))
-                    return new TextSpan(previousToken.Span.Filename, previousToken.Span.End, 2);
+                    return new TextSpan(previousToken.Span.SourceText, previousToken.Span.End, 2);
             }
 
             return Current.Span;

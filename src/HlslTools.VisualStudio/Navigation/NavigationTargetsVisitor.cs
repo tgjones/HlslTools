@@ -136,10 +136,11 @@ namespace HlslTools.VisualStudio.Navigation
             if (!node.GetFirstToken().Span.IsInRootFile)
                 yield break;
 
-            var firstDeclaratorTextSpan = TextSpan.FromBounds(null, node.Declaration.GetTextSpanRoot().Start, firstDeclarator.GetTextSpanRoot().End);
+            var declarationRootSpan = node.Declaration.GetTextSpanRoot();
+            var firstDeclaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, declarationRootSpan.Start, firstDeclarator.GetTextSpanRoot().End);
 
             if (firstDeclarator == lastDeclarator)
-                firstDeclaratorTextSpan = TextSpan.FromBounds(null, firstDeclaratorTextSpan.Start, node.GetTextSpanRoot().End);
+                firstDeclaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, firstDeclaratorTextSpan.Start, node.GetTextSpanRoot().End);
 
             yield return CreateTarget(firstDeclarator.Identifier, firstDeclarator.Identifier.Text, firstDeclaratorTextSpan, Glyph.Variable);
 
@@ -147,7 +148,7 @@ namespace HlslTools.VisualStudio.Navigation
             {
                 var declaratorTextSpan = declarator.GetTextSpanRoot();
                 if (declarator == lastDeclarator)
-                    declaratorTextSpan = TextSpan.FromBounds(null, declaratorTextSpan.Start, node.GetTextSpanRoot().End);
+                    declaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, declaratorTextSpan.Start, node.GetTextSpanRoot().End);
                 yield return CreateTarget(declarator.Identifier, declarator.Identifier.Text, declaratorTextSpan, Glyph.Variable);
             }
         }

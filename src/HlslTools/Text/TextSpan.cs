@@ -4,29 +4,31 @@ namespace HlslTools.Text
 {
     public struct TextSpan : IEquatable<TextSpan>
     {
-        public static readonly TextSpan None = new TextSpan(null, -1, 0);
+        public static readonly TextSpan None = new TextSpan(SourceText.From(string.Empty), -1, 0);
 
-        public TextSpan(string filename, int start, int length)
+        public TextSpan(SourceText sourceText, int start, int length)
         {
-            IsInRootFile = filename == null;
-            Filename = filename;
+            SourceText = sourceText;
+            IsInRootFile = sourceText.Filename == null;
+            Filename = sourceText.Filename;
             Start = start;
             End = Start + length;
             Length = length;
         }
 
+        public readonly SourceText SourceText;
         public readonly bool IsInRootFile;
         public readonly string Filename;
         public readonly int Start;
         public readonly int End;
         public readonly int Length;
 
-        public static TextSpan FromBounds(string filename, int start, int end)
+        public static TextSpan FromBounds(SourceText sourceText, int start, int end)
         {
             if (end < start)
                 throw new ArgumentOutOfRangeException();
             var length = end - start;
-            return new TextSpan(filename, start, length);
+            return new TextSpan(sourceText, start, length);
         }
 
         public bool Contains(int position)

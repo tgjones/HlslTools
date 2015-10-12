@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Glyphs;
+using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio.Language.NavigateTo.Interfaces;
 using Microsoft.VisualStudio.Text.Projection;
 
@@ -15,9 +16,12 @@ namespace HlslTools.VisualStudio.Navigation.NavigateTo
         [Import]
         public DispatcherGlyphService DispatcherGlyphService { get; set; }
 
+        [Import]
+        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
+
         public bool TryCreateNavigateToItemProvider(IServiceProvider serviceProvider, out INavigateToItemProvider provider)
         {
-            provider = new NavigateToItemProvider(BufferGraphFactoryService, this, DispatcherGlyphService, serviceProvider);
+            provider = new NavigateToItemProvider(BufferGraphFactoryService, this, DispatcherGlyphService, serviceProvider, SourceTextFactory);
             return true;
         }
 

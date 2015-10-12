@@ -23,16 +23,16 @@ namespace HlslTools.VisualStudio.Util.Extensions
                 () => new VisualStudioSourceTextContainer(textBuffer));
         }
 
-        public static IIncludeFileSystem GetIncludeFileSystem(this ITextBuffer textBuffer)
+        public static IIncludeFileSystem GetIncludeFileSystem(this ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(IncludeFileSystemKey,
-                () => new VisualStudioFileSystem(textBuffer.GetTextContainer()));
+                () => new VisualStudioFileSystem(textBuffer.GetTextContainer(), sourceTextFactory));
         }
 
-        public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer)
+        public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(BackgroundParserKey,
-                () => new BackgroundParser(textBuffer));
+                () => new BackgroundParser(textBuffer, sourceTextFactory));
         }
 
         public static SyntaxTagger GetSyntaxTagger(this ITextBuffer textBuffer)
@@ -40,21 +40,21 @@ namespace HlslTools.VisualStudio.Util.Extensions
             return (SyntaxTagger) textBuffer.Properties.GetProperty(typeof(SyntaxTagger));
         }
 
-        public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, CancellationToken cancellationToken)
+        public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken)
         {
-            var sourceText = new VisualStudioSourceText(snapshot);
+            var sourceText = snapshot.ToSourceText();
 
             var options = new ParserOptions();
             options.PreprocessorDefines.Add("__INTELLISENSE__");
 
-            var fileSystem = snapshot.TextBuffer.GetIncludeFileSystem();
+            var fileSystem = snapshot.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
 
             return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
         }
 
-        public static SemanticModel GetSemanticModel(this ITextSnapshot snapshot, CancellationToken cancellationToken)
+        public static SemanticModel GetSemanticModel(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken)
         {
-            var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+            var syntaxTree = snapshot.GetSyntaxTree(sourceTextFactory, cancellationToken);
             var compilation = new Compilation.Compilation(syntaxTree);
             return compilation.GetSemanticModel();
         }

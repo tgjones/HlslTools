@@ -6,11 +6,11 @@ namespace HlslTools.VisualStudio.Text
 {
     internal sealed class VisualStudioSourceText : SourceText
     {
-        public VisualStudioSourceText(ITextSnapshot snapshot)
+        public VisualStudioSourceText(ITextSnapshot snapshot, string filename)
         {
             Snapshot = snapshot;
             Length = Snapshot.Length;
-            Filename = null; // TODO: For now, the root file has its Filename set to null.
+            Filename = filename;
         }
 
         public override string GetText(TextSpan textSpan)

@@ -185,7 +185,7 @@ namespace HlslTools.Parser
             ReadToken();
             var end = _charReader.Position;
             var kind = _kind;
-            var span = TextSpan.FromBounds(Text.Filename, _start, end);
+            var span = TextSpan.FromBounds(Text, _start, end);
             var text = Text.GetText(span);
             var diagnostics = _diagnostics.ToImmutableArray();
 
@@ -203,9 +203,9 @@ namespace HlslTools.Parser
             return new SourceRange(new SourceLocation(_currentFileSegmentAbsolutePosition + span.Start - FileSegments.Last().Start), span.Length);
         }
 
-        private TextSpan CurrentSpan => TextSpan.FromBounds(Text.Filename, _start, _charReader.Position);
+        private TextSpan CurrentSpan => TextSpan.FromBounds(Text, _start, _charReader.Position);
 
-        private TextSpan CurrentSpanStart => TextSpan.FromBounds(Text.Filename, _start, Math.Min(_start + 2, Text.Length));
+        private TextSpan CurrentSpanStart => TextSpan.FromBounds(Text, _start, Math.Min(_start + 2, Text.Length));
 
         private void ReadTrivia(List<SyntaxNode> target, bool isTrailing)
         {
@@ -402,7 +402,7 @@ namespace HlslTools.Parser
         private SyntaxTrivia CreateDisabledText()
         {
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text.Filename, _start, end);
+            var span = TextSpan.FromBounds(Text, _start, end);
             var text = Text.GetText(span);
             return new SyntaxTrivia(SyntaxKind.DisabledTextTrivia, text, MakeAbsolute(span), span, ImmutableArray<Diagnostic>.Empty);
         }
@@ -525,7 +525,7 @@ namespace HlslTools.Parser
         {
             var start = _start;
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text.Filename, start, end);
+            var span = TextSpan.FromBounds(Text, start, end);
             var text = Text.GetText(span);
             var diagnostics = _diagnostics.ToImmutableArray();
             var trivia = new SyntaxTrivia(kind, text, MakeAbsolute(span), span, diagnostics);
@@ -1105,7 +1105,7 @@ namespace HlslTools.Parser
             }
 
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text.Filename, start, end);
+            var span = TextSpan.FromBounds(Text, start, end);
             var text = Text.GetText(span);
 
             _kind = SyntaxFacts.GetKeywordKind(text);

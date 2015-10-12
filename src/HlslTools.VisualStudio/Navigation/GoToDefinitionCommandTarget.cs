@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.Navigation.GoToDefinitionProviders;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio;
@@ -19,13 +20,15 @@ namespace HlslTools.VisualStudio.Navigation
         private readonly IWpfTextView _textView;
         private readonly GoToDefinitionProviderService _goToDefinitionProviderService;
         private readonly SVsServiceProvider _serviceProvider;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
-        public GoToDefinitionCommandTarget(IVsTextView adapter, IWpfTextView textView, GoToDefinitionProviderService goToDefinitionProviderService, SVsServiceProvider serviceProvider)
+        public GoToDefinitionCommandTarget(IVsTextView adapter, IWpfTextView textView, GoToDefinitionProviderService goToDefinitionProviderService, SVsServiceProvider serviceProvider, VisualStudioSourceTextFactory sourceTextFactory)
             : base(adapter, textView, VSConstants.VSStd97CmdID.GotoDefn)
         {
             _textView = textView;
             _goToDefinitionProviderService = goToDefinitionProviderService;
             _serviceProvider = serviceProvider;
+            _sourceTextFactory = sourceTextFactory;
         }
 
         protected override bool IsEnabled(VSConstants.VSStd97CmdID commandId)
@@ -47,7 +50,7 @@ namespace HlslTools.VisualStudio.Navigation
             SemanticModel semanticModel;
             try
             {
-                semanticModel = await System.Threading.Tasks.Task.Run(() => pos.Snapshot.GetSemanticModel(CancellationToken.None));
+                semanticModel = await System.Threading.Tasks.Task.Run(() => pos.Snapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
             }
             catch (Exception ex)
             {

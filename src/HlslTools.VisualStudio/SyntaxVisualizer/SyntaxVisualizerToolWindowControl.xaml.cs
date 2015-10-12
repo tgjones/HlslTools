@@ -8,6 +8,7 @@ using System.Windows.Media;
 using System.Windows.Threading;
 using HlslTools.Syntax;
 using HlslTools.Text;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio;
@@ -20,6 +21,7 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
     public sealed partial class SyntaxVisualizerToolWindowControl : UserControl, IVsRunningDocTableEvents, IDisposable
     {
         private readonly TimeSpan _typingTimerTimeout = TimeSpan.FromMilliseconds(300.0);
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         private IVsRunningDocumentTable _runningDocumentTable;
         private uint _runningDocumentTableCookie;
@@ -46,6 +48,9 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
         {
             InitializeComponent();
             InitializeRunningDocTable();
+
+            var componentModel = HlslToolsPackage.Instance.AsVsServiceProvider().GetComponentModel();
+            _sourceTextFactory = componentModel.GetService<VisualStudioSourceTextFactory>();
         }
 
         private void InitializeRunningDocTable()
@@ -179,7 +184,7 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
 
             try
             {
-                _activeSyntaxTree = await Task.Run(() => currentSnapshot.GetSyntaxTree(CancellationToken.None));
+                _activeSyntaxTree = await Task.Run(() => currentSnapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None));
             }
             catch (Exception ex)
             {
@@ -195,8 +200,8 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
         {
             if (!IsVisible || _activeWpfTextView == null)
                 return;
-            var span = _activeWpfTextView.Selection.StreamSelectionSpan.SnapshotSpan.Span;
-            NavigateToBestMatch(span);
+            var snapshotSpan = _activeWpfTextView.Selection.StreamSelectionSpan.SnapshotSpan;
+            NavigateToBestMatch(snapshotSpan);
         }
 
         private void DisplaySyntaxTree()
@@ -232,12 +237,12 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
             items.Add(treeViewItem);
         }
 
-        private void NavigateToBestMatch(Span span)
+        private void NavigateToBestMatch(SnapshotSpan snapshotSpan)
         {
             if (!_isNavigatingFromTreeToSource && _activeSyntaxTree != null)
             {
                 _isNavigatingFromSourceToTree = true;
-                var sourceRange = _activeSyntaxTree.MapRootFileRange(new TextSpan(null, span.Start, span.Length));
+                var sourceRange = _activeSyntaxTree.MapRootFileRange(new TextSpan(snapshotSpan.Snapshot.ToSourceText(), snapshotSpan.Span.Start, snapshotSpan.Span.Length));
                 NavigateToBestMatch((TreeViewItem) TreeView.Items[0], sourceRange);
                 _isNavigatingFromSourceToTree = false;
             }

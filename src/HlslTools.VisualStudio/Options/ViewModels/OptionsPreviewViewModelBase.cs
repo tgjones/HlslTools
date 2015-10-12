@@ -64,8 +64,9 @@ namespace HlslTools.VisualStudio.Options.ViewModels
             const string start = "//[";
             const string end = "//]";
 
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(text));
-            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(null, 0, text.Length), _optionsService.FormattingOptions);
+            var sourceText = SourceText.From(text);
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(sourceText);
+            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(sourceText, 0, text.Length), _optionsService.FormattingOptions);
             var formatted = Formatter.ApplyEdits(text, edits);
 
             var textBuffer = _textBufferFactoryService.CreateTextBuffer(formatted, _contentType);

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using HlslTools.Diagnostics;
 using HlslTools.Text;
+using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -20,9 +22,13 @@ namespace HlslTools.VisualStudio.ErrorList
             _textDocument = textDocument;
         }
 
-        public void AddError(ITextSnapshot snapshot, Diagnostic diagnostic, TextSpan span)
+        public void AddError(Diagnostic diagnostic, TextSpan span)
         {
-            var line = snapshot.GetLineFromPosition(span.Start);
+            var sourceText = span.SourceText as VisualStudioSourceText;
+            if (sourceText == null)
+                return;
+
+            var line = sourceText.Snapshot.GetLineFromPosition(span.Start);
 
             var task = new ErrorTask
             {

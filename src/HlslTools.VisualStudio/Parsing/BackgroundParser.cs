@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 
@@ -10,6 +11,7 @@ namespace HlslTools.VisualStudio.Parsing
     internal sealed class BackgroundParser : IDisposable
     {
         private readonly ITextBuffer _textBuffer;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private readonly CancellationTokenSource _shutdownToken;
 
         private readonly object _lockObject = new object();
@@ -19,9 +21,10 @@ namespace HlslTools.VisualStudio.Parsing
 
         private readonly SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSyntaxTreeHandler>> _syntaxTreeAvailableEventHandlers;
 
-        public BackgroundParser(ITextBuffer textBuffer)
+        public BackgroundParser(ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory)
         {
             _textBuffer = textBuffer;
+            _sourceTextFactory = sourceTextFactory;
 
             _shutdownToken = new CancellationTokenSource();
 
@@ -74,7 +77,7 @@ namespace HlslTools.VisualStudio.Parsing
                     {
                         var cancellationToken = cancellationTokenSource.Token;
 
-                        var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+                        var syntaxTree = snapshot.GetSyntaxTree(_sourceTextFactory, cancellationToken);
 
                         cancellationToken.ThrowIfCancellationRequested();
 

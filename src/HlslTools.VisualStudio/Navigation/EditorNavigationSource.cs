@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Glyphs;
 using HlslTools.VisualStudio.Parsing;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 
@@ -14,12 +15,14 @@ namespace HlslTools.VisualStudio.Navigation
     {
         private readonly ITextBuffer _textBuffer;
         private readonly DispatcherGlyphService _glyphService;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private List<EditorTypeNavigationTarget> _navigationTargets;
 
-        public EditorNavigationSource(ITextBuffer textBuffer, BackgroundParser backgroundParser, DispatcherGlyphService glyphService)
+        public EditorNavigationSource(ITextBuffer textBuffer, BackgroundParser backgroundParser, DispatcherGlyphService glyphService, VisualStudioSourceTextFactory sourceTextFactory)
         {
             _textBuffer = textBuffer;
             _glyphService = glyphService;
+            _sourceTextFactory = sourceTextFactory;
 
             _navigationTargets = new List<EditorTypeNavigationTarget>();
 
@@ -31,7 +34,7 @@ namespace HlslTools.VisualStudio.Navigation
             await Task.Run(async () =>
             {
                 var snapshot = _textBuffer.CurrentSnapshot;
-                var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, snapshot.GetSyntaxTree(CancellationToken.None));
+                var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, snapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None));
                 await InvalidateTargets(snapshotSyntaxTree, CancellationToken.None);
             });
         }

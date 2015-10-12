@@ -18,7 +18,7 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
 
         protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, Diagnostic diagnostic, bool squigglesEnabled)
         {
-            _errorListHelper.AddError(snapshot, diagnostic, diagnostic.Span);
+            _errorListHelper.AddError(diagnostic, diagnostic.Span);
 
             if (!diagnostic.Span.IsInRootFile || !squigglesEnabled)
                 return null;

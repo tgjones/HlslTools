@@ -6,6 +6,7 @@ using HlslTools.Formatting;
 using HlslTools.Syntax;
 using HlslTools.Text;
 using HlslTools.VisualStudio.Options;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
@@ -15,10 +16,10 @@ namespace HlslTools.VisualStudio.Formatting
 {
     internal static class FormattingExtensions
     {
-        public static void Format(this ITextBuffer buffer, TextSpan span, IOptionsService optionsService)
+        public static void Format(this ITextBuffer buffer, TextSpan span, IOptionsService optionsService, VisualStudioSourceTextFactory sourceTextFactory)
         {
             SyntaxTree syntaxTree;
-            if (!TryGetSyntaxTree(buffer, out syntaxTree))
+            if (!TryGetSyntaxTree(buffer, sourceTextFactory, out syntaxTree))
                 return;
             var edits = Formatter.GetEdits(syntaxTree,
                 span,
@@ -27,13 +28,13 @@ namespace HlslTools.VisualStudio.Formatting
         }
 
         // https://github.com/Microsoft/nodejstools/blob/master/Nodejs/Product/Nodejs/EditFilter.cs#L866
-        public static void FormatAfterTyping(this ITextView textView, char ch, IOptionsService optionsService)
+        public static void FormatAfterTyping(this ITextView textView, char ch, IOptionsService optionsService, VisualStudioSourceTextFactory sourceTextFactory)
         {
             if (!ShouldFormatOnCharacter(ch, optionsService))
                 return;
 
             SyntaxTree syntaxTree;
-            if (!TryGetSyntaxTree(textView.TextBuffer, out syntaxTree))
+            if (!TryGetSyntaxTree(textView.TextBuffer, sourceTextFactory, out syntaxTree))
                 return;
 
             var edits = Formatter.GetEditsAfterKeystroke(syntaxTree,
@@ -54,11 +55,11 @@ namespace HlslTools.VisualStudio.Formatting
             return false;
         }
 
-        private static bool TryGetSyntaxTree(ITextBuffer textBuffer, out SyntaxTree syntaxTree)
+        private static bool TryGetSyntaxTree(ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory, out SyntaxTree syntaxTree)
         {
             try
             {
-                var syntaxTreeTask = Task.Run(() => textBuffer.CurrentSnapshot.GetSyntaxTree(CancellationToken.None));
+                var syntaxTreeTask = Task.Run(() => textBuffer.CurrentSnapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None));
 
                 if (!syntaxTreeTask.Wait(TimeSpan.FromSeconds(5)))
                 {

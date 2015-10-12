@@ -5,6 +5,7 @@ using HlslTools.Compilation;
 using HlslTools.Syntax;
 using HlslTools.Text;
 using HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders;
+using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio.Text;
 
 namespace HlslTools.VisualStudio.IntelliSense.Completion
@@ -16,7 +17,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
             var rootFilePosition = semanticModel.Compilation.SyntaxTree.MapRootFilePosition(position);
             var token = GetIdentifierOrKeywordAtPosition(syntaxTree.Root, rootFilePosition);
-            var applicableSpan = token?.Span ?? new TextSpan(null, position, 0);
+            var applicableSpan = token?.Span ?? new TextSpan(textSnapshot.ToSourceText(), position, 0);
 
             var items = providers.SelectMany(p => p.GetItems(semanticModel, rootFilePosition));
             var sortedItems = items.OrderBy(c => c.DisplayText).ToImmutableArray();

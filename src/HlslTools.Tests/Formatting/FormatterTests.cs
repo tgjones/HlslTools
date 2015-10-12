@@ -1644,7 +1644,7 @@ float f3;
             // Arrange.
             var syntaxTree = parse(unformattedText);
             if (textSpan == null)
-                textSpan = new TextSpan(null, 0, unformattedText.Length);
+                textSpan = new TextSpan(syntaxTree.Text, 0, unformattedText.Length);
             if (options == null)
                 options = new FormattingOptions();
 

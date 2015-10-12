@@ -343,6 +343,7 @@
     <Compile Include="Tagging\Squiggles\SyntaxErrorTagger.cs" />
     <Compile Include="Tagging\Squiggles\SyntaxErrorTaggerProvider.cs" />
     <Compile Include="Text\VisualStudioFileSystem.cs" />
+    <Compile Include="Text\VisualStudioSourceTextFactory.cs" />
     <Compile Include="Text\VisualStudioTextExtensions.cs" />
     <Compile Include="Text\VisualStudioSourceText.cs" />
     <Compile Include="Parsing\BackgroundParser.cs" />

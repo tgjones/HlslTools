@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Threading;
 using HlslTools.VisualStudio.Options;
+using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
@@ -15,11 +16,13 @@ namespace HlslTools.VisualStudio.Formatting
         private IOleCommandTarget _nextCommandTarget;
         private readonly IWpfTextView _textView;
         private readonly IOptionsService _optionsService;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
-        public FormatCommandTarget(IVsTextView adapter, IWpfTextView textView, IOptionsService optionsService)
+        public FormatCommandTarget(IVsTextView adapter, IWpfTextView textView, IOptionsService optionsService, VisualStudioSourceTextFactory sourceTextFactory)
         {
             _textView = textView;
             _optionsService = optionsService;
+            _sourceTextFactory = sourceTextFactory;
 
             Dispatcher.CurrentDispatcher.InvokeAsync(() =>
             {
@@ -87,7 +90,7 @@ namespace HlslTools.VisualStudio.Formatting
 
         private void FormatSpan(int start, int length)
         {
-            _textView.TextBuffer.Format(new TextSpan(null, start, length), _optionsService);
+            _textView.TextBuffer.Format(new TextSpan(_textView.TextSnapshot.ToSourceText(), start, length), _optionsService, _sourceTextFactory);
         }
 
         private int Paste(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)
@@ -145,7 +148,7 @@ namespace HlslTools.VisualStudio.Formatting
             {
                 case '}':
                 case ';':
-                    _textView.FormatAfterTyping(ch, _optionsService);
+                    _textView.FormatAfterTyping(ch, _optionsService, _sourceTextFactory);
                     break;
             }
 

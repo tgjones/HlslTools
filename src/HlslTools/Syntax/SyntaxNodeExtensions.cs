@@ -68,7 +68,7 @@ namespace HlslTools.Syntax
 #endif
 
             return TextSpan.FromBounds(
-                firstToken.Span.Filename,
+                firstToken.Span.SourceText,
                 firstToken.Span.Start, 
                 lastToken.Span.End);
         }
@@ -87,7 +87,7 @@ namespace HlslTools.Syntax
                 return TextSpan.None;
 
             return TextSpan.FromBounds(
-                firstToken.Span.Filename,
+                firstToken.Span.SourceText,
                 firstToken.Span.Start,
                 lastToken.Span.End);
         }
@@ -106,7 +106,7 @@ namespace HlslTools.Syntax
                 return TextSpan.None;
 
             return TextSpan.FromBounds(
-                null,
+                firstToken.Span.SourceText,
                 firstToken.Span.Start,
                 lastToken.Span.End);
         }

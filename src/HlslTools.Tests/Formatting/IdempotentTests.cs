@@ -32,7 +32,7 @@ namespace HlslTools.Tests.Formatting
 
         private static string FormatCode(string sourceCode, SyntaxTree syntaxTree)
         {
-            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(null, 0, sourceCode.Length), new FormattingOptions());
+            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(syntaxTree.Text, 0, sourceCode.Length), new FormattingOptions());
             return Formatter.ApplyEdits(sourceCode, edits);
         }
     }

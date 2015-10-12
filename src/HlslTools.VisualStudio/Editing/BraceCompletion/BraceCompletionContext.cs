@@ -7,6 +7,7 @@ using System.Linq;
 using HlslTools.VisualStudio.Formatting;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Tagging.Classification;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
@@ -23,13 +24,18 @@ namespace HlslTools.VisualStudio.Editing.BraceCompletion
         private readonly ITextBufferUndoManagerProvider _undoManager;
         private readonly HlslClassificationService _classificationService;
         private readonly IOptionsService _optionsService;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
-        public BraceCompletionContext(ISmartIndentationService smartIndentationService, ITextBufferUndoManagerProvider undoManager, HlslClassificationService classificationService, IOptionsService optionsService)
+        public BraceCompletionContext(
+            ISmartIndentationService smartIndentationService, ITextBufferUndoManagerProvider undoManager, 
+            HlslClassificationService classificationService, IOptionsService optionsService,
+            VisualStudioSourceTextFactory sourceTextFactory)
         {
             _smartIndentationService = smartIndentationService;
             _undoManager = undoManager;
             _classificationService = classificationService;
             _optionsService = optionsService;
+            _sourceTextFactory = sourceTextFactory;
         }
 
         public void Start(IBraceCompletionSession session)
@@ -127,7 +133,9 @@ namespace HlslTools.VisualStudio.Editing.BraceCompletion
                     startPosition--;
             }
 
-            session.SubjectBuffer.Format(TextSpan.FromBounds(null, Math.Max(startPosition, 0), endPosition), _optionsService);
+            session.SubjectBuffer.Format(
+                TextSpan.FromBounds(snapshot.ToSourceText(), Math.Max(startPosition, 0), endPosition),
+                _optionsService, _sourceTextFactory);
         }
 
         private void PutCaretOnLine(IBraceCompletionSession session, int lineNumber)

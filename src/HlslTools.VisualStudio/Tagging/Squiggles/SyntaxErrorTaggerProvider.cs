@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.ErrorList;
 using HlslTools.VisualStudio.Options;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -17,6 +18,9 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
         [Import]
         public IOptionsService OptionsService { get; set; }
 
+        [Import]
+        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
+
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             var errorListHelper = buffer.GetErrorListHelper();
@@ -24,7 +28,8 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
                 return null;
 
             return AsyncTaggerUtility.CreateTagger<SyntaxErrorTagger, T>(buffer,
-                () => new SyntaxErrorTagger(textView, buffer.GetBackgroundParser(), errorListHelper, OptionsService));
+                () => new SyntaxErrorTagger(textView, buffer.GetBackgroundParser(SourceTextFactory), errorListHelper, OptionsService),
+                SourceTextFactory);
         }
     }
 }

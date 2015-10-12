@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Tagging;
 using HlslTools.VisualStudio.Tests.Support;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -20,11 +21,12 @@ namespace HlslTools.VisualStudio.Tests.Tagging
         public async Task CanDoTagging(string testFile)
         {
             // Arrange.
+            var sourceTextFactory = Container.GetExportedValue<VisualStudioSourceTextFactory>();
             var sourceCode = File.ReadAllText(testFile);
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
-            var backgroundParser = new BackgroundParser(textBuffer);
+            var backgroundParser = new BackgroundParser(textBuffer, sourceTextFactory);
             var snapshot = textBuffer.CurrentSnapshot;
-            var syntaxTree = snapshot.GetSyntaxTree(CancellationToken.None);
+            var syntaxTree = snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None);
             var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, syntaxTree);
             var tagger = CreateTagger(backgroundParser, snapshot);
 

@@ -19,15 +19,17 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
         private readonly ITextView _textView;
         private readonly IQuickInfoBroker _quickInfoBroker;
         private readonly QuickInfoModelProviderService _quickInfoModelProviderService;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         private QuickInfoModel _model;
         private IQuickInfoSession _session;
 
-        public QuickInfoManager(ITextView textView, IQuickInfoBroker quickInfoBroker, QuickInfoModelProviderService quickInfoModelProviderService)
+        public QuickInfoManager(ITextView textView, IQuickInfoBroker quickInfoBroker, QuickInfoModelProviderService quickInfoModelProviderService, VisualStudioSourceTextFactory sourceTextFactory)
         {
             _textView = textView;
             _quickInfoBroker = quickInfoBroker;
             _quickInfoModelProviderService = quickInfoModelProviderService;
+            _sourceTextFactory = sourceTextFactory;
         }
 
         public async void TriggerQuickInfo(int offset)
@@ -35,7 +37,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             SemanticModel semanticModel;
             try
             {
-                semanticModel = await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.GetSemanticModel(CancellationToken.None));
+                semanticModel = await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
             }
             catch (OperationCanceledException)
             {

@@ -9,6 +9,7 @@ namespace HlslTools.Formatting
 {
     internal sealed class FormattingVisitor : SyntaxWalker
     {
+        private readonly SourceText _rootSourceText;
         private readonly List<LocatedNode> _locatedNodes;
         private readonly Dictionary<LocatedNode, int> _locatedNodeIndexLookup;
 
@@ -22,6 +23,7 @@ namespace HlslTools.Formatting
 
         public FormattingVisitor(SyntaxTree tree, TextSpan spanToFormat, FormattingOptions options)
         {
+            _rootSourceText = spanToFormat.SourceText;
             _locatedNodes = tree.Root.GetRootLocatedNodes().ToList();
 
             _locatedNodeIndexLookup = new Dictionary<LocatedNode, int>();
@@ -37,11 +39,11 @@ namespace HlslTools.Formatting
         {
             var firstLocatedNodeIndex = _locatedNodes.FindIndex(x => x.Span.Start >= span.Start);
             var previousEndOfLineNode = FindPreviousEndOfLine(firstLocatedNodeIndex);
-            var expandedSpan = TextSpan.FromBounds(null, previousEndOfLineNode?.Span.End ?? 0, span.End);
+            var expandedSpan = TextSpan.FromBounds(span.SourceText, previousEndOfLineNode?.Span.End ?? 0, span.End);
 
             var lastLocatedNodeIndex = _locatedNodes.FindIndex(x => x.Span.End >= span.End);
             var nextEndOfLineNode = FindNextEndOfLine(lastLocatedNodeIndex);
-            expandedSpan = TextSpan.FromBounds(null, expandedSpan.Start, nextEndOfLineNode?.Span.End ?? _locatedNodes.Last().Span.End);
+            expandedSpan = TextSpan.FromBounds(span.SourceText, expandedSpan.Start, nextEndOfLineNode?.Span.End ?? _locatedNodes.Last().Span.End);
 
             return expandedSpan;
         }
@@ -1487,7 +1489,7 @@ namespace HlslTools.Formatting
 
             if (previousLocatedNode.Kind != SyntaxKind.WhitespaceTrivia)
             {
-                MaybeReplaceText(new TextSpan(null, previousLocatedNode.Span.End, 0), whitespace);
+                MaybeReplaceText(new TextSpan(_rootSourceText, previousLocatedNode.Span.End, 0), whitespace);
                 return;
             }
 
@@ -1519,7 +1521,7 @@ namespace HlslTools.Formatting
                     default:
                         // hit a newline, replace the indentation with new indentation
                         MaybeReplaceText(
-                            TextSpan.FromBounds(null, previousNode.Span.End, openBraceToken.Span.Start), 
+                            TextSpan.FromBounds(_rootSourceText, previousNode.Span.End, openBraceToken.Span.Start), 
                             (!OnSameLine(nodeIndex, openBraceTokenIndex) && !previousNode.IsToken)
                                 ? GetBraceNewLineFormatting(ReplaceWith.InsertNewLineAndIndentation)
                                 : GetBraceNewLineFormatting(braceOnNewLine));
@@ -1527,7 +1529,7 @@ namespace HlslTools.Formatting
                 }
             }
             MaybeReplaceText(
-                new TextSpan(null, 0, openBraceToken.Span.Start),
+                new TextSpan(_rootSourceText, 0, openBraceToken.Span.Start),
                 GetBraceNewLineFormatting(braceOnNewLine));
         }
 
@@ -1580,8 +1582,8 @@ namespace HlslTools.Formatting
             }
             else if (!string.IsNullOrEmpty(whitespace))
             {
-                MaybeReplaceText(new TextSpan(null, token.Span.End, 0), whitespace);
-                previousWhitespaceSpan = new TextSpan(null, token.Span.End, whitespace.Length);
+                MaybeReplaceText(new TextSpan(_rootSourceText, token.Span.End, 0), whitespace);
+                previousWhitespaceSpan = new TextSpan(_rootSourceText, token.Span.End, whitespace.Length);
             }
 
             for (var i = startIndex; i < _locatedNodes.Count; i++)
@@ -1611,7 +1613,7 @@ namespace HlslTools.Formatting
                         break;
 
                     case SyntaxKind.EndOfLineTrivia:
-                        MaybeReplaceText(TextSpan.FromBounds(null,
+                        MaybeReplaceText(TextSpan.FromBounds(_rootSourceText,
                             previousWhitespaceSpan?.Start ?? previousNonWhitespaceNode.Span.End,
                             nextLocatedNode.Span.Start), "");
                         return;
@@ -1624,7 +1626,7 @@ namespace HlslTools.Formatting
 
         private void InsertWhitespace(int position)
         {
-            MaybeReplaceText(new TextSpan(null, position, 0), " ");
+            MaybeReplaceText(new TextSpan(_rootSourceText, position, 0), " ");
         }
 
         private LocatedNode GetLocatedNode(int index)
@@ -1663,13 +1665,13 @@ namespace HlslTools.Formatting
                 if (_locatedNodes[i].Kind == SyntaxKind.EndOfLineTrivia)
                 {
                     MaybeReplaceText(
-                        TextSpan.FromBounds(null, _locatedNodes[i].Span.End, token.Span.Start),
+                        TextSpan.FromBounds(_rootSourceText, _locatedNodes[i].Span.End, token.Span.Start),
                         GetIndentation());
                     break;
                 }
 
                 MaybeReplaceText(
-                    TextSpan.FromBounds(null, _locatedNodes[i].Span.End, token.Span.Start),
+                    TextSpan.FromBounds(_rootSourceText, _locatedNodes[i].Span.End, token.Span.Start),
                     _options.NewLine + GetIndentation());
                 break;
             }

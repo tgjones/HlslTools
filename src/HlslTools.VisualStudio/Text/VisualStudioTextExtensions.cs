@@ -9,12 +9,12 @@ namespace HlslTools.VisualStudio.Text
     {
         private static readonly ConditionalWeakTable<ITextSnapshot, SourceText> SnapshotMap = new ConditionalWeakTable<ITextSnapshot, SourceText>();
 
-        public static SourceText ToSourceText(this ITextSnapshot textSnapshot, VisualStudioSourceTextContainer sourceTextContainer)
+        public static SourceText ToSourceText(this ITextSnapshot textSnapshot)
         {
             if (textSnapshot == null)
                 throw new ArgumentNullException(nameof(textSnapshot));
 
-            return SnapshotMap.GetValue(textSnapshot, ts => new VisualStudioSourceText(ts));
+            return SnapshotMap.GetValue(textSnapshot, ts => new VisualStudioSourceText(ts, null));
         }
 
         public static ITextSnapshot ToTextSnapshot(this SourceText text)

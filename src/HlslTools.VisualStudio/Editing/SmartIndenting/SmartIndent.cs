@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using HlslTools.Syntax;
+using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -11,10 +12,12 @@ namespace HlslTools.VisualStudio.Editing.SmartIndenting
     internal sealed class SmartIndent : ISmartIndent
     {
         private readonly HlslLanguagePreferences _languagePreferences;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
-        public SmartIndent(SVsServiceProvider serviceProvider)
+        public SmartIndent(SVsServiceProvider serviceProvider, VisualStudioSourceTextFactory sourceTextFactory)
         {
             _languagePreferences = serviceProvider.GetHlslToolsService().LanguagePreferences;
+            _sourceTextFactory = sourceTextFactory;
         }
 
         public int? GetDesiredIndentation(ITextSnapshotLine line)
@@ -35,9 +38,9 @@ namespace HlslTools.VisualStudio.Editing.SmartIndenting
             }
         }
 
-        private static int? DoSmartIndent(ITextSnapshotLine line)
+        private int? DoSmartIndent(ITextSnapshotLine line)
         {
-            var syntaxTree = line.Snapshot.GetSyntaxTree(CancellationToken.None);
+            var syntaxTree = line.Snapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None);
             var root = syntaxTree.Root;
             var lineStartPosition = line.Start.Position;
             var indent = FindTotalParentChainIndent(root, lineStartPosition, 0);

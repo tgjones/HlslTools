@@ -5,10 +5,12 @@ namespace HlslTools.VisualStudio.Text
 {
     internal sealed class VisualStudioFileSystem : IIncludeFileSystem
     {
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private readonly string _parentDirectory;
 
-        public VisualStudioFileSystem(VisualStudioSourceTextContainer textContainer)
+        public VisualStudioFileSystem(VisualStudioSourceTextContainer textContainer, VisualStudioSourceTextFactory sourceTextFactory)
         {
+            _sourceTextFactory = sourceTextFactory;
             if (textContainer.Filename != null)
                 _parentDirectory = Path.GetDirectoryName(textContainer.Filename);
         }
@@ -24,7 +26,7 @@ namespace HlslTools.VisualStudio.Text
             if (!File.Exists(fullPath))
                 return null;
 
-            return SourceText.From(File.ReadAllText(fullPath), fullPath);
+            return _sourceTextFactory.CreateSourceText(fullPath);
         }
 
 //        if (textBuffer.Properties.ContainsProperty(typeof(IVsTextBuffer)))
