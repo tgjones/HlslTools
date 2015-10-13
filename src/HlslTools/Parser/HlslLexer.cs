@@ -95,7 +95,6 @@ namespace HlslTools.Parser
             switch (_mode)
             {
                 case LexerMode.Syntax:
-                case LexerMode.MacroArguments:
                     token = LexSyntaxToken();
                     break;
                 case LexerMode.Directive:
@@ -121,7 +120,7 @@ namespace HlslTools.Parser
             }
 
             // Expand macros and attach as a special kind of trivia.
-            if (token.Kind == SyntaxKind.IdentifierToken && ExpandMacros && _mode != LexerMode.MacroArguments)
+            if (token.Kind == SyntaxKind.IdentifierToken && ExpandMacros)
             {
                 List<SyntaxToken> expandedTokens;
                 if (TryExpandMacro(token, new BaseMacroExpansionLexer(this), out expandedTokens))
@@ -244,8 +243,6 @@ namespace HlslTools.Parser
                         }
                         break;
                     case '#':
-                        if (_charReader.Peek() == '#') // Token pasting operator
-                            return;
                         var shouldContinue = LexDirectiveAndExcludedTrivia(isTrailing || !onlyWhitespaceOnLine, target);
                         if (!shouldContinue)
                             return;
@@ -822,16 +819,6 @@ namespace HlslTools.Parser
 
                 case '"':
                     ReadString();
-                    break;
-
-                case '#':
-                    if (_mode != LexerMode.MacroArguments)
-                        goto default;
-                    if (_charReader.Peek() != '#')
-                        goto default;
-                    NextChar();
-                    NextChar();
-                    _kind = SyntaxKind.HashHashToken;
                     break;
 
                 default:

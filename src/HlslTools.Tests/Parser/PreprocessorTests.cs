@@ -282,40 +282,21 @@ float g = FOO(3, 4);
         }
 
         [Test]
-        public void TestFunctionLikeDefineWithMultipleParamsAndTokenPasteOperator()
+        public void TestNegFunctionLikeDefineWithTokenPasteOperator()
         {
             const string text = @"
-#define FOO 1
-#define PARAM_DEFN(type, name, semantic) type name: semantic
-PARAM_DEFN(float, g_Transparency, Transparency##FOO) = 0.5;
+#define FOO
+#define PARAM_DEFN(type, name) type name
+PARAM_DEFN(float, Transparency##FOO) = 0.5;
 ";
             var node = Parse(text);
 
-            TestRoundTripping(node, text);
+            TestRoundTripping(node, text, false);
+            VerifyErrorCode(node, DiagnosticId.TokenUnexpected);
             VerifyDirectivesSpecial(node,
-                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
-                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
-
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
-
-            var varDeclStatement = (VariableDeclarationStatementSyntax) node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("g_Transparency"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Qualifiers, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Qualifiers[0].Kind, Is.EqualTo(SyntaxKind.SemanticName));
-            Assert.That(((SemanticSyntax) varDeclStatement.Declaration.Variables[0].Qualifiers[0]).Semantic.Text, Is.EqualTo("Transparency1"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
-
-            var equalsValueClause = (EqualsValueClauseSyntax) varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
-
-            var numericLiteralExpr = (LiteralExpressionSyntax) equalsValueClause.Value;
-            Assert.That(numericLiteralExpr.Token.Text, Is.EqualTo("0.5"));
-
-            Assert.That(node.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" },
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PARAM_DEFN" },
+                new DirectiveInfo { Kind = SyntaxKind.BadDirectiveTrivia, Status = NodeStatus.IsActive, Text = "##FOO) = 0.5;" });
         }
 
         [Test]

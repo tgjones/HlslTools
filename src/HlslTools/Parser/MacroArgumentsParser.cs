@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using HlslTools.Syntax;
@@ -8,7 +7,7 @@ namespace HlslTools.Parser
     internal sealed class MacroArgumentsParser : HlslParser
     {
         public MacroArgumentsParser(ILexer lexer)
-            : base(lexer, LexerMode.MacroArguments)
+            : base(lexer, LexerMode.Syntax)
         {
             
         }
