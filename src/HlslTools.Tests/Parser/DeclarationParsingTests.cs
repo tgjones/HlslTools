@@ -244,7 +244,7 @@ namespace HlslTools.Tests.Parser
         [Test]
         public void TestGlobalFunctionDefinition()
         {
-            var text = "void Foo(int a) { return; }";
+            var text = "inline void Foo(int a) { return; }";
             var file = ParseFile(text);
 
             Assert.NotNull(file);
@@ -254,6 +254,8 @@ namespace HlslTools.Tests.Parser
 
             Assert.AreEqual(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
             var fs = (FunctionDefinitionSyntax)file.Declarations[0];
+            Assert.AreEqual(1, fs.Modifiers.Count);
+            Assert.AreEqual(SyntaxKind.InlineKeyword, fs.Modifiers[0].Kind);
             Assert.NotNull(fs.ReturnType);
             Assert.AreEqual("void", fs.ReturnType.ToString());
             Assert.AreEqual("Foo", fs.Name.ToString());

@@ -117,6 +117,7 @@ namespace HlslTools.Syntax
         Half4x4Keyword,
         IfKeyword,
         InKeyword,
+        InlineKeyword,
         InoutKeyword,
         InputPatchKeyword,
         IntKeyword,

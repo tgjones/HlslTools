@@ -184,6 +184,8 @@ namespace HlslTools.Syntax
                     return "static";
                 case SyntaxKind.ConstKeyword:
                     return "const";
+                case SyntaxKind.InlineKeyword:
+                    return "inline";
                 case SyntaxKind.VolatileKeyword:
                     return "volatile";
                 case SyntaxKind.ExternKeyword:
@@ -967,6 +969,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.ClassKeyword:
                 case SyntaxKind.ConstKeyword:
                 case SyntaxKind.ExternKeyword:
+                case SyntaxKind.InlineKeyword:
                 case SyntaxKind.InterfaceKeyword:
                 case SyntaxKind.StaticKeyword:
                 case SyntaxKind.StructKeyword:
@@ -1384,6 +1387,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Half4x4Keyword:
                 case SyntaxKind.IfKeyword:
                 case SyntaxKind.InKeyword:
+                case SyntaxKind.InlineKeyword:
                 case SyntaxKind.InoutKeyword:
                 case SyntaxKind.InputPatchKeyword:
                 case SyntaxKind.IntKeyword:
@@ -1871,6 +1875,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.IfKeyword;
                 case "in":
                     return SyntaxKind.InKeyword;
+                case "inline":
+                    return SyntaxKind.InlineKeyword;
                 case "inout":
                     return SyntaxKind.InoutKeyword;
                 case "InputPatch":
@@ -2212,6 +2218,7 @@ namespace HlslTools.Syntax
                     return true;
 
                 case SyntaxKind.ExternKeyword:
+                case SyntaxKind.InlineKeyword:
                 case SyntaxKind.PreciseKeyword:
                 case SyntaxKind.SharedKeyword:
                 case SyntaxKind.GroupsharedKeyword:
