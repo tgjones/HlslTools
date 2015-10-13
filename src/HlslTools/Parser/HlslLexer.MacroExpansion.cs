@@ -39,7 +39,10 @@ namespace HlslTools.Parser
 
                     // If it is, then parse the macro arguments, and
                     // check that we have the correct number of arguments.
+                    ExpandMacros = false;
                     var macroArguments = new MacroArgumentsParser(lexer).ParseArgumentList();
+                    ExpandMacros = true;
+
                     if (macroArguments.Arguments.Count != functionLikeDefine.Parameters.Parameters.Count)
                     {
                         expandedTokens = new List<SyntaxToken>
