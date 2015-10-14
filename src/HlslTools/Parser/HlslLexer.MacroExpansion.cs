@@ -113,12 +113,20 @@ namespace HlslTools.Parser
             while ((token = lexer.GetNextToken()) != null)
             {
                 // Do token pasting (##).
-                if (lexer.Peek(0) != null && lexer.Peek(0).Kind == SyntaxKind.HashHashToken
-                    && lexer.Peek(1) != null && lexer.Peek(1).Kind != SyntaxKind.HashHashToken)
+                if (lexer.Peek(0).Kind == SyntaxKind.HashHashToken
+                    && lexer.Peek(1).Kind != SyntaxKind.EndOfFileToken && lexer.Peek(1).Kind != SyntaxKind.HashHashToken)
                 {
                     lexer.GetNextToken();
                     var concatenatedText = token.Text + lexer.GetNextToken().Text;
                     token = new HlslLexer(new StringText(concatenatedText)).Lex(LexerMode.Syntax);
+                }
+
+                // Do stringification (#).
+                if (token.Kind == SyntaxKind.HashToken && lexer.Peek(0).Kind != SyntaxKind.EndOfFileToken)
+                {
+                    var nextToken = lexer.GetNextToken();
+                    var stringifiedText = "\"" + nextToken.Text + "\"";
+                    token = new HlslLexer(new StringText(stringifiedText)).Lex(LexerMode.Syntax);
                 }
 
                 List<SyntaxToken> expandedTokens;

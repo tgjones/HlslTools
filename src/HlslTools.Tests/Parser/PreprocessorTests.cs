@@ -377,6 +377,50 @@ float f = FOO(x, b);
         }
 
         [Test]
+        public void TestStringificationOperator()
+        {
+            const string text = @"
+#define TEX_COMP_FULL(format, packed) string Build_TexComp_DdsFormat = #format; string Build_TexComp_IsPacked = #packed;
+Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "TEX_COMP_FULL" });
+
+            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
+            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+
+            var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
+            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
+            Assert.That(((PredefinedObjectTypeSyntax) varDeclStatement.Declaration.Type).ObjectTypeToken.Kind, Is.EqualTo(SyntaxKind.Texture2DKeyword));
+            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("MyTex"));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Annotations.Annotations, Has.Count.EqualTo(2));
+
+            var annotation1 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[0];
+            Assert.That(annotation1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(annotation1.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Build_TexComp_DdsFormat"));
+            Assert.That(annotation1.Declaration.Variables[0].Initializer, Is.Not.Null);
+            Assert.That(annotation1.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.That(((EqualsValueClauseSyntax) annotation1.Declaration.Variables[0].Initializer).Value.Kind, Is.EqualTo(SyntaxKind.StringLiteralExpression));
+            Assert.That(((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens, Has.Count.EqualTo(1));
+            Assert.That(((StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens[0].Text, Is.EqualTo("\"dxt5\""));
+
+            var annotation2 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[1];
+            Assert.That(annotation2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(annotation2.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Build_TexComp_IsPacked"));
+            Assert.That(annotation2.Declaration.Variables[0].Initializer, Is.Not.Null);
+            Assert.That(annotation2.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.That(((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value.Kind, Is.EqualTo(SyntaxKind.StringLiteralExpression));
+            Assert.That(((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value).Tokens, Has.Count.EqualTo(1));
+            Assert.That(((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value).Tokens[0].Text, Is.EqualTo("\"true\""));
+
+            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Null);
+        }
+
+        [Test]
         public void TestNegBadDirectiveName()
         {
             const string text = @"#foo";
