@@ -29,7 +29,7 @@ namespace HlslTools.VisualStudio.ErrorList
             ITextDocument document;
             if (_textDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
                 textView.TextBuffer.Properties.GetOrCreateSingletonProperty(
-                    () => new ErrorListHelper(_serviceProvider, textView, document));
+                    () => new ErrorListHelper(_serviceProvider, document));
         }
 
         private static void OnViewClosed(object sender, EventArgs e)

@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Diagnostics;
 using HlslTools.Diagnostics;
 using HlslTools.Text;
+using HlslTools.VisualStudio.Navigation;
 using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
 
 namespace HlslTools.VisualStudio.ErrorList
 {
     internal sealed class ErrorListHelper : IErrorListHelper, IDisposable
     {
         private readonly ErrorListProvider _errorListProvider;
-        private readonly ITextView _textView;
+        private readonly IServiceProvider _serviceProvider;
         private readonly ITextDocument _textDocument;
 
-        public ErrorListHelper(IServiceProvider serviceProvider, ITextView textView, ITextDocument textDocument)
+        public ErrorListHelper(IServiceProvider serviceProvider, ITextDocument textDocument)
         {
             _errorListProvider = new ErrorListProvider(serviceProvider);
-            _textView = textView;
+            _serviceProvider = serviceProvider;
             _textDocument = textDocument;
         }
 
@@ -49,11 +48,7 @@ namespace HlslTools.VisualStudio.ErrorList
         private void OnTaskNavigate(object sender, EventArgs e)
         {
             var task = (ErrorTask)sender;
-            _errorListProvider.Navigate(task, new Guid("{00000000-0000-0000-0000-000000000000}"));
-
-            var line = _textView.TextBuffer.CurrentSnapshot.GetLineFromLineNumber(task.Line);
-            var point = new SnapshotPoint(line.Snapshot, line.Start.Position + task.Column);
-            _textView.Caret.MoveTo(point);
+            _serviceProvider.NavigateTo(task.Document, task.Line, task.Column, task.Line, task.Column);
         }
 
         public void Clear()
