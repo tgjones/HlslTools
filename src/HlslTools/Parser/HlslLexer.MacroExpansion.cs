@@ -211,7 +211,9 @@ namespace HlslTools.Parser
 
             public SyntaxToken Lex(LexerMode mode)
             {
-                return _macroBody[_tokenIndex++];
+                return (_tokenIndex < _macroBody.Count)
+                    ? _macroBody[_tokenIndex++]
+                    : SyntaxFactory.ParseToken("\0");
             }
 
             public SyntaxToken GetNextToken()
@@ -230,7 +232,7 @@ namespace HlslTools.Parser
             {
                 if (_tokenIndex + offset < _macroBody.Count)
                     return _macroBody[_tokenIndex + offset];
-                return null;
+                return SyntaxFactory.ParseToken("\0");
             }
         }
     }
