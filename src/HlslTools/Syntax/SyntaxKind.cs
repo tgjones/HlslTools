@@ -299,6 +299,7 @@ namespace HlslTools.Syntax
         FloatLiteralToken,
         StringLiteralToken,
         BracketedStringLiteralToken,
+        PreprocessingNumber,
 
         // Additional preprocessor keywords
         IfDefKeyword,

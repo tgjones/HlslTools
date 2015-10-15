@@ -421,6 +421,29 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
         }
 
         [Test]
+        public void TestMacroBodyContaining2D()
+        {
+            const string text = @"
+#define TEX2D(name) Texture2D name ## 2D
+TEX2D(MyTexture);
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "TEX2D" });
+
+            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
+            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+
+            var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
+            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
+            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("MyTexture2D"));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Null);
+        }
+
+        [Test]
         public void TestNegBadDirectiveName()
         {
             const string text = @"#foo";

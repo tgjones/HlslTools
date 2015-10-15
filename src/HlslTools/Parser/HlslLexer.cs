@@ -888,6 +888,7 @@ namespace HlslTools.Parser
             var hasDotModifier = false;
             var hasFloatSuffix = false;
             var hasHexModifier = false;
+            var isPreprocessingNumber = false;
 
             while (true)
             {
@@ -947,6 +948,10 @@ namespace HlslTools.Parser
                     case '7':
                     case '8':
                     case '9':
+                        sb.Append(_charReader.Current);
+                        NextChar();
+                        break;
+
                     case 'A':
                     case 'B':
                     case 'C':
@@ -955,11 +960,16 @@ namespace HlslTools.Parser
                     case 'b':
                     case 'c':
                     case 'd':
-                        sb.Append(_charReader.Current);
-                        NextChar();
-                        break;
+                        if (hasHexModifier)
+                            goto case '0';
+                        goto default;
 
                     default:
+                        if (_mode == LexerMode.Directive && char.IsLetter(_charReader.Current))
+                        {
+                            isPreprocessingNumber = true;
+                            goto case '0';
+                        }
                         goto ExitLoop;
                 }
             }
@@ -967,9 +977,19 @@ namespace HlslTools.Parser
             ExitLoop:
 
             var text = sb.ToString();
-            _value = ((hasDotModifier || hasExponentialModifier || hasFloatSuffix) && !hasHexModifier)
-                ? ReadDouble(text)
-                : ReadInt32OrInt64(text, hasHexModifier);
+
+            if (isPreprocessingNumber)
+                _value = ReadPreprocessingNumber(text);
+            else if ((hasDotModifier || hasExponentialModifier || hasFloatSuffix) && !hasHexModifier)
+                _value = ReadDouble(text);
+            else
+                _value = ReadInt32OrInt64(text, hasHexModifier);
+        }
+
+        private string ReadPreprocessingNumber(string text)
+        {
+            _kind = SyntaxKind.PreprocessingNumber;
+            return text;
         }
 
         private double ReadDouble(string text)
