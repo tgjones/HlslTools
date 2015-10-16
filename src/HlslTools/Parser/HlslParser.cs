@@ -23,7 +23,7 @@ namespace HlslTools.Parser
 
         // Set to true when parsing generic template arguments.
         private bool _greaterThanTokenIsNotOperator;
-        private bool _allowLinearAsIdentifier;
+        private bool _allowLinearAndPointAsIdentifiers;
 
         // Set to true when parsing pass statements.
         private bool _allowGreaterThanTokenAroundRhsExpression;
@@ -203,19 +203,19 @@ namespace HlslTools.Parser
             public readonly int TokenIndex;
             public readonly LexerMode Mode;
             public readonly bool GreaterThanTokenIsNotOperator;
-            public readonly bool AllowLinearAsIdentifier;
+            public readonly bool AllowLinearAndPointAsIdentifiers;
             public readonly TerminatorState TermState;
             public readonly Stack<bool> CommaIsSeparatorStack;
 
             internal ResetPoint(
                 int tokenIndex, LexerMode mode,
-                bool greaterThanTokenIsNotOperator, bool allowLinearAsIdentifier,
+                bool greaterThanTokenIsNotOperator, bool allowLinearAndPointAsIdentifiers,
                 Stack<bool> commaIsSeparatorStack, TerminatorState termState)
             {
                 TokenIndex = tokenIndex;
                 Mode = mode;
                 GreaterThanTokenIsNotOperator = greaterThanTokenIsNotOperator;
-                AllowLinearAsIdentifier = allowLinearAsIdentifier;
+                AllowLinearAndPointAsIdentifiers = allowLinearAndPointAsIdentifiers;
                 CommaIsSeparatorStack = new Stack<bool>(commaIsSeparatorStack);
                 TermState = termState;
             }
@@ -226,7 +226,7 @@ namespace HlslTools.Parser
         private ResetPoint GetResetPoint()
         {
             _scanStack.Push(true);
-            return new ResetPoint(_tokenIndex, _mode, _greaterThanTokenIsNotOperator, _allowLinearAsIdentifier, CommaIsSeparatorStack, _termState);
+            return new ResetPoint(_tokenIndex, _mode, _greaterThanTokenIsNotOperator, _allowLinearAndPointAsIdentifiers, CommaIsSeparatorStack, _termState);
         }
 
         private void Reset(ref ResetPoint state)
@@ -236,7 +236,7 @@ namespace HlslTools.Parser
             _mode = state.Mode;
             _tokenIndex = state.TokenIndex;
             _greaterThanTokenIsNotOperator = state.GreaterThanTokenIsNotOperator;
-            _allowLinearAsIdentifier = state.AllowLinearAsIdentifier;
+            _allowLinearAndPointAsIdentifiers = state.AllowLinearAndPointAsIdentifiers;
             CommaIsSeparatorStack = state.CommaIsSeparatorStack;
             _termState = state.TermState;
         }

@@ -277,7 +277,7 @@ namespace HlslTools.Tests.Parser
         [Test]
         public void TestSamplerStateInitializer()
         {
-            var text = "SamplerState MySamplerState { MagFilter = linear; MipFilter = anistropic; };";
+            var text = "SamplerState MySamplerState { MinFilter = point; MagFilter = linear; MipFilter = anistropic; };";
             var file = ParseFile(text);
 
             Assert.NotNull(file);
@@ -293,13 +293,16 @@ namespace HlslTools.Tests.Parser
             Assert.AreEqual("MySamplerState", fs.Declaration.Variables[0].Identifier.Text);
             Assert.AreEqual(SyntaxKind.StateInitializer, fs.Declaration.Variables[0].Initializer.Kind);
             var init = (StateInitializerSyntax) fs.Declaration.Variables[0].Initializer;
-            Assert.AreEqual(2, init.Properties.Count);
-            Assert.AreEqual("MagFilter", init.Properties[0].Name.Text);
+            Assert.AreEqual(3, init.Properties.Count);
+            Assert.AreEqual("MinFilter", init.Properties[0].Name.Text);
             Assert.AreEqual(SyntaxKind.IdentifierName, init.Properties[0].Value.Kind);
-            Assert.AreEqual("linear", init.Properties[0].Value.ToString());
-            Assert.AreEqual("MipFilter", init.Properties[1].Name.Text);
+            Assert.AreEqual("point", init.Properties[0].Value.ToString());
+            Assert.AreEqual("MagFilter", init.Properties[1].Name.Text);
             Assert.AreEqual(SyntaxKind.IdentifierName, init.Properties[1].Value.Kind);
-            Assert.AreEqual("anistropic", init.Properties[1].Value.ToString());
+            Assert.AreEqual("linear", init.Properties[1].Value.ToString());
+            Assert.AreEqual("MipFilter", init.Properties[2].Name.Text);
+            Assert.AreEqual(SyntaxKind.IdentifierName, init.Properties[2].Value.Kind);
+            Assert.AreEqual("anistropic", init.Properties[2].Value.ToString());
             Assert.NotNull(fs.SemicolonToken);
         }
 
