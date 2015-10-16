@@ -63,7 +63,10 @@ namespace HlslTools.Parser
                         .ToList();
 
                     // Replace parameters with possibly-expanded arguments.
-                    macroBody = ReplaceParameters(expandedArguments, functionLikeDefineDirective);
+                    macroBody = ReplaceParameters(
+                        macroArguments.Arguments.ToList(), expandedArguments,
+                        functionLikeDefineDirective.Parameters,
+                        functionLikeDefineDirective.Body);
 
                     lastToken = macroArguments.DescendantTokens().LastOrDefault(x => !x.IsMissing) ?? token;
 
@@ -121,14 +124,6 @@ namespace HlslTools.Parser
                     token = new HlslLexer(new StringText(concatenatedText)).Lex(LexerMode.Syntax);
                 }
 
-                // Do stringification (#).
-                if (token.Kind == SyntaxKind.HashToken && lexer.Peek(0).Kind != SyntaxKind.EndOfFileToken)
-                {
-                    var nextToken = lexer.GetNextToken();
-                    var stringifiedText = "\"" + nextToken.Text + "\"";
-                    token = new HlslLexer(new StringText(stringifiedText)).Lex(LexerMode.Syntax);
-                }
-
                 List<SyntaxToken> expandedTokens;
                 if (TryExpandMacro(token, lexer, out expandedTokens))
                     result.AddRange(expandedTokens);
@@ -139,36 +134,73 @@ namespace HlslTools.Parser
             return result;
         }
 
-        private static List<SyntaxToken> ReplaceParameters(List<List<SyntaxToken>> expandedArguments, FunctionLikeDefineDirectiveTriviaSyntax directive)
+        private static List<SyntaxToken> ReplaceParameters(
+            List<MacroArgumentSyntax> originalArguments,
+            List<List<SyntaxToken>> expandedArguments,
+            FunctionLikeDefineDirectiveParameterListSyntax parameterList,
+            List<SyntaxToken> macroBody)
         {
-            var parameters = directive.Parameters.Parameters;
+            var parameters = parameterList.Parameters;
 
-            if (directive.Body.Any())
-                return directive.Body
-                    .SelectMany((x, i) =>
+            var result = new List<SyntaxToken>();
+
+            for (var i = 0; i < macroBody.Count; i++)
+            {
+                var token = macroBody[i];
+
+                switch (token.Kind)
+                {
+                    case SyntaxKind.HashToken:
                     {
-                        if (x.Kind == SyntaxKind.IdentifierToken)
+                        if (i < macroBody.Count - 1 && macroBody[i + 1].Kind == SyntaxKind.IdentifierToken)
                         {
-                            var parameterIndex = -1;
-                            for (var index = 0; index < parameters.Count; index++)
-                            {
-                                var parameter = parameters[index];
-                                if (parameter.Text == x.Text)
-                                {
-                                    parameterIndex = index;
-                                    break;
-                                }
-                            }
+                            var parameterIndex = FindParameterIndex(parameters, macroBody[i + 1]);
                             if (parameterIndex != -1)
                             {
-                                return expandedArguments[parameterIndex];
+                                var stringifiedText = "\"" + originalArguments[parameterIndex].ToString(true) + "\"";
+                                result.Add(new HlslLexer(new StringText(stringifiedText)).Lex(LexerMode.Syntax));
+                                i++;
+                                break;
                             }
                         }
-                        return new List<SyntaxToken> { x };
-                    })
-                    .ToList();
+                        goto default;
+                    }
 
-            return new List<SyntaxToken>();
+                    case SyntaxKind.IdentifierToken:
+                    {
+                        var parameterIndex = FindParameterIndex(parameters, token);
+                        if (parameterIndex != -1)
+                            result.AddRange(expandedArguments[parameterIndex]);
+                        else
+                            result.Add(token);
+                        break;
+                    }
+
+                    default:
+                    {
+                        result.Add(token);
+                        break;
+
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        private static int FindParameterIndex(SeparatedSyntaxList<SyntaxToken> parameters, SyntaxToken token)
+        {
+            var parameterIndex = -1;
+            for (var index = 0; index < parameters.Count; index++)
+            {
+                var parameter = parameters[index];
+                if (parameter.Text == token.Text)
+                {
+                    parameterIndex = index;
+                    break;
+                }
+            }
+            return parameterIndex;
         }
 
         private interface IMacroExpansionLexer : ILexer

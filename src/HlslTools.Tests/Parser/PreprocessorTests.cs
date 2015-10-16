@@ -421,6 +421,36 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
         }
 
         [Test]
+        public void TestStringificationOperatorWithArgumentContainingMultipleTokens()
+        {
+            const string text = @"
+#define FOO(value) #value""else""
+string Bar = FOO(some/thing);
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" });
+
+            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
+            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+
+            var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
+            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(((IdentifierNameSyntax)varDeclStatement.Declaration.Type).Name.Text, Is.EqualTo("string"));
+            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Bar"));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
+            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+
+            var initializerExpr = (StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax) varDeclStatement.Declaration.Variables[0].Initializer).Value;
+            Assert.That(initializerExpr.Tokens, Has.Count.EqualTo(2));
+            Assert.That(initializerExpr.Tokens[0].Text, Is.EqualTo("\"some/thing\""));
+            Assert.That(initializerExpr.Tokens[1].Text, Is.EqualTo("\"else\""));
+        }
+
+        [Test]
         public void TestMacroBodyContaining2D()
         {
             const string text = @"
