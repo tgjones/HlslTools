@@ -200,7 +200,21 @@ namespace HlslTools.Parser
                 while (Current.Kind == SyntaxKind.CommaToken)
                 {
                     paramList.Add(Match(SyntaxKind.CommaToken));
-                    paramList.Add(Match(SyntaxKind.IdentifierToken));
+
+                    switch (Current.Kind)
+                    {
+                        case SyntaxKind.IdentifierToken:
+                            paramList.Add(Match(SyntaxKind.IdentifierToken));
+                            break;
+
+                        default:
+                            if (Current.Kind.IsKeyword())
+                            {
+                                paramList.Add(NextToken().WithKind(SyntaxKind.IdentifierToken));
+                                break;
+                            }
+                            goto case SyntaxKind.IdentifierToken;
+                    }
                 }
             }
 
@@ -210,7 +224,12 @@ namespace HlslTools.Parser
 
             var body = new List<SyntaxToken>();
             while (Current.Kind != SyntaxKind.EndOfDirectiveToken)
-                body.Add(NextToken());
+            {
+                var nextToken = NextToken();
+                if (nextToken.Kind.IsKeyword())
+                    nextToken = nextToken.WithKind(SyntaxKind.IdentifierToken);
+                body.Add(nextToken);
+            }
 
             var eod = ParseEndOfDirective(name.IsMissing);
 

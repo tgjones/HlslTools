@@ -88,6 +88,14 @@ namespace HlslTools.Parser
             // Scan macro body for nested macros.
             expandedTokens = ExpandNestedMacro(new NestedMacroExpansionLexer(macroBody));
 
+            // Relex identifier tokens, because at this point keywords are stored as identifiers.
+            for (var i = 0; i < expandedTokens.Count; i++)
+                if (expandedTokens[i].Kind == SyntaxKind.IdentifierToken)
+                {
+                    var relexedToken = new HlslLexer(new StringText(expandedTokens[i].Text)).Lex(LexerMode.Syntax);
+                    expandedTokens[i] = expandedTokens[i].WithKind(relexedToken.Kind);
+                }
+
             var localExpandedTokens = expandedTokens;
             expandedTokens = expandedTokens
                 .Select((x, i) =>
