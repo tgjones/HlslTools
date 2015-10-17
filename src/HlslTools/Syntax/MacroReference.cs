@@ -18,7 +18,7 @@ namespace HlslTools.Syntax
 
         internal abstract MacroReference WithLeadingTrivia(ImmutableArray<SyntaxNode> trivia);
 
-        internal abstract void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile);
+        internal abstract void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences);
 
         public abstract void Accept(SyntaxVisitor visitor);
         public abstract T Accept<T>(SyntaxVisitor<T> visitor);

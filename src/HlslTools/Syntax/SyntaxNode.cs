@@ -169,18 +169,25 @@ namespace HlslTools.Syntax
         public string ToString(bool includeNonRootFile)
         {
             var sb = new StringBuilder();
-            WriteTo(sb, false, false, includeNonRootFile);
+            WriteTo(sb, false, false, includeNonRootFile, false);
+            return sb.ToString();
+        }
+
+        public string ToStringIgnoringMacroReferences()
+        {
+            var sb = new StringBuilder();
+            WriteTo(sb, false, false, true, true);
             return sb.ToString();
         }
 
         public virtual string ToFullString()
         {
             var sb = new StringBuilder();
-            WriteTo(sb, true, true, false);
+            WriteTo(sb, true, true, false, false);
             return sb.ToString();
         }
 
-        protected internal virtual void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile)
+        protected internal virtual void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences)
         {
             var first = true;
             var lastIndex = ChildNodes.Count - 1;
@@ -196,7 +203,7 @@ namespace HlslTools.Syntax
                 var child = ChildNodes[i];
                 if (child != null)
                 {
-                    child.WriteTo(sb, leading | !first, trailing | (i < lastIndex), includeNonRootFile);
+                    child.WriteTo(sb, leading | !first, trailing | (i < lastIndex), includeNonRootFile, ignoreMacroReferences);
                     first = false;
                 }
             }

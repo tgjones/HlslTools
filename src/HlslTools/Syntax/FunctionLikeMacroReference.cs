@@ -39,10 +39,10 @@ namespace HlslTools.Syntax
             return new FunctionLikeMacroReference(OriginalToken.WithLeadingTrivia(trivia), ArgumentList, Directive);
         }
 
-        internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile)
+        internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences)
         {
-            OriginalToken.WriteTo(sb, leading, trailing, includeNonRootFile);
-            ArgumentList?.WriteTo(sb, leading, trailing, includeNonRootFile);
+            OriginalToken.WriteTo(sb, leading, trailing, includeNonRootFile, ignoreMacroReferences);
+            ArgumentList?.WriteTo(sb, leading, trailing, includeNonRootFile, ignoreMacroReferences);
         }
 
         public override void Accept(SyntaxVisitor visitor)

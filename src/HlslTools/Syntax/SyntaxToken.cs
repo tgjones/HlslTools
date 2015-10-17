@@ -137,18 +137,18 @@ namespace HlslTools.Syntax
             return stack;
         }
 
-        protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile)
+        protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences)
         {
-            if (MacroReference != null && !IsFirstTokenInMacroExpansion)
+            if (!ignoreMacroReferences && MacroReference != null && !IsFirstTokenInMacroExpansion)
                 return;
 
-            if (MacroReference == null && leading)
+            if ((ignoreMacroReferences || MacroReference == null) && leading)
                 foreach (var trivia in LeadingTrivia)
-                    trivia.WriteTo(sb, true, true, includeNonRootFile);
+                    trivia.WriteTo(sb, true, true, includeNonRootFile, ignoreMacroReferences);
 
-            if (MacroReference != null)
+            if (!ignoreMacroReferences && MacroReference != null)
             {
-                MacroReference.WriteTo(sb, leading, trailing, includeNonRootFile);
+                MacroReference.WriteTo(sb, leading, trailing, includeNonRootFile, ignoreMacroReferences);
             }
             else if (Span.IsInRootFile || includeNonRootFile)
             {
@@ -157,7 +157,7 @@ namespace HlslTools.Syntax
 
             if (MacroReference == null && trailing)
                 foreach (var trivia in TrailingTrivia)
-                    trivia.WriteTo(sb, true, true, includeNonRootFile);
+                    trivia.WriteTo(sb, true, true, includeNonRootFile, ignoreMacroReferences);
         }
     }
 }

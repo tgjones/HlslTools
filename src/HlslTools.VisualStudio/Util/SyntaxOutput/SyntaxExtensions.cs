@@ -21,7 +21,7 @@ namespace HlslTools.VisualStudio.Util.SyntaxOutput
             var result = new StringBuilder();
 
             if (includeReturnType)
-                result.Append($"{returnType.ToString(true)} ");
+                result.Append($"{returnType.ToStringIgnoringMacroReferences()} ");
 
             result.Append(name.GetFullyQualifiedName());
             result.Append("(");
@@ -45,7 +45,7 @@ namespace HlslTools.VisualStudio.Util.SyntaxOutput
         {
             var result = new StringBuilder();
 
-            result.Append(parameter.Type.ToString(true));
+            result.Append(parameter.Type.ToStringIgnoringMacroReferences());
 
             if (includeParameterName)
             {
@@ -60,7 +60,7 @@ namespace HlslTools.VisualStudio.Util.SyntaxOutput
         {
             var result = new StringBuilder();
 
-            result.Append(declaration.Type.ToString(true));
+            result.Append(declaration.Type.ToStringIgnoringMacroReferences());
             result.Append(" ");
             result.Append(declarator.Identifier.GetFullyQualifiedName());
 
@@ -124,7 +124,7 @@ namespace HlslTools.VisualStudio.Util.SyntaxOutput
             if (parent.Kind == SyntaxKind.QualifiedDeclarationName)
             {
                 var qualifiedDeclarationName = (QualifiedDeclarationNameSyntax) parent;
-                result = qualifiedDeclarationName.Left.ToString(true) + "::" + result;
+                result = qualifiedDeclarationName.Left.ToStringIgnoringMacroReferences() + "::" + result;
             }
 
             return result;

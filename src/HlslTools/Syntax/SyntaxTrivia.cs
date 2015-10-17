@@ -29,7 +29,7 @@ namespace HlslTools.Syntax
             return visitor.VisitSyntaxTrivia(this);
         }
 
-        protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile)
+        protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences)
         {
             if (Span.IsInRootFile || includeNonRootFile)
                 sb.Append(Text);
