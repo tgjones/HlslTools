@@ -123,15 +123,6 @@ namespace HlslTools.Parser
             SyntaxToken token;
             while ((token = lexer.GetNextToken()) != null)
             {
-                // Do token pasting (##).
-                if (lexer.Peek(0).Kind == SyntaxKind.HashHashToken
-                    && lexer.Peek(1).Kind != SyntaxKind.EndOfFileToken && lexer.Peek(1).Kind != SyntaxKind.HashHashToken)
-                {
-                    lexer.GetNextToken();
-                    var concatenatedText = token.Text + lexer.GetNextToken().Text;
-                    token = new HlslLexer(new StringText(concatenatedText)).Lex(LexerMode.Syntax);
-                }
-
                 List<SyntaxToken> expandedTokens;
                 if (TryExpandMacro(token, lexer, out expandedTokens))
                     result.AddRange(expandedTokens);
@@ -156,8 +147,32 @@ namespace HlslTools.Parser
             {
                 var token = macroBody[i];
 
+                // Do token pasting (##).
+                if (i < macroBody.Count - 2
+                    && macroBody[i + 1].Kind == SyntaxKind.HashHashToken
+                    && macroBody[i + 2].Kind != SyntaxKind.EndOfFileToken
+                    && macroBody[i + 2].Kind != SyntaxKind.HashHashToken)
+                {
+                    var parameterIndexLeft = FindParameterIndex(parameters, token);
+                    var pastedText = (parameterIndexLeft != -1) ? originalArguments[parameterIndexLeft].ToString(true) : token.Text;
+
+                    while (i < macroBody.Count - 2
+                        && macroBody[i + 1].Kind == SyntaxKind.HashHashToken
+                        && macroBody[i + 2].Kind != SyntaxKind.EndOfFileToken
+                        && macroBody[i + 2].Kind != SyntaxKind.HashHashToken)
+                    {
+                        var parameterIndexRight = FindParameterIndex(parameters, macroBody[i + 2]);
+                        var textRight = (parameterIndexRight != -1) ? originalArguments[parameterIndexRight].ToString(true) : macroBody[i + 2].Text;
+                        pastedText += textRight;
+                        i += 2;
+                    }
+                    result.AddRange(SyntaxFactory.ParseAllTokens(new StringText(pastedText)).TakeWhile(t => t.Kind != SyntaxKind.EndOfFileToken));
+                    continue;
+                }
+
                 switch (token.Kind)
                 {
+                    // Potentially stringify.
                     case SyntaxKind.HashToken:
                     {
                         if (i < macroBody.Count - 1 && macroBody[i + 1].Kind == SyntaxKind.IdentifierToken)
@@ -166,7 +181,7 @@ namespace HlslTools.Parser
                             if (parameterIndex != -1)
                             {
                                 var stringifiedText = "\"" + originalArguments[parameterIndex].ToString(true) + "\"";
-                                result.Add(new HlslLexer(new StringText(stringifiedText)).Lex(LexerMode.Syntax));
+                                result.Add(SyntaxFactory.ParseToken(stringifiedText));
                                 i++;
                                 break;
                             }
@@ -174,6 +189,7 @@ namespace HlslTools.Parser
                         goto default;
                     }
 
+                    // Potentially replacement parameter with argument tokens.
                     case SyntaxKind.IdentifierToken:
                     {
                         var parameterIndex = FindParameterIndex(parameters, token);
@@ -188,7 +204,6 @@ namespace HlslTools.Parser
                     {
                         result.Add(token);
                         break;
-
                     }
                 }
             }
@@ -273,13 +288,8 @@ namespace HlslTools.Parser
 
             public SyntaxToken Peek(LexerMode mode)
             {
-                return Peek(0);
-            }
-
-            public SyntaxToken Peek(int offset)
-            {
-                if (_tokenIndex + offset < _macroBody.Count)
-                    return _macroBody[_tokenIndex + offset];
+                if (_tokenIndex < _macroBody.Count)
+                    return _macroBody[_tokenIndex];
                 return SyntaxFactory.ParseToken("\0");
             }
         }

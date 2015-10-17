@@ -328,7 +328,71 @@ PARAM(float, PASTE(bar, baz)) = 1.0f;
         }
 
         [Test]
-        public void TestNegFunctionLikeDefineWithNestedPasteIncludingMacro()
+        public void TestFunctionLikeDefineWithPasteWithMultiTokenArguments()
+        {
+            const string text = @"
+#define FOO(name, uvcoords) Texture2D g_##name##Texture; \
+    SamplerState name##Sampler; \
+    float4 GetTex(PsInput input) { \
+        return g_##name##Texture.Sample(name##Sampler, input.##uvcoords); \
+    }
+
+FOO(Diffuse, texCoords.xy)
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" });
+
+            Assert.That(node.ChildNodes, Has.Count.EqualTo(4));
+
+            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            var varDeclStatement1 = (VariableDeclarationStatementSyntax) node.ChildNodes[0];
+            Assert.That(varDeclStatement1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
+            Assert.That(((PredefinedObjectTypeSyntax) varDeclStatement1.Declaration.Type).ObjectTypeToken.Text, Is.EqualTo("Texture2D"));
+            Assert.That(varDeclStatement1.Declaration.Variables, Has.Count.EqualTo(1));
+            Assert.That(varDeclStatement1.Declaration.Variables[0].Identifier.Text, Is.EqualTo("g_DiffuseTexture"));
+            Assert.That(varDeclStatement1.Declaration.Variables[0].Initializer, Is.Null);
+
+            Assert.That(node.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            var varDeclStatement2 = (VariableDeclarationStatementSyntax)node.ChildNodes[1];
+            Assert.That(varDeclStatement2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
+            Assert.That(((PredefinedObjectTypeSyntax)varDeclStatement2.Declaration.Type).ObjectTypeToken.Text, Is.EqualTo("SamplerState"));
+            Assert.That(varDeclStatement2.Declaration.Variables, Has.Count.EqualTo(1));
+            Assert.That(varDeclStatement2.Declaration.Variables[0].Identifier.Text, Is.EqualTo("DiffuseSampler"));
+            Assert.That(varDeclStatement2.Declaration.Variables[0].Initializer, Is.Null);
+
+            Assert.That(node.ChildNodes[2].Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
+            var funcDefStatement = (FunctionDefinitionSyntax) node.ChildNodes[2];
+            Assert.That(funcDefStatement.ReturnType.Kind, Is.EqualTo(SyntaxKind.PredefinedVectorType));
+            Assert.That(((VectorTypeSyntax)funcDefStatement.ReturnType).TypeToken.Text, Is.EqualTo("float4"));
+            Assert.That(funcDefStatement.Name.Kind, Is.EqualTo(SyntaxKind.IdentifierDeclarationName));
+            Assert.That(((IdentifierDeclarationNameSyntax)funcDefStatement.Name).Name.Text, Is.EqualTo("GetTex"));
+
+            Assert.That(funcDefStatement.Body.Statements, Has.Count.EqualTo(1));
+            Assert.That(funcDefStatement.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ReturnStatement));
+            var returnStatement = (ReturnStatementSyntax) funcDefStatement.Body.Statements[0];
+            Assert.That(returnStatement.Expression.Kind, Is.EqualTo(SyntaxKind.InvocationExpression));
+            var invocationExpr = (InvocationExpressionSyntax) returnStatement.Expression;
+            Assert.That(invocationExpr.Expression.Kind, Is.EqualTo(SyntaxKind.MemberAccessExpression));
+            var memberAccessExpr = (MemberAccessExpressionSyntax) invocationExpr.Expression;
+            Assert.That(memberAccessExpr.Expression.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(((IdentifierNameSyntax) memberAccessExpr.Expression).Name.Text, Is.EqualTo("g_DiffuseTexture"));
+            Assert.That(memberAccessExpr.Name.Name.Text, Is.EqualTo("Sample"));
+            Assert.That(invocationExpr.ArgumentList.Arguments, Has.Count.EqualTo(2));
+            Assert.That(invocationExpr.ArgumentList.Arguments[0].Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(((IdentifierNameSyntax)invocationExpr.ArgumentList.Arguments[0]).Name.Text, Is.EqualTo("DiffuseSampler"));
+            Assert.That(invocationExpr.ArgumentList.Arguments[1].Kind, Is.EqualTo(SyntaxKind.MemberAccessExpression));
+            Assert.That(((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression.Kind, Is.EqualTo(SyntaxKind.MemberAccessExpression));
+            Assert.That(((MemberAccessExpressionSyntax)((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(((IdentifierNameSyntax) ((MemberAccessExpressionSyntax)((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression).Name.Text, Is.EqualTo("input"));
+            Assert.That(((MemberAccessExpressionSyntax) ((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Name.Name.Text, Is.EqualTo("texCoords"));
+            Assert.That(((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Name.Name.Text, Is.EqualTo("xy"));
+        }
+
+        [Test]
+        public void TestFunctionLikeDefineWithNestedPasteIncludingMacro()
         {
             const string text = @"
 #define FOO
@@ -338,12 +402,27 @@ PARAM(float, PASTE(bar, FOO)) = 1.0f;
 ";
             var node = Parse(text);
 
-            TestRoundTripping(node, text, false);
-            VerifyErrorCode(node, DiagnosticId.TokenExpected, DiagnosticId.TokenUnexpected);
+            TestRoundTripping(node, text);
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" },
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PASTE" },
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PARAM" });
+
+            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
+            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+
+            var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
+            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
+            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("barFOO"));
+            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
+            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+
+            var equalsValueClause = (EqualsValueClauseSyntax)varDeclStatement.Declaration.Variables[0].Initializer;
+            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
+
+            var floatLiteral = (LiteralExpressionSyntax)equalsValueClause.Value;
+            Assert.That(floatLiteral.Token.Text, Is.EqualTo("1.0f"));
         }
 
         [Test]
