@@ -56,7 +56,7 @@ namespace HlslTools.Parser
                 ExpressionOperatorType operatorType;
                 if (SyntaxFacts.IsBinaryExpression(tk) 
                     && (!_greaterThanTokenIsNotOperator || tk != SyntaxKind.GreaterThanToken)
-                    && ((tk != SyntaxKind.GreaterThanToken || !_allowGreaterThanTokenAroundRhsExpression) && Lookahead.Kind != SyntaxKind.SemiToken))
+                    && (tk != SyntaxKind.GreaterThanToken || !_allowGreaterThanTokenAroundRhsExpression || Lookahead.Kind != SyntaxKind.SemiToken))
                 {
                     operatorType = ExpressionOperatorType.BinaryExpression;
                     opKind = SyntaxFacts.GetBinaryExpression(tk);

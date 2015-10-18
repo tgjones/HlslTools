@@ -297,7 +297,7 @@ namespace HlslTools.Parser
             var equals = Match(SyntaxKind.EqualsToken);
             var lessThan = NextTokenIf(SyntaxKind.LessThanToken);
 
-            _greaterThanTokenIsNotOperator = true;
+            _allowGreaterThanTokenAroundRhsExpression = true;
             _allowLinearAndPointAsIdentifiers = true;
             ExpressionSyntax value;
             try
@@ -307,7 +307,7 @@ namespace HlslTools.Parser
             finally
             {
                 _allowLinearAndPointAsIdentifiers = false;
-                _greaterThanTokenIsNotOperator = false;
+                _allowGreaterThanTokenAroundRhsExpression = false;
             }
             
             var greaterThan = NextTokenIf(SyntaxKind.GreaterThanToken);

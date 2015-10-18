@@ -277,13 +277,13 @@ namespace HlslTools.Tests.Parser
         [Test]
         public void TestSamplerStateInitializer()
         {
-            var text = "SamplerState MySamplerState { MinFilter = point; MagFilter = linear; MipFilter = anistropic; };";
+            var text = "SamplerState MySamplerState { MinFilter = <point>; MagFilter = linear; MipFilter = anistropic; AlphaBlendEnable = 16 > 8; };";
             var file = ParseFile(text);
 
             Assert.NotNull(file);
             Assert.AreEqual(1, file.Declarations.Count);
             Assert.AreEqual(text, file.ToString());
-            Assert.AreEqual(0, file.GetDiagnostics().Count());
+            Assert.That(file.GetDiagnostics(), Is.Empty);
 
             Assert.AreEqual(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
             var fs = (VariableDeclarationStatementSyntax)file.Declarations[0];
@@ -293,16 +293,29 @@ namespace HlslTools.Tests.Parser
             Assert.AreEqual("MySamplerState", fs.Declaration.Variables[0].Identifier.Text);
             Assert.AreEqual(SyntaxKind.StateInitializer, fs.Declaration.Variables[0].Initializer.Kind);
             var init = (StateInitializerSyntax) fs.Declaration.Variables[0].Initializer;
-            Assert.AreEqual(3, init.Properties.Count);
+
+            Assert.AreEqual(4, init.Properties.Count);
+
             Assert.AreEqual("MinFilter", init.Properties[0].Name.Text);
             Assert.AreEqual(SyntaxKind.IdentifierName, init.Properties[0].Value.Kind);
             Assert.AreEqual("point", init.Properties[0].Value.ToString());
+
             Assert.AreEqual("MagFilter", init.Properties[1].Name.Text);
             Assert.AreEqual(SyntaxKind.IdentifierName, init.Properties[1].Value.Kind);
             Assert.AreEqual("linear", init.Properties[1].Value.ToString());
+
             Assert.AreEqual("MipFilter", init.Properties[2].Name.Text);
             Assert.AreEqual(SyntaxKind.IdentifierName, init.Properties[2].Value.Kind);
             Assert.AreEqual("anistropic", init.Properties[2].Value.ToString());
+
+            Assert.AreEqual("AlphaBlendEnable", init.Properties[3].Name.Text);
+            Assert.AreEqual(SyntaxKind.GreaterThanExpression, init.Properties[3].Value.Kind);
+            Assert.AreEqual(SyntaxKind.NumericLiteralExpression, ((BinaryExpressionSyntax) init.Properties[3].Value).Left.Kind);
+            Assert.AreEqual("16", ((BinaryExpressionSyntax)init.Properties[3].Value).Left.ToString());
+            Assert.AreEqual(SyntaxKind.GreaterThanToken, ((BinaryExpressionSyntax)init.Properties[3].Value).OperatorToken.Kind);
+            Assert.AreEqual(SyntaxKind.NumericLiteralExpression, ((BinaryExpressionSyntax)init.Properties[3].Value).Right.Kind);
+            Assert.AreEqual("8", ((BinaryExpressionSyntax)init.Properties[3].Value).Right.ToString());
+
             Assert.NotNull(fs.SemicolonToken);
         }
 
