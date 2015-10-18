@@ -224,12 +224,7 @@ namespace HlslTools.Parser
 
             var body = new List<SyntaxToken>();
             while (Current.Kind != SyntaxKind.EndOfDirectiveToken)
-            {
-                var nextToken = NextToken();
-                if (nextToken.Kind.IsKeyword())
-                    nextToken = nextToken.WithKind(SyntaxKind.IdentifierToken);
-                body.Add(nextToken);
-            }
+                body.Add(NextToken());
 
             var eod = ParseEndOfDirective(name.IsMissing);
 

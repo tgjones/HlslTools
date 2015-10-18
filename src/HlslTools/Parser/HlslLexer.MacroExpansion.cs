@@ -202,6 +202,8 @@ namespace HlslTools.Parser
 
                     default:
                     {
+                        if (token.Kind.IsKeyword())
+                            goto case SyntaxKind.IdentifierToken;
                         result.Add(token);
                         break;
                     }
