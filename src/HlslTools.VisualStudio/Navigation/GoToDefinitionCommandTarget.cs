@@ -31,7 +31,7 @@ namespace HlslTools.VisualStudio.Navigation
             _sourceTextFactory = sourceTextFactory;
         }
 
-        protected override bool IsEnabled(VSConstants.VSStd97CmdID commandId)
+        protected override bool IsEnabled(VSConstants.VSStd97CmdID commandId, ref string commandText)
         {
             // For performance reasons, don't check if we can actually go to definition.
             return true;

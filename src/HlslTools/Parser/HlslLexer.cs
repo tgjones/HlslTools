@@ -280,9 +280,7 @@ namespace HlslTools.Parser
             if (directive.Kind == SyntaxKind.IncludeDirectiveTrivia)
             {
                 var includeDirective = (IncludeDirectiveTriviaSyntax)directive;
-                var includeFilename = includeDirective.Filename.Text;
-                includeFilename = includeFilename.TrimStart('<', '"');
-                includeFilename = includeFilename.TrimEnd('>', '"');
+                var includeFilename = includeDirective.TrimmedFilename;
 
                 SourceText include;
                 try

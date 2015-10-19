@@ -445,6 +445,8 @@ namespace HlslTools.Syntax
         public readonly SyntaxToken IncludeKeyword;
         public readonly SyntaxToken Filename;
 
+        public string TrimmedFilename => Filename.Text.TrimStart('<', '"').TrimEnd('>', '"');
+
         public IncludeDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken includeKeyword, SyntaxToken filename, SyntaxToken endOfDirectiveToken, bool isActive, IEnumerable<Diagnostic> diagnostics)
             : base(SyntaxKind.IncludeDirectiveTrivia, diagnostics)
         {

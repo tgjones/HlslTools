@@ -274,6 +274,7 @@
     <Compile Include="Navigation\NavigateTo\NavigateToItemProviderFactory.cs" />
     <Compile Include="Navigation\NavigateTo\NavigateToVisitor.cs" />
     <Compile Include="Navigation\NavigationExtensions.cs" />
+    <Compile Include="Navigation\OpenIncludeFileCommandTarget.cs" />
     <Compile Include="Options\HlslAdvancedOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>

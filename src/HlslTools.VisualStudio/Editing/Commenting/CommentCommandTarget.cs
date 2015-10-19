@@ -18,7 +18,7 @@ namespace HlslTools.VisualStudio.Editing.Commenting
             return TextView.CommentOrUncommentBlock(comment: true);
         }
 
-        protected override bool IsEnabled(VSConstants.VSStd2KCmdID commandId)
+        protected override bool IsEnabled(VSConstants.VSStd2KCmdID commandId, ref string commandText)
         {
             return true;
         }
