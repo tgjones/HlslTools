@@ -175,7 +175,7 @@ namespace HlslTools.Parser
                     // Potentially stringify.
                     case SyntaxKind.HashToken:
                     {
-                        if (i < macroBody.Count - 1 && macroBody[i + 1].Kind == SyntaxKind.IdentifierToken)
+                        if (i < macroBody.Count - 1 && macroBody[i + 1].Kind.IsIdentifierOrKeyword())
                         {
                             var parameterIndex = FindParameterIndex(parameters, macroBody[i + 1]);
                             if (parameterIndex != -1)
