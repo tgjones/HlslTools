@@ -7,6 +7,8 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
     [Export(typeof(IQuickInfoModelProvider))]
     internal sealed class MacroReferenceQuickInfoModelProvider : QuickInfoModelProvider<SyntaxToken>
     {
+        public override int Priority { get; } = 1;
+
         protected override QuickInfoModel CreateModel(SemanticModel semanticModel, SourceLocation position, SyntaxToken node)
         {
             if (node.MacroReference == null)

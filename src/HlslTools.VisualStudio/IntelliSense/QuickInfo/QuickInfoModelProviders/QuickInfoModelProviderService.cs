@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
+using System.Linq;
 
 namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
 {
@@ -10,7 +11,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
         [ImportingConstructor]
         public QuickInfoModelProviderService([ImportMany] IEnumerable<IQuickInfoModelProvider> providers)
         {
-            Providers = providers.ToImmutableArray();
+            Providers = providers.OrderByDescending(x => x.Priority).ToImmutableArray();
         }
 
         public ImmutableArray<IQuickInfoModelProvider> Providers { get; }

@@ -7,6 +7,8 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
     internal abstract class QuickInfoModelProvider<T> : IQuickInfoModelProvider
         where T : SyntaxNode
     {
+        public virtual int Priority { get; } = 0;
+
         public QuickInfoModel GetModel(SemanticModel semanticModel, SourceLocation position)
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
