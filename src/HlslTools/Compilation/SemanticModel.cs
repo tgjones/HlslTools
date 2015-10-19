@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using HlslTools.Binding;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Diagnostics;
@@ -10,8 +11,8 @@ namespace HlslTools.Compilation
 {
     public sealed class SemanticModel
     {
-        private readonly BindingResult _bindingResult;
-        private ImmutableArray<Diagnostic> _diagnostics;
+        //private readonly BindingResult _bindingResult;
+        //private ImmutableArray<Diagnostic> _diagnostics;
 
         public Compilation Compilation { get; }
 
@@ -26,21 +27,24 @@ namespace HlslTools.Compilation
             //       - Function and method bodies may contain symbols.
         }
 
-        public IEnumerable<Diagnostic> GetDiagnostics()
-        {
-            if (_diagnostics.IsDefault)
-                _diagnostics = _bindingResult.GetDiagnostics().ToImmutableArray();
-            return _diagnostics;
-        }
-
-        //public IEnumerable<Symbol> LookupSymbols(int position)
+        //public IEnumerable<Diagnostic> GetDiagnostics()
         //{
-        //    var node = FindClosestNodeWithBinder(_bindingResult.Root, position);
-        //    var binder = node == null ? null : _bindingResult.GetBinder(node);
-        //    return binder == null
-        //        ? Enumerable.Empty<Symbol>()
-        //        : LookupSymbols(binder);
+        //    if (_diagnostics.IsDefault)
+        //        _diagnostics = _bindingResult.GetDiagnostics().ToImmutableArray();
+        //    return _diagnostics;
         //}
+
+        public IEnumerable<Symbol> LookupSymbols(SourceLocation position)
+        {
+            // TODO
+            return IntrinsicFunctions.AllFunctions;
+
+            //var node = FindClosestNodeWithBinder(_bindingResult.Root, position);
+            //var binder = node == null ? null : _bindingResult.GetBinder(node);
+            //return binder == null
+            //    ? Enumerable.Empty<Symbol>()
+            //    : LookupSymbols(binder);
+        }
 
         //private static IEnumerable<Symbol> LookupSymbols(Binder binder)
         //{
@@ -74,7 +78,7 @@ namespace HlslTools.Compilation
         //    }
         //}
 
-        //private SyntaxNode FindClosestNodeWithBinder(SyntaxNode root, int position)
+        //private SyntaxNode FindClosestNodeWithBinder(SyntaxNode root, SourceLocation position)
         //{
         //    var token = root.FindTokenContext(position);
         //    return (from n in token.Parent.AncestorsAndSelf()
@@ -91,41 +95,41 @@ namespace HlslTools.Compilation
         //    return token.Span;
         //}
 
-        public Symbol GetDeclaredSymbol(FunctionDefinitionSyntax syntax)
-        {
-            return _bindingResult.GetSymbol(syntax);
-        }
+        //public Symbol GetDeclaredSymbol(FunctionDefinitionSyntax syntax)
+        //{
+        //    return _bindingResult.GetSymbol(syntax);
+        //}
 
-        public Symbol GetDeclaredSymbol(VariableDeclaratorSyntax syntax)
-        {
-            return _bindingResult.GetSymbol(syntax);
-        }
+        //public Symbol GetDeclaredSymbol(VariableDeclaratorSyntax syntax)
+        //{
+        //    return _bindingResult.GetSymbol(syntax);
+        //}
 
-        public Symbol GetSymbol(ExpressionSyntax expression)
-        {
-            var boundExpression = GetBoundExpression(expression);
-            return boundExpression == null ? null : GetSymbol(boundExpression);
-        }
+        //public Symbol GetSymbol(ExpressionSyntax expression)
+        //{
+        //    var boundExpression = GetBoundExpression(expression);
+        //    return boundExpression == null ? null : GetSymbol(boundExpression);
+        //}
 
-        private static Symbol GetSymbol(BoundExpression expression)
-        {
-            switch (expression.Kind)
-            {
-                case BoundNodeKind.FunctionInvocationExpression:
-                    return GetSymbol((BoundFunctionInvocationExpression)expression);
-                default:
-                    return null;
-            }
-        }
+        //private static Symbol GetSymbol(BoundExpression expression)
+        //{
+        //    switch (expression.Kind)
+        //    {
+        //        case BoundNodeKind.FunctionInvocationExpression:
+        //            return GetSymbol((BoundFunctionInvocationExpression)expression);
+        //        default:
+        //            return null;
+        //    }
+        //}
 
-        private static Symbol GetSymbol(BoundFunctionInvocationExpression expression)
-        {
-            return expression.Symbol;
-        }
+        //private static Symbol GetSymbol(BoundFunctionInvocationExpression expression)
+        //{
+        //    return expression.Symbol;
+        //}
 
-        private BoundExpression GetBoundExpression(ExpressionSyntax expression)
-        {
-            return _bindingResult.GetBoundNode(expression) as BoundExpression;
-        }
+        //private BoundExpression GetBoundExpression(ExpressionSyntax expression)
+        //{
+        //    return _bindingResult.GetBoundNode(expression) as BoundExpression;
+        //}
     }
 }

@@ -1,5 +1,6 @@
 using System.Windows.Input;
 using HlslTools.VisualStudio.IntelliSense.Completion;
+using HlslTools.VisualStudio.IntelliSense.SignatureHelp;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text.Editor;
 
@@ -10,26 +11,30 @@ namespace HlslTools.VisualStudio.IntelliSense
         private readonly ITextView _textView;
         private readonly IIntellisenseSessionStackMapService _intellisenseSessionStackMapService;
         private readonly CompletionModelManager _completionModelManager;
+        private readonly SignatureHelpManager _signatureHelpManager;
 
-        public HlslKeyProcessor(ITextView textView, IIntellisenseSessionStackMapService intellisenseSessionStackMapService, CompletionModelManager completionModelManager)
+        public HlslKeyProcessor(ITextView textView, IIntellisenseSessionStackMapService intellisenseSessionStackMapService, CompletionModelManager completionModelManager, SignatureHelpManager signatureHelpManager)
         {
             _textView = textView;
             _intellisenseSessionStackMapService = intellisenseSessionStackMapService;
             _completionModelManager = completionModelManager;
+            _signatureHelpManager = signatureHelpManager;
         }
 
-        public override bool IsInterestedInHandledEvents => true;
+        public override bool IsInterestedInHandledEvents { get; } = true;
 
         public override void TextInput(TextCompositionEventArgs args)
         {
             base.TextInput(args);
             _completionModelManager.HandleTextInput(args.Text);
+            _signatureHelpManager.HandleTextInput(args.Text);
         }
 
         public override void PreviewTextInput(TextCompositionEventArgs args)
         {
             base.PreviewTextInput(args);
             _completionModelManager.HandlePreviewTextInput(args.Text);
+            _signatureHelpManager.HandlePreviewTextInput(args.Text);
         }
 
         public override void PreviewKeyDown(KeyEventArgs args)
@@ -45,6 +50,11 @@ namespace HlslTools.VisualStudio.IntelliSense
             else if (modifiers == ModifierKeys.Control && key == Key.J)
             {
                 ListMembers();
+                args.Handled = true;
+            }
+            else if (modifiers == (ModifierKeys.Control | ModifierKeys.Shift) && key == Key.Space)
+            {
+                ParameterInfo();
                 args.Handled = true;
             }
             else if (modifiers == ModifierKeys.None)
@@ -88,6 +98,11 @@ namespace HlslTools.VisualStudio.IntelliSense
         private void CompleteWord()
         {
             _completionModelManager.TriggerCompletion(true);
+        }
+
+        private void ParameterInfo()
+        {
+            _signatureHelpManager.TriggerSignatureHelp();
         }
 
         private bool ExecuteKeyboardCommandIfSessionActive(IntellisenseKeyboardCommand command)

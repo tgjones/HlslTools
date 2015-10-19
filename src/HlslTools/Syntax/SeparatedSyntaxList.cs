@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.Contracts;
+using System.Linq;
 
 namespace HlslTools.Syntax
 {
@@ -50,6 +51,12 @@ namespace HlslTools.Syntax
         {
             return _list;
         }
+
+        [Pure]
+        public IEnumerable<SyntaxToken> GetSeparators()
+        {
+            return _list.Where((item, index) => index % 2 != 0).Cast<SyntaxToken>();
+        } 
 
         public static bool operator ==(SeparatedSyntaxList<TNode> left, SeparatedSyntaxList<TNode> right)
         {
