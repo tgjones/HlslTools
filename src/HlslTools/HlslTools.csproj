@@ -110,11 +110,16 @@
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\GlobalSymbol.cs" />
     <Compile Include="Symbols\GlobalVariableSymbol.cs" />
+    <Compile Include="Symbols\IInvocableSymbol.cs" />
     <Compile Include="Symbols\ILocalSymbolTable.cs" />
     <Compile Include="Symbols\IndexerSymbol.cs" />
     <Compile Include="Symbols\InterfaceSymbol.cs" />
     <Compile Include="Symbols\ISymbolTable.cs" />
     <Compile Include="Symbols\LocalSymbol.cs" />
+    <Compile Include="Symbols\Markup\SymbolMarkup.cs" />
+    <Compile Include="Symbols\Markup\SymbolMarkupBuilder.cs" />
+    <Compile Include="Symbols\Markup\SymbolMarkupKind.cs" />
+    <Compile Include="Symbols\Markup\SymbolMarkupToken.cs" />
     <Compile Include="Symbols\MethodDeclarationSymbol.cs" />
     <Compile Include="Symbols\MethodDefinitionSymbol.cs" />
     <Compile Include="Symbols\MethodSymbol.cs" />

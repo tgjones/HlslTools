@@ -148,6 +148,7 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol Double4x4;
 
         public static readonly TypeSymbol[] AllScalarTypes;
+        public static readonly TypeSymbol[] AllFloatVectorTypes;
         public static readonly TypeSymbol[] AllVectorTypes;
         public static readonly TypeSymbol[] AllMatrixTypes;
 
@@ -299,6 +300,14 @@ namespace HlslTools.Symbols
                 Half,
                 Float,
                 Double
+            };
+
+            AllFloatVectorTypes = new[]
+            {
+                Float1,
+                Float2,
+                Float3,
+                Float4
             };
 
             AllVectorTypes = new[]

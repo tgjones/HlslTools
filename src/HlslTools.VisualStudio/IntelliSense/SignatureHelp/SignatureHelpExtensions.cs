@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using System.Text;
 using HlslTools.Symbols;
+using HlslTools.Symbols.Markup;
 using HlslTools.Syntax;
+using HlslTools.Text;
 
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
@@ -32,15 +36,72 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             return separators.TakeWhile(s => !s.IsMissing && s.SourceRange.End <= position).Count();
         }
 
-        public static IEnumerable<SignatureItem> ToSignatureItems(this IEnumerable<Symbol> symbols)
+        public static IEnumerable<SignatureItem> ToSignatureItems<TSymbol>(this IEnumerable<TSymbol> symbols)
+            where TSymbol : Symbol, IInvocableSymbol
         {
             return symbols.Select(ToSignatureItem);
         }
 
-        private static SignatureItem ToSignatureItem(this Symbol symbol)
+        private static bool IsCommaToken(SymbolMarkupToken token)
         {
-            throw new NotImplementedException();
-            //return SymbolMarkup.ForSymbol(symbol).ToSignatureItem(IsCommaToken);
+            return token.Kind == SymbolMarkupKind.Punctuation && token.Text == ",";
+        }
+
+        private static SignatureItem ToSignatureItem<TSymbol>(this TSymbol symbol, Func<SymbolMarkupToken, bool> separatorPredicate)
+            where TSymbol : Symbol, IInvocableSymbol
+        {
+            var markup = SymbolMarkup.ForSymbol(symbol);
+
+            var sb = new StringBuilder();
+            var parameterStart = 0;
+            var nextNonWhitespaceStartsParameter = false;
+            var parameterSpans = new List<TextSpan>();
+            var parameterNamesAndDocs = new List<Tuple<string, string>>();
+
+            foreach (var node in markup.Tokens)
+            {
+                var isParameterName = node.Kind == SymbolMarkupKind.ParameterName;
+                var isWhitespace = node.Kind == SymbolMarkupKind.Whitespace;
+                var isLeftParenthesis = node.Kind == SymbolMarkupKind.Punctuation && node.Text == "(";
+                var isRightParenthesis = node.Kind == SymbolMarkupKind.Punctuation && node.Text == ")";
+                var isSeparator = separatorPredicate(node);
+
+                if (isParameterName)
+                {
+                    parameterNamesAndDocs.Add(Tuple.Create(node.Text, symbol.Parameters[parameterNamesAndDocs.Count].Documentation));
+                }
+
+                if (isLeftParenthesis)
+                {
+                    nextNonWhitespaceStartsParameter = true;
+                }
+                else if (isSeparator || isRightParenthesis)
+                {
+                    var end = sb.Length;
+                    var span = TextSpan.FromBounds(null, parameterStart, end);
+                    parameterSpans.Add(span);
+                    nextNonWhitespaceStartsParameter = true;
+                }
+                else if (!isWhitespace && nextNonWhitespaceStartsParameter)
+                {
+                    parameterStart = sb.Length;
+                    nextNonWhitespaceStartsParameter = false;
+                }
+
+                sb.Append(node.Text);
+            }
+
+            var parameters = parameterSpans
+                .Zip(parameterNamesAndDocs, (s, n) => new ParameterItem(n.Item1, n.Item2, s))
+                .ToImmutableArray();
+            
+            return new SignatureItem(sb.ToString(), symbol.Documentation, parameters);
+        }
+
+        private static SignatureItem ToSignatureItem<TSymbol>(this TSymbol symbol)
+            where TSymbol : Symbol, IInvocableSymbol
+        {
+            return symbol.ToSignatureItem(IsCommaToken);
         }
     }
 }

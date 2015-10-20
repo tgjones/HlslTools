@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace HlslTools.Symbols
 {
-    public abstract class MethodSymbol : MemberSymbol
+    public abstract class MethodSymbol : MemberSymbol, IInvocableSymbol
     {
         private readonly Func<MethodSymbol, IEnumerable<ParameterSymbol>> _lazyParameters;
         private ImmutableArray<ParameterSymbol> _parameters;

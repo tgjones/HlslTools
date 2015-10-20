@@ -182,7 +182,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
                 else if (showSession)
                 {
                     var snapshot = _textView.TextBuffer.CurrentSnapshot;
-                    var triggerPosition = _model.ApplicableSpan.Start;
+                    //var triggerPosition = _model.ApplicableSpan.Start;
+                    var triggerPosition = _textView.Caret.Position.BufferPosition.Position;
                     var triggerPoint = snapshot.CreateTrackingPoint(triggerPosition, PointTrackingMode.Negative);
 
                     _session = _signatureHelpBroker.CreateSignatureHelpSession(_textView, triggerPoint, true);

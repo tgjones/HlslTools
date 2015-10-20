@@ -7,7 +7,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
     [Export(typeof(ISignatureHelpSourceProvider))]
     [ContentType(HlslConstants.ContentTypeName)]
-    internal class SignatureHelpSourceProvider : ISignatureHelpSourceProvider
+    [Name(nameof(SignatureHelpSourceProvider))]
+    internal sealed class SignatureHelpSourceProvider : ISignatureHelpSourceProvider
     {
         public ISignatureHelpSource TryCreateSignatureHelpSource(ITextBuffer textBuffer)
         {

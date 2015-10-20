@@ -17,6 +17,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 
             ApplicableToSpan = applicableSpan;
             Content = signatureItem.Content;
+            Documentation = signatureItem.Documentation;
             Parameters = new ReadOnlyCollection<IParameter>(parameters);
             CurrentParameter = selectedParameter >= 0 && selectedParameter < parameters.Length
                 ? parameters[selectedParameter]
@@ -25,7 +26,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 
         private Parameter CreateParameter(ParameterItem p)
         {
-            return new Parameter(this, p.Name, string.Empty, new Span(p.Span.Start, p.Span.Length));
+            return new Parameter(this, p.Name, p.Documentation, new Span(p.Span.Start, p.Span.Length));
         }
 
         public IParameter CurrentParameter

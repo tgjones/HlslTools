@@ -7,30 +7,22 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
     internal sealed class SignatureItem : IEquatable<SignatureItem>
     {
-        private readonly string _content;
-        private readonly ImmutableArray<ParameterItem> _parameters;
-
-        public SignatureItem(string content, IEnumerable<ParameterItem> parameters)
+        public SignatureItem(string content, string documentation, IEnumerable<ParameterItem> parameters)
         {
-            _content = content;
-            _parameters = parameters.ToImmutableArray();
+            Content = content;
+            Documentation = documentation;
+            Parameters = parameters.ToImmutableArray();
         }
 
-        public string Content
-        {
-            get { return _content; }
-        }
-
-        public ImmutableArray<ParameterItem> Parameters
-        {
-            get { return _parameters; }
-        }
+        public string Content { get; }
+        public string Documentation { get; }
+        public ImmutableArray<ParameterItem> Parameters { get; }
 
         public bool Equals(SignatureItem other)
         {
             return other != null &&
-                   _content == other.Content &&
-                   _parameters.SequenceEqual(other.Parameters);
+                   Content == other.Content &&
+                   Parameters.SequenceEqual(other.Parameters);
         }
 
         public override bool Equals(object obj)
@@ -43,8 +35,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
         {
             unchecked
             {
-                var hashCode = _content.GetHashCode();
-                hashCode = (hashCode * 397) ^ _parameters.GetHashCode();
+                var hashCode = Content.GetHashCode();
+                hashCode = (hashCode * 397) ^ Parameters.GetHashCode();
                 return hashCode;
             }
         }

@@ -9,8 +9,8 @@ namespace HlslTools.Text
         public TextSpan(SourceText sourceText, int start, int length)
         {
             SourceText = sourceText;
-            IsInRootFile = sourceText.Filename == null;
-            Filename = sourceText.Filename;
+            IsInRootFile = sourceText?.Filename == null;
+            Filename = sourceText?.Filename;
             Start = start;
             End = Start + length;
             Length = length;

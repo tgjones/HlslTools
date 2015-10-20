@@ -5,13 +5,15 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
     public sealed class ParameterItem : IEquatable<ParameterItem>
     {
-        public ParameterItem(string name, TextSpan span)
+        public ParameterItem(string name, string documentation, TextSpan span)
         {
             Name = name;
+            Documentation = documentation;
             Span = span;
         }
 
         public string Name { get; }
+        public string Documentation { get; }
         public TextSpan Span { get; }
 
         public bool Equals(ParameterItem other)
