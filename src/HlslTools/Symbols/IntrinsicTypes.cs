@@ -150,8 +150,10 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllScalarTypes;
         public static readonly TypeSymbol[] AllFloatVectorTypes;
         public static readonly TypeSymbol[] AllVectorTypes;
+        public static readonly TypeSymbol[] AllFloatMatrixTypes;
         public static readonly TypeSymbol[] AllMatrixTypes;
 
+        public static readonly TypeSymbol[] AllFloatTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
 
         public static readonly TypeSymbol SamplerState;
@@ -338,6 +340,26 @@ namespace HlslTools.Symbols
                 Double4
             };
 
+            AllFloatMatrixTypes = new[]
+            {
+                Float1x1,
+                Float1x2,
+                Float1x3,
+                Float1x4,
+                Float2x1,
+                Float2x2,
+                Float2x3,
+                Float2x4,
+                Float3x1,
+                Float3x2,
+                Float3x3,
+                Float3x4,
+                Float4x1,
+                Float4x2,
+                Float4x3,
+                Float4x4
+            };
+
             AllMatrixTypes = new[]
             {
                 Bool1x1,
@@ -437,6 +459,11 @@ namespace HlslTools.Symbols
                 Double4x3,
                 Double4x4
             };
+
+            AllFloatTypes = new[] { Float }
+                .Union(AllFloatVectorTypes)
+                .Union(AllFloatMatrixTypes)
+                .ToArray();
 
             AllNumericTypes = AllScalarTypes
                 .Union(AllVectorTypes)
