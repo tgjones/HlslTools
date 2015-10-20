@@ -266,6 +266,7 @@
     <Compile Include="IntelliSense\SignatureHelp\Parameter.cs" />
     <Compile Include="IntelliSense\SignatureHelp\Signature.cs" />
     <Compile Include="IntelliSense\SignatureHelp\ParameterItem.cs" />
+    <Compile Include="IntelliSense\SignatureHelp\SignatureHelpTriggerProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpExtensions.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpManager.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpManagerProvider.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProviderService.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpSource.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpSourceProvider.cs" />
+    <Compile Include="IntelliSense\SignatureHelp\SignatureHelpTrigger.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureItem.cs" />
     <Compile Include="Navigation\GoToDefinitionCommandTarget.cs" />
     <Compile Include="Navigation\GoToDefinitionProviders\GoToDefinitionProvider.cs" />

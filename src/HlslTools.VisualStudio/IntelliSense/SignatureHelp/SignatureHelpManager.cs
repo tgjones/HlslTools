@@ -72,10 +72,6 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
                 TriggerSignatureHelp();
         }
 
-        public void HandlePreviewTextInput(string text)
-        {
-        }
-
         public void TriggerSignatureHelp()
         {
             if (_session != null)

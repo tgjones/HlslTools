@@ -27,14 +27,12 @@ namespace HlslTools.VisualStudio.IntelliSense
         {
             base.TextInput(args);
             _completionModelManager.HandleTextInput(args.Text);
-            _signatureHelpManager.HandleTextInput(args.Text);
         }
 
         public override void PreviewTextInput(TextCompositionEventArgs args)
         {
             base.PreviewTextInput(args);
             _completionModelManager.HandlePreviewTextInput(args.Text);
-            _signatureHelpManager.HandlePreviewTextInput(args.Text);
         }
 
         public override void PreviewKeyDown(KeyEventArgs args)
