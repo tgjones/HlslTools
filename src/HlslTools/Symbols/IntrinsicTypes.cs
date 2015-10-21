@@ -148,12 +148,24 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol Double4x4;
 
         public static readonly TypeSymbol[] AllScalarTypes;
+
+        public static readonly TypeSymbol[] AllBoolVectorTypes;
+        public static readonly TypeSymbol[] AllIntVectorTypes;
+        public static readonly TypeSymbol[] AllUintVectorTypes;
         public static readonly TypeSymbol[] AllFloatVectorTypes;
+        public static readonly TypeSymbol[] AllDoubleVectorTypes;
         public static readonly TypeSymbol[] AllVectorTypes;
+
+        public static readonly TypeSymbol[] AllBoolMatrixTypes;
+        public static readonly TypeSymbol[] AllIntMatrixTypes;
         public static readonly TypeSymbol[] AllFloatMatrixTypes;
+        public static readonly TypeSymbol[] AllDoubleMatrixTypes;
         public static readonly TypeSymbol[] AllMatrixTypes;
 
+        public static readonly TypeSymbol[] AllBoolTypes;
+        public static readonly TypeSymbol[] AllIntTypes;
         public static readonly TypeSymbol[] AllFloatTypes;
+        public static readonly TypeSymbol[] AllDoubleTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
 
         public static readonly TypeSymbol SamplerState;
@@ -304,12 +316,44 @@ namespace HlslTools.Symbols
                 Double
             };
 
+            AllBoolVectorTypes = new[]
+            {
+                Bool1,
+                Bool2,
+                Bool3,
+                Bool4
+            };
+
+            AllIntVectorTypes = new[]
+            {
+                Int1,
+                Int2,
+                Int3,
+                Int4
+            };
+
+            AllUintVectorTypes = new[]
+            {
+                Uint1,
+                Uint2,
+                Uint3,
+                Uint4
+            };
+
             AllFloatVectorTypes = new[]
             {
                 Float1,
                 Float2,
                 Float3,
                 Float4
+            };
+
+            AllDoubleVectorTypes = new[]
+            {
+                Double1,
+                Double2,
+                Double3,
+                Double4
             };
 
             AllVectorTypes = new[]
@@ -340,6 +384,46 @@ namespace HlslTools.Symbols
                 Double4
             };
 
+            AllBoolMatrixTypes = new[]
+            {
+                Bool1x1,
+                Bool1x2,
+                Bool1x3,
+                Bool1x4,
+                Bool2x1,
+                Bool2x2,
+                Bool2x3,
+                Bool2x4,
+                Bool3x1,
+                Bool3x2,
+                Bool3x3,
+                Bool3x4,
+                Bool4x1,
+                Bool4x2,
+                Bool4x3,
+                Bool4x4
+            };
+
+            AllIntMatrixTypes = new[]
+            {
+                Int1x1,
+                Int1x2,
+                Int1x3,
+                Int1x4,
+                Int2x1,
+                Int2x2,
+                Int2x3,
+                Int2x4,
+                Int3x1,
+                Int3x2,
+                Int3x3,
+                Int3x4,
+                Int4x1,
+                Int4x2,
+                Int4x3,
+                Int4x4
+            };
+
             AllFloatMatrixTypes = new[]
             {
                 Float1x1,
@@ -358,6 +442,26 @@ namespace HlslTools.Symbols
                 Float4x2,
                 Float4x3,
                 Float4x4
+            };
+
+            AllDoubleMatrixTypes = new[]
+            {
+                Double1x1,
+                Double1x2,
+                Double1x3,
+                Double1x4,
+                Double2x1,
+                Double2x2,
+                Double2x3,
+                Double2x4,
+                Double3x1,
+                Double3x2,
+                Double3x3,
+                Double3x4,
+                Double4x1,
+                Double4x2,
+                Double4x3,
+                Double4x4
             };
 
             AllMatrixTypes = new[]
@@ -460,9 +564,24 @@ namespace HlslTools.Symbols
                 Double4x4
             };
 
+            AllBoolTypes = new[] { Bool }
+                .Union(AllBoolVectorTypes)
+                .Union(AllBoolMatrixTypes)
+                .ToArray();
+
+            AllIntTypes = new[] { Int }
+                .Union(AllIntVectorTypes)
+                .Union(AllIntMatrixTypes)
+                .ToArray();
+
             AllFloatTypes = new[] { Float }
                 .Union(AllFloatVectorTypes)
                 .Union(AllFloatMatrixTypes)
+                .ToArray();
+
+            AllDoubleTypes = new[] { Double }
+                .Union(AllDoubleVectorTypes)
+                .Union(AllDoubleMatrixTypes)
                 .ToArray();
 
             AllNumericTypes = AllScalarTypes
