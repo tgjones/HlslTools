@@ -98,7 +98,7 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create3(
                 "clamp",
                 "Clamps the specified value to the specified minimum and maximum range.",
-                IntrinsicTypes.AllFloatTypes.Union(IntrinsicTypes.AllIntTypes).ToArray(),
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray(),
                 "value", "A value to clamp.",
                 "min", "The specified minimum range.",
                 "max", "The specified maximum range."));
@@ -124,7 +124,7 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "countbits",
                 "Counts the number of bits (per component) in the input integer.",
-                new [] { IntrinsicTypes.Uint }.Union(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new [] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The input value."));
 
             allFunctions.AddRange(Create2(
@@ -269,16 +269,16 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "f16tof32",
                 "Converts the float16 stored in the low-half of the uint to a float.",
-                new[] { IntrinsicTypes.Uint }.Union(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The input value.",
-                new[] { IntrinsicTypes.Float }.Union(IntrinsicTypes.AllFloatVectorTypes).ToArray()));
+                new[] { IntrinsicTypes.Float }.Concat(IntrinsicTypes.AllFloatVectorTypes).ToArray()));
 
             allFunctions.AddRange(Create1(
                 "f32tof16",
                 "Converts an input into a float16 type.",
-                new[] { IntrinsicTypes.Float }.Union(IntrinsicTypes.AllFloatVectorTypes).ToArray(),
+                new[] { IntrinsicTypes.Float }.Concat(IntrinsicTypes.AllFloatVectorTypes).ToArray(),
                 "value", "The input value.",
-                new[] { IntrinsicTypes.Uint }.Union(IntrinsicTypes.AllUintVectorTypes).ToArray()));
+                new[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray()));
 
             allFunctions.AddRange(Create3(
                 "faceforward",
@@ -291,13 +291,13 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "firstbithigh",
                 "Gets the location of the first set bit starting from the highest order bit and working downward, per component.",
-                new [] { IntrinsicTypes.Int }.Union(IntrinsicTypes.AllIntVectorTypes).Union(new[] { IntrinsicTypes.Uint }).Union(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new [] { IntrinsicTypes.Int }.Concat(IntrinsicTypes.AllIntVectorTypes).Concat(new[] { IntrinsicTypes.Uint }).Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create1(
                 "firstbitlow",
                 "Returns the location of the first set bit starting from the lowest order bit and working upward, per component.",
-                new[] { IntrinsicTypes.Int }.Union(IntrinsicTypes.AllIntVectorTypes).Union(new[] { IntrinsicTypes.Uint }).Union(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new[] { IntrinsicTypes.Int }.Concat(IntrinsicTypes.AllIntVectorTypes).Concat(new[] { IntrinsicTypes.Uint }).Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create1(
@@ -576,21 +576,21 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create2(
                 "max",
                 "Selects the greater of x and y.",
-                IntrinsicTypes.AllFloatTypes.Union(IntrinsicTypes.AllIntTypes).ToArray(),
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray(),
                 "x", "The x input value.",
                 "y", "The y input value."));
 
             allFunctions.AddRange(Create2(
                 "min",
                 "Selects the lesser of x and y.",
-                IntrinsicTypes.AllFloatTypes.Union(IntrinsicTypes.AllIntTypes).ToArray(),
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray(),
                 "x", "The x input value.",
                 "y", "The y input value."));
 
             allFunctions.AddRange(Create2(
                 "modf",
                 "Splits the value x into fractional and integer parts, each of which has the same sign as x.",
-                IntrinsicTypes.AllFloatTypes.Union(IntrinsicTypes.AllIntTypes).ToArray(),
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray(),
                 "x", "The x input value.",
                 "ip", "The integer portion of x.",
                 overrideParameterDirection2: ParameterDirection.Out));
@@ -674,10 +674,671 @@ namespace HlslTools.Symbols
                 "x", "The x input value. If x is a vector, it treated as a row vector.",
                 "y", "The y input value. If y is a vector, it treated as a column vector.",
                 IntrinsicTypes.Int));
-            // overload 6: TODO
-            // overload 7: TODO
-            // overload 8: TODO
-            // overload 9: TODO
+            // overload 6
+            var overload6Parameter1 = new[]
+            {
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int4,
+            };
+            var overload6Parameter2 = new[]
+            {
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4
+            };
+            var overload6Result = new[]
+            {
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+            };
+            for (var i = 0; i < overload6Parameter1.Length; i++)
+            {
+                var i1 = i;
+                allFunctions.Add(new FunctionDeclarationSymbol(
+                    "mul",
+                    "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
+                    overload6Result[i],
+                    f => new[]
+                    {
+                        new ParameterSymbol("x", "The x input value. If x is a vector, it treated as a row vector.", f, overload6Parameter1[i1]),
+                        new ParameterSymbol("y", "The y input value. If y is a vector, it treated as a column vector.", f, overload6Parameter2[i1])
+                    }));
+            }
+            // overload 7
+            allFunctions.AddRange(Create2(
+                "mul",
+                "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
+                IntrinsicTypes.AllFloatMatrixTypes,
+                "x", "The x input value. If x is a vector, it treated as a row vector.",
+                "y", "The y input value. If y is a vector, it treated as a column vector.",
+                IntrinsicTypes.Float,
+                overrideParameterType2: IntrinsicTypes.Float));
+            allFunctions.AddRange(Create2(
+                "mul",
+                "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
+                IntrinsicTypes.AllIntMatrixTypes,
+                "x", "The x input value. If x is a vector, it treated as a row vector.",
+                "y", "The y input value. If y is a vector, it treated as a column vector.",
+                IntrinsicTypes.Int,
+                overrideParameterType2: IntrinsicTypes.Int));
+            // overload 8
+            var overload8Parameter1 = new[]
+            {
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4
+            };
+            var overload8Parameter2 = new[]
+            {
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4
+            };
+            var overload8Result = new[]
+            {
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float1,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float2,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float3,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Float4,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int1,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int2,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int3,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int4,
+                IntrinsicTypes.Int4
+            };
+            for (var i = 0; i < overload8Parameter1.Length; i++)
+            {
+                var i1 = i;
+                allFunctions.Add(new FunctionDeclarationSymbol(
+                    "mul",
+                    "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
+                    overload8Result[i],
+                    f => new[]
+                    {
+                        new ParameterSymbol("x", "The x input value. If x is a vector, it treated as a row vector.", f, overload8Parameter1[i1]),
+                        new ParameterSymbol("y", "The y input value. If y is a vector, it treated as a column vector.", f, overload8Parameter2[i1])
+                    }));
+            }
+            // overload 9
+            var overload9Parameter1 = new[]
+            {
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float4x4,
+
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int4x4,
+            };
+            var overload9Parameter2 = new[]
+            {
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+            };
+            var overload9Result = new[]
+            {
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float1x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float4x4,
+
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int1x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int4x4,
+            };
+            for (var i = 0; i < overload9Parameter1.Length; i++)
+            {
+                var i1 = i;
+                allFunctions.Add(new FunctionDeclarationSymbol(
+                    "mul",
+                    "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
+                    overload9Result[i],
+                    f => new[]
+                    {
+                        new ParameterSymbol("x", "The x input value. If x is a vector, it treated as a row vector.", f, overload9Parameter1[i1]),
+                        new ParameterSymbol("y", "The y input value. If y is a vector, it treated as a column vector.", f, overload9Parameter2[i1])
+                    }));
+            }
 
             allFunctions.AddRange(Create1(
                 "noise",
@@ -839,7 +1500,7 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "rcp",
                 "Calculates a fast, approximate, per-component reciprocal.",
-                IntrinsicTypes.AllFloatTypes.Union(IntrinsicTypes.AllDoubleTypes).ToArray(),
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllDoubleTypes).ToArray(),
                 "value", "The input value."));
 
             allFunctions.AddRange(Create2(
@@ -861,7 +1522,7 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "reversebits",
                 "Reverses the order of the bits, per component.",
-                new[] { IntrinsicTypes.Uint }.Union(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The input value."));
 
             allFunctions.AddRange(Create1(
@@ -885,9 +1546,9 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                "sign",
                "Returns the sign of x.",
-               IntrinsicTypes.AllFloatTypes.Union(IntrinsicTypes.AllIntTypes).ToArray(),
+               IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray(),
                "value", "The input value.",
-               IntrinsicTypes.AllIntTypes.Union(IntrinsicTypes.AllIntTypes).ToArray()));
+               IntrinsicTypes.AllIntTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray()));
 
             allFunctions.AddRange(Create1(
                "sin",
@@ -944,6 +1605,328 @@ namespace HlslTools.Symbols
               "Returns the hyperbolic tangent of the specified value.",
               IntrinsicTypes.AllFloatTypes,
               "value", "The specified value, in radians."));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex1D",
+                "Samples a 1D texture.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float)
+                }));
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex1D",
+                "Samples a 1D texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float1),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float1)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex1Dbias",
+                "Samples a 1D texture after biasing the mip level by t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex1Dgrad",
+                "Samples a 1D texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float1),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float1)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex1Dlod",
+                "Samples a 1D texture with mipmaps. The mipmap LOD is specified in t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex1Dproj",
+                "Samples a 1D texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex2D",
+                "Samples a 2D texture.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float2)
+                }));
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex2D",
+                "Samples a 2D texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float2),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float2),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float2)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex2Dbias",
+                "Samples a 2D texture after biasing the mip level by t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex2Dgrad",
+                "Samples a 2D texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float2),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float2),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float2)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex2Dlod",
+                "Samples a 2D texture with mipmaps. The mipmap LOD is specified in t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex2Dproj",
+                "Samples a 2D texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex3D",
+                "Samples a 3D texture.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float3)
+                }));
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex3D",
+                "Samples a 3D texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float3)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex3Dbias",
+                "Samples a 3D texture after biasing the mip level by t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex3Dgrad",
+                "Samples a 3D texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float3)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex3Dlod",
+                "Samples a 3D texture with mipmaps. The mipmap LOD is specified in t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "tex3Dproj",
+                "Samples a 3D texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "texCUBE",
+                "Samples a cube texture.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float3)
+                }));
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "texCUBE",
+                "Samples a cube texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float3)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "texCUBEbias",
+                "Samples a cube texture after biasing the mip level by t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "texCUBEgrad",
+                "Samples a cube texture using a gradient to select the mip level.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddx", "Rate of change of the surface geometry in the x direction.", f, IntrinsicTypes.Float3),
+                    new ParameterSymbol("ddy", "Rate of change of the surface geometry in the y direction.", f, IntrinsicTypes.Float3)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "texCUBElod",
+                "Samples a cube texture with mipmaps. The mipmap LOD is specified in t.w.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.Add(new FunctionDeclarationSymbol(
+                "texCUBEproj",
+                "Samples a cube texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
+                IntrinsicTypes.Float4,
+                f => new[]
+                {
+                    new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
+                    new ParameterSymbol("t", "The texture coordinate.", f, IntrinsicTypes.Float4)
+                }));
+
+            allFunctions.AddRange(Create1(
+                "transpose",
+                "Transposes the specified input matrix.",
+                IntrinsicTypes.AllFloatMatrixTypes,
+                "value", "The specified matrix.",
+                IntrinsicTypes.Float1x1, // Transposed rows / columns
+                IntrinsicTypes.Float2x1,
+                IntrinsicTypes.Float3x1,
+                IntrinsicTypes.Float4x1,
+                IntrinsicTypes.Float1x2,
+                IntrinsicTypes.Float2x2,
+                IntrinsicTypes.Float3x2,
+                IntrinsicTypes.Float4x2,
+                IntrinsicTypes.Float1x3,
+                IntrinsicTypes.Float2x3,
+                IntrinsicTypes.Float3x3,
+                IntrinsicTypes.Float4x3,
+                IntrinsicTypes.Float1x4,
+                IntrinsicTypes.Float2x4,
+                IntrinsicTypes.Float3x4,
+                IntrinsicTypes.Float4x4));
+            allFunctions.AddRange(Create1(
+                "transpose",
+                "Transposes the specified input matrix.",
+                IntrinsicTypes.AllIntMatrixTypes,
+                "value", "The specified matrix.",
+                IntrinsicTypes.Int1x1, // Transposed rows / columns
+                IntrinsicTypes.Int2x1,
+                IntrinsicTypes.Int3x1,
+                IntrinsicTypes.Int4x1,
+                IntrinsicTypes.Int1x2,
+                IntrinsicTypes.Int2x2,
+                IntrinsicTypes.Int3x2,
+                IntrinsicTypes.Int4x2,
+                IntrinsicTypes.Int1x3,
+                IntrinsicTypes.Int2x3,
+                IntrinsicTypes.Int3x3,
+                IntrinsicTypes.Int4x3,
+                IntrinsicTypes.Int1x4,
+                IntrinsicTypes.Int2x4,
+                IntrinsicTypes.Int3x4,
+                IntrinsicTypes.Int4x4));
+            allFunctions.AddRange(Create1(
+                "transpose",
+                "Transposes the specified input matrix.",
+                IntrinsicTypes.AllBoolMatrixTypes,
+                "value", "The specified matrix.",
+                IntrinsicTypes.Bool1x1, // Transposed rows / columns
+                IntrinsicTypes.Bool2x1,
+                IntrinsicTypes.Bool3x1,
+                IntrinsicTypes.Bool4x1,
+                IntrinsicTypes.Bool1x2,
+                IntrinsicTypes.Bool2x2,
+                IntrinsicTypes.Bool3x2,
+                IntrinsicTypes.Bool4x2,
+                IntrinsicTypes.Bool1x3,
+                IntrinsicTypes.Bool2x3,
+                IntrinsicTypes.Bool3x3,
+                IntrinsicTypes.Bool4x3,
+                IntrinsicTypes.Bool1x4,
+                IntrinsicTypes.Bool2x4,
+                IntrinsicTypes.Bool3x4,
+                IntrinsicTypes.Bool4x4));
+
+            allFunctions.AddRange(Create1(
+              "trunc",
+              "Truncates a floating-point value to the integer component.",
+              IntrinsicTypes.AllFloatTypes,
+              "value", "The specified input."));
 
             AllFunctions = allFunctions;
         }

@@ -168,6 +168,10 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllDoubleTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
 
+        public static readonly TypeSymbol Sampler1D;
+        public static readonly TypeSymbol Sampler2D;
+        public static readonly TypeSymbol Sampler3D;
+        public static readonly TypeSymbol SamplerCube;
         public static readonly TypeSymbol SamplerState;
         public static readonly TypeSymbol SamplerComparisonState;
 
@@ -187,10 +191,10 @@ namespace HlslTools.Symbols
             Bool2 = new IntrinsicTypeSymbol("bool2", "Represents a vector containing 2 boolean components.", t => CreateVectorTypeFields(2, Bool2, Bool, Bool2, Bool3, Bool4));
             Bool3 = new IntrinsicTypeSymbol("bool3", "Represents a vector containing 3 boolean components.", t => CreateVectorTypeFields(3, Bool3, Bool, Bool2, Bool3, Bool4));
             Bool4 = new IntrinsicTypeSymbol("bool4", "Represents a vector containing 4 boolean components.", t => CreateVectorTypeFields(4, Bool4, Bool, Bool2, Bool3, Bool4));
-            Int1 = new IntrinsicTypeSymbol("nt1", "Represents a vector containing 1 signed integer component.",  t => CreateVectorTypeFields(1, Int1, Int, Int2, Int3, Int4));
-            Int2 = new IntrinsicTypeSymbol("nt2", "Represents a vector containing 2 signed integer components.", t => CreateVectorTypeFields(2, Int2, Int, Int2, Int3, Int4));
-            Int3 = new IntrinsicTypeSymbol("nt3", "Represents a vector containing 3 signed integer components.", t => CreateVectorTypeFields(3, Int3, Int, Int2, Int3, Int4));
-            Int4 = new IntrinsicTypeSymbol("nt4", "Represents a vector containing 4 signed integer components.", t => CreateVectorTypeFields(4, Int4, Int, Int2, Int3, Int4));
+            Int1 = new IntrinsicTypeSymbol("int1", "Represents a vector containing 1 signed integer component.",  t => CreateVectorTypeFields(1, Int1, Int, Int2, Int3, Int4));
+            Int2 = new IntrinsicTypeSymbol("int2", "Represents a vector containing 2 signed integer components.", t => CreateVectorTypeFields(2, Int2, Int, Int2, Int3, Int4));
+            Int3 = new IntrinsicTypeSymbol("int3", "Represents a vector containing 3 signed integer components.", t => CreateVectorTypeFields(3, Int3, Int, Int2, Int3, Int4));
+            Int4 = new IntrinsicTypeSymbol("int4", "Represents a vector containing 4 signed integer components.", t => CreateVectorTypeFields(4, Int4, Int, Int2, Int3, Int4));
             Uint1 = new IntrinsicTypeSymbol("uint1", "Represents a vector containing 1 unsigned integer component.", t => CreateVectorTypeFields(1, Uint1, Uint, Uint2, Uint3, Uint4));
             Uint2 = new IntrinsicTypeSymbol("uint2", "Represents a vector containing 2 unsigned integer components.", t => CreateVectorTypeFields(2, Uint2, Uint, Uint2, Uint3, Uint4));
             Uint3 = new IntrinsicTypeSymbol("uint3", "Represents a vector containing 3 unsigned integer components.", t => CreateVectorTypeFields(3, Uint3, Uint, Uint2, Uint3, Uint4));
@@ -589,6 +593,10 @@ namespace HlslTools.Symbols
                 .Union(AllMatrixTypes)
                 .ToArray();
 
+            Sampler1D = new IntrinsicTypeSymbol("sampler1D", "");
+            Sampler2D = new IntrinsicTypeSymbol("sampler2D", "");
+            Sampler3D = new IntrinsicTypeSymbol("sampler3D", "");
+            SamplerCube = new IntrinsicTypeSymbol("samplerCUBE", "");
             SamplerState = new IntrinsicTypeSymbol("SamplerState", "");
             SamplerComparisonState = new IntrinsicTypeSymbol("SamplerComparisonState", "");
         }
