@@ -96,7 +96,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             return selectedIndex;
         }
 
-        private async void UpdateModel()
+        private async Task UpdateModel()
         {
             var selectedIndex = GetSelectedItemIndex();
 
@@ -147,9 +147,13 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             if (_session == null)
                 return;
 
-            UpdateModel();
-            _session.Recalculate();
-            _session.Match();
+            UpdateModel().ContinueWith(t =>
+            {
+                _session.Recalculate();
+                _session.Match();
+            }, CancellationToken.None,
+            TaskContinuationOptions.OnlyOnRanToCompletion, 
+            TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void OnModelChanged(EventArgs e)
