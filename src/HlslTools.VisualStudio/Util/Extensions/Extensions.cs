@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Runtime.CompilerServices;
+using System.Threading;
 using HlslTools.Compilation;
 using HlslTools.Parser;
 using HlslTools.Syntax;
@@ -13,6 +14,9 @@ namespace HlslTools.VisualStudio.Util.Extensions
 {
     internal static class Extensions
     {
+        private static readonly ConditionalWeakTable<ITextSnapshot, SyntaxTree> CachedSyntaxTrees = new ConditionalWeakTable<ITextSnapshot, SyntaxTree>();
+        private static readonly ConditionalWeakTable<ITextSnapshot, SemanticModel> CachedSemanticModels = new ConditionalWeakTable<ITextSnapshot, SemanticModel>();
+
         private static readonly object TextContainerKey = new object();
         private static readonly object IncludeFileSystemKey = new object();
         private static readonly object BackgroundParserKey = new object();
@@ -42,21 +46,27 @@ namespace HlslTools.VisualStudio.Util.Extensions
 
         public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken)
         {
-            var sourceText = snapshot.ToSourceText();
+            return CachedSyntaxTrees.GetValue(snapshot, key =>
+            {
+                var sourceText = key.ToSourceText();
 
-            var options = new ParserOptions();
-            options.PreprocessorDefines.Add("__INTELLISENSE__");
+                var options = new ParserOptions();
+                options.PreprocessorDefines.Add("__INTELLISENSE__");
 
-            var fileSystem = snapshot.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
+                var fileSystem = key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
 
-            return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
+                return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
+            });
         }
 
         public static SemanticModel GetSemanticModel(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken)
         {
-            var syntaxTree = snapshot.GetSyntaxTree(sourceTextFactory, cancellationToken);
-            var compilation = new Compilation.Compilation(syntaxTree);
-            return compilation.GetSemanticModel();
+            return CachedSemanticModels.GetValue(snapshot, key =>
+            {
+                var syntaxTree = key.GetSyntaxTree(sourceTextFactory, cancellationToken);
+                var compilation = new Compilation.Compilation(syntaxTree);
+                return compilation.GetSemanticModel();
+            });
         }
 
         public static int GetPosition(this ITextView syntaxEditor, ITextSnapshot snapshot)
