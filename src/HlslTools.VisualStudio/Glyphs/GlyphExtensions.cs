@@ -30,6 +30,8 @@ namespace HlslTools.VisualStudio.Glyphs
                     return StandardGlyphGroup.GlyphGroupVariable;
                 case Glyph.Keyword:
                     return StandardGlyphGroup.GlyphKeyword;
+                case Glyph.Semantic:
+                    return StandardGlyphGroup.GlyphGroupConstant;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(glyph), glyph, null);
             }

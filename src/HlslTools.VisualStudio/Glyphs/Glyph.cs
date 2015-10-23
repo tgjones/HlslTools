@@ -12,6 +12,7 @@
         Function,
         Variable,
         Parameter,
-        Keyword
+        Keyword,
+        Semantic
     }
 }
