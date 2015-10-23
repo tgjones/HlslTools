@@ -1,6 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using HlslTools.Compilation;
 using HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders;
+using HlslTools.VisualStudio.Text;
+using HlslTools.VisualStudio.Util;
+using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -12,30 +18,33 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
         private readonly ITextView _textView;
         private readonly ICompletionBroker _completionBroker;
         private readonly CompletionProviderService _completionProviderService;
+        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         private ICompletionSession _session;
         private CompletionModel _model;
 
-        public CompletionModelManager(ITextView textView, ICompletionBroker completionBroker, CompletionProviderService completionProviderService)
+        public CompletionModelManager(ITextView textView, ICompletionBroker completionBroker, CompletionProviderService completionProviderService, VisualStudioSourceTextFactory sourceTextFactory)
         {
-            //_workspace = workspace;
-            //_workspace.CurrentDocumentChanged += WorkspaceOnCurrentDocumentChanged;
             _textView = textView;
+            _textView.TextBuffer.PostChanged += OnTextBufferOnPostChanged;
             _completionBroker = completionBroker;
             _completionProviderService = completionProviderService;
+            _sourceTextFactory = sourceTextFactory;
         }
 
         private static bool IsTriggerChar(char c)
         {
-            return char.IsLetter(c)
-                   || c == '_' 
+            return char.IsLetter(c) 
                    || c == '.';
         }
 
         private static bool IsCommitChar(char c)
         {
             return char.IsWhiteSpace(c)
-                   || c == '\t' 
+                   || c == '\t'
+                   || c == '\r'
+                   || c == '\n'
+                   || c == ' ' 
                    || c == '.' 
                    || c == ',' 
                    || c == '(' 
@@ -56,7 +65,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
                 Commit();
         }
 
-        private void WorkspaceOnCurrentDocumentChanged(object sender, EventArgs e)
+        private void OnTextBufferOnPostChanged(object sender, EventArgs e)
         {
             if (_session != null)
                 UpdateModel();
@@ -70,32 +79,31 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
                 UpdateModel();
         }
 
-        private void UpdateModel()
+        private async void UpdateModel()
         {
-            //var documentView = _textView.GetDocumentView(_workspace.CurrentDocument);
-            //var position = documentView.Position;
-            //var document = documentView.Document;
+            var snapshot = _textView.TextSnapshot;
+            var triggerPosition = _textView.GetPosition(snapshot);
 
-            //SemanticModel semanticModel;
-            //try
-            //{
-            //    semanticModel = await document.GetSemanticModelAsync();
-            //}
-            //catch (OperationCanceledException)
-            //{
-            //    return;
-            //}
-            //catch (Exception ex)
-            //{
-            //    Logger.Log("Failed to get semantic model: " + ex);
-            //    return;
-            //}
-            
-            //var model = semanticModel.GetCompletionModel(position, documentView.Text, _completionProviderService.Providers);
+            SemanticModel semanticModel;
+            try
+            {
+                semanticModel = await Task.Run(() => snapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
+            catch (Exception ex)
+            {
+                Logger.Log("Failed to get semantic model: " + ex);
+                return;
+            }
 
-            //// Let observers know that we've a new model.
+            var model = semanticModel.GetCompletionModel(triggerPosition, snapshot, _completionProviderService.Providers);
 
-            //Model = model;
+            // Let observers know that we've a new model.
+
+            Model = model;
         }
 
         public bool Commit()

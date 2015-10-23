@@ -1,9 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Collections.Immutable;
-using System.Linq;
-using HlslTools.Binding;
-using HlslTools.Binding.BoundNodes;
-using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 

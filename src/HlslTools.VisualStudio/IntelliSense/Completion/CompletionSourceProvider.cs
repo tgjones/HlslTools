@@ -6,8 +6,9 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace HlslTools.VisualStudio.IntelliSense.Completion
 {
-    //[Export(typeof(ICompletionSourceProvider))]
+    [Export(typeof(ICompletionSourceProvider))]
     [ContentType(HlslConstants.ContentTypeName)]
+    [Name(nameof(CompletionSourceProvider))]
     internal sealed class CompletionSourceProvider : ICompletionSourceProvider
     {
         [Import]

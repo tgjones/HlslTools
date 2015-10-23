@@ -106,7 +106,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             SemanticModel semanticModel;
             try
             {
-                semanticModel = await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
+                semanticModel = await Task.Run(() => snapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
             }
             catch (OperationCanceledException)
             {
