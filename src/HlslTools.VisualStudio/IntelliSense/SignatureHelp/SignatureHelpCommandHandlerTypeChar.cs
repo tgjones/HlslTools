@@ -8,11 +8,11 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
-    internal sealed class SignatureHelpTrigger : CommandTargetBase<VSConstants.VSStd2KCmdID>
+    internal sealed class SignatureHelpCommandHandlerTypeChar : CommandTargetBase<VSConstants.VSStd2KCmdID>
     {
         private readonly SignatureHelpManager _signatureHelpManager;
 
-        public SignatureHelpTrigger(IVsTextView adapter, IWpfTextView textView, SignatureHelpManager signatureHelpManager)
+        public SignatureHelpCommandHandlerTypeChar(IVsTextView adapter, IWpfTextView textView, SignatureHelpManager signatureHelpManager)
             : base(adapter, textView, VSConstants.VSStd2KCmdID.TYPECHAR)
         {
             _signatureHelpManager = signatureHelpManager;

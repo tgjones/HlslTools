@@ -8,11 +8,11 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace HlslTools.VisualStudio.IntelliSense.Completion
 {
-    internal sealed class CompletionTrigger : CommandTargetBase<VSConstants.VSStd2KCmdID>
+    internal sealed class CompletionCommandHandler : CommandTargetBase<VSConstants.VSStd2KCmdID>
     {
         private readonly CompletionModelManager _completionModelManager;
 
-        public CompletionTrigger(IVsTextView adapter, IWpfTextView textView, CompletionModelManager completionModelManager)
+        public CompletionCommandHandler(IVsTextView adapter, IWpfTextView textView, CompletionModelManager completionModelManager)
             : base(adapter, textView, 
                   VSConstants.VSStd2KCmdID.TYPECHAR, 
                   VSConstants.VSStd2KCmdID.RETURN, 

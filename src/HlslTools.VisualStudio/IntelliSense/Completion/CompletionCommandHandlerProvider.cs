@@ -9,7 +9,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
     //[Export(typeof(IVsTextViewCreationListener))]
     [ContentType(HlslConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
-    internal sealed class CompletionTriggerProvider : IVsTextViewCreationListener
+    internal sealed class CompletionCommandHandlerProvider : IVsTextViewCreationListener
     {
         [Import]
         public IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
@@ -21,7 +21,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             var completionModelManager = CompletionModelManagerProvider.GetCompletionModel(textView);
-            textView.Properties.GetOrCreateSingletonProperty(() => new CompletionTrigger(textViewAdapter, textView, completionModelManager));
+            textView.Properties.GetOrCreateSingletonProperty(() => new CompletionCommandHandler(textViewAdapter, textView, completionModelManager));
         }
     }
 }

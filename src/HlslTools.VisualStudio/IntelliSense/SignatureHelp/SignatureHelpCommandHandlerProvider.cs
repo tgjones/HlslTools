@@ -9,7 +9,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
     //[Export(typeof(IVsTextViewCreationListener))]
     [ContentType(HlslConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
-    internal sealed class SignatureHelpTriggerProvider : IVsTextViewCreationListener
+    internal sealed class SignatureHelpCommandHandlerProvider : IVsTextViewCreationListener
     {
         [Import]
         public IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
@@ -21,7 +21,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             var signatureHelpManager = SignatureHelpManagerProvider.GetSignatureHelpManager(textView);
-            textView.Properties.GetOrCreateSingletonProperty(() => new SignatureHelpTrigger(textViewAdapter, textView, signatureHelpManager));
+            textView.Properties.GetOrCreateSingletonProperty(() => new SignatureHelpCommandHandlerParamInfo(textViewAdapter, textView, signatureHelpManager));
+            textView.Properties.GetOrCreateSingletonProperty(() => new SignatureHelpCommandHandlerTypeChar(textViewAdapter, textView, signatureHelpManager));
         }
     }
 }
