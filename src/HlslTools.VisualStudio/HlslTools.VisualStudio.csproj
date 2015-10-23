@@ -240,6 +240,8 @@
     <Compile Include="IntelliSense\Completion\CompletionSourceProvider.cs" />
     <Compile Include="IntelliSense\Completion\HlslCompletionSet.cs" />
     <Compile Include="IntelliSense\Completion\CompletionProviders\ICompletionProvider.cs" />
+    <Compile Include="IntelliSense\Completion\CompletionTrigger.cs" />
+    <Compile Include="IntelliSense\Completion\CompletionTriggerProvider.cs" />
     <Compile Include="IntelliSense\HlslKeyProcessor.cs" />
     <Compile Include="IntelliSense\KeyProcessorProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoManager.cs" />

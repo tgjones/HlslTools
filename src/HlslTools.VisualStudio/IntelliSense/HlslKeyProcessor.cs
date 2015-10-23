@@ -23,18 +23,6 @@ namespace HlslTools.VisualStudio.IntelliSense
 
         public override bool IsInterestedInHandledEvents { get; } = true;
 
-        public override void TextInput(TextCompositionEventArgs args)
-        {
-            base.TextInput(args);
-            _completionModelManager.HandleTextInput(args.Text);
-        }
-
-        public override void PreviewTextInput(TextCompositionEventArgs args)
-        {
-            base.PreviewTextInput(args);
-            _completionModelManager.HandlePreviewTextInput(args.Text);
-        }
-
         public override void PreviewKeyDown(KeyEventArgs args)
         {
             var key = args.Key;
@@ -73,14 +61,6 @@ namespace HlslTools.VisualStudio.IntelliSense
                         break;
                     case Key.PageDown:
                         args.Handled = ExecuteKeyboardCommandIfSessionActive(IntellisenseKeyboardCommand.PageDown);
-                        break;
-                    case Key.Tab:
-                        _completionModelManager.Commit();
-                        // Don't eat the key
-                        break;
-                    case Key.Return:
-                        if (_completionModelManager.Commit())
-                            args.Handled = true;
                         break;
                 }
             }

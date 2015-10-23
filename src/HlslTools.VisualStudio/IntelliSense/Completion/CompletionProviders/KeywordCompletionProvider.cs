@@ -22,9 +22,9 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
             return GetAvailableKeywords(syntaxTree, position)
                 .Select(k => k.GetText())
-                .Select(t => new CompletionItem(t, t, null, Glyph.Keyword));
+                .Select(t => new CompletionItem(t, t, t + " Keyword", Glyph.Keyword));
         }
-
+        
         private static bool IsInPropertyAccess(SyntaxNode root, SourceLocation position)
         {
             var token = root.FindTokenOnLeft(position);

@@ -32,37 +32,12 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
             _sourceTextFactory = sourceTextFactory;
         }
 
-        private static bool IsTriggerChar(char c)
+        public void HandleTextInput(bool isTrigger)
         {
-            return char.IsLetter(c) 
-                   || c == '.';
-        }
-
-        private static bool IsCommitChar(char c)
-        {
-            return char.IsWhiteSpace(c)
-                   || c == '\t'
-                   || c == '\r'
-                   || c == '\n'
-                   || c == ' ' 
-                   || c == '.' 
-                   || c == ',' 
-                   || c == '(' 
-                   || c == ')';
-        }
-
-        public void HandleTextInput(string text)
-        {
-            if (_session == null && text.Any(IsTriggerChar))
+            if (_session == null && isTrigger)
                 TriggerCompletion(false);
             else if (_session != null)
                 UpdateModel();
-        }
-
-        public void HandlePreviewTextInput(string text)
-        {
-            if (_session != null && text.Any(IsCommitChar))
-                Commit();
         }
 
         private void OnTextBufferOnPostChanged(object sender, EventArgs e)
@@ -118,9 +93,9 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
             // If it's a builder, we don't want to eat the enter key.
             var sendThrough = isBuilder;
 
-            //_workspace.CurrentDocumentChanged -= WorkspaceOnCurrentDocumentChanged;
+            _textView.TextBuffer.PostChanged -= OnTextBufferOnPostChanged;
             _session.Commit();
-            //_workspace.CurrentDocumentChanged += WorkspaceOnCurrentDocumentChanged;
+            _textView.TextBuffer.PostChanged += OnTextBufferOnPostChanged;
 
             return !sendThrough;
         }
