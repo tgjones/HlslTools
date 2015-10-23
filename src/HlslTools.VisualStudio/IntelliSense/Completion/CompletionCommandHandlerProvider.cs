@@ -21,6 +21,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
             var completionModelManager = CompletionModelManagerProvider.GetCompletionModel(textView);
+            textView.Properties.GetOrCreateSingletonProperty(() => new CompletionCommandHandlerTriggers(textViewAdapter, textView, completionModelManager));
             textView.Properties.GetOrCreateSingletonProperty(() => new CompletionCommandHandler(textViewAdapter, textView, completionModelManager));
         }
     }

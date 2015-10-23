@@ -229,6 +229,7 @@
     <Compile Include="Formatting\FormatCommandTarget.cs" />
     <Compile Include="Formatting\FormattingTextViewCreationListener.cs" />
     <Compile Include="HlslLanguagePreferences.cs" />
+    <Compile Include="IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
     <Compile Include="IntelliSense\Completion\CompletionExtensions.cs" />
     <Compile Include="IntelliSense\Completion\CompletionItem.cs" />
     <Compile Include="IntelliSense\Completion\CompletionModel.cs" />
