@@ -5,6 +5,8 @@ namespace HlslTools.Symbols
     [Flags]
     public enum SemanticUsages
     {
+        None = 0,
+
         VertexShaderInput = 1 << 0,
         VertexShaderOutput = 1 << 1,
 
