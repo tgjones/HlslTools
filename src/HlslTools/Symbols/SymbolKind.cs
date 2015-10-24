@@ -15,6 +15,7 @@
         GlobalVariable,
         Parameter,
         Indexer,
-        IntrinsicType
+        IntrinsicType,
+        Semantic
     }
 }

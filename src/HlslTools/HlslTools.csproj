@@ -114,6 +114,7 @@
     <Compile Include="Symbols\ILocalSymbolTable.cs" />
     <Compile Include="Symbols\IndexerSymbol.cs" />
     <Compile Include="Symbols\InterfaceSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicSemantics.cs" />
     <Compile Include="Symbols\ISymbolTable.cs" />
     <Compile Include="Symbols\LocalSymbol.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkup.cs" />
@@ -123,6 +124,8 @@
     <Compile Include="Symbols\MethodDeclarationSymbol.cs" />
     <Compile Include="Symbols\MethodDefinitionSymbol.cs" />
     <Compile Include="Symbols\MethodSymbol.cs" />
+    <Compile Include="Symbols\SemanticSymbol.cs" />
+    <Compile Include="Symbols\SemanticUsages.cs" />
     <Compile Include="Symbols\SourceFieldSymbol.cs" />
     <Compile Include="Symbols\SourceFunctionDeclarationSymbol.cs" />
     <Compile Include="Symbols\SourceFunctionDefinitionSymbol.cs" />

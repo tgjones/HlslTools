@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 
@@ -32,7 +33,9 @@ namespace HlslTools.Compilation
         public IEnumerable<Symbol> LookupSymbols(SourceLocation position)
         {
             // TODO
-            return IntrinsicFunctions.AllFunctions;
+            return IntrinsicFunctions.AllFunctions
+                .AsEnumerable<Symbol>()
+                .Union(IntrinsicSemantics.AllSemantics);
 
             //var node = FindClosestNodeWithBinder(_bindingResult.Root, position);
             //var binder = node == null ? null : _bindingResult.GetBinder(node);
