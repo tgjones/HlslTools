@@ -70,6 +70,7 @@ namespace HlslTools.Syntax
         Double4x4Keyword,
         ElseKeyword,
         ErrorKeyword,
+        ExportKeyword,
         ExternKeyword,
         FloatKeyword,
         Float1Keyword,
