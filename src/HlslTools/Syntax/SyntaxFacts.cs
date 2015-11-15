@@ -184,6 +184,8 @@ namespace HlslTools.Syntax
                     return "static";
                 case SyntaxKind.ConstKeyword:
                     return "const";
+                case SyntaxKind.ExportKeyword:
+                    return "export";
                 case SyntaxKind.InlineKeyword:
                     return "inline";
                 case SyntaxKind.VolatileKeyword:
@@ -968,6 +970,7 @@ namespace HlslTools.Syntax
             {
                 case SyntaxKind.ClassKeyword:
                 case SyntaxKind.ConstKeyword:
+                case SyntaxKind.ExportKeyword:
                 case SyntaxKind.ExternKeyword:
                 case SyntaxKind.InlineKeyword:
                 case SyntaxKind.InterfaceKeyword:
@@ -1339,6 +1342,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Double4x3Keyword:
                 case SyntaxKind.Double4x4Keyword:
                 case SyntaxKind.ElseKeyword:
+                case SyntaxKind.ExportKeyword:
                 case SyntaxKind.ExternKeyword:
                 case SyntaxKind.FalseKeyword:
                 case SyntaxKind.FloatKeyword:
@@ -1781,6 +1785,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.Double4x4Keyword;
                 case "else":
                     return SyntaxKind.ElseKeyword;
+                case "export":
+                    return SyntaxKind.ExportKeyword;
                 case "extern":
                     return SyntaxKind.ExternKeyword;
                 case "float":
@@ -2217,6 +2223,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.ColumnMajorKeyword:
                     return true;
 
+                case SyntaxKind.ExportKeyword:
                 case SyntaxKind.ExternKeyword:
                 case SyntaxKind.InlineKeyword:
                 case SyntaxKind.PreciseKeyword:

@@ -275,6 +275,39 @@ namespace HlslTools.Tests.Parser
         }
 
         [Test]
+        public void TestExportFunctionDefinition()
+        {
+            var text = "export void Foo(int a) { return; }";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.AreEqual(1, file.Declarations.Count);
+            Assert.AreEqual(text, file.ToString());
+            Assert.AreEqual(0, file.GetDiagnostics().Count());
+
+            Assert.AreEqual(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
+            var fs = (FunctionDefinitionSyntax)file.Declarations[0];
+            Assert.AreEqual(1, fs.Modifiers.Count);
+            Assert.AreEqual(SyntaxKind.ExportKeyword, fs.Modifiers[0].Kind);
+            Assert.NotNull(fs.ReturnType);
+            Assert.AreEqual("void", fs.ReturnType.ToString());
+            Assert.AreEqual("Foo", fs.Name.ToString());
+            Assert.NotNull(fs.ParameterList.OpenParenToken);
+            Assert.False(fs.ParameterList.OpenParenToken.IsMissing);
+            Assert.AreEqual(1, fs.ParameterList.Parameters.Count);
+            var fp = fs.ParameterList.Parameters[0];
+            Assert.AreEqual("int", fp.Type.ToString());
+            Assert.AreEqual("a", fp.Declarator.Identifier.ToString());
+            Assert.NotNull(fs.ParameterList.CloseParenToken);
+            Assert.False(fs.ParameterList.CloseParenToken.IsMissing);
+            Assert.NotNull(fs.Body);
+            Assert.NotNull(fs.Body.OpenBraceToken);
+            Assert.AreEqual(1, fs.Body.Statements.Count);
+            Assert.NotNull(fs.Body.CloseBraceToken);
+            Assert.Null(fs.SemicolonToken);
+        }
+
+        [Test]
         public void TestSamplerStateInitializer()
         {
             var text = "SamplerState MySamplerState { MinFilter = <point>; MagFilter = linear; MipFilter = anistropic; AlphaBlendEnable = 16 > 8; };";
