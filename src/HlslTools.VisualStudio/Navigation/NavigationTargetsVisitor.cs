@@ -115,7 +115,7 @@ namespace HlslTools.VisualStudio.Navigation
 
         public override IEnumerable<EditorNavigationTarget> VisitTechnique(TechniqueSyntax node)
         {
-            yield return CreateTarget(node.Name, node.Name.Text, node.GetTextSpanSafe(), Glyph.Technique);
+            yield return CreateTarget(node.Name, node.Name?.Text, node.GetTextSpanSafe(), Glyph.Technique);
         }
 
         public override IEnumerable<EditorNavigationTarget> VisitEmptyStatement(EmptyStatementSyntax node)

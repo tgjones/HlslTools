@@ -352,6 +352,28 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(fs.SemicolonToken);
         }
 
+        [Test]
+        public void TestTechnique()
+        {
+            var text = "technique Technique { pass Pass1 { } };";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.AreEqual(1, file.Declarations.Count);
+            Assert.AreEqual(text, file.ToString());
+            Assert.That(file.GetDiagnostics().Count(), Is.EqualTo(1));
+
+            Assert.AreEqual(SyntaxKind.TechniqueDeclaration, file.Declarations[0].Kind);
+            var fs = (TechniqueSyntax)file.Declarations[0];
+            Assert.IsFalse(fs.TechniqueKeyword.IsMissing);
+            Assert.Null(fs.Name);
+            Assert.AreEqual(1, fs.Passes.Count);
+            Assert.AreEqual("Pass1", fs.Passes[0].Name.Text);
+            Assert.AreEqual(0, fs.Passes[0].Statements.Count);
+
+            Assert.NotNull(fs.SemicolonToken);
+        }
+
         private static CompilationUnitSyntax ParseFile(string text)
         {
             return SyntaxFactory.ParseCompilationUnit(text);
