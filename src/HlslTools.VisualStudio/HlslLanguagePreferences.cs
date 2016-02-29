@@ -34,6 +34,8 @@ namespace HlslTools.VisualStudio
             if (pLangPrefs != null && pLangPrefs.Length > 0 && pLangPrefs[0].guidLang == _preferences.guidLang)
             {
                 _preferences.IndentStyle = pLangPrefs[0].IndentStyle;
+                _preferences.fInsertTabs = pLangPrefs[0].fInsertTabs;
+                _preferences.uIndentSize = pLangPrefs[0].uIndentSize;
 
                 if (_preferences.fDropdownBar != (_preferences.fDropdownBar = pLangPrefs[0].fDropdownBar))
                 {
