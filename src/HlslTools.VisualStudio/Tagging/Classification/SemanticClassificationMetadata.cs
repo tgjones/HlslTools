@@ -78,6 +78,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(PunctuationClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = PunctuationClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class PunctuationFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -92,6 +93,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(SemanticClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = SemanticClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class SemanticFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -106,6 +108,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(PackOffsetClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = PackOffsetClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class PackOffsetFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -120,6 +123,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(RegisterLocationClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = RegisterLocationClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class RegisterLocationFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -134,6 +138,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(GlobalVariableClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = GlobalVariableClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class GlobalVariableIdentifierFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -148,6 +153,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(FieldIdentifierClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = FieldIdentifierClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class FieldIdentifierFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -162,6 +168,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(LocalVariableClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = LocalVariableClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class LocalVariableIdentifierFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -176,6 +183,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(ParameterClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = ParameterClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class ParameterIdentifierFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -190,6 +198,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(FunctionClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = FunctionClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class FunctionIdentifierFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
@@ -204,6 +213,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Name(ClassIdentifierClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = ClassIdentifierClassificationTypeName)]
         [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
         public sealed class ClassIdentifierFormat : ClassificationFormatDefinition
         {
             [ImportingConstructor]
