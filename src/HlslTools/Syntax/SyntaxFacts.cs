@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using HlslTools.Binding;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Symbols;
 
@@ -144,92 +143,96 @@ namespace HlslTools.Syntax
                 // Keywords
                 case SyntaxKind.BoolKeyword:
                     return "bool";
-                case SyntaxKind.IntKeyword:
-                    return "int";
-                case SyntaxKind.UintKeyword:
-                    return "uint";
-                case SyntaxKind.DoubleKeyword:
-                    return "double";
-                case SyntaxKind.FloatKeyword:
-                    return "float";
-                case SyntaxKind.VoidKeyword:
-                    return "void";
-                case SyntaxKind.TrueKeyword:
-                    return "true";
-                case SyntaxKind.FalseKeyword:
-                    return "false";
-                case SyntaxKind.IfKeyword:
-                    return "if";
-                case SyntaxKind.ElseKeyword:
-                    return "else";
-                case SyntaxKind.WhileKeyword:
-                    return "while";
-                case SyntaxKind.ForKeyword:
-                    return "for";
-                case SyntaxKind.DoKeyword:
-                    return "do";
-                case SyntaxKind.SwitchKeyword:
-                    return "switch";
-                case SyntaxKind.CaseKeyword:
-                    return "case";
-                case SyntaxKind.DefaultKeyword:
-                    return "default";
                 case SyntaxKind.BreakKeyword:
                     return "break";
+                case SyntaxKind.CaseKeyword:
+                    return "case";
+                case SyntaxKind.ClassKeyword:
+                    return "class";
+                case SyntaxKind.ConstantBufferKeyword:
+                    return "ConstantBuffer";
+                case SyntaxKind.ConstKeyword:
+                    return "const";
                 case SyntaxKind.ContinueKeyword:
                     return "continue";
+                case SyntaxKind.DefKeyword:
+                    return "def";
+                case SyntaxKind.DefineKeyword:
+                    return "define";
+                case SyntaxKind.DoKeyword:
+                    return "do";
+                case SyntaxKind.DefaultKeyword:
+                    return "default";
+                case SyntaxKind.DoubleKeyword:
+                    return "double";
+                case SyntaxKind.ElifKeyword:
+                    return "elif";
+                case SyntaxKind.ElseKeyword:
+                    return "else";
+                case SyntaxKind.EndIfKeyword:
+                    return "endif";
+                case SyntaxKind.ErrorKeyword:
+                    return "error";
+                case SyntaxKind.ExportKeyword:
+                    return "export";
+                case SyntaxKind.ExternKeyword:
+                    return "extern";
+                case SyntaxKind.FalseKeyword:
+                    return "false";
+                case SyntaxKind.FloatKeyword:
+                    return "float";
+                case SyntaxKind.ForKeyword:
+                    return "for";
+                case SyntaxKind.IfKeyword:
+                    return "if";
+                case SyntaxKind.IncludeKeyword:
+                    return "include";
+                case SyntaxKind.InKeyword:
+                    return "in";
+                case SyntaxKind.InlineKeyword:
+                    return "inline";
+                case SyntaxKind.InoutKeyword:
+                    return "inout";
+                case SyntaxKind.InterfaceKeyword:
+                    return "interface";
+                case SyntaxKind.IntKeyword:
+                    return "int";
+                case SyntaxKind.LineKeyword:
+                    return "line";
+                case SyntaxKind.MessageKeyword:
+                    return "message";
+                case SyntaxKind.OutKeyword:
+                    return "out";
+                case SyntaxKind.PackMatrixKeyword:
+                    return "pack_matrix";
+                case SyntaxKind.PackoffsetKeyword:
+                    return "packoffset";
+                case SyntaxKind.PragmaKeyword:
+                    return "pragma";
+                case SyntaxKind.RegisterKeyword:
+                    return "register";
                 case SyntaxKind.ReturnKeyword:
                     return "return";
                 case SyntaxKind.StaticKeyword:
                     return "static";
-                case SyntaxKind.ConstKeyword:
-                    return "const";
-                case SyntaxKind.ExportKeyword:
-                    return "export";
-                case SyntaxKind.InlineKeyword:
-                    return "inline";
-                case SyntaxKind.VolatileKeyword:
-                    return "volatile";
-                case SyntaxKind.ExternKeyword:
-                    return "extern";
-                case SyntaxKind.OutKeyword:
-                    return "out";
-                case SyntaxKind.InKeyword:
-                    return "in";
-                case SyntaxKind.InoutKeyword:
-                    return "inout";
-                case SyntaxKind.ClassKeyword:
-                    return "class";
                 case SyntaxKind.StructKeyword:
                     return "struct";
-                case SyntaxKind.InterfaceKeyword:
-                    return "interface";
-                case SyntaxKind.ElifKeyword:
-                    return "elif";
-                case SyntaxKind.EndIfKeyword:
-                    return "endif";
-                case SyntaxKind.IncludeKeyword:
-                    return "include";
-                case SyntaxKind.DefineKeyword:
-                    return "define";
+                case SyntaxKind.SwitchKeyword:
+                    return "switch";
+                case SyntaxKind.TrueKeyword:
+                    return "true";
+                case SyntaxKind.UintKeyword:
+                    return "uint";
                 case SyntaxKind.UndefKeyword:
                     return "undef";
-                case SyntaxKind.LineKeyword:
-                    return "line";
-                case SyntaxKind.ErrorKeyword:
-                    return "error";
-                case SyntaxKind.PragmaKeyword:
-                    return "pragma";
-                case SyntaxKind.DefKeyword:
-                    return "def";
-                case SyntaxKind.MessageKeyword:
-                    return "message";
-                case SyntaxKind.PackMatrixKeyword:
-                    return "pack_matrix";
+                case SyntaxKind.VoidKeyword:
+                    return "void";
+                case SyntaxKind.VolatileKeyword:
+                    return "volatile";
                 case SyntaxKind.WarningKeyword:
                     return "warning";
-                case SyntaxKind.ConstantBufferKeyword:
-                    return "ConstantBuffer";
+                case SyntaxKind.WhileKeyword:
+                    return "while";
 
                 default:
                     return string.Empty;

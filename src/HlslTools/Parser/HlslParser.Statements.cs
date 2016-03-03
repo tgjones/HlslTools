@@ -323,6 +323,7 @@ namespace HlslTools.Parser
                 case SyntaxKind.RegisterKeyword:
                 case SyntaxKind.PackoffsetKeyword:
                 case SyntaxKind.IdentifierToken:
+                case SyntaxKind.SemiToken:
                     return true;
 
                 default:
@@ -338,10 +339,8 @@ namespace HlslTools.Parser
                     return ParseRegisterLocation();
                 case SyntaxKind.PackoffsetKeyword:
                     return ParsePackOffsetLocation();
-                case SyntaxKind.IdentifierToken:
-                    return ParseSemantic();
                 default:
-                    throw new InvalidOperationException();
+                    return ParseSemantic();
             }
         }
 

@@ -37,8 +37,23 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
         private static IEnumerable<SyntaxKind> GetAvailableKeywords(SyntaxTree syntaxTree, SourceLocation position)
         {
+            if (IsInSemantic(syntaxTree, position))
+            {
+                yield return SyntaxKind.PackoffsetKeyword;
+                yield return SyntaxKind.RegisterKeyword;
+            }
+
             yield return SyntaxKind.TrueKeyword;
             yield return SyntaxKind.FalseKeyword;
+        }
+
+        private static bool IsInSemantic(SyntaxTree syntaxTree, SourceLocation position)
+        {
+            var token = syntaxTree.Root.FindTokenOnLeft(position);
+            return token.Parent
+                .AncestorsAndSelf()
+                .OfType<SemanticSyntax>()
+                .Any();
         }
     }
 }
