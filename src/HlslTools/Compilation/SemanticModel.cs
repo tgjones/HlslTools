@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
@@ -9,6 +10,8 @@ namespace HlslTools.Compilation
     {
         //private readonly BindingResult _bindingResult;
         //private ImmutableArray<Diagnostic> _diagnostics;
+        private readonly SymbolScopeStack _symbolStack;
+        private readonly Dictionary<SyntaxNode, Symbol> _syntaxToSymbolLookup;
 
         public Compilation Compilation { get; }
 
@@ -21,6 +24,103 @@ namespace HlslTools.Compilation
             // TODO: Bind symbols.
             // TODO: Bind function amd method bodies.
             //       - Function and method bodies may contain symbols.
+
+            _symbolStack = new SymbolScopeStack();
+
+            _syntaxToSymbolLookup = new Dictionary<SyntaxNode, Symbol>();
+
+            var compilationUnitSyntax = (CompilationUnitSyntax) compilation.SyntaxTree.Root;
+            foreach (var node in compilationUnitSyntax.Declarations)
+            {
+                switch (node.Kind)
+                {
+                    case SyntaxKind.TypeDeclarationStatement:
+                    {
+                        var statement = (TypeDeclarationStatementSyntax) node;
+                        switch (statement.Type.Kind)
+                        {
+                            case SyntaxKind.StructType:
+                                AddSymbol(node, CreateStructSymbol((StructTypeSyntax) statement.Type));
+                                break;
+                            default:
+                                throw new NotImplementedException();
+                        }
+                        break;
+                    }
+                    case SyntaxKind.VariableDeclarationStatement:
+                    {
+                        var statement = (VariableDeclarationStatementSyntax) node;
+                        var valueType = FindTypeSymbol(statement.Declaration.Type);
+                        foreach (var declarator in statement.Declaration.Variables)
+                            AddSymbol(declarator, new GlobalVariableSymbol(declarator, valueType));
+                        break;
+                    }
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
+        public Symbol GetSymbol(SyntaxNode node)
+        {
+            Symbol result;
+            _syntaxToSymbolLookup.TryGetValue(node, out result);
+            return result;
+        }
+
+        private void AddSymbol(SyntaxNode node, Symbol symbol)
+        {
+            _syntaxToSymbolLookup.Add(node, symbol);
+            _symbolStack.AddSymbol(symbol);
+        }
+
+        private StructSymbol CreateStructSymbol(StructTypeSyntax node)
+        {
+            Func<TypeSymbol, IEnumerable<FieldSymbol>> fields = t =>
+            {
+                var result = new List<FieldSymbol>();
+                foreach (var declaration in node.Fields)
+                {
+                    var valueType = FindTypeSymbol(declaration.Declaration.Type);
+                    foreach (var declarator in declaration.Declaration.Variables)
+                        result.Add(new SourceFieldSymbol(declarator, t, valueType));
+                }
+                return result;
+            };
+            return new StructSymbol(node, null, fields);
+        }
+
+        private TypeSymbol FindTypeSymbol(TypeSyntax node)
+        {
+            switch (node.Kind)
+            {
+                case SyntaxKind.PredefinedScalarType:
+                {
+                    var typeNode = (ScalarTypeSyntax) node;
+                    switch (typeNode.TypeTokens.Count)
+                    {
+                        case 1:
+                            switch (typeNode.TypeTokens[0].Text)
+                            {
+                                case "float":
+                                    return IntrinsicTypes.Float;
+                                case "int":
+                                    return IntrinsicTypes.Float;
+                                default:
+                                    throw new NotImplementedException();
+                            }
+                        default:
+                            throw new NotImplementedException();
+                    }
+                }
+                case SyntaxKind.IdentifierName:
+                {
+                    var identifierName = (IdentifierNameSyntax) node;
+                    return _symbolStack.CurrentScope.FindSymbol(identifierName.Name.Text) as TypeSymbol;
+                }
+                default:
+                    throw new NotImplementedException();
+            }
         }
 
         //public IEnumerable<Diagnostic> GetDiagnostics()

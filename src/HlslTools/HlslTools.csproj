@@ -135,6 +135,7 @@
     <Compile Include="Symbols\StructSymbol.cs" />
     <Compile Include="Symbols\SymbolImplementation.cs" />
     <Compile Include="Symbols\SymbolScope.cs" />
+    <Compile Include="Symbols\SymbolScopeStack.cs" />
     <Compile Include="Symbols\SymbolSet.cs" />
     <Compile Include="Syntax\AnnotationsSyntax.cs" />
     <Compile Include="Syntax\CompileExpressionSyntax.cs" />

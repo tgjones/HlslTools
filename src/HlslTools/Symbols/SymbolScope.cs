@@ -6,71 +6,99 @@ using System.Diagnostics;
 
 namespace HlslTools.Symbols
 {
-    internal sealed class SymbolScope : ISymbolTable
+    internal sealed class SymbolScope
     {
-        private readonly ISymbolTable _parentSymbolTable;
-        private List<SymbolScope> _childScopes;
+        private readonly SymbolScope _parent;
+        private readonly Dictionary<string, Symbol> _symbols;
 
-        private readonly Dictionary<string, LocalSymbol> _localTable;
-        private readonly Collection<LocalSymbol> _locals;
-
-        public SymbolScope(SymbolScope parentScope)
-            : this((ISymbolTable)parentScope)
+        public SymbolScope(SymbolScope parent)
         {
-            Parent = parentScope;
+            _parent = parent;
+            _symbols = new Dictionary<string, Symbol>();
         }
 
-        public SymbolScope(ISymbolTable parentSymbolTable)
+        public void AddSymbol(Symbol symbol)
         {
-            Debug.Assert(parentSymbolTable != null);
-            _parentSymbolTable = parentSymbolTable;
-
-            _locals = new Collection<LocalSymbol>();
-            _localTable = new Dictionary<string, LocalSymbol>();
+            if (_symbols.ContainsKey(symbol.Name))
+                throw new InvalidOperationException();
+            _symbols.Add(symbol.Name, symbol);
         }
 
-        public ICollection<SymbolScope> ChildScopes => _childScopes;
-
-        public SymbolScope Parent { get; }
-
-        public void AddChildScope(SymbolScope scope)
+        public Symbol FindSymbol(string name)
         {
-            if (_childScopes == null)
-                _childScopes = new List<SymbolScope>();
-            _childScopes.Add(scope);
+            Symbol result;
+            if (_symbols.TryGetValue(name, out result))
+                return result;
+
+            return _parent?.FindSymbol(name);
         }
-
-        public void AddSymbol(LocalSymbol symbol)
-        {
-            Debug.Assert(symbol != null);
-            Debug.Assert(String.IsNullOrEmpty(symbol.Name) == false);
-            Debug.Assert(_localTable.ContainsKey(symbol.Name) == false);
-
-            _locals.Add(symbol);
-            _localTable[symbol.Name] = symbol;
-        }
-
-        #region ISymbolTable Members
-
-        ICollection ISymbolTable.Symbols => _locals;
-
-        Symbol ISymbolTable.FindSymbol(string name, Symbol context)
-        {
-            Symbol symbol = null;
-
-            if (_localTable.ContainsKey(name))
-            {
-                symbol = _localTable[name];
-            }
-
-            if (symbol == null)
-            {
-                Debug.Assert(_parentSymbolTable != null);
-                symbol = _parentSymbolTable.FindSymbol(name, context);
-            }
-
-            return symbol;
-        }
-        #endregion
     }
+
+    //internal sealed class SymbolScope : ISymbolTable
+    //{
+    //    private readonly ISymbolTable _parentSymbolTable;
+    //    private List<SymbolScope> _childScopes;
+
+    //    private readonly Dictionary<string, LocalSymbol> _localTable;
+    //    private readonly Collection<LocalSymbol> _locals;
+
+    //    public SymbolScope(SymbolScope parentScope)
+    //        : this((ISymbolTable)parentScope)
+    //    {
+    //        Parent = parentScope;
+    //    }
+
+    //    public SymbolScope(ISymbolTable parentSymbolTable)
+    //    {
+    //        Debug.Assert(parentSymbolTable != null);
+    //        _parentSymbolTable = parentSymbolTable;
+
+    //        _locals = new Collection<LocalSymbol>();
+    //        _localTable = new Dictionary<string, LocalSymbol>();
+    //    }
+
+    //    public ICollection<SymbolScope> ChildScopes => _childScopes;
+
+    //    public SymbolScope Parent { get; }
+
+    //    public void AddChildScope(SymbolScope scope)
+    //    {
+    //        if (_childScopes == null)
+    //            _childScopes = new List<SymbolScope>();
+    //        _childScopes.Add(scope);
+    //    }
+
+    //    public void AddSymbol(LocalSymbol symbol)
+    //    {
+    //        Debug.Assert(symbol != null);
+    //        Debug.Assert(String.IsNullOrEmpty(symbol.Name) == false);
+    //        Debug.Assert(_localTable.ContainsKey(symbol.Name) == false);
+
+    //        _locals.Add(symbol);
+    //        _localTable[symbol.Name] = symbol;
+    //    }
+
+    //    #region ISymbolTable Members
+
+    //    ICollection ISymbolTable.Symbols => _locals;
+
+    //    Symbol ISymbolTable.FindSymbol(string name, Symbol context)
+    //    {
+    //        Symbol symbol = null;
+
+    //        if (_localTable.ContainsKey(name))
+    //        {
+    //            symbol = _localTable[name];
+    //        }
+
+    //        if (symbol == null)
+    //        {
+    //            Debug.Assert(_parentSymbolTable != null);
+    //            symbol = _parentSymbolTable.FindSymbol(name, context);
+    //        }
+
+    //        return symbol;
+    //    }
+    //    #endregion
+    //}
 }

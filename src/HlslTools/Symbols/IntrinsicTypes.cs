@@ -175,6 +175,8 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol SamplerState;
         public static readonly TypeSymbol SamplerComparisonState;
 
+        public static readonly TypeSymbol[] AllIntrinsicTypes;
+
         static IntrinsicTypes()
         {
             // Scalar types.
@@ -599,6 +601,10 @@ namespace HlslTools.Symbols
             SamplerCube = new IntrinsicTypeSymbol("samplerCUBE", "");
             SamplerState = new IntrinsicTypeSymbol("SamplerState", "");
             SamplerComparisonState = new IntrinsicTypeSymbol("SamplerComparisonState", "");
+
+            AllIntrinsicTypes = AllNumericTypes
+                .Union(new[] { Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState })
+                .ToArray();
         }
 
         private static IEnumerable<FieldSymbol> CreateVectorTypeFields(int numComponents,
