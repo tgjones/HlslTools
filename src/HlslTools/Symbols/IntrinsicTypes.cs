@@ -1224,7 +1224,11 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static TypeSymbol CreateByteAddressBufferType()
+        private static TypeSymbol _byteAddressBuffer;
+
+        public static TypeSymbol ByteAddressBuffer => _byteAddressBuffer ?? (_byteAddressBuffer = CreateByteAddressBufferType());
+
+        private static TypeSymbol CreateByteAddressBufferType()
         {
             return new IntrinsicTypeSymbol("ByteAddressBuffer",
                 "A read-only buffer that is indexed in bytes.",

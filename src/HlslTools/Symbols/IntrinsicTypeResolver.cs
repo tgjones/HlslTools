@@ -1,58 +1,61 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
 using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
-    internal sealed class SymbolSet : ISymbolTable
+    internal static class IntrinsicTypeResolver
     {
-        private readonly List<Symbol> _globals;
-        private readonly Dictionary<string, Symbol> _globalMap;
-
-        public SymbolSet()
+        public static TypeSymbol GetTypeSymbol(this TypeSyntax node, SymbolScopeStack symbolScopeStack)
         {
-            _globals = new List<Symbol>();
-            _globalMap = new Dictionary<string, Symbol>();
+            switch (node.Kind)
+            {
+                case SyntaxKind.PredefinedScalarType:
+                case SyntaxKind.PredefinedVectorType:
+                case SyntaxKind.PredefinedGenericVectorType:
+                case SyntaxKind.PredefinedMatrixType:
+                case SyntaxKind.PredefinedGenericMatrixType:
+                case SyntaxKind.PredefinedObjectType:
+                    return ((PredefinedTypeSyntax) node).GetTypeSymbol(symbolScopeStack);
+                case SyntaxKind.IdentifierName:
+                    {
+                        var identifierName = (IdentifierNameSyntax) node;
+                        return symbolScopeStack.CurrentScope.FindSymbol(identifierName.Name.Text) as TypeSymbol;
+                    }
+                default:
+                    throw new NotImplementedException(node.Kind.ToString());
+            }
         }
 
-        public bool IsSymbol(TypeSymbol symbol, string symbolName)
-        {
-            return (((ISymbolTable)this).FindSymbol(symbolName, null) == symbol);
-        }
-
-        public TypeSymbol ResolveIntrinsicType(PredefinedTypeSyntax type, ISymbolTable symbolTable, Symbol contextSymbol)
+        public static TypeSymbol GetTypeSymbol(this PredefinedTypeSyntax type, SymbolScopeStack symbolScopeStack)
         {
             switch (type.Kind)
             {
                 case SyntaxKind.PredefinedScalarType:
-                    return ResolveIntrinsicScalarType((ScalarTypeSyntax) type);
+                    return GetTypeSymbol((ScalarTypeSyntax) type);
 
                 case SyntaxKind.PredefinedVectorType:
-                    return ResolveIntrinsicVectorType((VectorTypeSyntax)type);
+                    return GetTypeSymbol((VectorTypeSyntax) type);
 
                 case SyntaxKind.PredefinedGenericVectorType:
-                    return ResolveIntrinsicGenericVectorType((GenericVectorTypeSyntax)type);
+                    return GetTypeSymbol((GenericVectorTypeSyntax) type);
 
                 case SyntaxKind.PredefinedMatrixType:
-                    return ResolveIntrinsicMatrixType((MatrixTypeSyntax)type);
+                    return GetTypeSymbol((MatrixTypeSyntax) type);
 
                 case SyntaxKind.PredefinedGenericMatrixType:
-                    return ResolveIntrinsicGenericMatrixType((GenericMatrixTypeSyntax)type);
+                    return GetTypeSymbol((GenericMatrixTypeSyntax) type);
 
                 case SyntaxKind.PredefinedObjectType:
-                    return ResolveIntrinsicObjectType((PredefinedObjectTypeSyntax) type, symbolTable, contextSymbol);
+                    return GetTypeSymbol((PredefinedObjectTypeSyntax) type, symbolScopeStack);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), "Unmapped intrinsic type");
             }
         }
 
-        private static TypeSymbol ResolveIntrinsicScalarType(ScalarTypeSyntax type)
+        public static TypeSymbol GetTypeSymbol(this ScalarTypeSyntax node)
         {
-            var scalarType = SyntaxFacts.GetScalarType(type.TypeTokens.Select(x => x.Kind).ToArray());
+            var scalarType = SyntaxFacts.GetScalarType(node);
             switch (scalarType)
             {
                 case ScalarType.Void:
@@ -74,26 +77,26 @@ namespace HlslTools.Symbols
             }
         }
 
-        private static TypeSymbol ResolveIntrinsicVectorType(VectorTypeSyntax type)
+        public static TypeSymbol GetTypeSymbol(this VectorTypeSyntax node)
         {
-            var vectorType = SyntaxFacts.GetVectorType(type.TypeToken.Kind);
+            var vectorType = SyntaxFacts.GetVectorType(node.TypeToken.Kind);
             var scalarType = vectorType.Item1;
             var numComponents = vectorType.Item2;
 
             return IntrinsicTypes.GetVectorType(scalarType, numComponents);
         }
 
-        private static TypeSymbol ResolveIntrinsicGenericVectorType(GenericVectorTypeSyntax type)
+        public static TypeSymbol GetTypeSymbol(this GenericVectorTypeSyntax node)
         {
-            var scalarType = SyntaxFacts.GetScalarType(type.ScalarType.TypeTokens.Select(x => x.Kind).ToArray());
-            var numComponents = (int) type.SizeToken.Value;
+            var scalarType = SyntaxFacts.GetScalarType(node.ScalarType);
+            var numComponents = (int) node.SizeToken.Value;
 
             return IntrinsicTypes.GetVectorType(scalarType, numComponents);
         }
 
-        private static TypeSymbol ResolveIntrinsicMatrixType(MatrixTypeSyntax type)
+        public static TypeSymbol GetTypeSymbol(this MatrixTypeSyntax node)
         {
-            var matrixType = SyntaxFacts.GetMatrixType(type.TypeToken.Kind);
+            var matrixType = SyntaxFacts.GetMatrixType(node.TypeToken.Kind);
             var scalarType = matrixType.Item1;
             var numRows = matrixType.Item2;
             var numCols = matrixType.Item3;
@@ -101,18 +104,18 @@ namespace HlslTools.Symbols
             return IntrinsicTypes.GetMatrixType(scalarType, numRows, numCols);
         }
 
-        private static TypeSymbol ResolveIntrinsicGenericMatrixType(GenericMatrixTypeSyntax type)
+        public static TypeSymbol GetTypeSymbol(this GenericMatrixTypeSyntax node)
         {
-            var scalarType = SyntaxFacts.GetScalarType(type.ScalarType.TypeTokens.Select(x => x.Kind).ToArray());
-            var numRows = (int) type.RowsToken.Value;
-            var numCols = (int) type.ColsToken.Value;
+            var scalarType = SyntaxFacts.GetScalarType(node.ScalarType);
+            var numRows = (int) node.RowsToken.Value;
+            var numCols = (int) node.ColsToken.Value;
 
             return IntrinsicTypes.GetMatrixType(scalarType, numRows, numCols);
         }
 
-        private TypeSymbol ResolveIntrinsicObjectType(PredefinedObjectTypeSyntax type, ISymbolTable symbolTable, Symbol contextSymbol)
+        public static TypeSymbol GetTypeSymbol(this PredefinedObjectTypeSyntax node, SymbolScopeStack symbolScopeStack)
         {
-            var predefinedObjectType = SyntaxFacts.GetPredefinedObjectType(type.ObjectTypeToken.Kind);
+            var predefinedObjectType = SyntaxFacts.GetPredefinedObjectType(node.ObjectTypeToken.Kind);
             switch (predefinedObjectType)
             {
                 case PredefinedObjectType.Buffer:
@@ -128,20 +131,20 @@ namespace HlslTools.Symbols
                 {
                     TypeSymbol valueType;
                     ScalarType scalarType;
-                    if (type.TemplateArgumentList != null)
+                    if (node.TemplateArgumentList != null)
                     {
-                        var valueTypeSyntax = type.TemplateArgumentList.Arguments[0];
-                        valueType = ResolveIntrinsicType((PredefinedTypeSyntax) valueTypeSyntax, symbolTable, contextSymbol);
+                        var valueTypeSyntax = node.TemplateArgumentList.Arguments[0];
+                        valueType = GetTypeSymbol((PredefinedTypeSyntax) valueTypeSyntax, symbolScopeStack);
                         switch (valueTypeSyntax.Kind)
                         {
                             case SyntaxKind.PredefinedScalarType:
-                                scalarType = SyntaxFacts.GetScalarType(((ScalarTypeSyntax) valueTypeSyntax).TypeTokens.Select(x => x.Kind).ToArray());
+                                scalarType = SyntaxFacts.GetScalarType((ScalarTypeSyntax) valueTypeSyntax);
                                 break;
                             case SyntaxKind.PredefinedVectorType:
                                 scalarType = SyntaxFacts.GetVectorType(((VectorTypeSyntax) valueTypeSyntax).TypeToken.Kind).Item1;
                                 break;
                             case SyntaxKind.PredefinedGenericVectorType:
-                                scalarType = SyntaxFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType.TypeTokens.Select(x => x.Kind).ToArray());
+                                scalarType = SyntaxFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();
@@ -165,8 +168,8 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.ConsumeStructuredBuffer:
                 case PredefinedObjectType.StructuredBuffer:
                 {
-                    var valueTypeSyntax = (TypeSyntax) type.TemplateArgumentList.Arguments[0];
-                    var valueType = ResolveType(valueTypeSyntax, symbolTable, contextSymbol);
+                    var valueTypeSyntax = (TypeSyntax) node.TemplateArgumentList.Arguments[0];
+                    var valueType = GetTypeSymbol(valueTypeSyntax, symbolScopeStack);
                     switch (predefinedObjectType)
                     {
                         case PredefinedObjectType.AppendStructuredBuffer:
@@ -180,7 +183,7 @@ namespace HlslTools.Symbols
                     }
                 }
                 case PredefinedObjectType.ByteAddressBuffer:
-                    return IntrinsicTypes.CreateByteAddressBufferType();
+                    return IntrinsicTypes.ByteAddressBuffer;
                 case PredefinedObjectType.RWByteAddressBuffer:
                 case PredefinedObjectType.RWStructuredBuffer:
                 case PredefinedObjectType.InputPatch:
@@ -198,48 +201,5 @@ namespace HlslTools.Symbols
                     throw new ArgumentOutOfRangeException();
             }
         }
-
-        public TypeSymbol ResolveType(TypeSyntax node, ISymbolTable symbolTable, Symbol contextSymbol)
-        {
-            if (node is PredefinedTypeSyntax)
-            {
-                return ResolveIntrinsicType((PredefinedTypeSyntax) node, symbolTable, contextSymbol);
-            }
-            //else if (node is ArrayTypeNode)
-            //{
-            //    ArrayTypeNode arrayTypeNode = (ArrayTypeNode)node;
-
-            //    TypeSymbol itemTypeSymbol = ResolveType(arrayTypeNode.BaseType, symbolTable, contextSymbol);
-            //    Debug.Assert(itemTypeSymbol != null);
-
-            //    return CreateArrayTypeSymbol(itemTypeSymbol);
-            //}
-            else
-            {
-                Debug.Assert(node is IdentifierNameSyntax);
-                var nameNode = (IdentifierNameSyntax) node;
-
-                return (TypeSymbol)symbolTable.FindSymbol(nameNode.Name.Text, contextSymbol);
-            }
-        }
-
-        public void AddGlobal(Symbol symbol)
-        {
-            _globals.Add(symbol);
-            _globalMap.Add(symbol.Name, symbol);
-        }
-
-        #region ISymbolTable Members
-
-        ICollection ISymbolTable.Symbols => _globals;
-
-        Symbol ISymbolTable.FindSymbol(string name, Symbol context)
-        {
-            Symbol symbol;
-            _globalMap.TryGetValue(name, out symbol);
-            return symbol;
-        }
-
-        #endregion
     }
 }

@@ -50,7 +50,8 @@ namespace HlslTools.Compilation
                     case SyntaxKind.VariableDeclarationStatement:
                     {
                         var statement = (VariableDeclarationStatementSyntax) node;
-                        var valueType = FindTypeSymbol(statement.Declaration.Type);
+                        var valueType = statement.Declaration.Type.GetTypeSymbol(_symbolStack);
+                        AddSymbolLookup(statement.Declaration.Type, valueType);
                         foreach (var declarator in statement.Declaration.Variables)
                             AddSymbol(declarator, new GlobalVariableSymbol(declarator, valueType));
                         break;
@@ -68,9 +69,18 @@ namespace HlslTools.Compilation
             return result;
         }
 
+        private void AddSymbolLookup(SyntaxNode node, Symbol symbol)
+        {
+            if (symbol == null)
+                return;
+            _syntaxToSymbolLookup.Add(node, symbol);
+        }
+
         private void AddSymbol(SyntaxNode node, Symbol symbol)
         {
-            _syntaxToSymbolLookup.Add(node, symbol);
+            if (symbol == null)
+                return;
+            AddSymbolLookup(node, symbol);
             _symbolStack.AddSymbol(symbol);
         }
 
@@ -81,7 +91,7 @@ namespace HlslTools.Compilation
                 var result = new List<FieldSymbol>();
                 foreach (var declaration in node.Fields)
                 {
-                    var valueType = FindTypeSymbol(declaration.Declaration.Type);
+                    var valueType = declaration.Declaration.Type.GetTypeSymbol(_symbolStack);
                     foreach (var declarator in declaration.Declaration.Variables)
                         result.Add(new SourceFieldSymbol(declarator, t, valueType));
                 }
@@ -90,38 +100,7 @@ namespace HlslTools.Compilation
             return new StructSymbol(node, null, fields);
         }
 
-        private TypeSymbol FindTypeSymbol(TypeSyntax node)
-        {
-            switch (node.Kind)
-            {
-                case SyntaxKind.PredefinedScalarType:
-                {
-                    var typeNode = (ScalarTypeSyntax) node;
-                    switch (typeNode.TypeTokens.Count)
-                    {
-                        case 1:
-                            switch (typeNode.TypeTokens[0].Text)
-                            {
-                                case "float":
-                                    return IntrinsicTypes.Float;
-                                case "int":
-                                    return IntrinsicTypes.Float;
-                                default:
-                                    throw new NotImplementedException();
-                            }
-                        default:
-                            throw new NotImplementedException();
-                    }
-                }
-                case SyntaxKind.IdentifierName:
-                {
-                    var identifierName = (IdentifierNameSyntax) node;
-                    return _symbolStack.CurrentScope.FindSymbol(identifierName.Name.Text) as TypeSymbol;
-                }
-                default:
-                    throw new NotImplementedException();
-            }
-        }
+        
 
         //public IEnumerable<Diagnostic> GetDiagnostics()
         //{

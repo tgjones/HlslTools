@@ -351,14 +351,14 @@ namespace HlslTools.Syntax
             }
         }
 
-        public static ScalarType GetScalarType(SyntaxKind[] kinds)
+        public static ScalarType GetScalarType(ScalarTypeSyntax node)
         {
-            if (kinds.Length == 2 && kinds[0] == SyntaxKind.UnsignedKeyword && kinds[1] == SyntaxKind.IntKeyword)
+            if (node.TypeTokens.Count == 2 && node.TypeTokens[0].Kind == SyntaxKind.UnsignedKeyword && node.TypeTokens[1].Kind == SyntaxKind.IntKeyword)
                 return ScalarType.Uint;
 
-            Debug.Assert(kinds.Length == 1);
+            Debug.Assert(node.TypeTokens.Count == 1);
 
-            switch (kinds[0])
+            switch (node.TypeTokens[0].Kind)
             {
                 case SyntaxKind.VoidKeyword:
                     return ScalarType.Void;
@@ -386,6 +386,7 @@ namespace HlslTools.Syntax
             {
                 case SyntaxKind.VectorKeyword:
                     return Tuple.Create(ScalarType.Float, 4);
+
                 case SyntaxKind.Bool1Keyword:
                     return Tuple.Create(ScalarType.Bool, 1);
                 case SyntaxKind.Bool2Keyword:

@@ -9,7 +9,7 @@ namespace HlslTools.Tests.Compilation
     public class SemanticModelTests
     {
         [Test]
-        public void GetSemanticModel()
+        public void CanGetSemanticModel()
         {
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(@"
 struct MyStruct
@@ -18,7 +18,27 @@ struct MyStruct
     int b;
 };
 
-MyStruct s;"));
+MyStruct s;
+
+float Scalar1;
+int Scalar2;
+
+float2 Vector1;
+int4 Vector2;
+vector<bool, 3> Vector3;
+
+matrix Matrix1;
+float1x2 Matrix2;
+int2x3 Matrix3;
+bool4x2 Matrix4;
+matrix<uint, 3, 2> Matrix5;
+
+float4x4 WorldViewProjection;
+
+Texture2D Picture;
+Texture2D<bool> PictureTyped;
+SamplerState PictureSampler;
+SamplerComparisonState PictureSamplerComparison;"));
             var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
 

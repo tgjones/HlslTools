@@ -115,6 +115,7 @@
     <Compile Include="Symbols\IndexerSymbol.cs" />
     <Compile Include="Symbols\InterfaceSymbol.cs" />
     <Compile Include="Symbols\IntrinsicSemantics.cs" />
+    <Compile Include="Symbols\IntrinsicTypeResolver.cs" />
     <Compile Include="Symbols\ISymbolTable.cs" />
     <Compile Include="Symbols\LocalSymbol.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkup.cs" />
@@ -136,7 +137,6 @@
     <Compile Include="Symbols\SymbolImplementation.cs" />
     <Compile Include="Symbols\SymbolScope.cs" />
     <Compile Include="Symbols\SymbolScopeStack.cs" />
-    <Compile Include="Symbols\SymbolSet.cs" />
     <Compile Include="Syntax\AnnotationsSyntax.cs" />
     <Compile Include="Syntax\CompileExpressionSyntax.cs" />
     <Compile Include="Syntax\CompoundExpressionSyntax.cs" />

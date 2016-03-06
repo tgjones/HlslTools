@@ -12,7 +12,7 @@ namespace HlslTools.Binding
     {
         private readonly ILocalSymbolTable _symbolTable;
         private readonly Symbol _symbolContext;
-        private readonly SymbolSet _symbolSet;
+        //private readonly SymbolSet _symbolSet;
 
         public ExpressionBinder(ILocalSymbolTable symbolTable, MemberSymbol memberContext, List<Diagnostic> diagnostics)
         {
@@ -51,6 +51,8 @@ namespace HlslTools.Binding
                     return ProcessPostfixUnary((PostfixUnaryExpressionSyntax)node);
                 case SyntaxKind.MemberAccessExpression:
                     return ProcessMemberAccess((MemberAccessExpressionSyntax) node);
+                //case SyntaxKind.FunctionInvocationExpression:
+                //    return ProcessFunctionInvocation((InvocationExpressionSyntax) node);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
