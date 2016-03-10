@@ -1,4 +1,5 @@
-﻿using HlslTools.VisualStudio.Util.Extensions;
+﻿using System.Runtime.InteropServices;
+using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
@@ -6,6 +7,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace HlslTools.VisualStudio.Navigation
 {
+    [Guid("80329450-4B0D-4EC7-A4E4-A57C024888D5")]
     internal sealed class HlslLanguageInfo : IVsLanguageInfo
     {
         private readonly SVsServiceProvider _serviceProvider;

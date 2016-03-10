@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Runtime.InteropServices;
 using HlslTools.VisualStudio.Editing.BraceCompletion;
@@ -8,6 +9,7 @@ using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace HlslTools.VisualStudio
@@ -36,6 +38,11 @@ namespace HlslTools.VisualStudio
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension4)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension5)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension6)]
+
+    [ProvideEditorFactory(typeof(HlslEditorFactory), 140, CommonPhysicalViewAttributes = (int) __VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
+    [ProvideEditorExtension(typeof(HlslEditorFactory), ".*", 1)]
+    [ProvideEditorLogicalView(typeof(HlslEditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
+    [ProvideFileExtensionMapping("{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", "HLSL Tools", typeof(HlslEditorFactory), typeof(HlslLanguageInfo), GuidList.guidShaderStudio_VisualStudioPackagePkgString, 100)]
 
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
@@ -89,6 +96,8 @@ namespace HlslTools.VisualStudio
             ((IConnectionPointContainer)textMgr).FindConnectionPoint(ref textManagerEvents2Guid, out textManagerEvents2ConnectionPoint);
             uint cookie;
             textManagerEvents2ConnectionPoint.Advise(LanguagePreferences, out cookie);
+
+            RegisterEditorFactory(new HlslEditorFactory(this));
         }
 
         protected override void Dispose(bool disposing)
@@ -104,6 +113,11 @@ namespace HlslTools.VisualStudio
             where TOptionsPage : DialogPage
         {
             return (TOptionsPage) GetDialogPage(typeof(TOptionsPage));
+        }
+
+        internal new object GetService(Type serviceType)
+        {
+            return base.GetService(serviceType);
         }
     }
 }

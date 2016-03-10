@@ -4,6 +4,7 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using Microsoft.VisualStudio.TextManager.Interop;
 
 namespace HlslTools.VisualStudio.Util.Extensions
 {
@@ -17,6 +18,11 @@ namespace HlslTools.VisualStudio.Util.Extensions
         public static IComponentModel GetComponentModel(this SVsServiceProvider serviceProvider)
         {
             return serviceProvider.GetService<SComponentModel, IComponentModel>();
+        }
+
+        public static IVsTextManager GetTextManager(this SVsServiceProvider serviceProvider)
+        {
+            return serviceProvider.GetService<VsTextManagerClass, IVsTextManager>();
         }
 
         public static HlslToolsPackage GetHlslToolsService(this SVsServiceProvider serviceProvider)

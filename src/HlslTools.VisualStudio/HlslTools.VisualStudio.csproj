@@ -228,6 +228,7 @@
     <Compile Include="Formatting\FormattingExtensions.cs" />
     <Compile Include="Formatting\FormatCommandTarget.cs" />
     <Compile Include="Formatting\FormattingTextViewCreationListener.cs" />
+    <Compile Include="HlslEditorFactory.cs" />
     <Compile Include="HlslLanguagePreferences.cs" />
     <Compile Include="IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
     <Compile Include="IntelliSense\Completion\CompletionExtensions.cs" />
@@ -339,6 +340,7 @@
     <Compile Include="Editing\SmartIndenting\SmartIndent.cs" />
     <Compile Include="Editing\SmartIndenting\SmartIndentProvider.cs" />
     <Compile Include="Parsing\BackgroundParserManager.cs" />
+    <Compile Include="ProvideFileExtensionMapping.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindow.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindowCommand.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml.cs">
