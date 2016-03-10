@@ -2,6 +2,11 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal enum BoundNodeKind
     {
+        CompilationUnit,
+
+        // Types
+        StructType,
+
         // Expressions
         FunctionInvocationExpression,
         UnaryExpression,

@@ -28,9 +28,7 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.MethodDefinition:
                     markup.AppendMethodSymbolInfo((MethodSymbol) symbol);
                     break;
-                case SymbolKind.LocalVariable:
-                    break;
-                case SymbolKind.GlobalVariable:
+                case SymbolKind.Variable:
                     break;
                 case SymbolKind.Parameter:
                     markup.AppendParameterSymbolInfo((ParameterSymbol)symbol);
@@ -69,7 +67,7 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendMethodSymbolInfo(this ICollection<SymbolMarkupToken> markup, MethodSymbol symbol)
         {
-            markup.AppendType(symbol.AssociatedType);
+            markup.AppendType(symbol.ReturnType);
             markup.AppendSpace();
             markup.AppendName(SymbolMarkupKind.MethodName, symbol.Name);
             markup.AppendParameters(symbol.Parameters);
@@ -77,7 +75,7 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
         {
-            markup.AppendType(symbol.ValueType);
+            markup.AppendType(symbol.ReturnType);
             markup.AppendSpace();
             markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
             markup.AppendParameters(symbol.Parameters);

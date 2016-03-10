@@ -1,11 +1,12 @@
 ﻿using System;
+using HlslTools.Binding;
 using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
     internal static class IntrinsicTypeResolver
     {
-        public static TypeSymbol GetTypeSymbol(this TypeSyntax node, SymbolScopeStack symbolScopeStack)
+        public static TypeSymbol GetTypeSymbol(this TypeSyntax node, Binder binder)
         {
             switch (node.Kind)
             {
@@ -15,18 +16,18 @@ namespace HlslTools.Symbols
                 case SyntaxKind.PredefinedMatrixType:
                 case SyntaxKind.PredefinedGenericMatrixType:
                 case SyntaxKind.PredefinedObjectType:
-                    return ((PredefinedTypeSyntax) node).GetTypeSymbol(symbolScopeStack);
+                    return ((PredefinedTypeSyntax) node).GetTypeSymbol(binder);
                 case SyntaxKind.IdentifierName:
                     {
                         var identifierName = (IdentifierNameSyntax) node;
-                        return symbolScopeStack.CurrentScope.FindSymbol(identifierName.Name.Text) as TypeSymbol;
+                        return binder.LookupSymbol(identifierName.Name) as TypeSymbol;
                     }
                 default:
                     throw new NotImplementedException(node.Kind.ToString());
             }
         }
 
-        public static TypeSymbol GetTypeSymbol(this PredefinedTypeSyntax type, SymbolScopeStack symbolScopeStack)
+        public static TypeSymbol GetTypeSymbol(this PredefinedTypeSyntax type, Binder binder)
         {
             switch (type.Kind)
             {
@@ -46,7 +47,7 @@ namespace HlslTools.Symbols
                     return GetTypeSymbol((GenericMatrixTypeSyntax) type);
 
                 case SyntaxKind.PredefinedObjectType:
-                    return GetTypeSymbol((PredefinedObjectTypeSyntax) type, symbolScopeStack);
+                    return GetTypeSymbol((PredefinedObjectTypeSyntax) type, binder);
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type), "Unmapped intrinsic type");
@@ -113,7 +114,7 @@ namespace HlslTools.Symbols
             return IntrinsicTypes.GetMatrixType(scalarType, numRows, numCols);
         }
 
-        public static TypeSymbol GetTypeSymbol(this PredefinedObjectTypeSyntax node, SymbolScopeStack symbolScopeStack)
+        public static TypeSymbol GetTypeSymbol(this PredefinedObjectTypeSyntax node, Binder binder)
         {
             var predefinedObjectType = SyntaxFacts.GetPredefinedObjectType(node.ObjectTypeToken.Kind);
             switch (predefinedObjectType)
@@ -134,7 +135,7 @@ namespace HlslTools.Symbols
                     if (node.TemplateArgumentList != null)
                     {
                         var valueTypeSyntax = node.TemplateArgumentList.Arguments[0];
-                        valueType = GetTypeSymbol((PredefinedTypeSyntax) valueTypeSyntax, symbolScopeStack);
+                        valueType = GetTypeSymbol((PredefinedTypeSyntax) valueTypeSyntax, binder);
                         switch (valueTypeSyntax.Kind)
                         {
                             case SyntaxKind.PredefinedScalarType:
@@ -169,7 +170,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.StructuredBuffer:
                 {
                     var valueTypeSyntax = (TypeSyntax) node.TemplateArgumentList.Arguments[0];
-                    var valueType = GetTypeSymbol(valueTypeSyntax, symbolScopeStack);
+                    var valueType = GetTypeSymbol(valueTypeSyntax, binder);
                     switch (predefinedObjectType)
                     {
                         case PredefinedObjectType.AppendStructuredBuffer:

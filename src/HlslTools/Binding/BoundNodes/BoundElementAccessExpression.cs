@@ -15,7 +15,7 @@ namespace HlslTools.Binding.BoundNodes
         {
             Expression = expression;
             Index = index;
-            Type = indexer.AssociatedType;
+            Type = indexer.ValueType;
         }
     }
 }

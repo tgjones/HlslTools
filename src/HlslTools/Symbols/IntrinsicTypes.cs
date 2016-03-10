@@ -661,7 +661,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        private static IEnumerable<MemberSymbol> CreateMatrixTypeMembers(int numRows, int numColumns, TypeSymbol matrixType, TypeSymbol fieldType)
+        private static IEnumerable<Symbol> CreateMatrixTypeMembers(int numRows, int numColumns, TypeSymbol matrixType, TypeSymbol fieldType)
         {
             // TODO: Support composite fields like _m00_m01.
 

@@ -5,7 +5,7 @@
         public SymbolKind Kind { get; }
         public string Name { get; }
         public string Documentation { get; }
-        public Symbol Parent { get; set; }
+        public Symbol Parent { get; }
 
         protected Symbol(SymbolKind kind, string name, string documentation, Symbol parent)
         {

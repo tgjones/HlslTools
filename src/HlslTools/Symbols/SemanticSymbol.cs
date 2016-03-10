@@ -2,9 +2,9 @@ using System.Collections.Immutable;
 
 namespace HlslTools.Symbols
 {
-    public class SemanticSymbol : Symbol
+    public sealed class SemanticSymbol : Symbol
     {
-        public SemanticSymbol(string name, string documentation, bool allowsMultiple, SemanticUsages usages, params TypeSymbol[] valueTypes)
+        internal SemanticSymbol(string name, string documentation, bool allowsMultiple, SemanticUsages usages, params TypeSymbol[] valueTypes)
             : base(SymbolKind.Semantic, name, documentation, null)
         {
             AllowsMultiple = allowsMultiple;

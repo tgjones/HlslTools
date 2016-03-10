@@ -2,14 +2,14 @@
 
 namespace HlslTools.Symbols
 {
-    public class ArraySymbol : TypeSymbol
+    public sealed class ArraySymbol : TypeSymbol
     {
-        public ArraySymbol(TypeSymbol valueType)
+        internal ArraySymbol(TypeSymbol valueType)
             : base(SymbolKind.Array, $"{valueType.FullName}[]", "Array of " + valueType.Name, null, t => CreateArrayMembers(t, valueType))
         {
         }
 
-        private static IEnumerable<MemberSymbol> CreateArrayMembers(TypeSymbol parent, TypeSymbol valueType)
+        private static IEnumerable<Symbol> CreateArrayMembers(TypeSymbol parent, TypeSymbol valueType)
         {
             yield return new IndexerSymbol("[]", string.Empty, parent, valueType);
         }

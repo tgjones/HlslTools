@@ -5,7 +5,7 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundVariableDeclaration : BoundStatement
     {
-        public BoundVariableDeclaration(VariableDeclarationStatementSyntax syntax, LocalVariableSymbol variableSymbol, TypeSymbol declaredType, BoundExpression initializerOpt)
+        public BoundVariableDeclaration(VariableDeclaratorSyntax syntax, VariableSymbol variableSymbol, TypeSymbol declaredType, BoundExpression initializerOpt)
             : base(BoundNodeKind.VariableDeclaration, syntax)
         {
             VariableSymbol = variableSymbol;
@@ -13,7 +13,7 @@ namespace HlslTools.Binding.BoundNodes
             InitializerOpt = initializerOpt;
         }
 
-        public LocalVariableSymbol VariableSymbol { get; }
+        public VariableSymbol VariableSymbol { get; }
         public TypeSymbol DeclaredType { get; }
         public BoundExpression InitializerOpt { get; }
     }

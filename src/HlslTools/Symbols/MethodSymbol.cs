@@ -4,15 +4,16 @@ using System.Collections.Immutable;
 
 namespace HlslTools.Symbols
 {
-    public abstract class MethodSymbol : MemberSymbol, IInvocableSymbol
+    public abstract class MethodSymbol : Symbol, IInvocableSymbol, IMemberSymbol
     {
         private readonly Func<MethodSymbol, IEnumerable<ParameterSymbol>> _lazyParameters;
         private ImmutableArray<ParameterSymbol> _parameters;
 
         protected MethodSymbol(SymbolKind kind, string name, string documentation, TypeSymbol parent, TypeSymbol returnType, Func<MethodSymbol, IEnumerable<ParameterSymbol>> lazyParameters)
-            : base(kind, name, documentation, parent, returnType)
+            : base(kind, name, documentation, parent)
         {
             _lazyParameters = lazyParameters;
+            ReturnType = returnType;
         }
 
         public ImmutableArray<ParameterSymbol> Parameters
@@ -24,5 +25,9 @@ namespace HlslTools.Symbols
                 return _parameters;
             }
         }
+
+        public TypeSymbol ReturnType { get; }
+
+        TypeSymbol IMemberSymbol.AssociatedType => ReturnType;
     }
 }

@@ -5,16 +5,16 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundMemberExpression : BoundExpression
     {
-        public BoundMemberExpression(SyntaxNode syntax, BoundExpression objectReference, MemberSymbol member)
+        public BoundMemberExpression(SyntaxNode syntax, BoundExpression objectReference, Symbol member)
             : base(BoundNodeKind.MemberExpression, syntax)
         {
             ObjectReference = objectReference;
             Member = member;
-            Type = member.AssociatedType;
+            Type = ((IMemberSymbol) member).AssociatedType;
         }
 
         public override TypeSymbol Type { get; }
         public BoundExpression ObjectReference { get; }
-        public MemberSymbol Member { get; }
+        public Symbol Member { get; }
     }
 }

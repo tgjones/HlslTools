@@ -1,34 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using HlslTools.Binding.BoundNodes;
-using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 
 namespace HlslTools.Binding
 {
-    internal sealed class ExpressionBinder
+    partial class Binder
     {
-        private readonly ILocalSymbolTable _symbolTable;
-        private readonly Symbol _symbolContext;
-        //private readonly SymbolSet _symbolSet;
-
-        public ExpressionBinder(ILocalSymbolTable symbolTable, MemberSymbol memberContext, List<Diagnostic> diagnostics)
-        {
-            _symbolTable = symbolTable;
-            _symbolContext = memberContext;
-            //_symbolSet = memberContext.SymbolSet;
-        }
-
-        public ExpressionBinder(ILocalSymbolTable symbolTable, FieldSymbol fieldContext, List<Diagnostic> diagnostics)
-        {
-            _symbolTable = symbolTable;
-            _symbolContext = fieldContext;
-            //_symbolSet = fieldContext.SymbolSet;
-        }
-
-        public BoundExpression BindExpression(ExpressionSyntax node)
+        private BoundExpression BindExpression(ExpressionSyntax node)
         {
             switch (node.Kind)
             {
@@ -82,15 +62,11 @@ namespace HlslTools.Binding
 
         private BoundExpression ProcessIdentifierName(IdentifierNameSyntax node)
         {
-            var symbol = _symbolTable.FindSymbol(node.Name.Text, _symbolContext);
+            var symbol = LookupSymbol(node.Name);
 
-            var localSymbol = symbol as LocalSymbol;
-            if (localSymbol != null)
-                return new BoundLocalExpression(node, localSymbol);
-
-            var globalSymbol = symbol as GlobalSymbol;
-            if (globalSymbol != null)
-                return new BoundGlobalExpression(node, globalSymbol);
+            //var globalSymbol = symbol as GlobalSymbol;
+            //if (globalSymbol != null)
+            //    return new BoundExpression(node, globalSymbol);
 
             // TODO: Static method calls.
 
@@ -138,8 +114,7 @@ namespace HlslTools.Binding
         {
             var objectReference = BindExpression(node.Expression);
 
-            var typeSymbolTable = (ISymbolTable) objectReference.Type;
-            var member = (MemberSymbol) typeSymbolTable.FindSymbol(node.Name.Name.Text, _symbolContext);
+            var member = objectReference.Type.GetMember(node.Name.Name.Text);
 
             return new BoundMemberExpression(node, objectReference, member);
         }

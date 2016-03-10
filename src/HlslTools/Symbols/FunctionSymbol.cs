@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace HlslTools.Symbols
 {
-    public abstract class FunctionSymbol : GlobalSymbol, IInvocableSymbol
+    public abstract class FunctionSymbol : Symbol, IInvocableSymbol
     {
         private readonly Func<FunctionSymbol, IEnumerable<ParameterSymbol>> _lazyParameters;
         private ImmutableArray<ParameterSymbol> _parameters;
@@ -13,6 +13,7 @@ namespace HlslTools.Symbols
             : base(kind, name, documentation, returnType)
         {
             _lazyParameters = lazyParameters;
+            ReturnType = returnType;
         }
 
         public ImmutableArray<ParameterSymbol> Parameters
@@ -24,5 +25,7 @@ namespace HlslTools.Symbols
                 return _parameters;
             }
         }
+
+        public TypeSymbol ReturnType { get; }
     }
 }

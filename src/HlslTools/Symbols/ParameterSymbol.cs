@@ -1,6 +1,6 @@
 ﻿namespace HlslTools.Symbols
 {
-    public class ParameterSymbol : LocalVariableSymbol
+    public class ParameterSymbol : VariableSymbol
     {
         public ParameterDirection Direction { get; }
 
@@ -9,12 +9,5 @@
         {
             Direction = direction;
         }
-    }
-
-    public enum ParameterDirection
-    {
-        In,
-        Out,
-        Inout
     }
 }

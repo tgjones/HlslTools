@@ -2,43 +2,32 @@
 using System.Collections.Immutable;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Diagnostics;
-using HlslTools.Symbols;
 using HlslTools.Syntax;
 
 namespace HlslTools.Binding
 {
     internal sealed class BindingResult
     {
-        private readonly IDictionary<SyntaxNode, Symbol> _symbolFromSyntaxNode;
         private readonly IDictionary<SyntaxNode, BoundNode> _boundNodeFromSyntaxNode;
-        private readonly List<Diagnostic> _diagnostics;
+        private readonly IDictionary<BoundNode, Binder> _binderFromBoundNode;
 
         public CompilationUnitSyntax Root { get; }
 
-        public BindingResult(CompilationUnitSyntax root)
+        public BoundNode BoundRoot { get; }
+
+        public Binder RootBinder => _binderFromBoundNode[BoundRoot];
+
+        public ImmutableArray<Diagnostic> Diagnostics { get; }
+
+        public BindingResult(CompilationUnitSyntax root, BoundCompilationUnit boundRoot, IDictionary<SyntaxNode, BoundNode> boundNodeFromSyntaxNode, IDictionary<BoundNode, Binder> binderFromBoundNode, IList<Diagnostic> diagnostics)
         {
             Root = root;
+            BoundRoot = boundRoot;
 
-            _symbolFromSyntaxNode = new Dictionary<SyntaxNode, Symbol>();
-            _boundNodeFromSyntaxNode = new Dictionary<SyntaxNode, BoundNode>();
-            _diagnostics = new List<Diagnostic>();
-        }
+            _boundNodeFromSyntaxNode = boundNodeFromSyntaxNode;
+            _binderFromBoundNode = binderFromBoundNode;
 
-        public void AddSymbol(SyntaxNode syntaxNode, Symbol symbol)
-        {
-            _symbolFromSyntaxNode[syntaxNode] = symbol;
-        }
-
-        public Symbol GetSymbol(SyntaxNode syntaxNode)
-        {
-            Symbol result;
-            _symbolFromSyntaxNode.TryGetValue(syntaxNode, out result);
-            return result;
-        }
-
-        public void AddBoundNode(SyntaxNode syntaxNode, BoundNode boundNode)
-        {
-            _boundNodeFromSyntaxNode.Add(syntaxNode, boundNode);
+            Diagnostics = diagnostics.ToImmutableArray();
         }
 
         public BoundNode GetBoundNode(SyntaxNode syntaxNode)
@@ -48,14 +37,17 @@ namespace HlslTools.Binding
             return result;
         }
 
-        public void AddDiagnostic(Diagnostic diagnostic)
+        public Binder GetBinder(SyntaxNode syntaxNode)
         {
-            _diagnostics.Add(diagnostic);
+            var boundNode = GetBoundNode(syntaxNode);
+            return boundNode == null ? null : GetBinder(boundNode);
         }
 
-        public ImmutableArray<Diagnostic> GetDiagnostics()
+        public Binder GetBinder(BoundNode boundNode)
         {
-            return _diagnostics.ToImmutableArray();
+            Binder result;
+            _binderFromBoundNode.TryGetValue(boundNode, out result);
+            return result;
         }
     }
 }

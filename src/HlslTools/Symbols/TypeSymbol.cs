@@ -1,19 +1,16 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 
 namespace HlslTools.Symbols
 {
-    public abstract class TypeSymbol : Symbol, ISymbolTable
+    public abstract class TypeSymbol : Symbol
     {
-        private readonly Func<TypeSymbol, IEnumerable<MemberSymbol>> _lazyMembers;
-        private ImmutableArray<MemberSymbol> _members;
-        private Dictionary<string, MemberSymbol> _memberTable;
-        private ISymbolTable _parentSymbolTable;
+        private readonly Func<TypeSymbol, IEnumerable<Symbol>> _lazyMembers;
+        private ImmutableArray<Symbol> _members;
+        private Dictionary<string, Symbol> _memberTable;
 
-        public ImmutableArray<MemberSymbol> Members
+        public ImmutableArray<Symbol> Members
         {
             get
             {
@@ -23,13 +20,13 @@ namespace HlslTools.Symbols
             }
         }
 
-        private Dictionary<string, MemberSymbol> MemberTable
+        private Dictionary<string, Symbol> MemberTable
         {
             get
             {
                 if (_memberTable == null)
                 {
-                    _memberTable = new Dictionary<string, MemberSymbol>();
+                    _memberTable = new Dictionary<string, Symbol>();
                     foreach (var member in Members)
                         _memberTable.Add(member.Name, member);
                 }
@@ -37,7 +34,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent, Func<TypeSymbol, IEnumerable<MemberSymbol>> lazyMembers)
+        protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers)
             : base(kind, name, documentation, parent)
         {
             _lazyMembers = lazyMembers;
@@ -60,44 +57,11 @@ namespace HlslTools.Symbols
             return null;
         }
 
-        internal void SetParentSymbolTable(ISymbolTable symbolTable)
+        public Symbol GetMember(string name)
         {
-            Debug.Assert(_parentSymbolTable == null);
-            Debug.Assert(symbolTable != null);
-
-            _parentSymbolTable = symbolTable;
-        }
-
-        public MemberSymbol GetMember(string name)
-        {
-            MemberSymbol result;
+            Symbol result;
             MemberTable.TryGetValue(name, out result);
             return result;
         }
-
-        #region ISymbolTable Members
-
-        ICollection ISymbolTable.Symbols => Members;
-
-        Symbol ISymbolTable.FindSymbol(string name, Symbol context)
-        {
-            Debug.Assert(string.IsNullOrEmpty(name) == false);
-            Debug.Assert(context != null);
-
-            Symbol symbol = GetMember(name);
-
-            if (symbol == null)
-            {
-                var baseType = GetBaseType();
-                if (baseType != null)
-                    symbol = ((ISymbolTable)baseType).FindSymbol(name, context);
-            }
-
-            if (symbol == null && _parentSymbolTable != null)
-                symbol = _parentSymbolTable.FindSymbol(name, context);
-
-            return symbol;
-        }
-        #endregion
     }
 }

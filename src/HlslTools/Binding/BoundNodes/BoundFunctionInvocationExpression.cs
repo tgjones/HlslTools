@@ -15,7 +15,7 @@ namespace HlslTools.Binding.BoundNodes
             Result = result;
         }
 
-        public override TypeSymbol Type => Symbol?.ValueType;
+        public override TypeSymbol Type => Symbol?.ReturnType;
 
         public FunctionSymbol Symbol => Result.Selected?.Signature.Symbol;
 

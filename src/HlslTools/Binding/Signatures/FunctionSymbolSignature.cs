@@ -9,7 +9,7 @@ namespace HlslTools.Binding.Signatures
             Symbol = symbol;
         }
 
-        public override TypeSymbol ReturnType => Symbol.ValueType;
+        public override TypeSymbol ReturnType => Symbol.ReturnType;
 
         public override TypeSymbol GetParameterType(int index)
         {

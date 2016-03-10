@@ -1,11 +1,15 @@
 ﻿namespace HlslTools.Symbols
 {
-    public class IndexerSymbol : MemberSymbol
+    public sealed class IndexerSymbol : Symbol, IMemberSymbol
     {
-        public IndexerSymbol(string name, string documentation, TypeSymbol parent, TypeSymbol valueType)
-            : base(SymbolKind.Indexer, name, documentation, parent, valueType)
+        internal IndexerSymbol(string name, string documentation, TypeSymbol parent, TypeSymbol valueType)
+            : base(SymbolKind.Indexer, name, documentation, parent)
         {
-            
+            ValueType = valueType;
         }
+
+        public TypeSymbol ValueType { get; }
+
+        TypeSymbol IMemberSymbol.AssociatedType => ValueType;
     }
 }

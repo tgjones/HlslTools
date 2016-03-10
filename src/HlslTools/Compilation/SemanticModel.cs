@@ -1,6 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using HlslTools.Binding;
+using HlslTools.Binding.BoundNodes;
+using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 
@@ -8,106 +10,32 @@ namespace HlslTools.Compilation
 {
     public sealed class SemanticModel
     {
-        //private readonly BindingResult _bindingResult;
-        //private ImmutableArray<Diagnostic> _diagnostics;
-        private readonly SymbolScopeStack _symbolStack;
-        private readonly Dictionary<SyntaxNode, Symbol> _syntaxToSymbolLookup;
+        private readonly BindingResult _bindingResult;
 
         public Compilation Compilation { get; }
 
-        internal SemanticModel(Compilation compilation)
+        internal SemanticModel(Compilation compilation, BindingResult bindingResult)
         {
             Compilation = compilation;
-
-            //_bindingResult = new BindingResult(compilation.SyntaxTree.Root);
-
-            // TODO: Bind symbols.
-            // TODO: Bind function amd method bodies.
-            //       - Function and method bodies may contain symbols.
-
-            _symbolStack = new SymbolScopeStack();
-
-            _syntaxToSymbolLookup = new Dictionary<SyntaxNode, Symbol>();
-
-            var compilationUnitSyntax = (CompilationUnitSyntax) compilation.SyntaxTree.Root;
-            foreach (var node in compilationUnitSyntax.Declarations)
-            {
-                switch (node.Kind)
-                {
-                    case SyntaxKind.TypeDeclarationStatement:
-                    {
-                        var statement = (TypeDeclarationStatementSyntax) node;
-                        switch (statement.Type.Kind)
-                        {
-                            case SyntaxKind.StructType:
-                                AddSymbol(node, CreateStructSymbol((StructTypeSyntax) statement.Type));
-                                break;
-                            default:
-                                throw new NotImplementedException();
-                        }
-                        break;
-                    }
-                    case SyntaxKind.VariableDeclarationStatement:
-                    {
-                        var statement = (VariableDeclarationStatementSyntax) node;
-                        var valueType = statement.Declaration.Type.GetTypeSymbol(_symbolStack);
-                        AddSymbolLookup(statement.Declaration.Type, valueType);
-                        foreach (var declarator in statement.Declaration.Variables)
-                            AddSymbol(declarator, new GlobalVariableSymbol(declarator, valueType));
-                        break;
-                    }
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
+            _bindingResult = bindingResult;
         }
 
-        public Symbol GetSymbol(SyntaxNode node)
+        public StructSymbol GetDeclaredSymbol(StructTypeSyntax syntax)
         {
-            Symbol result;
-            _syntaxToSymbolLookup.TryGetValue(node, out result);
-            return result;
+            var result = _bindingResult.GetBoundNode(syntax) as BoundStructType;
+            return result?.StructSymbol;
         }
 
-        private void AddSymbolLookup(SyntaxNode node, Symbol symbol)
+        public VariableSymbol GetDeclaredSymbol(VariableDeclaratorSyntax syntax)
         {
-            if (symbol == null)
-                return;
-            _syntaxToSymbolLookup.Add(node, symbol);
+            var result = _bindingResult.GetBoundNode(syntax) as BoundVariableDeclaration;
+            return result?.VariableSymbol;
         }
 
-        private void AddSymbol(SyntaxNode node, Symbol symbol)
+        public IEnumerable<Diagnostic> GetDiagnostics()
         {
-            if (symbol == null)
-                return;
-            AddSymbolLookup(node, symbol);
-            _symbolStack.AddSymbol(symbol);
+            return _bindingResult.Diagnostics;
         }
-
-        private StructSymbol CreateStructSymbol(StructTypeSyntax node)
-        {
-            Func<TypeSymbol, IEnumerable<FieldSymbol>> fields = t =>
-            {
-                var result = new List<FieldSymbol>();
-                foreach (var declaration in node.Fields)
-                {
-                    var valueType = declaration.Declaration.Type.GetTypeSymbol(_symbolStack);
-                    foreach (var declarator in declaration.Declaration.Variables)
-                        result.Add(new SourceFieldSymbol(declarator, t, valueType));
-                }
-                return result;
-            };
-            return new StructSymbol(node, null, fields);
-        }
-
-        
-
-        //public IEnumerable<Diagnostic> GetDiagnostics()
-        //{
-        //    if (_diagnostics.IsDefault)
-        //        _diagnostics = _bindingResult.GetDiagnostics().ToImmutableArray();
-        //    return _diagnostics;
-        //}
 
         public IEnumerable<Symbol> LookupSymbols(SourceLocation position)
         {
