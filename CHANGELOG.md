@@ -1,5 +1,6 @@
 # Roadmap
 
+- [x] Custom file extensions
 - [ ] Semantic highlighting
 - [ ] Live semantic errors
 - [ ] Go to definition (full support)
