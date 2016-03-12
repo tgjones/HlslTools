@@ -8,11 +8,11 @@ namespace HlslTools.Syntax
         public readonly SyntaxToken Name;
         public readonly RegisterLocation Register;
         public readonly SyntaxToken OpenBraceToken;
-        public readonly List<SyntaxNode> Declarations;
+        public readonly List<VariableDeclarationStatementSyntax> Declarations;
         public readonly SyntaxToken CloseBraceToken;
         public readonly SyntaxToken SemicolonToken;
 
-        public ConstantBufferSyntax(SyntaxToken constantBufferKeyword, SyntaxToken name, RegisterLocation register, SyntaxToken openBraceToken, List<SyntaxNode> declarations, SyntaxToken closeBraceToken, SyntaxToken semicolonToken)
+        public ConstantBufferSyntax(SyntaxToken constantBufferKeyword, SyntaxToken name, RegisterLocation register, SyntaxToken openBraceToken, List<VariableDeclarationStatementSyntax> declarations, SyntaxToken closeBraceToken, SyntaxToken semicolonToken)
             : base(SyntaxKind.ConstantBufferDeclaration)
         {
             RegisterChildNode(out ConstantBufferKeyword, constantBufferKeyword);

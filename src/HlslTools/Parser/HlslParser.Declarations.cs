@@ -257,13 +257,28 @@ namespace HlslTools.Parser
 
             var openBrace = Match(SyntaxKind.OpenBraceToken);
 
-            var declarations = new List<SyntaxNode>();
-            ParseTopLevelDeclarations(declarations, SyntaxKind.CloseBraceToken);
+            var fields = new List<VariableDeclarationStatementSyntax>();
+            while (Current.Kind != SyntaxKind.CloseBraceToken)
+            {
+                if (IsPossibleVariableDeclarationStatement())
+                {
+                    fields.Add(ParseVariableDeclarationStatement());
+                }
+                else
+                {
+                    var action = SkipBadTokens(
+                        p => !p.IsPossibleVariableDeclarationStatement(),
+                        p => p.IsTerminator(),
+                        SyntaxKind.CloseBraceToken);
+                    if (action == PostSkipAction.Abort)
+                        break;
+                }
+            }
 
             var closeBrace = Match(SyntaxKind.CloseBraceToken);
             var semicolon = NextTokenIf(SyntaxKind.SemiToken);
 
-            return new ConstantBufferSyntax(cbuffer, name, register, openBrace, declarations, closeBrace, semicolon);
+            return new ConstantBufferSyntax(cbuffer, name, register, openBrace, fields, closeBrace, semicolon);
         }
 
         private TechniqueSyntax ParseTechnique()
