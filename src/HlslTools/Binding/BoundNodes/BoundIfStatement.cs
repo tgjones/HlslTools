@@ -1,5 +1,3 @@
-using HlslTools.Syntax;
-
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundIfStatement : BoundStatement
@@ -8,8 +6,8 @@ namespace HlslTools.Binding.BoundNodes
         public BoundStatement Consequence { get; }
         public BoundStatement AlternativeOpt { get; }
 
-        public BoundIfStatement(IfStatementSyntax syntax, BoundExpression condition, BoundStatement consequence, BoundStatement alternativeOpt)
-            : base(BoundNodeKind.IfStatement, syntax)
+        public BoundIfStatement(BoundExpression condition, BoundStatement consequence, BoundStatement alternativeOpt)
+            : base(BoundNodeKind.IfStatement)
         {
             Condition = condition;
             Consequence = consequence;

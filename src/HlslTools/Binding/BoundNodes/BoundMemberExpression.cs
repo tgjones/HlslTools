@@ -1,12 +1,11 @@
 ﻿using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundMemberExpression : BoundExpression
     {
-        public BoundMemberExpression(SyntaxNode syntax, BoundExpression objectReference, Symbol member)
-            : base(BoundNodeKind.MemberExpression, syntax)
+        public BoundMemberExpression(BoundExpression objectReference, Symbol member)
+            : base(BoundNodeKind.MemberExpression)
         {
             ObjectReference = objectReference;
             Member = member;

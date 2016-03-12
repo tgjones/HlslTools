@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
@@ -25,9 +24,11 @@ namespace HlslTools.Binding
         {
             var sharedBinderState = new SharedBinderState();
             var binder = new Binder(sharedBinderState, null);
-            //var boundCompilationUnit = binder.BindCompilationUnit(compilationUnit);
-            var boundCompilationUnit = new BoundCompilationUnit(compilationUnit, ImmutableArray<BoundNode>.Empty);
-            return new BindingResult(compilationUnit, boundCompilationUnit, sharedBinderState.BoundNodeFromSyntaxNode, sharedBinderState.BinderFromBoundNode, sharedBinderState.Diagnostics);
+            var boundCompilationUnit = binder.Bind(compilationUnit, binder.BindCompilationUnit);
+            return new BindingResult(compilationUnit, boundCompilationUnit, 
+                sharedBinderState.BoundNodeFromSyntaxNode, 
+                sharedBinderState.BinderFromBoundNode, 
+                sharedBinderState.Diagnostics);
         }
 
         private TResult Bind<TInput, TResult>(TInput node, Func<TInput, TResult> bindMethod)

@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
@@ -7,8 +6,8 @@ namespace HlslTools.Binding.BoundNodes
     {
         public ImmutableArray<BoundStatement> Statements { get; set; }
 
-        public BoundBlock(BlockSyntax syntax, ImmutableArray<BoundStatement> statements)
-            : base(BoundNodeKind.Block, syntax)
+        public BoundBlock(ImmutableArray<BoundStatement> statements)
+            : base(BoundNodeKind.Block)
         {
             Statements = statements;
         }

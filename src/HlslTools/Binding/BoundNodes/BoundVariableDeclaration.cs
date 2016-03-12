@@ -1,12 +1,11 @@
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundVariableDeclaration : BoundStatement
     {
-        public BoundVariableDeclaration(VariableDeclaratorSyntax syntax, VariableSymbol variableSymbol, TypeSymbol declaredType, BoundExpression initializerOpt)
-            : base(BoundNodeKind.VariableDeclaration, syntax)
+        public BoundVariableDeclaration(VariableSymbol variableSymbol, TypeSymbol declaredType, BoundExpression initializerOpt)
+            : base(BoundNodeKind.VariableDeclaration)
         {
             VariableSymbol = variableSymbol;
             DeclaredType = declaredType;

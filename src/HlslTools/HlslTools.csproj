@@ -51,7 +51,12 @@
   <ItemGroup>
     <Compile Include="Binding\Binder.cs" />
     <Compile Include="Binding\Binder.Lookup.cs" />
+    <Compile Include="Binding\BoundNodes\BoundClassType.cs" />
     <Compile Include="Binding\BoundNodes\BoundCompilationUnit.cs" />
+    <Compile Include="Binding\BoundNodes\BoundConstantBuffer.cs" />
+    <Compile Include="Binding\BoundNodes\BoundFunctionDeclaration.cs" />
+    <Compile Include="Binding\BoundNodes\BoundFunctionDefinition.cs" />
+    <Compile Include="Binding\BoundNodes\BoundInterfaceType.cs" />
     <Compile Include="Binding\BoundNodes\BoundStructType.cs" />
     <Compile Include="Binding\BindingResult.cs" />
     <Compile Include="Binding\BoundNodes\BoundBinaryExpression.cs" />
@@ -91,7 +96,7 @@
     <Compile Include="Binding\Signatures\FunctionSymbolSignature.cs" />
     <Compile Include="Binding\Signatures\Signature.cs" />
     <Compile Include="Binding\Binder.Statements.cs" />
-    <Compile Include="Binding\Binder.Types.cs" />
+    <Compile Include="Binding\Binder.Declarations.cs" />
     <Compile Include="Compilation\Compilation.cs" />
     <Compile Include="Compilation\SemanticModel.cs" />
     <Compile Include="Formatting\Edit.cs" />

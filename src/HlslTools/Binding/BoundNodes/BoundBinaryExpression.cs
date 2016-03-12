@@ -1,5 +1,4 @@
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
@@ -11,8 +10,8 @@ namespace HlslTools.Binding.BoundNodes
         public BoundExpression Left { get; }
         public BoundExpression Right { get; }
 
-        public BoundBinaryExpression(BinaryExpressionSyntax syntax, BinaryOperatorKind operatorKind, BoundExpression left, BoundExpression right, TypeSymbol type)
-            : base(BoundNodeKind.BinaryExpression, syntax)
+        public BoundBinaryExpression(BinaryOperatorKind operatorKind, BoundExpression left, BoundExpression right, TypeSymbol type)
+            : base(BoundNodeKind.BinaryExpression)
         {
             OperatorKind = operatorKind;
             Left = left;

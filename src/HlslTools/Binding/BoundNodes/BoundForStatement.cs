@@ -1,12 +1,11 @@
 using System.Collections.Immutable;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundForStatement : BoundLoopStatement
     {
-        public BoundForStatement(ForStatementSyntax syntax, BoundVariableDeclaration declaration, ImmutableArray<BoundExpression> initializers, BoundExpression condition, ImmutableArray<BoundExpression> incrementors, BoundStatement body)
-            : base(BoundNodeKind.ForStatement, syntax)
+        public BoundForStatement(BoundVariableDeclaration declaration, ImmutableArray<BoundExpression> initializers, BoundExpression condition, ImmutableArray<BoundExpression> incrementors, BoundStatement body)
+            : base(BoundNodeKind.ForStatement)
         {
             Declaration = declaration;
             Initializers = initializers;

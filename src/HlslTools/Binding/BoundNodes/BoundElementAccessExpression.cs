@@ -1,5 +1,4 @@
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
@@ -10,8 +9,8 @@ namespace HlslTools.Binding.BoundNodes
         public BoundExpression Expression { get; }
         public BoundExpression Index { get; }
 
-        public BoundElementAccessExpression(ElementAccessExpressionSyntax syntax, BoundExpression expression, BoundExpression index, IndexerSymbol indexer)
-            : base(BoundNodeKind.ElementAccessExpression, syntax)
+        public BoundElementAccessExpression(BoundExpression expression, BoundExpression index, IndexerSymbol indexer)
+            : base(BoundNodeKind.ElementAccessExpression)
         {
             Expression = expression;
             Index = index;

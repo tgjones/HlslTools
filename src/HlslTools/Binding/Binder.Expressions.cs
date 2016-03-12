@@ -80,7 +80,7 @@ namespace HlslTools.Binding
             var operatorKind = SyntaxFacts.GetUnaryOperatorKind(node.Kind);
             var expressionType = expression.Type;
 
-            return new BoundUnaryExpression(node, expression, operatorKind, expressionType);
+            return new BoundUnaryExpression(expression, operatorKind, expressionType);
         }
 
         private BoundExpression ProcessPostfixUnary(PostfixUnaryExpressionSyntax node)
@@ -107,7 +107,7 @@ namespace HlslTools.Binding
                     throw new ArgumentOutOfRangeException();
             }
 
-            return new BoundUnaryExpression(node, expression, operatorKind, expressionType);
+            return new BoundUnaryExpression(expression, operatorKind, expressionType);
         }
 
         private BoundExpression ProcessMemberAccess(MemberAccessExpressionSyntax node)
@@ -116,7 +116,7 @@ namespace HlslTools.Binding
 
             var member = objectReference.Type.GetMember(node.Name.Name.Text);
 
-            return new BoundMemberExpression(node, objectReference, member);
+            return new BoundMemberExpression(objectReference, member);
         }
     }
 }

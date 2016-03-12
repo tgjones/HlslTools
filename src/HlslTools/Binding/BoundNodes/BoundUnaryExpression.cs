@@ -1,12 +1,11 @@
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundUnaryExpression : BoundExpression
     {
-        public BoundUnaryExpression(SyntaxNode syntax, BoundExpression expression, UnaryOperatorKind operatorKind, TypeSymbol expressionType)
-            : base(BoundNodeKind.UnaryExpression, syntax)
+        public BoundUnaryExpression(BoundExpression expression, UnaryOperatorKind operatorKind, TypeSymbol expressionType)
+            : base(BoundNodeKind.UnaryExpression)
         {
             Expression = expression;
             OperatorKind = operatorKind;

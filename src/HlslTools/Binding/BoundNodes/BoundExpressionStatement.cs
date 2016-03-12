@@ -1,11 +1,9 @@
-﻿using HlslTools.Syntax;
-
-namespace HlslTools.Binding.BoundNodes
+﻿namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundExpressionStatement : BoundStatement
     {
-        public BoundExpressionStatement(ExpressionStatementSyntax syntax, BoundExpression expression)
-            : base(BoundNodeKind.ExpressionStatement, syntax)
+        public BoundExpressionStatement(BoundExpression expression)
+            : base(BoundNodeKind.ExpressionStatement)
         {
             Expression = expression;
         }

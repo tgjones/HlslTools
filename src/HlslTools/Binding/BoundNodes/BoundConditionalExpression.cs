@@ -1,5 +1,4 @@
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
@@ -11,8 +10,8 @@ namespace HlslTools.Binding.BoundNodes
         public BoundExpression Consequence { get; }
         public BoundExpression Alternative { get; }
 
-        public BoundConditionalExpression(ConditionalExpressionSyntax syntax, BoundExpression condition, BoundExpression consequence, BoundExpression alternative)
-            : base(BoundNodeKind.ConditionalExpression, syntax)
+        public BoundConditionalExpression(BoundExpression condition, BoundExpression consequence, BoundExpression alternative)
+            : base(BoundNodeKind.ConditionalExpression)
         {
             Condition = condition;
             Consequence = consequence;

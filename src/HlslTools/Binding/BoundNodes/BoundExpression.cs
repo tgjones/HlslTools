@@ -1,5 +1,4 @@
 ﻿using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
@@ -7,8 +6,8 @@ namespace HlslTools.Binding.BoundNodes
     {
         public abstract TypeSymbol Type { get; }
 
-        protected BoundExpression(BoundNodeKind kind, SyntaxNode syntax)
-            : base(kind, syntax)
+        protected BoundExpression(BoundNodeKind kind)
+            : base(kind)
         {
         }
     }

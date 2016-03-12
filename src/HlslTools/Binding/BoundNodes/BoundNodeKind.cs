@@ -6,6 +6,8 @@ namespace HlslTools.Binding.BoundNodes
 
         // Types
         StructType,
+        ClassType,
+        InterfaceType,
 
         // Expressions
         FunctionInvocationExpression,
@@ -33,7 +35,12 @@ namespace HlslTools.Binding.BoundNodes
         SwitchSection,
         SwitchLabel,
         NoOpStatement,
+
+        // Declarations
         VariableDeclaration,
-        MultipleVariableDeclarations
+        MultipleVariableDeclarations,
+        FunctionDeclaration,
+        FunctionDefinition,
+        ConstantBuffer
     }
 }

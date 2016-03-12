@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
@@ -11,41 +12,33 @@ namespace HlslTools.Binding
     {
         private BoundCompilationUnit BindCompilationUnit(CompilationUnitSyntax compilationUnit)
         {
-            var boundDeclarations = new List<BoundNode>();
-            foreach (var declaration in compilationUnit.Declarations)
-            {
-                switch (declaration.Kind)
-                {
-                    case SyntaxKind.VariableDeclarationStatement:
-                        BindGlobalVariable((VariableDeclarationStatementSyntax) declaration);
-                        break;
-                    case SyntaxKind.FunctionDeclaration:
-                        BindFunctionDeclaration((FunctionDeclarationSyntax) declaration);
-                        break;
-                    case SyntaxKind.FunctionDefinition:
-                        BindFunctionDefinition((FunctionDefinitionSyntax) declaration);
-                        break;
-                    case SyntaxKind.ConstantBufferDeclaration:
-                        BindConstantBufferDeclaration((ConstantBufferSyntax) declaration);
-                        break;
-                    case SyntaxKind.ClassType:
-                        BindClassDeclaration((ClassTypeSyntax) declaration);
-                        break;
-                    case SyntaxKind.StructType:
-                        BindStructDeclaration((StructTypeSyntax) declaration);
-                        break;
-                    case SyntaxKind.InterfaceType:
-                        BindInterfaceDeclaration((InterfaceTypeSyntax) declaration);
-                        break;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
-            }
-            return new BoundCompilationUnit(compilationUnit, boundDeclarations.ToImmutableArray());
+            var boundDeclarations = compilationUnit.Declarations.Select(x => Bind(x, BindGlobalDeclaration));
+            return new BoundCompilationUnit(boundDeclarations.ToImmutableArray());
         }
 
-        private void BindGlobalVariable(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax)
+        private BoundNode BindGlobalDeclaration(SyntaxNode declaration)
         {
+            switch (declaration.Kind)
+            {
+                case SyntaxKind.VariableDeclarationStatement:
+                    return BindVariableDeclaration((VariableDeclarationStatementSyntax) declaration);
+                case SyntaxKind.FunctionDeclaration:
+                    return BindFunctionDeclaration((FunctionDeclarationSyntax) declaration);
+                case SyntaxKind.FunctionDefinition:
+                    return BindFunctionDefinition((FunctionDefinitionSyntax) declaration);
+                case SyntaxKind.ConstantBufferDeclaration:
+                    return BindConstantBufferDeclaration((ConstantBufferSyntax) declaration);
+                case SyntaxKind.TypeDeclarationStatement:
+                    return BindTypeDeclaration((TypeDeclarationStatementSyntax) declaration);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax)
+        {
+            var boundDeclarations = new List<BoundVariableDeclaration>();
+
             var declaration = variableDeclarationStatementSyntax.Declaration;
             foreach (var declarator in declaration.Variables)
             {
@@ -59,11 +52,13 @@ namespace HlslTools.Binding
 
                 var initializer = BindExpression(null); // TODO
 
-                new BoundVariableDeclaration(declarator, symbol, variableType, initializer);
+                boundDeclarations.Add(new BoundVariableDeclaration(symbol, variableType, initializer));
             }
+
+            return new BoundMultipleVariableDeclarations(boundDeclarations.ToImmutableArray());
         }
 
-        private void BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
+        private BoundFunctionDeclaration BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
         {
             var returnType = LookupSymbol(declaration.ReturnType); // TODO
 
@@ -86,9 +81,11 @@ namespace HlslTools.Binding
 
             var symbol = new SourceFunctionDeclarationSymbol(declaration, returnType, lazyParameterSymbols);
             AddSymbol(symbol);
+
+            return new BoundFunctionDeclaration(symbol);
         }
 
-        private void BindFunctionDefinition(FunctionDefinitionSyntax declaration)
+        private BoundFunctionDefinition BindFunctionDefinition(FunctionDefinitionSyntax declaration)
         {
             var returnType = LookupSymbol(declaration.ReturnType); // TODO
 
@@ -111,17 +108,22 @@ namespace HlslTools.Binding
 
             var symbol = new SourceFunctionDefinitionSymbol(declaration, returnType, lazyParameterSymbols);
             AddSymbol(symbol);
+
+            return new BoundFunctionDefinition(symbol, BindBlock(declaration.Body));
         }
 
-        private void BindConstantBufferDeclaration(ConstantBufferSyntax declaration)
+        private BoundConstantBuffer BindConstantBufferDeclaration(ConstantBufferSyntax declaration)
         {
+            var variables = new List<BoundNode>();
+
             // Add constant buffer fields to global scope.
-            throw new NotImplementedException();
-            //foreach (var field in declaration.Declarations)
-            //    BindGlobalVariable(field);
+            foreach (var field in declaration.Declarations)
+                variables.Add(BindVariableDeclaration((VariableDeclarationStatementSyntax) field));
+
+            return new BoundConstantBuffer(variables.ToImmutableArray());
         }
 
-        private void BindClassDeclaration(ClassTypeSyntax declaration)
+        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration)
         {
             Func<TypeSymbol, IEnumerable<Symbol>> lazyMemberSymbols = cd =>
             {
@@ -146,10 +148,17 @@ namespace HlslTools.Binding
 
             var symbol = new ClassSymbol(declaration, null, lazyMemberSymbols);
             AddSymbol(symbol);
+
+            return new BoundClassType(symbol, ImmutableArray<BoundNode>.Empty); // TODO
         }
 
-        private void BindStructDeclaration(StructTypeSyntax declaration)
+        private BoundStructType BindStructDeclaration(StructTypeSyntax declaration)
         {
+            foreach (var field in declaration.Fields)
+            {
+                
+            }
+
             Func<TypeSymbol, IEnumerable<FieldSymbol>> lazyMemberSymbols = cd =>
             {
                 var memberSymbols = new List<FieldSymbol>();
@@ -160,9 +169,11 @@ namespace HlslTools.Binding
 
             var symbol = new StructSymbol(declaration, null, lazyMemberSymbols);
             AddSymbol(symbol);
+
+            return new BoundStructType(symbol, ImmutableArray<BoundStatement>.Empty); // TODO
         }
 
-        private void BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
+        private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
         {
             Func<TypeSymbol, IEnumerable<MethodDeclarationSymbol>> lazyMemberSymbols = cd =>
             {
@@ -174,6 +185,8 @@ namespace HlslTools.Binding
 
             var symbol = new InterfaceSymbol(declaration, null, lazyMemberSymbols);
             AddSymbol(symbol);
+
+            return new BoundInterfaceType(symbol, ImmutableArray<BoundNode>.Empty); // TODO
         }
 
         private IEnumerable<FieldSymbol> BindFields(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)
@@ -245,6 +258,21 @@ namespace HlslTools.Binding
             AddSymbol(symbol);
 
             return symbol;
+        }
+
+        private BoundNode BindTypeDeclaration(TypeDeclarationStatementSyntax declaration)
+        {
+            switch (declaration.Type.Kind)
+            {
+                case SyntaxKind.ClassType:
+                    return BindClassDeclaration((ClassTypeSyntax) declaration.Type);
+                case SyntaxKind.StructType:
+                    return BindStructDeclaration((StructTypeSyntax) declaration.Type);
+                case SyntaxKind.InterfaceType:
+                    return BindInterfaceDeclaration((InterfaceTypeSyntax) declaration.Type);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

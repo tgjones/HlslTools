@@ -1,11 +1,9 @@
-using HlslTools.Syntax;
-
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundDoStatement : BoundLoopStatement
     {
-        public BoundDoStatement(DoStatementSyntax syntax, BoundExpression condition, BoundStatement body)
-            : base(BoundNodeKind.DoStatement, syntax)
+        public BoundDoStatement(BoundExpression condition, BoundStatement body)
+            : base(BoundNodeKind.DoStatement)
         {
             Condition = condition;
             Body = body;

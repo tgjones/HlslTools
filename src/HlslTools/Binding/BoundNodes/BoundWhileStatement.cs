@@ -1,11 +1,9 @@
-using HlslTools.Syntax;
-
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundWhileStatement : BoundLoopStatement
     {
-        public BoundWhileStatement(WhileStatementSyntax syntax, BoundExpression condition, BoundStatement body)
-            : base(BoundNodeKind.WhileStatement, syntax)
+        public BoundWhileStatement(BoundExpression condition, BoundStatement body)
+            : base(BoundNodeKind.WhileStatement)
         {
             Condition = condition;
             Body = body;

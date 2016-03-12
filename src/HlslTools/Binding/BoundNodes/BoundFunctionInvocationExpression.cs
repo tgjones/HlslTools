@@ -2,14 +2,13 @@
 using System.Collections.Immutable;
 using HlslTools.Binding.Signatures;
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundFunctionInvocationExpression : BoundExpression
     {
-        public BoundFunctionInvocationExpression(SyntaxNode syntax, IEnumerable<BoundExpression> arguments, OverloadResolutionResult<FunctionSymbolSignature> result)
-            : base(BoundNodeKind.FunctionInvocationExpression, syntax)
+        public BoundFunctionInvocationExpression(IEnumerable<BoundExpression> arguments, OverloadResolutionResult<FunctionSymbolSignature> result)
+            : base(BoundNodeKind.FunctionInvocationExpression)
         {
             Arguments = arguments.ToImmutableArray();
             Result = result;
@@ -30,12 +29,12 @@ namespace HlslTools.Binding.BoundNodes
             if (newArguments == Arguments && result == Result)
                 return this;
 
-            return new BoundFunctionInvocationExpression(Syntax, newArguments, result);
+            return new BoundFunctionInvocationExpression(newArguments, result);
         }
 
         public override string ToString()
         {
-            return string.Format("{0}({1})", Symbol.Name, string.Join(",", Arguments));
+            return $"{Symbol.Name}({string.Join(",", Arguments)})";
         }
     }
 }

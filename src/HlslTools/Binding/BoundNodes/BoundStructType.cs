@@ -1,6 +1,5 @@
 using System.Collections.Immutable;
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
@@ -9,8 +8,8 @@ namespace HlslTools.Binding.BoundNodes
         public StructSymbol StructSymbol { get; }
         public ImmutableArray<BoundStatement> Fields { get; }
 
-        public BoundStructType(StructTypeSyntax syntax, StructSymbol structSymbol, ImmutableArray<BoundStatement> fields)
-            : base(BoundNodeKind.StructType, syntax)
+        public BoundStructType(StructSymbol structSymbol, ImmutableArray<BoundStatement> fields)
+            : base(BoundNodeKind.StructType)
         {
             StructSymbol = structSymbol;
             Fields = fields;

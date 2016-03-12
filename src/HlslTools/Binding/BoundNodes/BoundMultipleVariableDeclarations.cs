@@ -1,12 +1,11 @@
 using System.Collections.Immutable;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundMultipleVariableDeclarations : BoundStatement
     {
-        public BoundMultipleVariableDeclarations(VariableDeclarationSyntax syntax, ImmutableArray<BoundVariableDeclaration> variableDeclarations)
-            : base(BoundNodeKind.MultipleVariableDeclarations, syntax)
+        public BoundMultipleVariableDeclarations(ImmutableArray<BoundVariableDeclaration> variableDeclarations)
+            : base(BoundNodeKind.MultipleVariableDeclarations)
         {
             VariableDeclarations = variableDeclarations;
         }
