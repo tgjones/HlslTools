@@ -1,5 +1,7 @@
-﻿using HlslTools.Symbols;
+﻿using System.IO;
+using HlslTools.Symbols;
 using HlslTools.Syntax;
+using HlslTools.Tests.Support;
 using HlslTools.Text;
 using NUnit.Framework;
 
@@ -8,8 +10,23 @@ namespace HlslTools.Tests.Compilation
     [TestFixture]
     public class SemanticModelTests
     {
+        [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetTestShaders))]
+        public void CanGetSemanticModel(string testFile)
+        {
+            var sourceCode = File.ReadAllText(testFile);
+
+            // Build syntax tree.
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode), fileSystem: new TestFileSystem(testFile));
+            ShaderTestUtility.CheckForParseErrors(syntaxTree);
+
+            // Get semantic model.
+            var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
+            var semanticModel = compilation.GetSemanticModel();
+            Assert.That(semanticModel, Is.Not.Null);
+        }
+
         [Test]
-        public void CanGetSemanticModel()
+        public void SemanticModelForStructAndFunction()
         {
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(@"
 struct MyStruct
