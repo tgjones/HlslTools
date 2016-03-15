@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 
@@ -24,7 +25,11 @@ namespace HlslTools.Binding
             if (_symbols.TryGetValue(name.Text, out result))
                 return result;
 
-            return Parent?.LookupSymbol(name);
+            if (Parent != null)
+                return Parent.LookupSymbol(name);
+
+            // TODO: Need to return all overloads.
+            return IntrinsicFunctions.AllFunctions.FirstOrDefault(x => x.Name == name.Text);
         }
     }
 }

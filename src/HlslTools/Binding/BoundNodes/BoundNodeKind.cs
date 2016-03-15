@@ -12,13 +12,19 @@ namespace HlslTools.Binding.BoundNodes
 
         // Expressions
         FunctionInvocationExpression,
+        MethodInvocationExpression,
+        NumericConstructorInvocationExpression,
         UnaryExpression,
         BinaryExpression,
+        CastExpression,
         ConditionalExpression,
         ElementAccessExpression,
         LiteralExpression,
+        StringLiteralExpression,
         MemberExpression,
         VariableExpression,
+        MethodName,
+        FunctionName,
 
         // Statements
         Block,
@@ -40,6 +46,10 @@ namespace HlslTools.Binding.BoundNodes
         VariableDeclaration,
         MultipleVariableDeclarations,
         Function,
-        ConstantBuffer
+        ConstantBuffer,
+
+        // Other
+        EqualsValue,
+        Bad
     }
 }

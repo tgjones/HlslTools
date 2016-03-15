@@ -7,7 +7,10 @@ namespace HlslTools.Symbols
 {
     public static class IntrinsicTypes
     {
+        public static readonly TypeSymbol Missing = new IntrinsicTypeSymbol("[Missing]", string.Empty);
+
         public static readonly TypeSymbol Void;
+        public static readonly TypeSymbol String;
         public static readonly TypeSymbol Bool;
         public static readonly TypeSymbol Int;
         public static readonly TypeSymbol Uint;
@@ -181,6 +184,7 @@ namespace HlslTools.Symbols
         {
             // Scalar types.
             Void = new IntrinsicTypeSymbol("void", "Represents a void value.");
+            String = new IntrinsicTypeSymbol("string", "Represents a string value.");
             Bool = new IntrinsicTypeSymbol("bool", "Represents a boolean value.");
             Int = new IntrinsicTypeSymbol("int", "Represents a 32-bit signed integer value.");
             Uint = new IntrinsicTypeSymbol("uint", "Represents a 32-bit unsigned integer value.");
@@ -677,7 +681,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetVectorType(ScalarType scalarType, int numComponents)
         {
-            return AllVectorTypes[(((int)scalarType - 1) * 4) + numComponents];
+            return AllVectorTypes[(((int)scalarType - 1) * 4) + (numComponents - 1)];
         }
 
         public static TypeSymbol GetMatrixType(ScalarType scalarType, int numRows, int numCols)

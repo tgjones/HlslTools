@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using HlslTools.Binding.Signatures;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding.BoundNodes
 {
-    internal sealed class BoundFunctionInvocationExpression : BoundExpression
+    internal sealed class BoundMethodInvocationExpression : BoundExpression
     {
-        public BoundFunctionInvocationExpression(BoundExpression expression, ImmutableArray<BoundExpression> arguments, OverloadResolutionResult<FunctionSymbolSignature> result)
-            : base(BoundNodeKind.FunctionInvocationExpression)
+        public BoundMethodInvocationExpression(BoundExpression expression, ImmutableArray<BoundExpression> arguments, OverloadResolutionResult<MethodSymbolSignature> result)
+            : base(BoundNodeKind.MethodInvocationExpression)
         {
             Expression = expression;
             Arguments = arguments;
@@ -17,21 +17,21 @@ namespace HlslTools.Binding.BoundNodes
 
         public override TypeSymbol Type => Symbol?.ReturnType;
 
-        public FunctionSymbol Symbol => Result.Selected?.Signature.Symbol;
+        public MethodSymbol Symbol => Result.Selected?.Signature.Symbol;
 
         public BoundExpression Expression { get; }
         public ImmutableArray<BoundExpression> Arguments { get; }
 
-        public OverloadResolutionResult<FunctionSymbolSignature> Result { get; }
+        public OverloadResolutionResult<MethodSymbolSignature> Result { get; }
 
-        public BoundFunctionInvocationExpression Update(IEnumerable<BoundExpression> arguments, OverloadResolutionResult<FunctionSymbolSignature> result)
+        public BoundMethodInvocationExpression Update(IEnumerable<BoundExpression> arguments, OverloadResolutionResult<MethodSymbolSignature> result)
         {
             var newArguments = arguments.ToImmutableArray();
 
             if (newArguments == Arguments && result == Result)
                 return this;
 
-            return new BoundFunctionInvocationExpression(Expression, newArguments, result);
+            return new BoundMethodInvocationExpression(Expression, newArguments, result);
         }
 
         public override string ToString()

@@ -1,23 +1,21 @@
-using System.Collections.Immutable;
-
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundForStatement : BoundLoopStatement
     {
-        public BoundForStatement(BoundVariableDeclaration declaration, ImmutableArray<BoundExpression> initializers, BoundExpression condition, ImmutableArray<BoundExpression> incrementors, BoundStatement body)
+        public BoundForStatement(BoundMultipleVariableDeclarations declaration, BoundExpression initializer, BoundExpression condition, BoundExpression incrementor, BoundStatement body)
             : base(BoundNodeKind.ForStatement)
         {
-            Declaration = declaration;
-            Initializers = initializers;
+            Declarations = declaration;
+            Initializer = initializer;
             Condition = condition;
-            Incrementors = incrementors;
+            Incrementor = incrementor;
             Body = body;
         }
 
-        public BoundVariableDeclaration Declaration { get; }
-        public ImmutableArray<BoundExpression> Initializers { get; }
+        public BoundMultipleVariableDeclarations Declarations { get; }
+        public BoundExpression Initializer { get; }
         public BoundExpression Condition { get; }
-        public ImmutableArray<BoundExpression> Incrementors { get; }
+        public BoundExpression Incrementor { get; }
         public BoundStatement Body { get; }
     }
 }

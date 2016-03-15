@@ -8,7 +8,7 @@ namespace HlslTools.Binding.BoundNodes
             : base(BoundNodeKind.VariableExpression)
         {
             Symbol = variableSymbol;
-            Type = variableSymbol.ValueType;
+            Type = variableSymbol?.ValueType;
         }
 
         public override TypeSymbol Type { get; }

@@ -373,7 +373,6 @@ namespace HlslTools.Syntax
         ParenthesizedExpression,
         ConditionalExpression,
         InvocationExpression,
-        FunctionInvocationExpression,
         NumericConstructorInvocationExpression,
         ElementAccessExpression,
         Argument,
@@ -384,6 +383,7 @@ namespace HlslTools.Syntax
         StateInitializer,
         StateArrayInitializer,
         CompoundExpression,
+        CompileExpression,
 
         // Binary expressions
         AddExpression,

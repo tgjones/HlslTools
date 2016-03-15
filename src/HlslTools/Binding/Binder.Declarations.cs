@@ -21,7 +21,7 @@ namespace HlslTools.Binding
             switch (declaration.Kind)
             {
                 case SyntaxKind.VariableDeclarationStatement:
-                    return BindVariableDeclaration((VariableDeclarationStatementSyntax) declaration);
+                    return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) declaration);
                 case SyntaxKind.FunctionDeclaration:
                     return BindFunctionDeclaration((FunctionDeclarationSyntax) declaration);
                 case SyntaxKind.FunctionDefinition:
@@ -35,14 +35,13 @@ namespace HlslTools.Binding
             }
         }
 
-        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax)
+        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax)
         {
             var boundDeclarations = new List<BoundVariableDeclaration>();
 
-            var declaration = variableDeclarationStatementSyntax.Declaration;
-            foreach (var declarator in declaration.Variables)
+            foreach (var declarator in syntax.Variables)
             {
-                var variableType = LookupSymbol(declaration.Type);
+                var variableType = LookupSymbol(syntax.Type);
 
                 foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
                     variableType = new ArraySymbol(variableType);
@@ -50,9 +49,9 @@ namespace HlslTools.Binding
                 var symbol = new VariableSymbol(declarator, null, variableType);
                 AddSymbol(symbol);
 
-                BoundExpression initializer = null;
+                BoundInitializer initializer = null;
                 if (declarator.Initializer != null)
-                    initializer = BindExpression(null); // TODO
+                    initializer = BindInitializer(declarator.Initializer);
 
                 boundDeclarations.Add(Bind(declarator, x => new BoundVariableDeclaration(symbol, variableType, initializer)));
             }
@@ -122,7 +121,7 @@ namespace HlslTools.Binding
 
             // Add constant buffer fields to global scope.
             foreach (var field in declaration.Declarations)
-                variables.Add(BindVariableDeclaration(field));
+                variables.Add(BindVariableDeclarationStatement(field));
 
             return new BoundConstantBuffer(variables.ToImmutableArray());
         }
