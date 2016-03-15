@@ -54,7 +54,7 @@ namespace HlslTools.Binding
                 if (declarator.Initializer != null)
                     initializer = BindExpression(null); // TODO
 
-                boundDeclarations.Add(new BoundVariableDeclaration(symbol, variableType, initializer));
+                boundDeclarations.Add(Bind(declarator, x => new BoundVariableDeclaration(symbol, variableType, initializer)));
             }
 
             return new BoundMultipleVariableDeclarations(boundDeclarations.ToImmutableArray());
@@ -253,16 +253,21 @@ namespace HlslTools.Binding
             return symbol;
         }
 
-        private BoundNode BindTypeDeclaration(TypeDeclarationStatementSyntax declaration)
+        private BoundTypeDeclaration BindTypeDeclaration(TypeDeclarationStatementSyntax declaration)
         {
-            switch (declaration.Type.Kind)
+            return new BoundTypeDeclaration(Bind(declaration.Type, BindTypeDefinition));
+        }
+
+        private BoundNode BindTypeDefinition(TypeDefinitionSyntax syntax)
+        {
+            switch (syntax.Kind)
             {
                 case SyntaxKind.ClassType:
-                    return BindClassDeclaration((ClassTypeSyntax) declaration.Type);
+                    return BindClassDeclaration((ClassTypeSyntax) syntax);
                 case SyntaxKind.StructType:
-                    return BindStructDeclaration((StructTypeSyntax) declaration.Type);
+                    return BindStructDeclaration((StructTypeSyntax) syntax);
                 case SyntaxKind.InterfaceType:
-                    return BindInterfaceDeclaration((InterfaceTypeSyntax) declaration.Type);
+                    return BindInterfaceDeclaration((InterfaceTypeSyntax) syntax);
                 default:
                     throw new ArgumentOutOfRangeException();
             }

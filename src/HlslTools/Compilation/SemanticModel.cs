@@ -32,6 +32,59 @@ namespace HlslTools.Compilation
             return result?.VariableSymbol;
         }
 
+        public FunctionSymbol GetDeclaredSymbol(FunctionDeclarationSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundFunction;
+            return result?.FunctionSymbol;
+        }
+
+        public FunctionSymbol GetDeclaredSymbol(FunctionDefinitionSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundFunction;
+            return result?.FunctionSymbol;
+        }
+
+        public Symbol GetSymbol(ExpressionSyntax expression)
+        {
+            var boundExpression = GetBoundExpression(expression);
+            return boundExpression == null ? null : GetSymbol(boundExpression);
+        }
+
+        private static Symbol GetSymbol(BoundExpression expression)
+        {
+            switch (expression.Kind)
+            {
+                case BoundNodeKind.VariableExpression:
+                    return GetSymbol((BoundVariableExpression) expression);
+                case BoundNodeKind.FunctionInvocationExpression:
+                    return GetSymbol((BoundFunctionInvocationExpression) expression);
+                default:
+                    // TODO: More bound expression types.
+                    return null;
+            }
+        }
+
+        private static Symbol GetSymbol(BoundVariableExpression expression)
+        {
+            return expression.Symbol;
+        }
+
+        private static Symbol GetSymbol(BoundFunctionInvocationExpression expression)
+        {
+            return expression.Symbol;
+        }
+
+        public TypeSymbol GetExpressionType(ExpressionSyntax expression)
+        {
+            var boundExpression = GetBoundExpression(expression);
+            return boundExpression?.Type;
+        }
+
+        private BoundExpression GetBoundExpression(ExpressionSyntax expression)
+        {
+            return _bindingResult.GetBoundNode(expression) as BoundExpression;
+        }
+
         public IEnumerable<Diagnostic> GetDiagnostics()
         {
             return _bindingResult.Diagnostics;

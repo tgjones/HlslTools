@@ -1,18 +1,28 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 
 namespace HlslTools.Symbols
 {
     public abstract class TypeSymbol : Symbol
     {
         private readonly Dictionary<string, Symbol> _memberTable;
+        private readonly List<Symbol> _members;
+        private ImmutableArray<Symbol> _membersArray;
 
-        // TODO: Should be read-only.
-        public List<Symbol> Members { get; }
+        public ImmutableArray<Symbol> Members
+        {
+            get
+            {
+                if (_membersArray == ImmutableArray<Symbol>.Empty)
+                    _membersArray = _members.ToImmutableArray();
+                return _membersArray;
+            }
+        }
 
         protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
             : base(kind, name, documentation, parent)
         {
-            Members = new List<Symbol>();
+            _members = new List<Symbol>();
             _memberTable = new Dictionary<string, Symbol>();
         }
 
@@ -42,8 +52,9 @@ namespace HlslTools.Symbols
 
         internal void AddMember(Symbol member)
         {
-            Members.Add(member);
+            _members.Add(member);
             _memberTable[member.Name] = member;
+            _membersArray = ImmutableArray<Symbol>.Empty;
         }
     }
 }

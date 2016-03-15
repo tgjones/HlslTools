@@ -84,6 +84,7 @@
     <Compile Include="Binding\BoundNodes\BoundSwitchLabel.cs" />
     <Compile Include="Binding\BoundNodes\BoundSwitchSection.cs" />
     <Compile Include="Binding\BoundNodes\BoundSwitchStatement.cs" />
+    <Compile Include="Binding\BoundNodes\BoundTypeDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundUnaryExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableExpression.cs" />

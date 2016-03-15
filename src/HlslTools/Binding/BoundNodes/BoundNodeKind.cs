@@ -5,6 +5,7 @@ namespace HlslTools.Binding.BoundNodes
         CompilationUnit,
 
         // Types
+        TypeDeclaration,
         StructType,
         ClassType,
         InterfaceType,

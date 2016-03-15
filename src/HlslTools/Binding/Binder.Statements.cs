@@ -31,7 +31,7 @@ namespace HlslTools.Binding
 
         private BoundExpressionStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
         {
-            return new BoundExpressionStatement(BindExpression(syntax.Expression));
+            return new BoundExpressionStatement(Bind(syntax.Expression, BindExpression));
         }
     }
 }
