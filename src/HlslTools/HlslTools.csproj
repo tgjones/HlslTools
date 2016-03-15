@@ -51,11 +51,11 @@
   <ItemGroup>
     <Compile Include="Binding\Binder.cs" />
     <Compile Include="Binding\Binder.Lookup.cs" />
+    <Compile Include="Binding\BoundNodes\BoundAssignmentExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundClassType.cs" />
     <Compile Include="Binding\BoundNodes\BoundCompilationUnit.cs" />
     <Compile Include="Binding\BoundNodes\BoundConstantBuffer.cs" />
-    <Compile Include="Binding\BoundNodes\BoundFunctionDeclaration.cs" />
-    <Compile Include="Binding\BoundNodes\BoundFunctionDefinition.cs" />
+    <Compile Include="Binding\BoundNodes\BoundFunction.cs" />
     <Compile Include="Binding\BoundNodes\BoundInterfaceType.cs" />
     <Compile Include="Binding\BoundNodes\BoundStructType.cs" />
     <Compile Include="Binding\BindingResult.cs" />
@@ -86,6 +86,7 @@
     <Compile Include="Binding\BoundNodes\BoundSwitchStatement.cs" />
     <Compile Include="Binding\BoundNodes\BoundUnaryExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableDeclaration.cs" />
+    <Compile Include="Binding\BoundNodes\BoundVariableExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundWhileStatement.cs" />
     <Compile Include="Binding\Conversion.cs" />
     <Compile Include="Binding\Binder.Expressions.cs" />
@@ -112,7 +113,6 @@
     <Compile Include="Parser\ParserOptions.cs" />
     <Compile Include="Symbols\ArraySymbol.cs" />
     <Compile Include="Symbols\ClassSymbol.cs" />
-    <Compile Include="Symbols\FunctionDefinitionSymbol.cs" />
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\IMemberSymbol.cs" />
     <Compile Include="Symbols\ParameterDirection.cs" />
@@ -126,16 +126,12 @@
     <Compile Include="Symbols\Markup\SymbolMarkupBuilder.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkupKind.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkupToken.cs" />
-    <Compile Include="Symbols\MethodDeclarationSymbol.cs" />
-    <Compile Include="Symbols\MethodDefinitionSymbol.cs" />
     <Compile Include="Symbols\MethodSymbol.cs" />
     <Compile Include="Symbols\SemanticSymbol.cs" />
     <Compile Include="Symbols\SemanticUsages.cs" />
     <Compile Include="Symbols\SourceFieldSymbol.cs" />
-    <Compile Include="Symbols\SourceFunctionDeclarationSymbol.cs" />
-    <Compile Include="Symbols\SourceFunctionDefinitionSymbol.cs" />
-    <Compile Include="Symbols\SourceMethodDeclarationSymbol.cs" />
-    <Compile Include="Symbols\SourceMethodDefinitionSymbol.cs" />
+    <Compile Include="Symbols\SourceFunctionSymbol.cs" />
+    <Compile Include="Symbols\SourceMethodSymbol.cs" />
     <Compile Include="Symbols\SourceParameterSymbol.cs" />
     <Compile Include="Symbols\StructSymbol.cs" />
     <Compile Include="Syntax\AnnotationsSyntax.cs" />
@@ -180,7 +176,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Symbols\FieldSymbol.cs" />
-    <Compile Include="Symbols\FunctionDeclarationSymbol.cs" />
     <Compile Include="Symbols\IntrinsicTypeSymbol.cs" />
     <Compile Include="Symbols\ParameterSymbol.cs" />
     <Compile Include="Symbols\Symbol.cs" />

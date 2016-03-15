@@ -33,9 +33,23 @@ namespace HlslTools.Binding
                     return ProcessMemberAccess((MemberAccessExpressionSyntax) node);
                 //case SyntaxKind.FunctionInvocationExpression:
                 //    return ProcessFunctionInvocation((InvocationExpressionSyntax) node);
+                case SyntaxKind.SimpleAssignmentExpression:
+                    return ProcessSimpleAssignment((AssignmentExpressionSyntax) node);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(node.Kind.ToString());
             }
+        }
+
+        private BoundExpression ProcessSimpleAssignment(AssignmentExpressionSyntax node)
+        {
+            var operatorKind = (node.Kind != SyntaxKind.SimpleAssignmentExpression)
+                ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(node.Kind)
+                : null;
+
+            return new BoundAssignmentExpression(
+                BindExpression(node.Left),
+                operatorKind,
+                BindExpression(node.Right));
         }
 
         private static BoundExpression ProcessLiteral(LiteralExpressionSyntax node)
@@ -62,16 +76,9 @@ namespace HlslTools.Binding
 
         private BoundExpression ProcessIdentifierName(IdentifierNameSyntax node)
         {
-            var symbol = LookupSymbol(node.Name);
+            var symbol = (VariableSymbol) LookupSymbol(node.Name);
 
-            //var globalSymbol = symbol as GlobalSymbol;
-            //if (globalSymbol != null)
-            //    return new BoundExpression(node, globalSymbol);
-
-            // TODO: Static method calls.
-
-            Debug.Fail("Shouldn't be here.");
-            return null;
+            return new BoundVariableExpression(symbol);
         }
 
         private BoundExpression ProcessPrefixUnary(PrefixUnaryExpressionSyntax node)

@@ -1,13 +1,9 @@
-﻿using HlslTools.Binding;
-using HlslTools.Binding.BoundNodes;
-
-namespace HlslTools.Syntax
+﻿namespace HlslTools.Syntax
 {
     public class AssignmentExpressionSyntax : ExpressionSyntax
     {
         public readonly ExpressionSyntax Left;
         public readonly SyntaxToken OperatorToken;
-        public readonly BinaryOperatorKind? Operator;
         public readonly SyntaxToken LessThanToken;
         public readonly ExpressionSyntax Right;
         public readonly SyntaxToken GreaterThanToken;
@@ -17,9 +13,6 @@ namespace HlslTools.Syntax
         {
             RegisterChildNode(out Left, left);
             RegisterChildNode(out OperatorToken, operatorToken);
-            Operator = (kind != SyntaxKind.SimpleAssignmentExpression)
-                ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(kind)
-                : null;
             RegisterChildNode(out LessThanToken, lessThanToken);
             RegisterChildNode(out Right, right);
             RegisterChildNode(out GreaterThanToken, greaterThanToken);

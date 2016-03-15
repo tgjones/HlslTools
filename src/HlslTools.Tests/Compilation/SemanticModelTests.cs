@@ -33,8 +33,8 @@ void MyFunc()
             //Assert.That(structDefinitionSymbol.Name, Is.EqualTo("MyStruct"));
             //Assert.That(structDefinitionSymbol.Members, Has.Length.EqualTo(2));
 
-            //var variableSymbol = semanticModel.GetDeclaredSymbol(variableDeclaration.Declaration.Variables[0]);
-            //Assert.That(variableSymbol.ValueType, Is.EqualTo(structDefinitionSymbol));
+            //var functionSymbol = semanticModel.GetDeclaredSymbol(functionDefinition);
+            //Assert.That(functionSymbol.ReturnType, Is.EqualTo(IntrinsicTypes.Void));
         }
     }
 }

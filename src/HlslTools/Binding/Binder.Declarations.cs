@@ -50,7 +50,9 @@ namespace HlslTools.Binding
                 var symbol = new VariableSymbol(declarator, null, variableType);
                 AddSymbol(symbol);
 
-                var initializer = BindExpression(null); // TODO
+                BoundExpression initializer = null;
+                if (declarator.Initializer != null)
+                    initializer = BindExpression(null); // TODO
 
                 boundDeclarations.Add(new BoundVariableDeclaration(symbol, variableType, initializer));
             }
@@ -58,7 +60,7 @@ namespace HlslTools.Binding
             return new BoundMultipleVariableDeclarations(boundDeclarations.ToImmutableArray());
         }
 
-        private BoundFunctionDeclaration BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
+        private BoundFunction BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
         {
             var returnType = LookupSymbol(declaration.ReturnType); // TODO
 
@@ -79,13 +81,13 @@ namespace HlslTools.Binding
                 return parameterSymbols;
             };
 
-            var symbol = new SourceFunctionDeclarationSymbol(declaration, returnType, lazyParameterSymbols);
+            var symbol = new SourceFunctionSymbol(declaration, returnType, lazyParameterSymbols);
             AddSymbol(symbol);
 
-            return new BoundFunctionDeclaration(symbol);
+            return new BoundFunction(symbol);
         }
 
-        private BoundFunctionDefinition BindFunctionDefinition(FunctionDefinitionSyntax declaration)
+        private BoundFunction BindFunctionDefinition(FunctionDefinitionSyntax declaration)
         {
             var returnType = LookupSymbol(declaration.ReturnType); // TODO
 
@@ -106,10 +108,12 @@ namespace HlslTools.Binding
                 return parameterSymbols;
             };
 
-            var symbol = new SourceFunctionDefinitionSymbol(declaration, returnType, lazyParameterSymbols);
+            var symbol = new SourceFunctionSymbol(declaration, returnType, lazyParameterSymbols);
             AddSymbol(symbol);
 
-            return new BoundFunctionDefinition(symbol, BindBlock(declaration.Body));
+            Bind(declaration.Body, BindBlock);
+
+            return new BoundFunction(symbol);
         }
 
         private BoundConstantBuffer BindConstantBufferDeclaration(ConstantBufferSyntax declaration)
@@ -118,7 +122,7 @@ namespace HlslTools.Binding
 
             // Add constant buffer fields to global scope.
             foreach (var field in declaration.Declarations)
-                variables.Add(BindVariableDeclaration((VariableDeclarationStatementSyntax) field));
+                variables.Add(BindVariableDeclaration(field));
 
             return new BoundConstantBuffer(variables.ToImmutableArray());
         }
@@ -146,47 +150,23 @@ namespace HlslTools.Binding
                 return memberSymbols;
             };
 
-            var symbol = new ClassSymbol(declaration, null, lazyMemberSymbols);
+            var symbol = new ClassSymbol(declaration, null);
             AddSymbol(symbol);
 
-            return new BoundClassType(symbol, ImmutableArray<BoundNode>.Empty); // TODO
+            return new BoundClassType(symbol);
         }
 
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration)
         {
-            foreach (var field in declaration.Fields)
-            {
-                
-            }
+            var structSymbol = new StructSymbol(declaration, null);
+            AddSymbol(structSymbol);
 
-            Func<TypeSymbol, IEnumerable<FieldSymbol>> lazyMemberSymbols = cd =>
-            {
-                var memberSymbols = new List<FieldSymbol>();
-                foreach (var memberSyntax in declaration.Fields)
-                    memberSymbols.AddRange(BindFields(memberSyntax, cd));
-                return memberSymbols;
-            };
+            var structBinder = new Binder(_sharedBinderState, this);
+            foreach (var memberSyntax in declaration.Fields)
+                foreach (var fieldSymbol in structBinder.BindFields(memberSyntax, structSymbol))
+                    structSymbol.AddMember(fieldSymbol);
 
-            var symbol = new StructSymbol(declaration, null, lazyMemberSymbols);
-            AddSymbol(symbol);
-
-            return new BoundStructType(symbol, ImmutableArray<BoundStatement>.Empty); // TODO
-        }
-
-        private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
-        {
-            Func<TypeSymbol, IEnumerable<MethodDeclarationSymbol>> lazyMemberSymbols = cd =>
-            {
-                var memberSymbols = new List<MethodDeclarationSymbol>();
-                foreach (var memberSyntax in declaration.Methods)
-                    memberSymbols.Add(BindMethodDeclaration(memberSyntax, cd));
-                return memberSymbols;
-            };
-
-            var symbol = new InterfaceSymbol(declaration, null, lazyMemberSymbols);
-            AddSymbol(symbol);
-
-            return new BoundInterfaceType(symbol, ImmutableArray<BoundNode>.Empty); // TODO
+            return new BoundStructType(structSymbol);
         }
 
         private IEnumerable<FieldSymbol> BindFields(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)
@@ -199,14 +179,27 @@ namespace HlslTools.Binding
                 foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
                     variableType = new ArraySymbol(variableType);
 
-                var symbol = new SourceFieldSymbol(declarator, parentType, variableType);
-                AddSymbol(symbol);
-
-                yield return symbol;
+                yield return new SourceFieldSymbol(declarator, parentType, variableType);
             }
         }
 
-        private MethodDeclarationSymbol BindMethodDeclaration(FunctionDeclarationSyntax declaration, TypeSymbol parentType)
+        private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
+        {
+            Func<TypeSymbol, IEnumerable<MethodSymbol>> lazyMemberSymbols = cd =>
+            {
+                var memberSymbols = new List<MethodSymbol>();
+                foreach (var memberSyntax in declaration.Methods)
+                    memberSymbols.Add(BindMethodDeclaration(memberSyntax, cd));
+                return memberSymbols;
+            };
+
+            var symbol = new InterfaceSymbol(declaration, null);
+            AddSymbol(symbol);
+
+            return new BoundInterfaceType(symbol);
+        }
+
+        private MethodSymbol BindMethodDeclaration(FunctionDeclarationSyntax declaration, TypeSymbol parentType)
         {
             var returnType = LookupSymbol(declaration.ReturnType); // TODO
 
@@ -227,13 +220,13 @@ namespace HlslTools.Binding
                 return parameterSymbols;
             };
 
-            var symbol = new SourceMethodDeclarationSymbol(declaration, parentType, returnType, lazyParameterSymbols);
+            var symbol = new SourceMethodSymbol(declaration, parentType, returnType, lazyParameterSymbols);
             AddSymbol(symbol);
 
             return symbol;
         }
 
-        private MethodDefinitionSymbol BindMethodDefinition(FunctionDefinitionSyntax declaration, TypeSymbol parentType)
+        private MethodSymbol BindMethodDefinition(FunctionDefinitionSyntax declaration, TypeSymbol parentType)
         {
             var returnType = LookupSymbol(declaration.ReturnType); // TODO
 
@@ -254,7 +247,7 @@ namespace HlslTools.Binding
                 return parameterSymbols;
             };
 
-            var symbol = new SourceMethodDefinitionSymbol(declaration, parentType, returnType, lazyParameterSymbols);
+            var symbol = new SourceMethodSymbol(declaration, parentType, returnType, lazyParameterSymbols);
             AddSymbol(symbol);
 
             return symbol;

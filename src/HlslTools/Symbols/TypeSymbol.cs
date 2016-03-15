@@ -1,43 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Generic;
 
 namespace HlslTools.Symbols
 {
     public abstract class TypeSymbol : Symbol
     {
-        private readonly Func<TypeSymbol, IEnumerable<Symbol>> _lazyMembers;
-        private ImmutableArray<Symbol> _members;
-        private Dictionary<string, Symbol> _memberTable;
+        private readonly Dictionary<string, Symbol> _memberTable;
 
-        public ImmutableArray<Symbol> Members
-        {
-            get
-            {
-                if (_members.IsDefault)
-                    _members = _lazyMembers(this).ToImmutableArray();
-                return _members;
-            }
-        }
+        // TODO: Should be read-only.
+        public List<Symbol> Members { get; }
 
-        private Dictionary<string, Symbol> MemberTable
-        {
-            get
-            {
-                if (_memberTable == null)
-                {
-                    _memberTable = new Dictionary<string, Symbol>();
-                    foreach (var member in Members)
-                        _memberTable.Add(member.Name, member);
-                }
-                return _memberTable;
-            }
-        }
-
-        protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers)
+        protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
             : base(kind, name, documentation, parent)
         {
-            _lazyMembers = lazyMembers;
+            Members = new List<Symbol>();
+            _memberTable = new Dictionary<string, Symbol>();
         }
 
         public string FullName
@@ -60,8 +36,14 @@ namespace HlslTools.Symbols
         public Symbol GetMember(string name)
         {
             Symbol result;
-            MemberTable.TryGetValue(name, out result);
+            _memberTable.TryGetValue(name, out result);
             return result;
+        }
+
+        internal void AddMember(Symbol member)
+        {
+            Members.Add(member);
+            _memberTable[member.Name] = member;
         }
     }
 }

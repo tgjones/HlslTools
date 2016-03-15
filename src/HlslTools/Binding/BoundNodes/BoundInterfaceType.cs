@@ -1,4 +1,3 @@
-using System.Collections.Immutable;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding.BoundNodes
@@ -6,13 +5,11 @@ namespace HlslTools.Binding.BoundNodes
     internal sealed class BoundInterfaceType : BoundNode
     {
         public InterfaceSymbol InterfaceSymbol { get; }
-        public ImmutableArray<BoundNode> Members { get; }
 
-        public BoundInterfaceType(InterfaceSymbol interfaceSymbol, ImmutableArray<BoundNode> members)
+        public BoundInterfaceType(InterfaceSymbol interfaceSymbol)
             : base(BoundNodeKind.ClassType)
         {
             InterfaceSymbol = interfaceSymbol;
-            Members = members;
         }
     }
 }

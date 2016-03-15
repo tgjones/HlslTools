@@ -20,12 +20,10 @@ namespace HlslTools.Symbols.Markup
                     break;
                 case SymbolKind.Field:
                     break;
-                case SymbolKind.FunctionDeclaration:
-                case SymbolKind.FunctionDefinition:
+                case SymbolKind.Function:
                     markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol);
                     break;
-                case SymbolKind.MethodDeclaration:
-                case SymbolKind.MethodDefinition:
+                case SymbolKind.Method:
                     markup.AppendMethodSymbolInfo((MethodSymbol) symbol);
                     break;
                 case SymbolKind.Variable:

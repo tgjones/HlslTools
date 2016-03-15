@@ -16,9 +16,8 @@ namespace HlslTools.Binding.BoundNodes
         ConditionalExpression,
         ElementAccessExpression,
         LiteralExpression,
-        LocalExpression,
-        GlobalExpression,
         MemberExpression,
+        VariableExpression,
 
         // Statements
         Block,
@@ -39,8 +38,7 @@ namespace HlslTools.Binding.BoundNodes
         // Declarations
         VariableDeclaration,
         MultipleVariableDeclarations,
-        FunctionDeclaration,
-        FunctionDefinition,
+        Function,
         ConstantBuffer
     }
 }
