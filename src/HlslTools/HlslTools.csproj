@@ -131,6 +131,10 @@
     <Compile Include="Symbols\ClassSymbol.cs" />
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\IMemberSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicMatrixTypeSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicObjectTypeSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicScalarTypeSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicVectorTypeSymbol.cs" />
     <Compile Include="Symbols\ParameterDirection.cs" />
     <Compile Include="Symbols\TypeFacts.cs" />
     <Compile Include="Symbols\VariableSymbol.cs" />

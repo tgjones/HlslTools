@@ -8,6 +8,8 @@
         Uint,
         Half,
         Float,
-        Double
+        Double,
+
+        String
     }
 }

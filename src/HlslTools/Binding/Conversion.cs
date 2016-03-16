@@ -5,34 +5,11 @@ namespace HlslTools.Binding
 {
     public sealed class Conversion
     {
-        private const bool N = false;
-        private const bool Y = true;
-
-        private static readonly bool[,] ImplicitNumericConversions =
-        {
-            /*                SByte     Byte     Short     UShort     Int     UInt     Long     ULong     Char     Float     Double*/
-            /* SByte   */  {  N,        N,       Y,        N,         Y,      N,       Y,       N,        N,       Y,        Y},
-            /* Byte    */  {  N,        N,       Y,        Y,         Y,      Y,       Y,       Y,        N,       Y,        Y},
-            /* Short   */  {  N,        N,       N,        N,         Y,      N,       Y,       N,        N,       Y,        Y},
-            /* UShort  */  {  N,        N,       N,        N,         Y,      Y,       Y,       Y,        N,       Y,        Y},
-            /* Int     */  {  N,        N,       N,        N,         N,      N,       Y,       N,        N,       Y,        Y},
-            /* UInt    */  {  N,        N,       N,        N,         N,      N,       Y,       Y,        N,       Y,        Y},
-            /* Long    */  {  N,        N,       N,        N,         N,      N,       N,       N,        N,       Y,        Y},
-            /* ULong   */  {  N,        N,       N,        N,         N,      N,       N,       N,        N,       Y,        Y},
-            /* Char    */  {  N,        N,       N,        Y,         Y,      Y,       Y,       Y,        N,       Y,        Y},
-            /* Float   */  {  N,        N,       N,        N,         N,      N,       N,       N,        N,       N,        Y},
-            /* Double  */  {  N,        N,       N,        N,         N,      N,       N,       N,        N,       N,        N}
-        };
-
-        private readonly bool _exists;
-        private readonly bool _isIdentity;
-        private readonly bool _isImplicit;
-
         private Conversion(bool exists, bool isIdentity, bool isImplicit)
         {
-            _exists = exists;
-            _isIdentity = isIdentity;
-            _isImplicit = isImplicit;
+            Exists = exists;
+            IsIdentity = isIdentity;
+            IsImplicit = isImplicit;
         }
 
         private static readonly Conversion None = new Conversion(false, false, false);
@@ -42,32 +19,29 @@ namespace HlslTools.Binding
         private static readonly Conversion UpCast = new Conversion(true, false, true);
         private static readonly Conversion DownCast = new Conversion(true, false, false);
 
-        public bool Exists
-        {
-            get { return _exists; }
-        }
+        public bool Exists { get; }
 
-        public bool IsIdentity
-        {
-            get { return _isIdentity; }
-        }
+        public bool IsIdentity { get; }
 
-        public bool IsImplicit
-        {
-            get { return _isImplicit; }
-        }
+        public bool IsImplicit { get; }
 
-        public bool IsExplicit
-        {
-            get { return Exists && !IsImplicit; }
-        }
+        public bool IsExplicit => Exists && !IsImplicit;
 
         internal static Conversion Classify(TypeSymbol sourceType, TypeSymbol targetType)
         {
             if (sourceType == targetType)
                 return Identity;
 
-            throw new NotImplementedException();
+            // Can convert from any scalar to any scalar.
+            // Can convert from any vector or matrix to scalar (of different type).
+            // Can convert from any matrix to same or smaller matrix (of different type).
+            // Can convert from single column-or-row matrix to same or smaller vector (of different type).
+            // Can convert from any scalar to any vector.
+            // Can convert from any vector to same or smaller vector.
+
+            
+
+            // TODO: Convert between inherited and base class references.
 
             return None;
         }

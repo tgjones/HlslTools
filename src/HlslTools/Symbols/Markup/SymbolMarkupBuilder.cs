@@ -33,7 +33,10 @@ namespace HlslTools.Symbols.Markup
                     break;
                 case SymbolKind.Indexer:
                     break;
-                case SymbolKind.IntrinsicType:
+                case SymbolKind.IntrinsicScalarType:
+                case SymbolKind.IntrinsicVectorType:
+                case SymbolKind.IntrinsicMatrixType:
+                case SymbolKind.IntrinsicObjectType:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

@@ -12,7 +12,10 @@
         Variable,
         Parameter,
         Indexer,
-        IntrinsicType,
+        IntrinsicObjectType,
+        IntrinsicVectorType,
+        IntrinsicMatrixType,
+        IntrinsicScalarType,
         Semantic
     }
 }

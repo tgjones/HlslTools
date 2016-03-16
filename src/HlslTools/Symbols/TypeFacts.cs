@@ -2,8 +2,8 @@
 {
     internal static class TypeFacts
     {
-        public static readonly TypeSymbol Missing = new IntrinsicTypeSymbol("[Missing]", string.Empty);
-        public static readonly TypeSymbol Unknown = new IntrinsicTypeSymbol("[Unknown]", string.Empty);
+        public static readonly TypeSymbol Missing = new IntrinsicObjectTypeSymbol("[Missing]", string.Empty);
+        public static readonly TypeSymbol Unknown = new IntrinsicObjectTypeSymbol("[Unknown]", string.Empty);
 
         public static bool IsMissing(this TypeSymbol type)
         {
