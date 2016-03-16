@@ -33,13 +33,55 @@ namespace HlslTools.Binding
                 return Identity;
 
             // Can convert from any scalar to any scalar.
-            // Can convert from any vector or matrix to scalar (of different type).
-            // Can convert from any matrix to same or smaller matrix (of different type).
-            // Can convert from single column-or-row matrix to same or smaller vector (of different type).
-            // Can convert from any scalar to any vector.
-            // Can convert from any vector to same or smaller vector.
+            if (sourceType.Kind == SymbolKind.IntrinsicScalarType && targetType.Kind == SymbolKind.IntrinsicScalarType)
+                return Implicit;
 
-            
+            // Can convert from any scalar to any vector.
+            if (sourceType.Kind == SymbolKind.IntrinsicScalarType && targetType.Kind == SymbolKind.IntrinsicVectorType)
+                return Implicit;
+
+            // Can convert from any scalar to any matrix.
+            if (sourceType.Kind == SymbolKind.IntrinsicScalarType && targetType.Kind == SymbolKind.IntrinsicVectorType)
+                return Implicit;
+
+            // Can convert from any vector to any scalar.
+            if (sourceType.Kind == SymbolKind.IntrinsicVectorType && targetType.Kind == SymbolKind.IntrinsicScalarType)
+                return Implicit;
+
+            // Can convert from any matrix to any scalar.
+            if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicScalarType)
+                return Implicit;
+
+            // Can convert from any vector to same or smaller vector.
+            if (sourceType.Kind == SymbolKind.IntrinsicVectorType && targetType.Kind == SymbolKind.IntrinsicVectorType)
+            {
+                var source = (IntrinsicVectorTypeSymbol) sourceType;
+                var target = (IntrinsicVectorTypeSymbol) targetType;
+                if (target.NumComponents <= source.NumComponents)
+                    return Implicit;
+            }
+
+            // Can convert from any matrix to same or smaller matrix (of any type).
+            if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicMatrixType)
+            {
+                var source = (IntrinsicMatrixTypeSymbol) sourceType;
+                var target = (IntrinsicMatrixTypeSymbol) targetType;
+                if (target.Rows <= source.Rows && target.Cols <= source.Cols)
+                    return Implicit;
+            }
+
+            // Can convert from single column-or-row matrix to same or smaller vector (of different type).
+            if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicVectorType)
+            {
+                var source = (IntrinsicMatrixTypeSymbol) sourceType;
+                if (source.Rows == 1 || source.Cols == 1)
+                {
+                    var target = (IntrinsicVectorTypeSymbol) targetType;
+                    var activeMatrixDimension = source.Rows == 1 ? source.Cols : source.Rows;
+                    if (target.NumComponents <= activeMatrixDimension)
+                        return Implicit;
+                }
+            }
 
             // TODO: Convert between inherited and base class references.
 

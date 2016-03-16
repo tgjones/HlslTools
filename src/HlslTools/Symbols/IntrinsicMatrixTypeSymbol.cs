@@ -7,7 +7,7 @@ namespace HlslTools.Symbols
     public sealed class IntrinsicMatrixTypeSymbol : IntrinsicTypeSymbol
     {
         public IntrinsicMatrixTypeSymbol(string name, string documentation, ScalarType scalarType, int rows, int cols, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers = null)
-            : base(SymbolKind.IntrinsicVectorType, name, documentation, lazyMembers)
+            : base(SymbolKind.IntrinsicMatrixType, name, documentation, lazyMembers)
         {
             ScalarType = scalarType;
             Rows = rows;

@@ -75,9 +75,16 @@ namespace HlslTools.Binding
                     return BindCastExpression((CastExpressionSyntax) node);
                 case SyntaxKind.CompoundExpression:
                     return BindCompoundExpression((CompoundExpressionSyntax) node);
+                case SyntaxKind.ParenthesizedExpression:
+                    return BindParenthesizedExpression((ParenthesizedExpressionSyntax) node);
                 default:
                     throw new ArgumentOutOfRangeException(node.Kind.ToString());
             }
+        }
+
+        private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax)
+        {
+            return BindExpression(syntax.Expression);
         }
 
         private BoundBinaryExpression BindBinaryExpression(BinaryExpressionSyntax syntax)
