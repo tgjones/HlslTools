@@ -2,9 +2,9 @@
 
 namespace HlslTools.Binding.BoundNodes
 {
-    internal sealed class BoundMemberExpression : BoundExpression
+    internal sealed class BoundFieldExpression : BoundExpression
     {
-        public BoundMemberExpression(BoundExpression objectReference, Symbol member)
+        public BoundFieldExpression(BoundExpression objectReference, Symbol member)
             : base(BoundNodeKind.MemberExpression)
         {
             ObjectReference = objectReference;

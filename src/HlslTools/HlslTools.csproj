@@ -83,7 +83,7 @@
     <Compile Include="Binding\BoundNodes\BoundIfStatement.cs" />
     <Compile Include="Binding\BoundNodes\BoundLiteralExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundLoopStatement.cs" />
-    <Compile Include="Binding\BoundNodes\BoundMemberExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundFieldExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundMultipleVariableDeclarations.cs" />
     <Compile Include="Binding\BoundNodes\BoundNode.cs" />
     <Compile Include="Binding\BoundNodes\BoundNodeKind.cs" />
@@ -154,6 +154,7 @@
     <Compile Include="Syntax\LocatedNode.cs" />
     <Compile Include="Syntax\MacroArgumentListSyntax.cs" />
     <Compile Include="Syntax\MacroArgumentSyntax.cs" />
+    <Compile Include="Syntax\MethodInvocationExpressionSyntax.cs" />
     <Compile Include="Syntax\NamespaceSyntax.cs" />
     <Compile Include="Syntax\NameSyntax.cs" />
     <Compile Include="Syntax\ObjectLikeMacroReference.cs" />
@@ -201,7 +202,7 @@
     <Compile Include="Syntax\EqualsValueClauseSyntax.cs" />
     <Compile Include="Syntax\InitializerSyntax.cs" />
     <Compile Include="Syntax\MacroReference.cs" />
-    <Compile Include="Syntax\InvocationExpressionSyntax.cs" />
+    <Compile Include="Syntax\FunctionInvocationExpressionSyntax.cs" />
     <Compile Include="Syntax\SeparatedSyntaxList.cs" />
     <Compile Include="Syntax\SyntaxFactory.cs" />
     <Compile Include="Syntax\AttributeSyntax.cs" />
@@ -241,7 +242,7 @@
     <Compile Include="Syntax\IfStatementSyntax.cs" />
     <Compile Include="Syntax\LiteralExpressionSyntax.cs" />
     <Compile Include="Syntax\MatrixTypeSyntax.cs" />
-    <Compile Include="Syntax\MemberAccessExpressionSyntax.cs" />
+    <Compile Include="Syntax\FieldAccessExpressionSyntax.cs" />
     <Compile Include="Syntax\PackOffsetLocation.cs" />
     <Compile Include="Syntax\ParameterSyntax.cs" />
     <Compile Include="Syntax\ParenthesizedExpressionSyntax.cs" />

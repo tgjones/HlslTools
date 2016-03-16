@@ -372,7 +372,8 @@ namespace HlslTools.Syntax
         // Expressions
         ParenthesizedExpression,
         ConditionalExpression,
-        InvocationExpression,
+        MethodInvocationExpression,
+        FunctionInvocationExpression,
         NumericConstructorInvocationExpression,
         ElementAccessExpression,
         Argument,
@@ -405,7 +406,7 @@ namespace HlslTools.Syntax
         GreaterThanExpression,
         GreaterThanOrEqualExpression,
 
-        MemberAccessExpression,
+        FieldAccessExpression,
 
         // Assignment expressions
         SimpleAssignmentExpression,

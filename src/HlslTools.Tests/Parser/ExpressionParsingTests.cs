@@ -188,7 +188,7 @@ namespace HlslTools.Tests.Parser
         }
 
         [Test]
-        public void TestMemberAccess()
+        public void TestFieldAccess()
         {
             var kind = SyntaxKind.DotToken;
             var text = "(a)" + kind.GetText() + " b";
@@ -197,7 +197,7 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(expr);
             Assert.AreEqual(text, expr.ToString());
             Assert.AreEqual(0, expr.GetDiagnostics().Count());
-            var e = (MemberAccessExpressionSyntax)expr;
+            var e = (FieldAccessExpressionSyntax)expr;
             Assert.NotNull(e.DotToken);
             Assert.AreEqual(kind, e.DotToken.Kind);
             Assert.NotNull(e.Expression);
@@ -269,43 +269,90 @@ namespace HlslTools.Tests.Parser
         }
 
         [Test]
-        public void TestCallWithNoArgs()
+        public void TestFunctionCallWithNoArgs()
         {
             var text = "a()";
             var expr = ParseExpression(text);
 
             Assert.NotNull(expr);
-            Assert.AreEqual(SyntaxKind.InvocationExpression, expr.Kind);
+            Assert.AreEqual(SyntaxKind.FunctionInvocationExpression, expr.Kind);
             Assert.AreEqual(text, expr.ToString());
             Assert.AreEqual(0, expr.GetDiagnostics().Count());
-            var cs = (InvocationExpressionSyntax)expr;
+            var cs = (FunctionInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
             Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
-            Assert.NotNull(cs.Expression);
+            Assert.NotNull(cs.Name);
             Assert.AreEqual(0, cs.ArgumentList.Arguments.Count);
-            Assert.AreEqual("a", cs.Expression.ToString());
+            Assert.AreEqual("a", cs.Name.Text);
         }
 
         [Test]
-        public void TestCallWithArgs()
+        public void TestMethodCallWithNoArgs()
+        {
+            var text = "a.b()";
+            var expr = ParseExpression(text);
+
+            Assert.NotNull(expr);
+            Assert.AreEqual(SyntaxKind.MethodInvocationExpression, expr.Kind);
+            Assert.AreEqual(text, expr.ToString());
+            Assert.AreEqual(0, expr.GetDiagnostics().Count());
+            var cs = (MethodInvocationExpressionSyntax)expr;
+            Assert.NotNull(cs.ArgumentList.OpenParenToken);
+            Assert.NotNull(cs.ArgumentList.CloseParenToken);
+            Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
+            Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
+            Assert.NotNull(cs.Name);
+            Assert.AreEqual(0, cs.ArgumentList.Arguments.Count);
+            Assert.AreEqual("a", cs.Target.ToString());
+            Assert.NotNull(cs.DotToken);
+            Assert.AreEqual("b", cs.Name.Text);
+        }
+
+        [Test]
+        public void TestFunctionCallWithArgs()
         {
             var text = "a(b, c)";
             var expr = ParseExpression(text);
 
             Assert.NotNull(expr);
-            Assert.AreEqual(SyntaxKind.InvocationExpression, expr.Kind);
+            Assert.AreEqual(SyntaxKind.FunctionInvocationExpression, expr.Kind);
             Assert.AreEqual(text, expr.ToString());
             Assert.AreEqual(0, expr.GetDiagnostics().Count());
-            var cs = (InvocationExpressionSyntax)expr;
+            var cs = (FunctionInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
             Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
-            Assert.NotNull(cs.Expression);
+            Assert.NotNull(cs.Name);
             Assert.AreEqual(2, cs.ArgumentList.Arguments.Count);
-            Assert.AreEqual("a", cs.Expression.ToString());
+            Assert.AreEqual("a", cs.Name.Text);
+            Assert.AreEqual("b", cs.ArgumentList.Arguments[0].ToString());
+            Assert.AreEqual("c", cs.ArgumentList.Arguments[1].ToString());
+        }
+
+        [Test]
+        public void TestMethodCallWithArgs()
+        {
+            var text = "d.a(b, c)";
+            var expr = ParseExpression(text);
+
+            Assert.NotNull(expr);
+            Assert.AreEqual(SyntaxKind.MethodInvocationExpression, expr.Kind);
+            Assert.AreEqual(text, expr.ToString());
+            Assert.AreEqual(0, expr.GetDiagnostics().Count());
+            var cs = (MethodInvocationExpressionSyntax)expr;
+            Assert.NotNull(cs.ArgumentList.OpenParenToken);
+            Assert.NotNull(cs.ArgumentList.CloseParenToken);
+            Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
+            Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
+            Assert.NotNull(cs.Name);
+            Assert.NotNull(cs.Target);
+            Assert.NotNull(cs.DotToken);
+            Assert.AreEqual(2, cs.ArgumentList.Arguments.Count);
+            Assert.AreEqual("d", cs.Target.ToString());
+            Assert.AreEqual("a", cs.Name.Text);
             Assert.AreEqual("b", cs.ArgumentList.Arguments[0].ToString());
             Assert.AreEqual("c", cs.ArgumentList.Arguments[1].ToString());
         }
@@ -354,9 +401,9 @@ namespace HlslTools.Tests.Parser
 
             var compoundExp = (CompoundExpressionSyntax)expr;
             Assert.AreEqual(SyntaxKind.CompoundExpression, compoundExp.Left.Kind);
-            Assert.AreEqual(SyntaxKind.InvocationExpression, compoundExp.Right.Kind);
+            Assert.AreEqual(SyntaxKind.FunctionInvocationExpression, compoundExp.Right.Kind);
 
-            var invocationExpr = (InvocationExpressionSyntax) compoundExp.Right;
+            var invocationExpr = (FunctionInvocationExpressionSyntax) compoundExp.Right;
             Assert.AreEqual(3, invocationExpr.ArgumentList.Arguments.Count);
             Assert.AreEqual("1", invocationExpr.ArgumentList.Arguments[0].ToString());
             Assert.AreEqual("2", invocationExpr.ArgumentList.Arguments[1].ToString());

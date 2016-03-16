@@ -26,8 +26,8 @@ namespace HlslTools.Parser
             {
                 var compile = Match(SyntaxKind.CompileKeyword);
                 var shaderTarget = Match(SyntaxKind.IdentifierToken);
-                var shaderFunctionName = ParseIdentifier();
-                var shaderFunction = new InvocationExpressionSyntax(shaderFunctionName, ParseParenthesizedArgumentList(false));
+                var shaderFunctionName = Match(SyntaxKind.IdentifierToken);
+                var shaderFunction = new FunctionInvocationExpressionSyntax(shaderFunctionName, ParseParenthesizedArgumentList(false));
                 return new CompileExpressionSyntax(compile, shaderTarget, shaderFunction);
             }
 
@@ -140,7 +140,7 @@ namespace HlslTools.Parser
             switch (tk)
             {
                 case SyntaxKind.IdentifierToken:
-                    expr = ParseIdentifier();
+                    expr = ParseIdentifierOrFunctionInvocationExpression();
                     break;
                 case SyntaxKind.FalseKeyword:
                 case SyntaxKind.TrueKeyword:
@@ -185,6 +185,20 @@ namespace HlslTools.Parser
             return ParsePostFixExpression(expr);
         }
 
+        private ExpressionSyntax ParseIdentifierOrFunctionInvocationExpression()
+        {
+            return Lookahead.Kind == SyntaxKind.OpenParenToken
+                ? (ExpressionSyntax) ParseFunctionInvocationExpression()
+                : ParseIdentifier();
+        }
+
+        private FunctionInvocationExpressionSyntax ParseFunctionInvocationExpression()
+        {
+            var name = Match(SyntaxKind.IdentifierToken);
+            var arguments = ParseParenthesizedArgumentList(false);
+            return new FunctionInvocationExpressionSyntax(name, arguments);
+        }
+
         private NumericConstructorInvocationExpressionSyntax ParseNumericConstructorInvocationExpression()
         {
             var type = ParseType(false);
@@ -201,10 +215,6 @@ namespace HlslTools.Parser
                 var tk = Current.Kind;
                 switch (tk)
                 {
-                    case SyntaxKind.OpenParenToken:
-                        expr = new InvocationExpressionSyntax(expr, ParseParenthesizedArgumentList(false));
-                        break;
-
                     case SyntaxKind.OpenBracketToken:
                         expr = new ElementAccessExpressionSyntax(expr, Match(SyntaxKind.OpenBracketToken), ParseExpression(), Match(SyntaxKind.CloseBracketToken));
                         break;
@@ -215,7 +225,14 @@ namespace HlslTools.Parser
                         break;
 
                     case SyntaxKind.DotToken:
-                        expr = new MemberAccessExpressionSyntax(expr, NextToken(), ParseIdentifier());
+                        var dot = NextToken();
+                        var name = Match(SyntaxKind.IdentifierToken);
+
+                        if (Current.Kind == SyntaxKind.OpenParenToken)
+                            expr = new MethodInvocationExpressionSyntax(expr, dot, name, ParseParenthesizedArgumentList(false));
+                        else
+                            expr = new FieldAccessExpressionSyntax(expr, dot, name);
+
                         break;
 
                     default:

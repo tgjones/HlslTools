@@ -401,7 +401,7 @@ namespace HlslTools.Parser
                 _lexer.ExpandMacros = true;
 
                 var closeParen = Match(SyntaxKind.CloseParenToken);
-                expr = new InvocationExpressionSyntax(expr, new ArgumentListSyntax(
+                expr = new FunctionInvocationExpressionSyntax(((IdentifierNameSyntax) expr).Name, new ArgumentListSyntax(
                     openParen,
                     new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { name }),
                     closeParen));
@@ -528,9 +528,9 @@ namespace HlslTools.Parser
                 case SyntaxKind.IdentifierName:
                     var id = ((IdentifierNameSyntax)expr).Name.Text;
                     return IsDirectiveDefined(id);
-                case SyntaxKind.InvocationExpression:
+                case SyntaxKind.FunctionInvocationExpression:
                     // It must be a call to "defined" - that's the only one allowed by the parser.
-                    var functionCall = (InvocationExpressionSyntax)expr;
+                    var functionCall = (FunctionInvocationExpressionSyntax)expr;
                     var identifierName = ((IdentifierNameSyntax)functionCall.ArgumentList.Arguments[0]).Name;
                     return IsDirectiveDefined(identifierName.Text);
                 default:

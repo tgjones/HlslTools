@@ -277,7 +277,7 @@ namespace HlslTools.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitMemberAccess(MemberAccessExpressionSyntax node)
+        public virtual void VisitFieldAccess(FieldAccessExpressionSyntax node)
         {
             DefaultVisit(node);
         }
@@ -287,7 +287,12 @@ namespace HlslTools.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitInvocationExpression(InvocationExpressionSyntax node)
+        public virtual void VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
+        {
+            DefaultVisit(node);
+        }
+
+        public virtual void VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
         {
             DefaultVisit(node);
         }
@@ -777,7 +782,7 @@ namespace HlslTools.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitMemberAccess(MemberAccessExpressionSyntax node)
+        public virtual T VisitFieldAccess(FieldAccessExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
@@ -787,7 +792,12 @@ namespace HlslTools.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitInvocationExpression(InvocationExpressionSyntax node)
+        public virtual T VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
+        {
+            return DefaultVisit(node);
+        }
+
+        public virtual T VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
         {
             return DefaultVisit(node);
         }

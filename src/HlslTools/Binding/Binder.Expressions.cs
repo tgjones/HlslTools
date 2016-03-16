@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
+using HlslTools.Binding.Signatures;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 
@@ -48,10 +49,12 @@ namespace HlslTools.Binding
                 case SyntaxKind.LeftShiftExpression:
                 case SyntaxKind.RightShiftExpression:
                     return BindBinaryExpression((BinaryExpressionSyntax) node);
-                case SyntaxKind.MemberAccessExpression:
-                    return BindMemberAccessExpression((MemberAccessExpressionSyntax) node);
-                case SyntaxKind.InvocationExpression:
-                    return BindInvocationExpression((InvocationExpressionSyntax) node);
+                case SyntaxKind.FieldAccessExpression:
+                    return BindFieldAccessExpression((FieldAccessExpressionSyntax) node);
+                case SyntaxKind.FunctionInvocationExpression:
+                    return BindFunctionInvocationExpression((FunctionInvocationExpressionSyntax) node);
+                case SyntaxKind.MethodInvocationExpression:
+                    return BindMethodInvocationExpression((MethodInvocationExpressionSyntax) node);
                 case SyntaxKind.NumericConstructorInvocationExpression:
                     return BindNumericConstructorInvocationExpression((NumericConstructorInvocationExpressionSyntax) node);
                 case SyntaxKind.SimpleAssignmentExpression:
@@ -218,48 +221,60 @@ namespace HlslTools.Binding
                 BindArgumentList(syntax.ArgumentList));
         }
 
-        private BoundExpression BindInvocationExpression(InvocationExpressionSyntax syntax)
-        {
-            var expression = Bind(syntax.Expression, BindExpression);
-
-            switch (expression.Kind)
-            {
-                case BoundNodeKind.MemberExpression:
-                    return BindMethodInvocationExpression(syntax, expression);
-
-                default:
-                    return BindFunctionInvocationExpression(syntax, expression);
-            }
-        }
-
         private ImmutableArray<BoundExpression> BindArgumentList(ArgumentListSyntax syntax)
         {
             return syntax.Arguments.Select(x => Bind(x, BindExpression)).ToImmutableArray();
         }
 
-        private BoundMethodInvocationExpression BindMethodInvocationExpression(InvocationExpressionSyntax syntax, BoundExpression expression)
+        private BoundMethodInvocationExpression BindMethodInvocationExpression(MethodInvocationExpressionSyntax syntax)
         {
             return new BoundMethodInvocationExpression(
-                expression,
+                Bind(syntax.Target, BindExpression),
                 BindArgumentList(syntax.ArgumentList),
                 null); // TODO
         }
 
-        private BoundFunctionInvocationExpression BindFunctionInvocationExpression(InvocationExpressionSyntax syntax, BoundExpression expression)
+        private BoundFunctionInvocationExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)
         {
-            return new BoundFunctionInvocationExpression(
-                expression,
-                BindArgumentList(syntax.ArgumentList),
-                null); // TODO
+            //var boundArguments = BindArgumentList(syntax.ArgumentList);
+            //var argumentTypes = boundArguments.Select(a => a.Type).ToImmutableArray();
+
+            //var anyErrorsInArguments = argumentTypes.Any(a => a.IsError());
+            //if (anyErrorsInArguments)
+            //    return new BoundFunctionInvocationExpression(expression, boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
+
+            //var result = LookupFunction(name, argumentTypes);
+
+            //if (result.Best == null)
+            //{
+            //    if (result.Selected == null)
+            //    {
+            //        Diagnostics.ReportUndeclaredFunction(node, argumentTypes);
+            //        return new BoundErrorExpression();
+            //    }
+
+            //    var symbol1 = result.Selected.Signature.Symbol;
+            //    var symbol2 = result.Candidates.First(c => c.IsSuitable && c.Signature.Symbol != symbol1).Signature.Symbol;
+            //    Diagnostics.ReportAmbiguousInvocation(node.Span, symbol1, symbol2, argumentTypes);
+            //}
+
+            //var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
+
+            //return new BoundFunctionInvocationExpression(
+            //    expression,
+            //    convertedArguments,
+            //    result);
+
+            throw new NotImplementedException();
         }
 
-        private BoundExpression BindMemberAccessExpression(MemberAccessExpressionSyntax node)
+        private BoundExpression BindFieldAccessExpression(FieldAccessExpressionSyntax node)
         {
             var objectReference = BindExpression(node.Expression);
 
-            var member = objectReference.Type.GetMember(node.Name.Name.Text);
+            var member = objectReference.Type.GetMember(node.Name.Text);
 
-            return new BoundMemberExpression(objectReference, member);
+            return new BoundFieldExpression(objectReference, member);
         }
 
         private BoundInitializer BindInitializer(InitializerSyntax syntax)

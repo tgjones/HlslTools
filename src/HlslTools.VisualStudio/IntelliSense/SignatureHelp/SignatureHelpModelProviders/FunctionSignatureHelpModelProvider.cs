@@ -8,18 +8,13 @@ using HlslTools.Syntax;
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelProviders
 {
     [Export(typeof(ISignatureHelpModelProvider))]
-    internal sealed class FunctionSignatureHelpModelProvider : SignatureHelpModelProvider<InvocationExpressionSyntax>
+    internal sealed class FunctionSignatureHelpModelProvider : SignatureHelpModelProvider<FunctionInvocationExpressionSyntax>
     {
-        protected override SignatureHelpModel GetModel(SemanticModel semanticModel, InvocationExpressionSyntax node, SourceLocation position)
+        protected override SignatureHelpModel GetModel(SemanticModel semanticModel, FunctionInvocationExpressionSyntax node, SourceLocation position)
         {
-            if (node.Expression.Kind != SyntaxKind.IdentifierName)
-                return null;
-
             // TODO: We need to use the resolved symbol as the currently selected one.
 
-            var nameNode = (IdentifierNameSyntax) node.Expression;
-
-            var name = nameNode.Name;
+            var name = node.Name;
             var functionSignatures = semanticModel
                 .LookupSymbols(name.SourceRange.Start)
                 .OfType<FunctionSymbol>()

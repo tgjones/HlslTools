@@ -616,6 +616,13 @@ namespace HlslTools.Formatting
             Visit(node.Body);
         }
 
+        public override void VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
+        {
+            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+
+            Visit(node.ArgumentList);
+        }
+
         public override void VisitFunctionLikeDefineDirectiveParameterList(FunctionLikeDefineDirectiveParameterListSyntax node)
         {
             FormatOpenParenToken(node.OpenParenToken, _options.Spacing.FunctionDeclarationInsertSpaceWithinArgumentListParentheses);
@@ -734,13 +741,6 @@ namespace HlslTools.Formatting
             FormatCloseBraceToken(node.CloseBraceToken);
         }
 
-        public override void VisitInvocationExpression(InvocationExpressionSyntax node)
-        {
-            Visit(node.Expression);
-
-            Visit(node.ArgumentList);
-        }
-
         public override void VisitLineDirectiveTrivia(LineDirectiveTriviaSyntax node)
         {
             AlignDirective(node);
@@ -776,13 +776,24 @@ namespace HlslTools.Formatting
             FormatToken(node.TypeToken, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        public override void VisitMemberAccess(MemberAccessExpressionSyntax node)
+        public override void VisitFieldAccess(FieldAccessExpressionSyntax node)
         {
             Visit(node.Name);
 
             FormatDotToken(node.DotToken);
 
             Visit(node.Expression);
+        }
+
+        public override void VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
+        {
+            Visit(node.Target);
+
+            FormatDotToken(node.DotToken);
+
+            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+
+            Visit(node.ArgumentList);
         }
 
         public override void VisitNamespace(NamespaceSyntax node)

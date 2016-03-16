@@ -4,9 +4,9 @@ namespace HlslTools.Syntax
     {
         public readonly SyntaxToken CompileKeyword;
         public readonly SyntaxToken ShaderTargetToken;
-        public readonly InvocationExpressionSyntax ShaderFunction;
+        public readonly FunctionInvocationExpressionSyntax ShaderFunction;
 
-        public CompileExpressionSyntax(SyntaxToken compileKeyword, SyntaxToken shaderTargetToken, InvocationExpressionSyntax shaderFunction)
+        public CompileExpressionSyntax(SyntaxToken compileKeyword, SyntaxToken shaderTargetToken, FunctionInvocationExpressionSyntax shaderFunction)
             : base(SyntaxKind.CompileExpression)
         {
             RegisterChildNode(out CompileKeyword, compileKeyword);

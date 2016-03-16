@@ -373,22 +373,21 @@ FOO(Diffuse, texCoords.xy)
             Assert.That(funcDefStatement.Body.Statements, Has.Count.EqualTo(1));
             Assert.That(funcDefStatement.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ReturnStatement));
             var returnStatement = (ReturnStatementSyntax) funcDefStatement.Body.Statements[0];
-            Assert.That(returnStatement.Expression.Kind, Is.EqualTo(SyntaxKind.InvocationExpression));
-            var invocationExpr = (InvocationExpressionSyntax) returnStatement.Expression;
-            Assert.That(invocationExpr.Expression.Kind, Is.EqualTo(SyntaxKind.MemberAccessExpression));
-            var memberAccessExpr = (MemberAccessExpressionSyntax) invocationExpr.Expression;
-            Assert.That(memberAccessExpr.Expression.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
-            Assert.That(((IdentifierNameSyntax) memberAccessExpr.Expression).Name.Text, Is.EqualTo("g_DiffuseTexture"));
-            Assert.That(memberAccessExpr.Name.Name.Text, Is.EqualTo("Sample"));
+            Assert.That(returnStatement.Expression.Kind, Is.EqualTo(SyntaxKind.MethodInvocationExpression));
+            var invocationExpr = (MethodInvocationExpressionSyntax) returnStatement.Expression;
+            Assert.That(invocationExpr.Target.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            var identifierNameExpr = (IdentifierNameSyntax) invocationExpr.Target;
+            Assert.That(identifierNameExpr.Name.Text, Is.EqualTo("g_DiffuseTexture"));
+            Assert.That(invocationExpr.Name.Text, Is.EqualTo("Sample"));
             Assert.That(invocationExpr.ArgumentList.Arguments, Has.Count.EqualTo(2));
             Assert.That(invocationExpr.ArgumentList.Arguments[0].Kind, Is.EqualTo(SyntaxKind.IdentifierName));
             Assert.That(((IdentifierNameSyntax)invocationExpr.ArgumentList.Arguments[0]).Name.Text, Is.EqualTo("DiffuseSampler"));
-            Assert.That(invocationExpr.ArgumentList.Arguments[1].Kind, Is.EqualTo(SyntaxKind.MemberAccessExpression));
-            Assert.That(((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression.Kind, Is.EqualTo(SyntaxKind.MemberAccessExpression));
-            Assert.That(((MemberAccessExpressionSyntax)((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
-            Assert.That(((IdentifierNameSyntax) ((MemberAccessExpressionSyntax)((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression).Name.Text, Is.EqualTo("input"));
-            Assert.That(((MemberAccessExpressionSyntax) ((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Name.Name.Text, Is.EqualTo("texCoords"));
-            Assert.That(((MemberAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Name.Name.Text, Is.EqualTo("xy"));
+            Assert.That(invocationExpr.ArgumentList.Arguments[1].Kind, Is.EqualTo(SyntaxKind.FieldAccessExpression));
+            Assert.That(((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression.Kind, Is.EqualTo(SyntaxKind.FieldAccessExpression));
+            Assert.That(((FieldAccessExpressionSyntax)((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(((IdentifierNameSyntax) ((FieldAccessExpressionSyntax)((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression).Name.Text, Is.EqualTo("input"));
+            Assert.That(((FieldAccessExpressionSyntax) ((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Name.Text, Is.EqualTo("texCoords"));
+            Assert.That(((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Name.Text, Is.EqualTo("xy"));
         }
 
         [Test]

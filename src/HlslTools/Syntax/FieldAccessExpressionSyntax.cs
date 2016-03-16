@@ -1,13 +1,13 @@
 namespace HlslTools.Syntax
 {
-    public sealed class MemberAccessExpressionSyntax : ExpressionSyntax
+    public sealed class FieldAccessExpressionSyntax : ExpressionSyntax
     {
         public readonly ExpressionSyntax Expression;
         public readonly SyntaxToken DotToken;
-        public readonly IdentifierNameSyntax Name;
+        public readonly SyntaxToken Name;
 
-        public MemberAccessExpressionSyntax(ExpressionSyntax expression, SyntaxToken dotToken, IdentifierNameSyntax name)
-            : base(SyntaxKind.MemberAccessExpression)
+        public FieldAccessExpressionSyntax(ExpressionSyntax expression, SyntaxToken dotToken, SyntaxToken name)
+            : base(SyntaxKind.FieldAccessExpression)
         {
             RegisterChildNode(out Expression, expression);
             RegisterChildNode(out DotToken, dotToken);
@@ -16,12 +16,12 @@ namespace HlslTools.Syntax
 
         public override void Accept(SyntaxVisitor visitor)
         {
-            visitor.VisitMemberAccess(this);
+            visitor.VisitFieldAccess(this);
         }
 
         public override T Accept<T>(SyntaxVisitor<T> visitor)
         {
-            return visitor.VisitMemberAccess(this);
+            return visitor.VisitFieldAccess(this);
         }
     }
 }

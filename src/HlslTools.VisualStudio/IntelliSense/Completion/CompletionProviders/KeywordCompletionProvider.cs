@@ -31,8 +31,8 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             if (token == null || !token.SourceRange.ContainsOrTouches(position))
                 return false;
 
-            var propertyAccess = token.Parent.AncestorsAndSelf().OfType<MemberAccessExpressionSyntax>().FirstOrDefault();
-            return propertyAccess != null && (propertyAccess.DotToken == token || propertyAccess.Name.Name == token);
+            var propertyAccess = token.Parent.AncestorsAndSelf().OfType<FieldAccessExpressionSyntax>().FirstOrDefault();
+            return propertyAccess != null && (propertyAccess.DotToken == token || propertyAccess.Name == token);
         }
 
         private static IEnumerable<SyntaxKind> GetAvailableKeywords(SyntaxTree syntaxTree, SourceLocation position)

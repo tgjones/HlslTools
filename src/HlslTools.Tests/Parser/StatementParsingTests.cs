@@ -20,8 +20,7 @@ namespace HlslTools.Tests.Parser
 
             var es = (ExpressionStatementSyntax)statement;
             Assert.NotNull(es.Expression);
-            Assert.AreEqual(SyntaxKind.InvocationExpression, es.Expression.Kind);
-            Assert.AreEqual(SyntaxKind.IdentifierName, ((InvocationExpressionSyntax)es.Expression).Expression.Kind);
+            Assert.AreEqual(SyntaxKind.FunctionInvocationExpression, es.Expression.Kind);
             Assert.AreEqual("a()", es.Expression.ToString());
             Assert.NotNull(es.SemicolonToken);
             Assert.False(es.SemicolonToken.IsMissing);
@@ -40,8 +39,8 @@ namespace HlslTools.Tests.Parser
 
             var es = (ExpressionStatementSyntax)statement;
             Assert.NotNull(es.Expression);
-            Assert.AreEqual(SyntaxKind.InvocationExpression, es.Expression.Kind);
-            Assert.AreEqual(SyntaxKind.MemberAccessExpression, ((InvocationExpressionSyntax)es.Expression).Expression.Kind);
+            Assert.AreEqual(SyntaxKind.MethodInvocationExpression, es.Expression.Kind);
+            Assert.AreEqual(SyntaxKind.IdentifierName, ((MethodInvocationExpressionSyntax)es.Expression).Target.Kind);
             Assert.AreEqual("a.b()", es.Expression.ToString());
             Assert.NotNull(es.SemicolonToken);
             Assert.False(es.SemicolonToken.IsMissing);
@@ -1025,8 +1024,7 @@ namespace HlslTools.Tests.Parser
 
             var es = (ExpressionStatementSyntax)innerStatement;
             Assert.NotNull(es.Expression);
-            Assert.AreEqual(SyntaxKind.InvocationExpression, es.Expression.Kind);
-            Assert.AreEqual(SyntaxKind.IdentifierName, ((InvocationExpressionSyntax)es.Expression).Expression.Kind);
+            Assert.AreEqual(SyntaxKind.FunctionInvocationExpression, es.Expression.Kind);
             Assert.AreEqual("a()", es.Expression.ToString());
             Assert.NotNull(es.SemicolonToken);
             Assert.False(es.SemicolonToken.IsMissing);
