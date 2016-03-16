@@ -50,6 +50,8 @@ namespace HlslTools.Binding
                 case SyntaxKind.ExclusiveOrExpression:
                 case SyntaxKind.LeftShiftExpression:
                 case SyntaxKind.RightShiftExpression:
+                case SyntaxKind.LogicalOrExpression:
+                case SyntaxKind.LogicalAndExpression:
                     return BindBinaryExpression((BinaryExpressionSyntax) node);
                 case SyntaxKind.FieldAccessExpression:
                     return BindFieldAccessExpression((FieldAccessExpressionSyntax) node);
@@ -77,9 +79,19 @@ namespace HlslTools.Binding
                     return BindCompoundExpression((CompoundExpressionSyntax) node);
                 case SyntaxKind.ParenthesizedExpression:
                     return BindParenthesizedExpression((ParenthesizedExpressionSyntax) node);
+                case SyntaxKind.ConditionalExpression:
+                    return BindConditionalExpression((ConditionalExpressionSyntax) node);
                 default:
                     throw new ArgumentOutOfRangeException(node.Kind.ToString());
             }
+        }
+
+        private BoundExpression BindConditionalExpression(ConditionalExpressionSyntax node)
+        {
+            return new BoundConditionalExpression(
+                Bind(node.Condition, BindExpression),
+                Bind(node.WhenTrue, BindExpression),
+                Bind(node.WhenFalse, BindExpression));
         }
 
         private BoundExpression BindParenthesizedExpression(ParenthesizedExpressionSyntax syntax)
@@ -261,6 +273,7 @@ namespace HlslTools.Binding
 
         private BoundExpression BindNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax syntax)
         {
+            // TODO: Check that we have the correct number of arguments.
             return new BoundNumericConstructorInvocationExpression(
                 LookupType(syntax.Type),
                 BindArgumentList(syntax.ArgumentList));
@@ -271,12 +284,40 @@ namespace HlslTools.Binding
             return syntax.Arguments.Select(x => Bind(x, BindExpression)).ToImmutableArray();
         }
 
-        private BoundMethodInvocationExpression BindMethodInvocationExpression(MethodInvocationExpressionSyntax syntax)
+        private BoundExpression BindMethodInvocationExpression(MethodInvocationExpressionSyntax syntax)
         {
-            return new BoundMethodInvocationExpression(
-                Bind(syntax.Target, BindExpression),
-                BindArgumentList(syntax.ArgumentList),
-                null); // TODO
+            var target = Bind(syntax.Target, BindExpression);
+            var name = syntax.Name;
+            var arguments = BindArgumentList(syntax.ArgumentList);
+            var argumentTypes = arguments.Select(a => a.Type).ToImmutableArray();
+
+            // To avoid cascading errors, we'll return a node that insn't bound to
+            // any method if we couldn't resolve our target or any of our arguments.
+
+            var anyErrors = target.Type.IsError() || argumentTypes.Any(a => a.IsError());
+            if (anyErrors)
+                return new BoundMethodInvocationExpression(target, arguments, OverloadResolutionResult<MethodSymbolSignature>.None);
+
+            var result = LookupMethod(target.Type, name, argumentTypes);
+
+            if (result.Best == null)
+            {
+                if (result.Selected == null)
+                {
+                    Diagnostics.ReportUndeclaredMethod(syntax, target.Type, argumentTypes);
+                    return new BoundErrorExpression();
+                }
+
+                var symbol1 = result.Selected.Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.IsSuitable && c.Signature.Symbol != symbol1).Signature.Symbol;
+                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
+            }
+
+            // Convert all arguments (if necessary)
+
+            var convertedArguments = arguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
+
+            return new BoundMethodInvocationExpression(target, convertedArguments, result);
         }
 
         private BoundExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)

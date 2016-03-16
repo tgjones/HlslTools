@@ -8,15 +8,32 @@ namespace HlslTools.Symbols
     {
         private readonly List<Symbol> _members;
         private ImmutableArray<Symbol> _membersArray;
+        private bool _lazyMembersComputed;
 
         public ImmutableArray<Symbol> Members
         {
             get
             {
                 if (_membersArray == ImmutableArray<Symbol>.Empty)
+                {
+                    EnsureLazyMembers();
                     _membersArray = _members.ToImmutableArray();
+                }
                 return _membersArray;
             }
+        }
+
+        private void EnsureLazyMembers()
+        {
+            if (!_lazyMembersComputed)
+            {
+                ComputeLazyMembers();
+                _lazyMembersComputed = true;
+            }
+        }
+
+        protected virtual void ComputeLazyMembers()
+        {
         }
 
         protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
@@ -45,6 +62,7 @@ namespace HlslTools.Symbols
         public IEnumerable<T> LookupMembers<T>(string name)
             where T : Symbol
         {
+            EnsureLazyMembers();
             return _members.Where(x => x is T && x.Name == name).OfType<T>();
         }
 

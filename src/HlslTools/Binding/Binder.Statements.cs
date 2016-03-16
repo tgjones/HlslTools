@@ -20,6 +20,10 @@ namespace HlslTools.Binding
             {
                 case SyntaxKind.Block:
                     return BindBlock((BlockSyntax) syntax);
+                case SyntaxKind.BreakStatement:
+                    return BindBreakStatement((BreakStatementSyntax) syntax);
+                case SyntaxKind.DiscardStatement:
+                    return BindDiscardStatement((DiscardStatementSyntax) syntax);
                 case SyntaxKind.ExpressionStatement:
                     return BindExpressionStatement((ExpressionStatementSyntax) syntax);
                 case SyntaxKind.ForStatement:
@@ -33,6 +37,16 @@ namespace HlslTools.Binding
                 default:
                     throw new NotSupportedException("Not supported: " + syntax.Kind);
             }
+        }
+
+        private BoundStatement BindBreakStatement(BreakStatementSyntax syntax)
+        {
+            return new BoundBreakStatement();
+        }
+
+        private BoundStatement BindDiscardStatement(DiscardStatementSyntax syntax)
+        {
+            return new BoundDiscardStatement();
         }
 
         private BoundExpressionStatement BindExpressionStatement(ExpressionStatementSyntax syntax)

@@ -69,14 +69,9 @@ namespace HlslTools.Binding
             return result;
         }
 
-        public virtual IEnumerable<MethodSymbol> LookupMethods(TypeSymbol type)
-        {
-            return Parent.LookupMethods(type);
-        }
-
         private IEnumerable<MethodSymbol> LookupMethod(TypeSymbol type, SyntaxToken name)
         {
-            return LookupMethods(type).Where(m => name.Text == m.Name);
+            return type.LookupMembers<MethodSymbol>(name.Text);
         }
 
         private OverloadResolutionResult<MethodSymbolSignature> LookupMethod(TypeSymbol type, SyntaxToken name, ImmutableArray<TypeSymbol> argumentTypes)
