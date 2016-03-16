@@ -37,10 +37,13 @@
 
         UndeclaredType,
         UndeclaredFunction,
+        UndeclaredMethod,
         UndeclaredVariable,
+        UndeclaredField,
         AmbiguousInvocation,
         AmbiguousReference,
         AmbiguousType,
+        AmbiguousField,
         CannotConvert,
         InvocationRequiresParenthesis
     }

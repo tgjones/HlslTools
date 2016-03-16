@@ -44,6 +44,11 @@ namespace HlslTools.Binding
             return LookupSymbols<VariableSymbol>(name);
         }
 
+        private IEnumerable<FieldSymbol> LookupField(TypeSymbol type, SyntaxToken name)
+        {
+            return type.LookupMembers<FieldSymbol>(name.Text);
+        }
+
         public IEnumerable<TypeSymbol> LookupTypeSymbol(SyntaxToken name)
         {
             return LookupSymbols<TypeSymbol>(name);

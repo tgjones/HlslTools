@@ -26,11 +26,11 @@ namespace HlslTools.Binding
                     return BindIdentifierName((IdentifierNameSyntax) node);
                 case SyntaxKind.PreDecrementExpression:
                 case SyntaxKind.PreIncrementExpression:
-                    return BindPrefixUnaryExpression((PrefixUnaryExpressionSyntax) node);
                 case SyntaxKind.UnaryMinusExpression:
                 case SyntaxKind.UnaryPlusExpression:
                 case SyntaxKind.LogicalNotExpression:
                 case SyntaxKind.BitwiseNotExpression:
+                    return BindPrefixUnaryExpression((PrefixUnaryExpressionSyntax) node);
                 case SyntaxKind.PostDecrementExpression:
                 case SyntaxKind.PostIncrementExpression:
                     return BindPostfixUnaryExpression((PostfixUnaryExpressionSyntax)node);
@@ -328,11 +328,33 @@ namespace HlslTools.Binding
 
         private BoundExpression BindFieldAccessExpression(FieldAccessExpressionSyntax node)
         {
-            var objectReference = BindExpression(node.Expression);
+            var target = BindExpression(node.Expression);
 
-            var member = objectReference.Type.GetMember(node.Name.Text);
+            var name = node.Name;
+            if (target.Type.IsError())
+            {
+                // To avoid cascading errors, we'll give up early.
+                return new BoundErrorExpression();
+            }
 
-            return new BoundFieldExpression(objectReference, member);
+            var fieldSymbols = LookupField(target.Type, name).ToImmutableArray();
+
+            if (fieldSymbols.Length == 0)
+            {
+                var hasMethods = LookupMethod(target.Type, name).Any();
+                if (hasMethods)
+                    Diagnostics.ReportInvocationRequiresParenthesis(name);
+                else
+                    Diagnostics.ReportUndeclaredField(node, target.Type);
+
+                return new BoundErrorExpression();
+            }
+
+            if (fieldSymbols.Length > 1)
+                Diagnostics.ReportAmbiguousField(name);
+
+            var fieldSymbol = fieldSymbols[0];
+            return new BoundFieldExpression(target, fieldSymbol);
         }
 
         private BoundInitializer BindInitializer(InitializerSyntax syntax)

@@ -106,9 +106,24 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredFunction, name, argumentTypeList);
         }
 
+        public static void ReportUndeclaredMethod(this ICollection<Diagnostic> diagnostics, MethodInvocationExpressionSyntax node, TypeSymbol declaringType, IEnumerable<TypeSymbol> argumentTypes)
+        {
+            var name = node.Name.ValueText;
+            var declaringTypeName = declaringType.ToDisplayName();
+            var argumentTypeNames = string.Join(@", ", argumentTypes.Select(t => t.ToDisplayName()));
+            diagnostics.Report(node.GetTextSpanRoot(), DiagnosticId.UndeclaredMethod, declaringTypeName, name, argumentTypeNames);
+        }
+
         public static void ReportVariableNotDeclared(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
         {
             diagnostics.Report(name.Span, DiagnosticId.UndeclaredVariable, name.ValueText);
+        }
+
+        public static void ReportUndeclaredField(this ICollection<Diagnostic> diagnostics, FieldAccessExpressionSyntax node, TypeSymbol type)
+        {
+            var typeName = type.ToDisplayName();
+            var propertyName = node.Name.ValueText;
+            diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredField, typeName, propertyName);
         }
 
         public static void ReportAmbiguousInvocation(this ICollection<Diagnostic> diagnostics, TextSpan span, InvocableSymbol symbol1, InvocableSymbol symbol2, IReadOnlyList<TypeSymbol> argumentTypes)
@@ -124,6 +139,11 @@ namespace HlslTools.Diagnostics
                 var diagnostic = new Diagnostic(span, DiagnosticId.AmbiguousInvocation, message);
                 diagnostics.Add(diagnostic);
             }
+        }
+
+        public static void ReportAmbiguousField(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
+        {
+            diagnostics.Report(name.Span, DiagnosticId.AmbiguousField, name.ValueText);
         }
 
         public static void ReportCannotConvert(this ICollection<Diagnostic> diagnostics, TextSpan span, TypeSymbol sourceType, TypeSymbol targetType)

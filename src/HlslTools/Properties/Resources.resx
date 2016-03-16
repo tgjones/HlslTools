@@ -213,4 +213,16 @@
   <data name="UndeclaredVariable" xml:space="preserve">
     <value>Variable '{0}' is not declared.</value>
   </data>
+  <data name="UndeclaredField" xml:space="preserve">
+    <value>Type '{0}' does not have a field '{1}'.</value>
+  </data>
+  <data name="UndeclaredFunction" xml:space="preserve">
+    <value>Function '{0}({1})' is not declared.</value>
+  </data>
+  <data name="UndeclaredMethod" xml:space="preserve">
+    <value>Type '{0}' does not have a method '{1}({2})'.</value>
+  </data>
+  <data name="AmbiguousField" xml:space="preserve">
+    <value>Field '{0}' is ambiguous.</value>
+  </data>
 </root>

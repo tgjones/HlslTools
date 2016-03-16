@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HlslTools.Symbols
 {
     public abstract class TypeSymbol : Symbol
     {
-        private readonly Dictionary<string, Symbol> _memberTable;
         private readonly List<Symbol> _members;
         private ImmutableArray<Symbol> _membersArray;
 
@@ -23,7 +23,6 @@ namespace HlslTools.Symbols
             : base(kind, name, documentation, parent)
         {
             _members = new List<Symbol>();
-            _memberTable = new Dictionary<string, Symbol>();
         }
 
         public string FullName
@@ -43,17 +42,16 @@ namespace HlslTools.Symbols
             return null;
         }
 
-        public Symbol GetMember(string name)
+        public IEnumerable<T> LookupMembers<T>(string name)
+            where T : Symbol
         {
-            Symbol result;
-            _memberTable.TryGetValue(name, out result);
-            return result;
+            return _members.Where(x => x is T && x.Name == name).OfType<T>();
         }
 
         internal void AddMember(Symbol member)
         {
             _members.Add(member);
-            _memberTable[member.Name] = member;
+            // TODO: Add diagnostic if duplicate name.
             _membersArray = ImmutableArray<Symbol>.Empty;
         }
     }

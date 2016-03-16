@@ -61,6 +61,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Field &apos;{0}&apos; is ambiguous..
+        /// </summary>
+        internal static string AmbiguousField {
+            get {
+                return ResourceManager.GetString("AmbiguousField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invocation with argument types &apos;{2}&apos; is ambiguous between &apos;{0}&apos; and &apos;{1}&apos;..
         /// </summary>
         internal static string AmbiguousInvocation {
@@ -291,6 +300,33 @@ namespace HlslTools.Properties {
         internal static string TypeExpected {
             get {
                 return ResourceManager.GetString("TypeExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; does not have a field &apos;{1}&apos;..
+        /// </summary>
+        internal static string UndeclaredField {
+            get {
+                return ResourceManager.GetString("UndeclaredField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Function &apos;{0}({1})&apos; is not declared..
+        /// </summary>
+        internal static string UndeclaredFunction {
+            get {
+                return ResourceManager.GetString("UndeclaredFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; does not have a method &apos;{1}({2})&apos;..
+        /// </summary>
+        internal static string UndeclaredMethod {
+            get {
+                return ResourceManager.GetString("UndeclaredMethod", resourceCulture);
             }
         }
         
