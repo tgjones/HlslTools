@@ -7,7 +7,7 @@ namespace HlslTools.Syntax
         public readonly StateInitializerSyntax StateInitializer;
 
         public SamplerStateInitializerSyntax(SyntaxToken equalsToken, SyntaxToken samplerStateKeyword, StateInitializerSyntax stateInitializer)
-            : base(SyntaxKind.EqualsValueClause)
+            : base(SyntaxKind.SamplerStateInitializer)
         {
             RegisterChildNode(out EqualsToken, equalsToken);
             RegisterChildNode(out SamplerStateKeyword, samplerStateKeyword);

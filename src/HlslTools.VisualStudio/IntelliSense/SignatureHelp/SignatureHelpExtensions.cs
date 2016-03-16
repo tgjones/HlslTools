@@ -37,7 +37,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
         }
 
         public static IEnumerable<SignatureItem> ToSignatureItems<TSymbol>(this IEnumerable<TSymbol> symbols)
-            where TSymbol : Symbol, IInvocableSymbol
+            where TSymbol : InvocableSymbol
         {
             return symbols.Select(ToSignatureItem);
         }
@@ -48,7 +48,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
         }
 
         private static SignatureItem ToSignatureItem<TSymbol>(this TSymbol symbol, Func<SymbolMarkupToken, bool> separatorPredicate)
-            where TSymbol : Symbol, IInvocableSymbol
+            where TSymbol : InvocableSymbol
         {
             var markup = SymbolMarkup.ForSymbol(symbol);
 
@@ -99,7 +99,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
         }
 
         private static SignatureItem ToSignatureItem<TSymbol>(this TSymbol symbol)
-            where TSymbol : Symbol, IInvocableSymbol
+            where TSymbol : InvocableSymbol
         {
             return symbol.ToSignatureItem(IsCommaToken);
         }

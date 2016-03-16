@@ -41,7 +41,7 @@ namespace HlslTools.Binding
 
             foreach (var declarator in syntax.Variables)
             {
-                var variableType = LookupSymbol(syntax.Type);
+                var variableType = LookupType(syntax.Type);
 
                 foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
                     variableType = new ArraySymbol(variableType);
@@ -61,14 +61,14 @@ namespace HlslTools.Binding
 
         private BoundFunction BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
         {
-            var returnType = LookupSymbol(declaration.ReturnType); // TODO
+            var returnType = LookupType(declaration.ReturnType);
 
-            Func<FunctionSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
+            Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
             {
                 var parameterSymbols = new List<ParameterSymbol>();
                 foreach (var parameterSyntax in declaration.ParameterList.Parameters)
                 {
-                    var parameterValueType = LookupSymbol(parameterSyntax.Type);
+                    var parameterValueType = LookupType(parameterSyntax.Type);
                     var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
                     parameterSymbols.Add(new SourceParameterSymbol(
@@ -88,31 +88,32 @@ namespace HlslTools.Binding
 
         private BoundFunction BindFunctionDefinition(FunctionDefinitionSyntax declaration)
         {
-            var returnType = LookupSymbol(declaration.ReturnType); // TODO
+            var returnType = LookupType(declaration.ReturnType);
 
-            Func<FunctionSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
+            var functionBinder = new Binder(_sharedBinderState, this);
+            
+            var functionSymbol = new SourceFunctionSymbol(declaration, returnType);
+            AddSymbol(functionSymbol);
+
+            foreach (var parameterSyntax in declaration.ParameterList.Parameters)
             {
-                var parameterSymbols = new List<ParameterSymbol>();
-                foreach (var parameterSyntax in declaration.ParameterList.Parameters)
-                {
-                    var parameterValueType = LookupSymbol(parameterSyntax.Type);
-                    var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
+                var parameterValueType = LookupType(parameterSyntax.Type);
+                var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
-                    parameterSymbols.Add(new SourceParameterSymbol(
-                        parameterSyntax,
-                        fd,
-                        parameterValueType,
-                        parameterDirection));
-                }
-                return parameterSymbols;
-            };
+                var parameterSymbol = new SourceParameterSymbol(
+                    parameterSyntax,
+                    functionSymbol,
+                    parameterValueType,
+                    parameterDirection);
 
-            var symbol = new SourceFunctionSymbol(declaration, returnType, lazyParameterSymbols);
-            AddSymbol(symbol);
+                functionSymbol.AddParameter(parameterSymbol);
 
-            Bind(declaration.Body, BindBlock);
+                functionBinder.AddSymbol(parameterSymbol);
+            }
 
-            return new BoundFunction(symbol);
+            functionBinder.Bind(declaration.Body, functionBinder.BindBlock);
+
+            return new BoundFunction(functionSymbol);
         }
 
         private BoundConstantBuffer BindConstantBufferDeclaration(ConstantBufferSyntax declaration)
@@ -173,7 +174,7 @@ namespace HlslTools.Binding
             var declaration = variableDeclarationStatementSyntax.Declaration;
             foreach (var declarator in declaration.Variables)
             {
-                var variableType = LookupSymbol(declaration.Type);
+                var variableType = LookupType(declaration.Type);
 
                 foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
                     variableType = new ArraySymbol(variableType);
@@ -200,14 +201,14 @@ namespace HlslTools.Binding
 
         private MethodSymbol BindMethodDeclaration(FunctionDeclarationSyntax declaration, TypeSymbol parentType)
         {
-            var returnType = LookupSymbol(declaration.ReturnType); // TODO
+            var returnType = LookupType(declaration.ReturnType);
 
-            Func<MethodSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
+            Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
             {
                 var parameterSymbols = new List<ParameterSymbol>();
                 foreach (var parameterSyntax in declaration.ParameterList.Parameters)
                 {
-                    var parameterValueType = LookupSymbol(parameterSyntax.Type);
+                    var parameterValueType = LookupType(parameterSyntax.Type);
                     var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
                     parameterSymbols.Add(new SourceParameterSymbol(
@@ -227,14 +228,14 @@ namespace HlslTools.Binding
 
         private MethodSymbol BindMethodDefinition(FunctionDefinitionSyntax declaration, TypeSymbol parentType)
         {
-            var returnType = LookupSymbol(declaration.ReturnType); // TODO
+            var returnType = LookupType(declaration.ReturnType);
 
-            Func<MethodSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
+            Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
             {
                 var parameterSymbols = new List<ParameterSymbol>();
                 foreach (var parameterSyntax in declaration.ParameterList.Parameters)
                 {
-                    var parameterValueType = LookupSymbol(parameterSyntax.Type);
+                    var parameterValueType = LookupType(parameterSyntax.Type);
                     var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
                     parameterSymbols.Add(new SourceParameterSymbol(

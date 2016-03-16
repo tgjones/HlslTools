@@ -33,6 +33,15 @@
         TypeExpected,
 
         BadEmbeddedStatement,
-        ConstantExpected
+        ConstantExpected,
+
+        UndeclaredType,
+        UndeclaredFunction,
+        UndeclaredVariable,
+        AmbiguousInvocation,
+        AmbiguousReference,
+        AmbiguousType,
+        CannotConvert,
+        InvocationRequiresParenthesis
     }
 }

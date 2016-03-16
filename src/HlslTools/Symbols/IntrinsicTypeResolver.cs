@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Immutable;
+using System.Linq;
 using HlslTools.Binding;
+using HlslTools.Diagnostics;
 using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
@@ -20,7 +23,17 @@ namespace HlslTools.Symbols
                 case SyntaxKind.IdentifierName:
                     {
                         var identifierName = (IdentifierNameSyntax) node;
-                        return binder.LookupSymbol(identifierName.Name) as TypeSymbol;
+                        var symbols = binder.LookupTypeSymbol(identifierName.Name).ToImmutableArray();
+                        if (symbols.Length == 0)
+                        {
+                            binder.Diagnostics.ReportUndeclaredType(node);
+                            return TypeFacts.Unknown;
+                        }
+
+                        if (symbols.Length > 1)
+                            binder.Diagnostics.ReportAmbiguousType(identifierName.Name, symbols);
+
+                        return symbols.First();
                     }
                 default:
                     throw new NotImplementedException(node.Kind.ToString());

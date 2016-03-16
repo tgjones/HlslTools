@@ -3,8 +3,10 @@ using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Binding.Signatures;
+using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
+using HlslTools.Text;
 
 namespace HlslTools.Binding
 {
@@ -71,6 +73,8 @@ namespace HlslTools.Binding
                     return BindAssignmentExpression((AssignmentExpressionSyntax) node);
                 case SyntaxKind.CastExpression:
                     return BindCastExpression((CastExpressionSyntax) node);
+                case SyntaxKind.CompoundExpression:
+                    return BindCompoundExpression((CompoundExpressionSyntax) node);
                 default:
                     throw new ArgumentOutOfRangeException(node.Kind.ToString());
             }
@@ -119,9 +123,36 @@ namespace HlslTools.Binding
             }
         }
 
-        private BoundCastExpression BindCastExpression(CastExpressionSyntax syntax)
+        private BoundExpression BindCastExpression(CastExpressionSyntax syntax)
         {
-            return new BoundCastExpression(LookupSymbol(syntax.Type), Bind(syntax.Expression, BindExpression));
+            return BindConversion(syntax.GetTextSpanSafe(), Bind(syntax.Expression, BindExpression), LookupType(syntax.Type));
+        }
+
+        private BoundExpression BindCompoundExpression(CompoundExpressionSyntax syntax)
+        {
+            return new BoundCompoundExpression(
+                Bind(syntax.Left, BindExpression),
+                Bind(syntax.Right, BindExpression));
+        }
+
+        private BoundExpression BindConversion(TextSpan diagnosticSpan, BoundExpression expression, TypeSymbol targetType)
+        {
+            var sourceType = expression.Type;
+            var conversion = Conversion.Classify(sourceType, targetType);
+            if (conversion.IsIdentity)
+                return expression;
+
+            // To avoid cascading errors, we'll only validate the result
+            // if we could resolve both, the expression as well as the
+            // target type.
+
+            if (!sourceType.IsError() && !targetType.IsError())
+            {
+                if (!conversion.Exists)
+                    Diagnostics.ReportCannotConvert(diagnosticSpan, sourceType, targetType);
+            }
+
+            return new BoundConversionExpression(expression, targetType, conversion);
         }
 
         private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax node)
@@ -160,22 +191,29 @@ namespace HlslTools.Binding
 
         private BoundExpression BindIdentifierName(IdentifierNameSyntax node)
         {
-            var symbol = LookupSymbol(node.Name);
+            if (node.Name.IsMissing)
+                return new BoundErrorExpression();
 
-            if (symbol == null)
-                return new BoundBadExpression(node);
+            var name = node.Name;
+            var symbols = LookupVariable(name).ToImmutableArray();
 
-            switch (symbol.Kind)
+            if (symbols.Length == 0)
             {
-                case SymbolKind.Variable:
-                    return new BoundVariableExpression((VariableSymbol) symbol);
-                case SymbolKind.Function:
-                    return new BoundFunctionName((FunctionSymbol) symbol);
-                case SymbolKind.Method:
-                    return new BoundMethodName((MethodSymbol) symbol);
-                default:
-                    throw new ArgumentOutOfRangeException();
+                var isInvocable = LookupSymbols<FunctionSymbol>(name).Any();
+                if (isInvocable)
+                    Diagnostics.ReportInvocationRequiresParenthesis(name);
+                else
+                    Diagnostics.ReportVariableNotDeclared(name);
+
+                return new BoundErrorExpression();
             }
+
+            if (symbols.Length > 1)
+                Diagnostics.ReportAmbiguousName(name, symbols);
+
+            var symbol = symbols.First();
+
+            return new BoundVariableExpression(symbol);
         }
 
         private BoundExpression BindPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
@@ -217,7 +255,7 @@ namespace HlslTools.Binding
         private BoundExpression BindNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax syntax)
         {
             return new BoundNumericConstructorInvocationExpression(
-                LookupSymbol(syntax.Type),
+                LookupType(syntax.Type),
                 BindArgumentList(syntax.ArgumentList));
         }
 
@@ -234,38 +272,51 @@ namespace HlslTools.Binding
                 null); // TODO
         }
 
-        private BoundFunctionInvocationExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)
+        private BoundExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)
         {
-            //var boundArguments = BindArgumentList(syntax.ArgumentList);
-            //var argumentTypes = boundArguments.Select(a => a.Type).ToImmutableArray();
+            var name = syntax.Name;
+            var boundArguments = BindArgumentList(syntax.ArgumentList);
+            var argumentTypes = boundArguments.Select(a => a.Type).ToImmutableArray();
 
-            //var anyErrorsInArguments = argumentTypes.Any(a => a.IsError());
-            //if (anyErrorsInArguments)
-            //    return new BoundFunctionInvocationExpression(expression, boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
+            var anyErrorsInArguments = argumentTypes.Any(a => a.IsError());
+            if (anyErrorsInArguments)
+                return new BoundFunctionInvocationExpression(boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
 
-            //var result = LookupFunction(name, argumentTypes);
+            var result = LookupFunction(name, argumentTypes);
 
-            //if (result.Best == null)
-            //{
-            //    if (result.Selected == null)
-            //    {
-            //        Diagnostics.ReportUndeclaredFunction(node, argumentTypes);
-            //        return new BoundErrorExpression();
-            //    }
+            if (result.Best == null)
+            {
+                if (result.Selected == null)
+                {
+                    Diagnostics.ReportUndeclaredFunction(syntax, argumentTypes);
+                    return new BoundErrorExpression();
+                }
 
-            //    var symbol1 = result.Selected.Signature.Symbol;
-            //    var symbol2 = result.Candidates.First(c => c.IsSuitable && c.Signature.Symbol != symbol1).Signature.Symbol;
-            //    Diagnostics.ReportAmbiguousInvocation(node.Span, symbol1, symbol2, argumentTypes);
-            //}
+                var symbol1 = result.Selected.Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.IsSuitable && c.Signature.Symbol != symbol1).Signature.Symbol;
+                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
+            }
 
-            //var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
+            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
 
-            //return new BoundFunctionInvocationExpression(
-            //    expression,
-            //    convertedArguments,
-            //    result);
+            return new BoundFunctionInvocationExpression(convertedArguments, result);
+        }
 
-            throw new NotImplementedException();
+        private static BoundExpression BindArgument<T>(BoundExpression expression, OverloadResolutionResult<T> result, int argumentIndex)
+            where T : Signature
+        {
+            var selected = result.Selected;
+            if (selected == null)
+                return expression;
+
+            var targetType = selected.Signature.GetParameterType(argumentIndex);
+            var conversion = selected.ArgumentConversions[argumentIndex];
+
+            // TODO: We need check for ambiguous conversions here as well.
+
+            return conversion.IsIdentity
+                       ? expression
+                       : new BoundConversionExpression(expression, targetType, conversion);
         }
 
         private BoundExpression BindFieldAccessExpression(FieldAccessExpressionSyntax node)
@@ -283,7 +334,12 @@ namespace HlslTools.Binding
             {
                 case SyntaxKind.EqualsValueClause:
                     return BindEqualsValue((EqualsValueClauseSyntax) syntax);
-
+                case SyntaxKind.StateInitializer:
+                    return BindStateInitializer((StateInitializerSyntax) syntax);
+                case SyntaxKind.StateArrayInitializer:
+                    return BindStateArrayInitializer((StateArrayInitializerSyntax) syntax);
+                case SyntaxKind.SamplerStateInitializer:
+                    return BindSamplerStateInitializer((SamplerStateInitializerSyntax) syntax);
                 default:
                     throw new NotSupportedException(syntax.Kind.ToString());
             }
@@ -292,6 +348,21 @@ namespace HlslTools.Binding
         private BoundEqualsValue BindEqualsValue(EqualsValueClauseSyntax syntax)
         {
             return new BoundEqualsValue(Bind(syntax.Value, BindExpression));
+        }
+
+        private BoundStateInitializer BindStateInitializer(StateInitializerSyntax syntax)
+        {
+            return new BoundStateInitializer();
+        }
+
+        private BoundStateArrayInitializer BindStateArrayInitializer(StateArrayInitializerSyntax syntax)
+        {
+            return new BoundStateArrayInitializer();
+        }
+
+        private BoundSamplerStateInitializer BindSamplerStateInitializer(SamplerStateInitializerSyntax syntax)
+        {
+            return new BoundSamplerStateInitializer();
         }
     }
 }

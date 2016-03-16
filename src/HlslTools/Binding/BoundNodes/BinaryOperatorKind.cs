@@ -1,4 +1,6 @@
-﻿namespace HlslTools.Binding.BoundNodes
+﻿using System;
+
+namespace HlslTools.Binding.BoundNodes
 {
     public enum BinaryOperatorKind
     {

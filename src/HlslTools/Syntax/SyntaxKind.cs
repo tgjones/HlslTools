@@ -383,6 +383,7 @@ namespace HlslTools.Syntax
         ArrayInitializerExpression,
         StateInitializer,
         StateArrayInitializer,
+        SamplerStateInitializer,
         CompoundExpression,
         CompileExpression,
 

@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 using HlslTools.Tests.Support;
@@ -23,6 +25,11 @@ namespace HlslTools.Tests.Compilation
             var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
             Assert.That(semanticModel, Is.Not.Null);
+
+            foreach (var diagnostic in semanticModel.GetDiagnostics())
+                Debug.WriteLine(diagnostic);
+
+            Assert.That(semanticModel.GetDiagnostics().Count(), Is.EqualTo(0));
         }
 
         [Test]

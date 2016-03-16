@@ -16,7 +16,6 @@ namespace HlslTools.Binding.BoundNodes
         NumericConstructorInvocationExpression,
         UnaryExpression,
         BinaryExpression,
-        CastExpression,
         ConditionalExpression,
         ElementAccessExpression,
         LiteralExpression,
@@ -25,6 +24,8 @@ namespace HlslTools.Binding.BoundNodes
         VariableExpression,
         MethodName,
         FunctionName,
+        ConversionExpression,
+        CompoundExpression,
 
         // Statements
         Block,
@@ -50,6 +51,9 @@ namespace HlslTools.Binding.BoundNodes
 
         // Other
         EqualsValue,
-        Bad
+        StateInitializer,
+        StateArrayInitializer,
+        SamplerState,
+        Error
     }
 }

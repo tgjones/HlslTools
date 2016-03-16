@@ -52,8 +52,9 @@
     <Compile Include="Binding\Binder.cs" />
     <Compile Include="Binding\Binder.Lookup.cs" />
     <Compile Include="Binding\BoundNodes\BoundAssignmentExpression.cs" />
-    <Compile Include="Binding\BoundNodes\BoundBadExpression.cs" />
-    <Compile Include="Binding\BoundNodes\BoundCastExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundCompoundExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundConversionExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundErrorExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundClassType.cs" />
     <Compile Include="Binding\BoundNodes\BoundCompilationUnit.cs" />
     <Compile Include="Binding\BoundNodes\BoundConstantBuffer.cs" />
@@ -65,6 +66,9 @@
     <Compile Include="Binding\BoundNodes\BoundMethodInvocationExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundMethodName.cs" />
     <Compile Include="Binding\BoundNodes\BoundNumericConstructorInvocationExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundSamplerStateInitializer.cs" />
+    <Compile Include="Binding\BoundNodes\BoundStateArrayInitializer.cs" />
+    <Compile Include="Binding\BoundNodes\BoundStateInitializer.cs" />
     <Compile Include="Binding\BoundNodes\BoundStringLiteralExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundStructType.cs" />
     <Compile Include="Binding\BindingResult.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="Binding\BoundNodes\BoundWhileStatement.cs" />
     <Compile Include="Binding\Conversion.cs" />
     <Compile Include="Binding\Binder.Expressions.cs" />
+    <Compile Include="Binding\IntrinsicBinder.cs" />
     <Compile Include="Binding\OverloadResolution.cs" />
     <Compile Include="Binding\OverloadResolutionCandidate.cs" />
     <Compile Include="Binding\OverloadResolutionResult.cs" />
@@ -127,8 +132,9 @@
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\IMemberSymbol.cs" />
     <Compile Include="Symbols\ParameterDirection.cs" />
+    <Compile Include="Symbols\TypeFacts.cs" />
     <Compile Include="Symbols\VariableSymbol.cs" />
-    <Compile Include="Symbols\IInvocableSymbol.cs" />
+    <Compile Include="Symbols\InvocableSymbol.cs" />
     <Compile Include="Symbols\IndexerSymbol.cs" />
     <Compile Include="Symbols\InterfaceSymbol.cs" />
     <Compile Include="Symbols\IntrinsicSemantics.cs" />

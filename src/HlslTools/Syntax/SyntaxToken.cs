@@ -13,6 +13,8 @@ namespace HlslTools.Syntax
         public SyntaxKind ContextualKind { get; }
         public object Value { get; }
 
+        public string ValueText => Value as string ?? Text;
+
         public override bool IsMissing { get; }
 
         internal SyntaxToken(SyntaxKind kind, SyntaxKind contextualKind, 

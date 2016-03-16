@@ -198,4 +198,19 @@
   <data name="UnexpectedAttribute" xml:space="preserve">
     <value>Attribute not expected in this context.</value>
   </data>
+  <data name="AmbiguousInvocation" xml:space="preserve">
+    <value>Invocation with argument types '{2}' is ambiguous between '{0}' and '{1}'.</value>
+  </data>
+  <data name="AmbiguousReference" xml:space="preserve">
+    <value>Name '{0}' is ambiguous between '{1}' and '{2}'.</value>
+  </data>
+  <data name="AmbiguousType" xml:space="preserve">
+    <value>Type '{0}' is ambiguous between '{1}' and '{2}'.</value>
+  </data>
+  <data name="UndeclaredType" xml:space="preserve">
+    <value>Cannot resolve type: '{0}'.</value>
+  </data>
+  <data name="UndeclaredVariable" xml:space="preserve">
+    <value>Variable '{0}' is not declared.</value>
+  </data>
 </root>

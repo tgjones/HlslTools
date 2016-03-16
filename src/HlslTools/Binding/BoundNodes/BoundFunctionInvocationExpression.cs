@@ -7,10 +7,9 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundFunctionInvocationExpression : BoundExpression
     {
-        public BoundFunctionInvocationExpression(BoundExpression expression, ImmutableArray<BoundExpression> arguments, OverloadResolutionResult<FunctionSymbolSignature> result)
+        public BoundFunctionInvocationExpression(ImmutableArray<BoundExpression> arguments, OverloadResolutionResult<FunctionSymbolSignature> result)
             : base(BoundNodeKind.FunctionInvocationExpression)
         {
-            Expression = expression;
             Arguments = arguments;
             Result = result;
         }
@@ -19,7 +18,6 @@ namespace HlslTools.Binding.BoundNodes
 
         public FunctionSymbol Symbol => Result.Selected?.Signature.Symbol;
 
-        public BoundExpression Expression { get; }
         public ImmutableArray<BoundExpression> Arguments { get; }
 
         public OverloadResolutionResult<FunctionSymbolSignature> Result { get; }
@@ -31,7 +29,7 @@ namespace HlslTools.Binding.BoundNodes
             if (newArguments == Arguments && result == Result)
                 return this;
 
-            return new BoundFunctionInvocationExpression(Expression, newArguments, result);
+            return new BoundFunctionInvocationExpression(newArguments, result);
         }
 
         public override string ToString()

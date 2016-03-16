@@ -7,8 +7,6 @@ namespace HlslTools.Symbols
 {
     public static class IntrinsicTypes
     {
-        public static readonly TypeSymbol Missing = new IntrinsicTypeSymbol("[Missing]", string.Empty);
-
         public static readonly TypeSymbol Void;
         public static readonly TypeSymbol String;
         public static readonly TypeSymbol Bool;
