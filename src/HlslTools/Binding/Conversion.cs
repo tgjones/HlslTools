@@ -1,5 +1,6 @@
 ﻿using System;
 using HlslTools.Symbols;
+using HlslTools.Syntax;
 
 namespace HlslTools.Binding
 {
@@ -29,7 +30,7 @@ namespace HlslTools.Binding
 
         internal static Conversion Classify(TypeSymbol sourceType, TypeSymbol targetType)
         {
-            if (sourceType == targetType)
+            if (sourceType.Equals(targetType))
                 return Identity;
 
             // Can convert from any scalar to any scalar.
@@ -93,26 +94,56 @@ namespace HlslTools.Binding
             return None;
         }
 
-        internal static int Compare(TypeSymbol xType, Conversion xConversion, TypeSymbol yType, Conversion yConversion)
+        internal static int GetScore(TypeSymbol sourceType, TypeSymbol targetType, Conversion conversion)
         {
-            if (xConversion.IsIdentity && !yConversion.IsIdentity ||
-                xConversion.IsImplicit && yConversion.IsExplicit)
-                return -1;
+            if (conversion.IsIdentity)
+                return 0;
 
-            if (!xConversion.IsIdentity && yConversion.IsIdentity ||
-                xConversion.IsExplicit && yConversion.IsImplicit)
-                return 1;
+            var score = 0;
 
-            var xTypeToYType = Classify(xType, yType);
-            var yTypeToXType = Classify(yType, xType);
+            if (conversion.IsExplicit)
+                score += 1;
 
-            if (xTypeToYType.IsImplicit && yTypeToXType.IsExplicit)
-                return -1;
+            if (sourceType.Kind == SymbolKind.IntrinsicScalarType && targetType.Kind == SymbolKind.IntrinsicScalarType)
+            {
+                var source = (IntrinsicScalarTypeSymbol) sourceType;
+                var target = (IntrinsicScalarTypeSymbol) targetType;
+                if (IsWidening(source.ScalarType, target.ScalarType))
+                    score += 1;
+                else
+                    score += 6;
+            }
+            else
+            {
+                // TODO: Cost of vector / matrix conversions.
+                score += 2;
+            }
 
-            if (xTypeToYType.IsExplicit && yTypeToXType.IsImplicit)
-                return 1;
+            return score;
+        }
 
-            return 0;
+        private static bool IsWidening(ScalarType source, ScalarType target)
+        {
+            switch (source)
+            {
+                case ScalarType.Bool:
+                    return target >= ScalarType.Bool;
+                case ScalarType.Int:
+                    return target == ScalarType.Int || target >= ScalarType.Half;
+                case ScalarType.Uint:
+                    return target == ScalarType.Uint || target >= ScalarType.Half;
+                case ScalarType.Half:
+                    return target >= ScalarType.Half;
+                case ScalarType.Float:
+                    return target >= ScalarType.Float;
+                case ScalarType.Double:
+                    return target == ScalarType.Double;
+                case ScalarType.Void:
+                case ScalarType.String:
+                    return false; // TODO: Shouldn't be here
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(source), source, null);
+            }
         }
     }
 }
