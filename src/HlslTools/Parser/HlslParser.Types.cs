@@ -61,7 +61,6 @@ namespace HlslTools.Parser
                 case SyntaxKind.SamplerCubeKeyword:
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerComparisonStateKeyword:
-                case SyntaxKind.TextureKeyword:
                     return new PredefinedObjectTypeSyntax(token, null);
                 case SyntaxKind.InputPatchKeyword:
                 case SyntaxKind.OutputPatchKeyword:
@@ -98,6 +97,9 @@ namespace HlslTools.Parser
                 case SyntaxKind.Texture2DMSArrayKeyword:
                     return ParseMultisampledTextureType(token);
             }
+
+            if (token.ContextualKind == SyntaxKind.TextureKeyword)
+                return new PredefinedObjectTypeSyntax(token.WithKind(token.ContextualKind), null);
 
             if (token.ContextualKind == SyntaxKind.ConstantBufferKeyword)
                 return ParseTemplatedConstantBufferType(token);

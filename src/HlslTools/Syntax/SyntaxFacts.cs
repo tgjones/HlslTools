@@ -853,7 +853,6 @@ namespace HlslTools.Syntax
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerComparisonStateKeyword:
                 case SyntaxKind.StructuredBufferKeyword:
-                case SyntaxKind.TextureKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -870,6 +869,7 @@ namespace HlslTools.Syntax
                     switch (token.ContextualKind)
                     {
                         case SyntaxKind.ConstantBufferKeyword:
+                        case SyntaxKind.TextureKeyword:
                             return true;
 
                         default:
@@ -2074,8 +2074,6 @@ namespace HlslTools.Syntax
                     return SyntaxKind.Technique10Keyword;
                 case "technique11":
                     return SyntaxKind.Technique11Keyword;
-                case "texture":
-                    return SyntaxKind.TextureKeyword;
                 case "Texture1D":
                     return SyntaxKind.Texture1DKeyword;
                 case "Texture1DArray":
@@ -2184,6 +2182,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.SampleKeyword;
                 case "line":
                     return SyntaxKind.LineKeyword;
+                case "texture":
+                    return SyntaxKind.TextureKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
