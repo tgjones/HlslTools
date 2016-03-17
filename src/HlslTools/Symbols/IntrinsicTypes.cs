@@ -186,12 +186,12 @@ namespace HlslTools.Symbols
             // Scalar types.
             Void = new IntrinsicScalarTypeSymbol("void", "Represents a void value.", ScalarType.Void);
             String = new IntrinsicScalarTypeSymbol("string", "Represents a string value.", ScalarType.String);
-            Bool = new IntrinsicScalarTypeSymbol("bool", "Represents a boolean value.", ScalarType.Bool);
-            Int = new IntrinsicScalarTypeSymbol("int", "Represents a 32-bit signed integer value.", ScalarType.Int);
-            Uint = new IntrinsicScalarTypeSymbol("uint", "Represents a 32-bit unsigned integer value.", ScalarType.Uint);
-            Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half);
-            Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float);
-            Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double);
+            Bool = new IntrinsicScalarTypeSymbol("bool", "Represents a boolean value.", ScalarType.Bool, t => CreateVectorTypeFields(1, Bool, Bool1, Bool2, Bool3, Bool4));
+            Int = new IntrinsicScalarTypeSymbol("int", "Represents a 32-bit signed integer value.", ScalarType.Int, t => CreateVectorTypeFields(1, Int, Int1, Int2, Int3, Int4));
+            Uint = new IntrinsicScalarTypeSymbol("uint", "Represents a 32-bit unsigned integer value.", ScalarType.Uint, t => CreateVectorTypeFields(1, Uint, Uint1, Uint2, Uint3, Uint4));
+            Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half, t => CreateVectorTypeFields(1, Half, Half1, Half2, Half3, Half4));
+            Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float, t => CreateVectorTypeFields(1, Float, Float1, Float2, Float3, Float4));
+            Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double, t => CreateVectorTypeFields(1, Double, Double1, Double2, Double3, Double4));
 
             // Vector types.
             Bool1 = new IntrinsicVectorTypeSymbol("bool1", "Represents a vector containing 1 boolean component.",  ScalarType.Bool, 1, t => CreateVectorTypeFields(1, Bool1, Bool, Bool2, Bool3, Bool4));
