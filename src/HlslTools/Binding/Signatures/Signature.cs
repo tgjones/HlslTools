@@ -8,6 +8,7 @@ namespace HlslTools.Binding.Signatures
         public abstract TypeSymbol ReturnType { get; }
         public abstract TypeSymbol GetParameterType(int index);
         public abstract int ParameterCount { get; }
+        public abstract bool HasVariadicParameter { get; }
 
         public IEnumerable<TypeSymbol> GetParameterTypes()
         {

@@ -7,7 +7,7 @@ namespace HlslTools.Symbols
     public abstract class TypeSymbol : Symbol
     {
         private readonly List<Symbol> _members;
-        private ImmutableArray<Symbol> _membersArray;
+        private ImmutableArray<Symbol> _membersArray = ImmutableArray<Symbol>.Empty;
         private bool _lazyMembersComputed;
 
         public ImmutableArray<Symbol> Members
@@ -59,7 +59,7 @@ namespace HlslTools.Symbols
             return null;
         }
 
-        public IEnumerable<T> LookupMembers<T>(string name)
+        public virtual IEnumerable<T> LookupMembers<T>(string name)
             where T : Symbol
         {
             EnsureLazyMembers();

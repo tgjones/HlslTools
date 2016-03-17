@@ -115,6 +115,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot convert type &apos;{0}&apos; to &apos;{1}&apos;..
+        /// </summary>
+        internal static string CannotConvert {
+            get {
+                return ResourceManager.GetString("CannotConvert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A constant value is expected..
         /// </summary>
         internal static string ConstantExpected {
@@ -318,6 +327,15 @@ namespace HlslTools.Properties {
         internal static string UndeclaredFunction {
             get {
                 return ResourceManager.GetString("UndeclaredFunction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type &apos;{0}&apos; does not have an indexer &apos;[{1}]&apos;..
+        /// </summary>
+        internal static string UndeclaredIndexer {
+            get {
+                return ResourceManager.GetString("UndeclaredIndexer", resourceCulture);
             }
         }
         

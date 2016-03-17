@@ -114,6 +114,13 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(node.GetTextSpanRoot(), DiagnosticId.UndeclaredMethod, declaringTypeName, name, argumentTypeNames);
         }
 
+        public static void ReportUndeclaredIndexer(this ICollection<Diagnostic> diagnostics, ElementAccessExpressionSyntax node, TypeSymbol declaringType, IEnumerable<TypeSymbol> argumentTypes)
+        {
+            var declaringTypeName = declaringType.ToDisplayName();
+            var argumentTypeNames = string.Join(@", ", argumentTypes.Select(t => t.ToDisplayName()));
+            diagnostics.Report(node.GetTextSpanRoot(), DiagnosticId.UndeclaredIndexer, declaringTypeName, argumentTypeNames);
+        }
+
         public static void ReportVariableNotDeclared(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
         {
             diagnostics.Report(name.Span, DiagnosticId.UndeclaredVariable, name.ValueText);

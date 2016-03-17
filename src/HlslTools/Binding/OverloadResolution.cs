@@ -46,8 +46,8 @@ namespace HlslTools.Binding
         private static bool IsApplicable<T>(OverloadResolutionCandidate<T> candidate, int argumentCount)
             where T : Signature
         {
-            return candidate.Signature.ParameterCount == argumentCount &&
-                   candidate.ArgumentConversions.All(c => c.IsImplicit);
+            return (candidate.Signature.ParameterCount == argumentCount && candidate.ArgumentConversions.All(c => c.IsImplicit))
+                || (candidate.Signature.HasVariadicParameter && argumentCount >= candidate.Signature.ParameterCount); // TODO: Need to check that non-variadic argument / parameter types match.
         }
 
         private static void MarkCandidatesWithBetterAlternative<T>(IList<OverloadResolutionCandidate<T>> candidates, int argumentCount)

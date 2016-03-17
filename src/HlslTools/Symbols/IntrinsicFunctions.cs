@@ -70,6 +70,46 @@ namespace HlslTools.Symbols
                 IntrinsicTypes.Double2));
 
             allFunctions.AddRange(Create1(
+                "asfloat",
+                "Interprets the bit pattern of the input value as a floating-point number.",
+                IntrinsicTypes.AllBoolTypes.Concat(IntrinsicTypes.AllFloatTypes).Concat(IntrinsicTypes.AllIntTypes).Concat(IntrinsicTypes.AllUintTypes).ToArray(),
+                "value", "The input value.",
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllFloatTypes).Concat(IntrinsicTypes.AllFloatTypes).Concat(IntrinsicTypes.AllFloatTypes).ToArray()));
+
+            allFunctions.AddRange(Create1(
+                "asin",
+                "Returns the arcsine of the specified value.",
+                IntrinsicTypes.AllFloatTypes,
+                "value", "The specified value"));
+
+            allFunctions.AddRange(Create1(
+                "asint",
+                "Interprets the bit pattern of the input value as an integer.",
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllUintTypes).ToArray(),
+                "value", "The input value.",
+                IntrinsicTypes.AllIntTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray()));
+
+            allFunctions.AddRange(Create3(
+                "asuint",
+                "Reinterprets the bit pattern of a 64-bit value as two unsigned 32-bit integers.",
+                new[] { IntrinsicTypes.Double },
+                "value", "The input value.",
+                "lowbits", "The low 32-bit pattern of the input value.",
+                "highbits", "The high 32-bit pattern of the input value.",
+                IntrinsicTypes.Void,
+                overrideParameterType2: IntrinsicTypes.Uint,
+                overrideParameterType3: IntrinsicTypes.Uint,
+                overrideParameterDirection2: ParameterDirection.Out,
+                overrideParameterDirection3: ParameterDirection.Out));
+
+            allFunctions.AddRange(Create1(
+                "asuint",
+                "Interprets the bit pattern of the input value as an unsigned integer.",
+                IntrinsicTypes.AllFloatTypes.Concat(IntrinsicTypes.AllIntTypes).ToArray(),
+                "value", "The input value.",
+                IntrinsicTypes.AllUintTypes.Concat(IntrinsicTypes.AllUintTypes).ToArray()));
+
+            allFunctions.AddRange(Create1(
                 "atan", 
                 "Returns the arctangent of the specified value.", 
                 IntrinsicTypes.AllFloatTypes,
@@ -230,7 +270,11 @@ namespace HlslTools.Symbols
                "x", "The first vector.",
                "y", "The second vector."));
 
-            // TODO: errorf (requires string type and variadic arguments)
+            allFunctions.Add(new FunctionSymbol("errorf", "Submits an error message to the information queue.", IntrinsicTypes.Void, f => new[]
+            {
+                new ParameterSymbol("format", "The format string.", f, IntrinsicTypes.String),
+                new VariadicParameterSymbol("arguments...", "Optional arguments.", f),
+            }));
 
             allFunctions.AddRange(Create1(
                "EvaluateAttributeAtCentroid",
@@ -1359,6 +1403,12 @@ namespace HlslTools.Symbols
                 IntrinsicTypes.AllFloatTypes,
                 "x", "The specified value.",
                 "y", "The specified power."));
+
+            allFunctions.Add(new FunctionSymbol("printf", "Submits a custom shader message to the information queue.", IntrinsicTypes.Void, f => new[]
+            {
+                new ParameterSymbol("format", "The format string.", f, IntrinsicTypes.String),
+                new VariadicParameterSymbol("arguments...", "Optional arguments.", f),
+            }));
 
             // TODO: printf (requires string type and variadic arguments)
 

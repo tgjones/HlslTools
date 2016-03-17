@@ -12,8 +12,12 @@ namespace HlslTools.Binding
     {
         private BoundCompilationUnit BindCompilationUnit(CompilationUnitSyntax compilationUnit)
         {
-            var boundDeclarations = compilationUnit.Declarations.Select(x => Bind(x, BindGlobalDeclaration));
-            return new BoundCompilationUnit(boundDeclarations.ToImmutableArray());
+            return new BoundCompilationUnit(BindTopLevelDeclarations(compilationUnit.Declarations));
+        }
+
+        private ImmutableArray<BoundNode> BindTopLevelDeclarations(List<SyntaxNode> declarations)
+        {
+            return declarations.Select(x => Bind(x, BindGlobalDeclaration)).ToImmutableArray();
         }
 
         private BoundNode BindGlobalDeclaration(SyntaxNode declaration)
@@ -30,9 +34,39 @@ namespace HlslTools.Binding
                     return BindConstantBufferDeclaration((ConstantBufferSyntax) declaration);
                 case SyntaxKind.TypeDeclarationStatement:
                     return BindTypeDeclaration((TypeDeclarationStatementSyntax) declaration);
+                case SyntaxKind.Namespace:
+                    return BindNamespace((NamespaceSyntax) declaration);
+                case SyntaxKind.TechniqueDeclaration:
+                    return BindTechniqueDeclaration((TechniqueSyntax) declaration);
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(declaration.Kind.ToString());
             }
+        }
+
+        private BoundNode BindTechniqueDeclaration(TechniqueSyntax declaration)
+        {
+            var techniqueBinder = new Binder(_sharedBinderState, this);
+            var boundPasses = declaration.Passes.Select(x => techniqueBinder.Bind(x, techniqueBinder.BindPass));
+            return new BoundTechnique(boundPasses.ToImmutableArray());
+        }
+
+        private BoundPass BindPass(PassSyntax syntax)
+        {
+            // TODO
+            return new BoundPass();
+        }
+
+        private BoundNode BindNamespace(NamespaceSyntax declaration)
+        {
+            var enclosingNamespace = LookupEnclosingNamespace();
+            var namespaceSymbol = new NamespaceSymbol(declaration.Name.Text, enclosingNamespace);
+
+            AddSymbol(namespaceSymbol);
+
+            var namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
+            namespaceBinder.BindTopLevelDeclarations(declaration.Declarations);
+
+            return new BoundNamespace(namespaceSymbol);
         }
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax)
@@ -129,31 +163,46 @@ namespace HlslTools.Binding
 
         private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration)
         {
-            Func<TypeSymbol, IEnumerable<Symbol>> lazyMemberSymbols = cd =>
+            ClassSymbol baseClass = null;
+            var baseInterfaces = new List<InterfaceSymbol>();
+
+            // TODO: HLSL allows zero or one base class, and zero or more implemented interfaces.
+
+            if (declaration.BaseList != null)
             {
-                var memberSymbols = new List<Symbol>();
-                foreach (var memberSyntax in declaration.Members)
+                var baseType = LookupType(declaration.BaseList.BaseType);
+                switch (baseType.Kind)
                 {
-                    switch (memberSyntax.Kind)
-                    {
-                        case SyntaxKind.VariableDeclarationStatement:
-                            memberSymbols.AddRange(BindFields((VariableDeclarationStatementSyntax)memberSyntax, cd));
-                            break;
-                        case SyntaxKind.FunctionDeclaration:
-                            memberSymbols.Add(BindMethodDeclaration((FunctionDeclarationSyntax)memberSyntax, cd));
-                            break;
-                        case SyntaxKind.FunctionDefinition:
-                            memberSymbols.Add(BindMethodDefinition((FunctionDefinitionSyntax)memberSyntax, cd));
-                            break;
-                    }
+                    case SymbolKind.Class:
+                        baseClass = (ClassSymbol) baseType;
+                        break;
+                    case SymbolKind.Interface:
+                        baseInterfaces.Add((InterfaceSymbol) baseType);
+                        break;
                 }
-                return memberSymbols;
-            };
+            }
 
-            var symbol = new ClassSymbol(declaration, null);
-            AddSymbol(symbol);
+            var classSymbol = new ClassSymbol(declaration, null, baseClass, baseInterfaces.ToImmutableArray()); // TODO: parent symbol could be namespace or function body
+            AddSymbol(classSymbol);
 
-            return new BoundClassType(symbol);
+            foreach (var memberSyntax in declaration.Members)
+            {
+                switch (memberSyntax.Kind)
+                {
+                    case SyntaxKind.VariableDeclarationStatement:
+                        foreach (var field in BindFields((VariableDeclarationStatementSyntax)memberSyntax, classSymbol))
+                            classSymbol.AddMember(field);
+                        break;
+                    case SyntaxKind.FunctionDeclaration:
+                        classSymbol.AddMember(BindMethodDeclaration((FunctionDeclarationSyntax)memberSyntax, classSymbol));
+                        break;
+                    case SyntaxKind.FunctionDefinition:
+                        classSymbol.AddMember(BindMethodDefinition((FunctionDefinitionSyntax)memberSyntax, classSymbol));
+                        break;
+                }
+            }
+
+            return new BoundClassType(classSymbol);
         }
 
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration)
@@ -185,18 +234,13 @@ namespace HlslTools.Binding
 
         private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
         {
-            Func<TypeSymbol, IEnumerable<MethodSymbol>> lazyMemberSymbols = cd =>
-            {
-                var memberSymbols = new List<MethodSymbol>();
-                foreach (var memberSyntax in declaration.Methods)
-                    memberSymbols.Add(BindMethodDeclaration(memberSyntax, cd));
-                return memberSymbols;
-            };
+            var interfaceSymbol = new InterfaceSymbol(declaration, null);
+            AddSymbol(interfaceSymbol);
 
-            var symbol = new InterfaceSymbol(declaration, null);
-            AddSymbol(symbol);
+            foreach (var memberSyntax in declaration.Methods)
+                interfaceSymbol.AddMember(BindMethodDeclaration(memberSyntax, interfaceSymbol));
 
-            return new BoundInterfaceType(symbol);
+            return new BoundInterfaceType(interfaceSymbol);
         }
 
         private MethodSymbol BindMethodDeclaration(FunctionDeclarationSyntax declaration, TypeSymbol parentType)

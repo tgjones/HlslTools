@@ -7,14 +7,14 @@ namespace HlslTools.Symbols
 {
     public static class IntrinsicTypes
     {
-        public static readonly TypeSymbol Void;
-        public static readonly TypeSymbol String;
-        public static readonly TypeSymbol Bool;
-        public static readonly TypeSymbol Int;
-        public static readonly TypeSymbol Uint;
-        public static readonly TypeSymbol Half;
-        public static readonly TypeSymbol Float;
-        public static readonly TypeSymbol Double;
+        public static readonly IntrinsicScalarTypeSymbol Void;
+        public static readonly IntrinsicScalarTypeSymbol String;
+        public static readonly IntrinsicScalarTypeSymbol Bool;
+        public static readonly IntrinsicScalarTypeSymbol Int;
+        public static readonly IntrinsicScalarTypeSymbol Uint;
+        public static readonly IntrinsicScalarTypeSymbol Half;
+        public static readonly IntrinsicScalarTypeSymbol Float;
+        public static readonly IntrinsicScalarTypeSymbol Double;
 
         public static readonly TypeSymbol Bool1;
         public static readonly TypeSymbol Bool2;
@@ -159,12 +159,14 @@ namespace HlslTools.Symbols
 
         public static readonly TypeSymbol[] AllBoolMatrixTypes;
         public static readonly TypeSymbol[] AllIntMatrixTypes;
+        public static readonly TypeSymbol[] AllUintMatrixTypes;
         public static readonly TypeSymbol[] AllFloatMatrixTypes;
         public static readonly TypeSymbol[] AllDoubleMatrixTypes;
         public static readonly TypeSymbol[] AllMatrixTypes;
 
         public static readonly TypeSymbol[] AllBoolTypes;
         public static readonly TypeSymbol[] AllIntTypes;
+        public static readonly TypeSymbol[] AllUintTypes;
         public static readonly TypeSymbol[] AllFloatTypes;
         public static readonly TypeSymbol[] AllDoubleTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
@@ -175,6 +177,7 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol SamplerCube;
         public static readonly TypeSymbol SamplerState;
         public static readonly TypeSymbol SamplerComparisonState;
+        public static readonly TypeSymbol LegacyTexture;
 
         public static readonly TypeSymbol[] AllIntrinsicTypes;
 
@@ -432,6 +435,26 @@ namespace HlslTools.Symbols
                 Int4x4
             };
 
+            AllUintMatrixTypes = new[]
+            {
+                Uint1x1,
+                Uint1x2,
+                Uint1x3,
+                Uint1x4,
+                Uint2x1,
+                Uint2x2,
+                Uint2x3,
+                Uint2x4,
+                Uint3x1,
+                Uint3x2,
+                Uint3x3,
+                Uint3x4,
+                Uint4x1,
+                Uint4x2,
+                Uint4x3,
+                Uint4x4
+            };
+
             AllFloatMatrixTypes = new[]
             {
                 Float1x1,
@@ -582,6 +605,11 @@ namespace HlslTools.Symbols
                 .Union(AllIntMatrixTypes)
                 .ToArray();
 
+            AllUintTypes = new[] { Uint }
+                .Union(AllUintVectorTypes)
+                .Union(AllUintMatrixTypes)
+                .ToArray();
+
             AllFloatTypes = new[] { Float }
                 .Union(AllFloatVectorTypes)
                 .Union(AllFloatMatrixTypes)
@@ -604,8 +632,10 @@ namespace HlslTools.Symbols
             SamplerState = new IntrinsicObjectTypeSymbol("SamplerState", "");
             SamplerComparisonState = new IntrinsicObjectTypeSymbol("SamplerComparisonState", "");
 
+            LegacyTexture = new IntrinsicObjectTypeSymbol("texture", "");
+
             AllIntrinsicTypes = AllNumericTypes
-                .Union(new[] { Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState })
+                .Union(new[] { Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
                 .ToArray();
         }
 
@@ -663,11 +693,11 @@ namespace HlslTools.Symbols
             }
         }
 
-        private static IEnumerable<Symbol> CreateMatrixTypeMembers(int numRows, int numColumns, TypeSymbol matrixType, TypeSymbol fieldType)
+        private static IEnumerable<Symbol> CreateMatrixTypeMembers(int numRows, int numColumns, TypeSymbol matrixType, IntrinsicScalarTypeSymbol fieldType)
         {
             // TODO: Support composite fields like _m00_m01.
 
-            yield return new IndexerSymbol("[]", "", matrixType, fieldType);
+            yield return new IndexerSymbol("[]", "", matrixType, GetVectorType(fieldType.ScalarType, numColumns));
 
             for (var row = 0; row < numRows; row++)
                 for (var col = 0; col < numColumns; col++)
@@ -684,7 +714,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetMatrixType(ScalarType scalarType, int numRows, int numCols)
         {
-            return AllMatrixTypes[(((int)scalarType - 1) * 16) + (numRows * 4) + numCols];
+            return AllMatrixTypes[(((int)scalarType - 1) * 16) + ((numRows - 1) * 4) + (numCols - 1)];
         }
 
         public static IntrinsicTypeSymbol CreateTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
@@ -1328,6 +1358,27 @@ namespace HlslTools.Symbols
                         {
                             new ParameterSymbol("location", "The location of the buffer.", m, Int)
                         }),
+                });
+        }
+
+        public static TypeSymbol CreateInputPatchType(TypeSymbol valueType)
+        {
+            return new IntrinsicObjectTypeSymbol("InputPatch",
+                "Represents an array of control points that are available to the hull shader as inputs.",
+                t => new Symbol[]
+                {
+                    new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType),
+                    new FieldSymbol("Length", "The number of control points.", t, Uint)
+                });
+        }
+
+        public static TypeSymbol CreateOutputPatchType(TypeSymbol valueType)
+        {
+            return new IntrinsicObjectTypeSymbol("OutputPatch",
+                "Represents an array of output control points that are available to the hull shader's patch-constant function as well as the domain shader.",
+                t => new Symbol[]
+                {
+                    new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType)
                 });
         }
     }

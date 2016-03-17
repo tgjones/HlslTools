@@ -1,3 +1,4 @@
+using HlslTools.Binding.Signatures;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding.BoundNodes
@@ -9,12 +10,17 @@ namespace HlslTools.Binding.BoundNodes
         public BoundExpression Expression { get; }
         public BoundExpression Index { get; }
 
-        public BoundElementAccessExpression(BoundExpression expression, BoundExpression index, IndexerSymbol indexer)
+        public IndexerSymbol Symbol => Result.Selected?.Signature.Symbol;
+
+        public OverloadResolutionResult<IndexerSymbolSignature> Result { get; }
+
+        public BoundElementAccessExpression(BoundExpression expression, BoundExpression index, OverloadResolutionResult<IndexerSymbolSignature> result)
             : base(BoundNodeKind.ElementAccessExpression)
         {
             Expression = expression;
             Index = index;
-            Type = indexer.ValueType;
+            Result = result;
+            Type = Symbol?.ValueType;
         }
     }
 }

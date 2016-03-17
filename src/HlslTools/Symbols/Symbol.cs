@@ -1,4 +1,6 @@
-﻿namespace HlslTools.Symbols
+﻿using HlslTools.Symbols.Markup;
+
+namespace HlslTools.Symbols
 {
     public abstract class Symbol
     {
@@ -13,6 +15,11 @@
             Name = name;
             Documentation = documentation;
             Parent = parent;
+        }
+
+        public sealed override string ToString()
+        {
+            return SymbolMarkup.ForSymbol(this).ToString();
         }
     }
 }

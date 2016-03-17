@@ -23,6 +23,20 @@ namespace HlslTools.Binding
             return LocalSymbols.Where(x => x.Name == name);
         }
 
+        private NamespaceSymbol LookupEnclosingNamespace()
+        {
+            var binder = this;
+            while (binder != null)
+            {
+                var namespaceBinder = binder as NamespaceBinder;
+                if (namespaceBinder != null)
+                    return namespaceBinder.NamespaceSymbol;
+                binder = binder.Parent;
+            }
+
+            return null;
+        }
+
         private TypeSymbol LookupType(TypeSyntax syntax)
         {
             var type = syntax.GetTypeSymbol(this);
@@ -67,6 +81,18 @@ namespace HlslTools.Binding
             } while (!result.Any() && binder != null);
 
             return result;
+        }
+
+        private IEnumerable<IndexerSymbol> LookupIndexer(TypeSymbol type)
+        {
+            return type.LookupMembers<IndexerSymbol>("[]");
+        }
+
+        private OverloadResolutionResult<IndexerSymbolSignature> LookupIndexer(TypeSymbol type, ImmutableArray<TypeSymbol> argumentTypes)
+        {
+            var signatures = from m in LookupIndexer(type)
+                             select new IndexerSymbolSignature(m);
+            return OverloadResolution.Perform(signatures, argumentTypes);
         }
 
         private IEnumerable<MethodSymbol> LookupMethod(TypeSymbol type, SyntaxToken name)

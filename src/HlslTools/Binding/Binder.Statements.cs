@@ -34,9 +34,46 @@ namespace HlslTools.Binding
                     return BindReturnStatement((ReturnStatementSyntax) syntax);
                 case SyntaxKind.VariableDeclarationStatement:
                     return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) syntax);
+                case SyntaxKind.SwitchStatement:
+                    return BindSwitchStatement((SwitchStatementSyntax) syntax);
                 default:
                     throw new NotSupportedException("Not supported: " + syntax.Kind);
             }
+        }
+
+        private BoundStatement BindSwitchStatement(SwitchStatementSyntax syntax)
+        {
+            var switchBinder = new Binder(_sharedBinderState, this);
+            var boundSections = syntax.Sections.Select(x => switchBinder.Bind(x, switchBinder.BindSwitchSection)).ToImmutableArray();
+
+            return new BoundSwitchStatement(
+                Bind(syntax.Expression, BindExpression),
+                boundSections);
+        }
+
+        private BoundSwitchSection BindSwitchSection(SwitchSectionSyntax syntax)
+        {
+            return new BoundSwitchSection(
+                syntax.Labels.Select(x => Bind(x, BindSwitchLabel)).ToImmutableArray(),
+                syntax.Statements.Select(x => Bind(x, BindStatement)).ToImmutableArray());
+        }
+
+        private BoundSwitchLabel BindSwitchLabel(SwitchLabelSyntax syntax)
+        {
+            BoundExpression boundExpression;
+            switch (syntax.Kind)
+            {
+                case SyntaxKind.CaseSwitchLabel:
+                    var caseSwitchLabel = (CaseSwitchLabelSyntax) syntax;
+                    boundExpression = Bind(caseSwitchLabel.Value, BindExpression);
+                    break;
+                case SyntaxKind.DefaultSwitchLabel:
+                    boundExpression = null;
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+            return new BoundSwitchLabel(boundExpression);
         }
 
         private BoundStatement BindBreakStatement(BreakStatementSyntax syntax)

@@ -181,6 +181,8 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.AppendStructuredBuffer:
                 case PredefinedObjectType.ConsumeStructuredBuffer:
                 case PredefinedObjectType.StructuredBuffer:
+                case PredefinedObjectType.InputPatch:
+                case PredefinedObjectType.OutputPatch:
                 {
                     var valueTypeSyntax = (TypeSyntax) node.TemplateArgumentList.Arguments[0];
                     var valueType = GetTypeSymbol(valueTypeSyntax, binder);
@@ -192,6 +194,10 @@ namespace HlslTools.Symbols
                             return IntrinsicTypes.CreateConsumeStructuredBufferType(valueType);
                         case PredefinedObjectType.StructuredBuffer:
                             return IntrinsicTypes.CreateStructuredBufferType(valueType);
+                        case PredefinedObjectType.InputPatch:
+                            return IntrinsicTypes.CreateInputPatchType(valueType);
+                        case PredefinedObjectType.OutputPatch:
+                            return IntrinsicTypes.CreateOutputPatchType(valueType);
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -200,19 +206,34 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.ByteAddressBuffer;
                 case PredefinedObjectType.RWByteAddressBuffer:
                 case PredefinedObjectType.RWStructuredBuffer:
-                case PredefinedObjectType.InputPatch:
-                case PredefinedObjectType.OutputPatch:
                 case PredefinedObjectType.PointStream:
                 case PredefinedObjectType.LineStream:
                 case PredefinedObjectType.TriangleStream:
+                case PredefinedObjectType.RasterizerOrderedBuffer:
+                case PredefinedObjectType.RasterizerOrderedByteAddressBuffer:
+                case PredefinedObjectType.RasterizerOrderedStructuredBuffer:
+                case PredefinedObjectType.RasterizerOrderedTexture1D:
+                case PredefinedObjectType.RasterizerOrderedTexture1DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture2D:
+                case PredefinedObjectType.RasterizerOrderedTexture2DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture3D:
                     throw new NotImplementedException();
-                case PredefinedObjectType.Sampler:
+                case PredefinedObjectType.Sampler1D:
+                    return IntrinsicTypes.Sampler1D;
+                case PredefinedObjectType.Sampler2D:
+                    return IntrinsicTypes.Sampler2D;
+                case PredefinedObjectType.Sampler3D:
+                    return IntrinsicTypes.Sampler3D;
+                case PredefinedObjectType.SamplerCube:
+                    return IntrinsicTypes.SamplerCube;
                 case PredefinedObjectType.SamplerState:
                     return IntrinsicTypes.SamplerState;
                 case PredefinedObjectType.SamplerComparisonState:
                     return IntrinsicTypes.SamplerComparisonState;
+                case PredefinedObjectType.Texture:
+                    return IntrinsicTypes.LegacyTexture;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new InvalidOperationException(predefinedObjectType.ToString());
             }
         }
     }

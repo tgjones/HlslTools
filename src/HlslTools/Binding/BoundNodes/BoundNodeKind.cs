@@ -3,6 +3,7 @@ namespace HlslTools.Binding.BoundNodes
     internal enum BoundNodeKind
     {
         CompilationUnit,
+        Namespace,
 
         // Types
         TypeDeclaration,
@@ -26,6 +27,7 @@ namespace HlslTools.Binding.BoundNodes
         FunctionName,
         ConversionExpression,
         CompoundExpression,
+        ArrayInitializerExpression,
 
         // Statements
         Block,
@@ -48,6 +50,8 @@ namespace HlslTools.Binding.BoundNodes
         MultipleVariableDeclarations,
         Function,
         ConstantBuffer,
+        Technique,
+        Pass,
 
         // Other
         EqualsValue,

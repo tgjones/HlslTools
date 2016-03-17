@@ -846,9 +846,14 @@ namespace HlslTools.Syntax
                 case SyntaxKind.RWTexture2DArrayKeyword:
                 case SyntaxKind.RWTexture3DKeyword:
                 case SyntaxKind.SamplerKeyword:
+                case SyntaxKind.Sampler1DKeyword:
+                case SyntaxKind.Sampler2DKeyword:
+                case SyntaxKind.Sampler3DKeyword:
+                case SyntaxKind.SamplerCubeKeyword:
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerComparisonStateKeyword:
                 case SyntaxKind.StructuredBufferKeyword:
+                case SyntaxKind.TextureKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -932,14 +937,23 @@ namespace HlslTools.Syntax
                     return PredefinedObjectType.RWTexture2DArray;
                 case SyntaxKind.RWTexture3DKeyword:
                     return PredefinedObjectType.RWTexture3D;
+                case SyntaxKind.Sampler1DKeyword:
+                    return PredefinedObjectType.Sampler1D;
                 case SyntaxKind.SamplerKeyword:
-                    return PredefinedObjectType.Sampler;
+                case SyntaxKind.Sampler2DKeyword:
+                    return PredefinedObjectType.Sampler2D;
+                case SyntaxKind.Sampler3DKeyword:
+                    return PredefinedObjectType.Sampler3D;
+                case SyntaxKind.SamplerCubeKeyword:
+                    return PredefinedObjectType.SamplerCube;
                 case SyntaxKind.SamplerStateKeyword:
                     return PredefinedObjectType.SamplerState;
                 case SyntaxKind.SamplerComparisonStateKeyword:
                     return PredefinedObjectType.SamplerComparisonState;
                 case SyntaxKind.StructuredBufferKeyword:
                     return PredefinedObjectType.StructuredBuffer;
+                case SyntaxKind.TextureKeyword:
+                    return PredefinedObjectType.Texture;
                 case SyntaxKind.Texture1DKeyword:
                     return PredefinedObjectType.Texture1D;
                 case SyntaxKind.Texture1DArrayKeyword:
@@ -960,8 +974,24 @@ namespace HlslTools.Syntax
                     return PredefinedObjectType.TextureCubeArray;
                 case SyntaxKind.TriangleStreamKeyword:
                     return PredefinedObjectType.TriangleStream;
+                case SyntaxKind.RasterizerOrderedBufferKeyword:
+                    return PredefinedObjectType.RasterizerOrderedBuffer;
+                case SyntaxKind.RasterizerOrderedByteAddressBufferKeyword:
+                    return PredefinedObjectType.RasterizerOrderedByteAddressBuffer;
+                case SyntaxKind.RasterizerOrderedStructuredBufferKeyword:
+                    return PredefinedObjectType.RasterizerOrderedStructuredBuffer;
+                case SyntaxKind.RasterizerOrderedTexture1DArrayKeyword:
+                    return PredefinedObjectType.RasterizerOrderedTexture1DArray;
+                case SyntaxKind.RasterizerOrderedTexture1DKeyword:
+                    return PredefinedObjectType.RasterizerOrderedTexture1D;
+                case SyntaxKind.RasterizerOrderedTexture2DArrayKeyword:
+                    return PredefinedObjectType.RasterizerOrderedTexture2DArray;
+                case SyntaxKind.RasterizerOrderedTexture2DKeyword:
+                    return PredefinedObjectType.RasterizerOrderedTexture2D;
+                case SyntaxKind.RasterizerOrderedTexture3DKeyword:
+                    return PredefinedObjectType.RasterizerOrderedTexture3D;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(kind));
+                    throw new ArgumentOutOfRangeException(nameof(kind), kind.ToString());
             }
         }
 
@@ -1458,6 +1488,10 @@ namespace HlslTools.Syntax
                 case SyntaxKind.RWTexture3DKeyword:
                 case SyntaxKind.SampleKeyword:
                 case SyntaxKind.SamplerKeyword:
+                case SyntaxKind.Sampler1DKeyword:
+                case SyntaxKind.Sampler2DKeyword:
+                case SyntaxKind.Sampler3DKeyword:
+                case SyntaxKind.SamplerCubeKeyword:
                 case SyntaxKind.SamplerComparisonStateKeyword:
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerStateLegacyKeyword:
@@ -1470,6 +1504,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.TechniqueKeyword:
                 case SyntaxKind.Technique10Keyword:
                 case SyntaxKind.Technique11Keyword:
+                case SyntaxKind.TextureKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -2006,6 +2041,14 @@ namespace HlslTools.Syntax
                     return SyntaxKind.RWTexture3DKeyword;
                 case "sampler":
                     return SyntaxKind.SamplerKeyword;
+                case "sampler1D":
+                    return SyntaxKind.Sampler1DKeyword;
+                case "sampler2D":
+                    return SyntaxKind.Sampler2DKeyword;
+                case "sampler3D":
+                    return SyntaxKind.Sampler3DKeyword;
+                case "samplerCUBE":
+                    return SyntaxKind.SamplerCubeKeyword;
                 case "SamplerComparisonState":
                     return SyntaxKind.SamplerComparisonStateKeyword;
                 case "SamplerState":
@@ -2031,6 +2074,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.Technique10Keyword;
                 case "technique11":
                     return SyntaxKind.Technique11Keyword;
+                case "texture":
+                    return SyntaxKind.TextureKeyword;
                 case "Texture1D":
                     return SyntaxKind.Texture1DKeyword;
                 case "Texture1DArray":

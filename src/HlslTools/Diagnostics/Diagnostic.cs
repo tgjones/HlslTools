@@ -19,7 +19,9 @@ namespace HlslTools.Diagnostics
         public static Diagnostic Format(TextSpan textSpan, DiagnosticId diagnosticId, params object[] args)
         {
             var message = diagnosticId.GetMessage();
-            var formattedMessage = string.Format(CultureInfo.CurrentCulture, message, args);
+            var formattedMessage = (message != null)
+                ? string.Format(CultureInfo.CurrentCulture, message, args)
+                : $"Missing diagnostic message for {diagnosticId}";
             return new Diagnostic(textSpan, diagnosticId, formattedMessage);
         }
 

@@ -17,6 +17,7 @@ namespace HlslTools.Binding.Signatures
         }
 
         public override int ParameterCount => Symbol.Parameters.Length;
+        public override bool HasVariadicParameter { get; } = false;
 
         public MethodSymbol Symbol { get; }
 

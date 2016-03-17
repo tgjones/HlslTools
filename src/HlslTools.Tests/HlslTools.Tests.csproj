@@ -52,7 +52,6 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Binding\ExpressionBinderTests.cs" />
     <Compile Include="Compilation\SemanticModelTests.cs" />
     <Compile Include="Formatting\FormatterTests.cs" />
     <Compile Include="Formatting\IdempotentTests.cs" />

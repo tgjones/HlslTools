@@ -2,6 +2,8 @@
 {
     public enum PredefinedObjectType
     {
+        Texture,
+
         Texture1D,
         Texture1DArray,
         Texture2D,
@@ -24,6 +26,15 @@
         ConsumeStructuredBuffer,
         StructuredBuffer,
 
+        RasterizerOrderedBuffer,
+        RasterizerOrderedByteAddressBuffer,
+        RasterizerOrderedStructuredBuffer,
+        RasterizerOrderedTexture1D,
+        RasterizerOrderedTexture1DArray,
+        RasterizerOrderedTexture2D,
+        RasterizerOrderedTexture2DArray,
+        RasterizerOrderedTexture3D,
+
         RWBuffer,
         RWByteAddressBuffer,
         RWStructuredBuffer,
@@ -38,7 +49,10 @@
         BlendState,
         DepthStencilState,
         RasterizerState,
-        Sampler,
+        Sampler1D,
+        Sampler2D,
+        Sampler3D,
+        SamplerCube,
         SamplerState,
         SamplerComparisonState
     }

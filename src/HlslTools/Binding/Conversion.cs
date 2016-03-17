@@ -83,7 +83,12 @@ namespace HlslTools.Binding
                 }
             }
 
+            // Can convert from any numeric type to a struct.
+            if (sourceType.IsIntrinsicNumericType() && targetType.Kind == SymbolKind.Struct)
+                return Explicit;
+
             // TODO: Convert between inherited and base class references.
+            // TODO: Array to numeric type conversions.
 
             return None;
         }
@@ -106,21 +111,6 @@ namespace HlslTools.Binding
 
             if (xTypeToYType.IsExplicit && yTypeToXType.IsImplicit)
                 return 1;
-
-            //var xKnown = xType.GetKnownType();
-            //var yKnown = yType.GetKnownType();
-
-            //if (xKnown != null && yKnown != null)
-            //{
-            //    var x = xKnown.Value;
-            //    var y = yKnown.Value;
-
-            //    if (x.IsSignedNumericType() && y.IsUnsignedNumericType())
-            //        return -1;
-
-            //    if (x.IsUnsignedNumericType() && y.IsSignedNumericType())
-            //        return 1;
-            //}
 
             return 0;
         }

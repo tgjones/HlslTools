@@ -55,8 +55,13 @@ namespace HlslTools.Parser
                 case SyntaxKind.BlendStateKeyword:
                 case SyntaxKind.DepthStencilStateKeyword:
                 case SyntaxKind.SamplerKeyword:
+                case SyntaxKind.Sampler1DKeyword:
+                case SyntaxKind.Sampler2DKeyword:
+                case SyntaxKind.Sampler3DKeyword:
+                case SyntaxKind.SamplerCubeKeyword:
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerComparisonStateKeyword:
+                case SyntaxKind.TextureKeyword:
                     return new PredefinedObjectTypeSyntax(token, null);
                 case SyntaxKind.InputPatchKeyword:
                 case SyntaxKind.OutputPatchKeyword:

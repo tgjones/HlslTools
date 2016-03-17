@@ -81,9 +81,53 @@ namespace HlslTools.Binding
                     return BindParenthesizedExpression((ParenthesizedExpressionSyntax) node);
                 case SyntaxKind.ConditionalExpression:
                     return BindConditionalExpression((ConditionalExpressionSyntax) node);
+                case SyntaxKind.ElementAccessExpression:
+                    return BindElementAccessExpression((ElementAccessExpressionSyntax) node);
+                case SyntaxKind.ArrayInitializerExpression:
+                    return BindArrayInitializerExpression((ArrayInitializerExpressionSyntax) node);
                 default:
                     throw new ArgumentOutOfRangeException(node.Kind.ToString());
             }
+        }
+
+        private BoundExpression BindArrayInitializerExpression(ArrayInitializerExpressionSyntax syntax)
+        {
+            return new BoundArrayInitializerExpression(syntax.Elements.Select(x => Bind(x, BindExpression)).ToImmutableArray());
+        }
+
+        private BoundExpression BindElementAccessExpression(ElementAccessExpressionSyntax syntax)
+        {
+            var target = Bind(syntax.Expression, BindExpression);
+            var index = Bind(syntax.Index, BindExpression);
+            var indexTypes = new[] { index.Type }.ToImmutableArray();
+
+            // To avoid cascading errors, we'll return a node that isn't bound to
+            // any method if we couldn't resolve our target or any of our arguments.
+
+            var anyErrors = target.Type.IsError() || index.Type.IsError();
+            if (anyErrors)
+                return new BoundElementAccessExpression(target, index, OverloadResolutionResult<IndexerSymbolSignature>.None);
+
+            var result = LookupIndexer(target.Type, indexTypes);
+
+            if (result.Best == null)
+            {
+                if (result.Selected == null)
+                {
+                    Diagnostics.ReportUndeclaredIndexer(syntax, target.Type, indexTypes);
+                    return new BoundErrorExpression();
+                }
+
+                var symbol1 = result.Selected.Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.IsSuitable && c.Signature.Symbol != symbol1).Signature.Symbol;
+                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, indexTypes);
+            }
+
+            // Convert all arguments (if necessary)
+
+            var convertedIndex = BindArgument(index, result, 0);
+
+            return new BoundElementAccessExpression(target, convertedIndex, result);
         }
 
         private BoundExpression BindConditionalExpression(ConditionalExpressionSyntax node)
@@ -291,7 +335,7 @@ namespace HlslTools.Binding
             var arguments = BindArgumentList(syntax.ArgumentList);
             var argumentTypes = arguments.Select(a => a.Type).ToImmutableArray();
 
-            // To avoid cascading errors, we'll return a node that insn't bound to
+            // To avoid cascading errors, we'll return a node that isn't bound to
             // any method if we couldn't resolve our target or any of our arguments.
 
             var anyErrors = target.Type.IsError() || argumentTypes.Any(a => a.IsError());
@@ -355,6 +399,9 @@ namespace HlslTools.Binding
         {
             var selected = result.Selected;
             if (selected == null)
+                return expression;
+
+            if (argumentIndex >= selected.Signature.ParameterCount && selected.Signature.HasVariadicParameter)
                 return expression;
 
             var targetType = selected.Signature.GetParameterType(argumentIndex);

@@ -1,4 +1,6 @@
-﻿using HlslTools.Symbols;
+﻿using System;
+using System.Linq;
+using HlslTools.Symbols;
 
 namespace HlslTools.Binding.Signatures
 {
@@ -7,6 +9,8 @@ namespace HlslTools.Binding.Signatures
         public FunctionSymbolSignature(FunctionSymbol symbol)
         {
             Symbol = symbol;
+            ParameterCount = Symbol.Parameters.Count(x => x.ValueType != TypeFacts.Variadic);
+            HasVariadicParameter = Symbol.Parameters.Any(x => x.ValueType == TypeFacts.Variadic);
         }
 
         public override TypeSymbol ReturnType => Symbol.ReturnType;
@@ -16,7 +20,9 @@ namespace HlslTools.Binding.Signatures
             return Symbol.Parameters[index].ValueType;
         }
 
-        public override int ParameterCount => Symbol.Parameters.Length;
+        public override int ParameterCount { get; }
+
+        public override bool HasVariadicParameter { get; }
 
         public FunctionSymbol Symbol { get; }
 

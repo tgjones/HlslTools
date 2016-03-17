@@ -38,6 +38,7 @@
         UndeclaredType,
         UndeclaredFunction,
         UndeclaredMethod,
+        UndeclaredIndexer,
         UndeclaredVariable,
         UndeclaredField,
         AmbiguousInvocation,

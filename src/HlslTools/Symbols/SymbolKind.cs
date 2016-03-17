@@ -3,6 +3,7 @@
     public enum SymbolKind
     {
         Array,
+        Namespace,
         Struct,
         Class,
         Interface,

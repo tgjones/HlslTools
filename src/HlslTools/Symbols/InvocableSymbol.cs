@@ -7,7 +7,7 @@ namespace HlslTools.Symbols
     public abstract class InvocableSymbol : Symbol
     {
         private readonly List<ParameterSymbol> _parameters;
-        private ImmutableArray<ParameterSymbol> _parametersArray;
+        private ImmutableArray<ParameterSymbol> _parametersArray = ImmutableArray<ParameterSymbol>.Empty;
 
         public ImmutableArray<ParameterSymbol> Parameters
         {

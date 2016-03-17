@@ -4,6 +4,7 @@
     {
         public static readonly TypeSymbol Missing = new IntrinsicObjectTypeSymbol("[Missing]", string.Empty);
         public static readonly TypeSymbol Unknown = new IntrinsicObjectTypeSymbol("[Unknown]", string.Empty);
+        public static readonly TypeSymbol Variadic = new IntrinsicObjectTypeSymbol("[Variadic]", string.Empty);
 
         public static bool IsMissing(this TypeSymbol type)
         {
@@ -29,6 +30,13 @@
                 return "<missing>";
 
             return type.Name;
+        }
+
+        public static bool IsIntrinsicNumericType(this TypeSymbol type)
+        {
+            return type.Kind == SymbolKind.IntrinsicMatrixType
+                || type.Kind == SymbolKind.IntrinsicScalarType
+                || type.Kind == SymbolKind.IntrinsicVectorType;
         }
     }
 }
