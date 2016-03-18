@@ -421,7 +421,7 @@ namespace HlslTools.Tests.Parser
             Assert.AreEqual(0, expression.GetDiagnostics().Count());
             Assert.AreEqual(text, expression.ToString());
 
-            return expression;
+            return (ExpressionSyntax) expression.Root;
         }
     }
 }

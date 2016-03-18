@@ -14,7 +14,7 @@ namespace HlslTools.Compilation
 
         public SemanticModel GetSemanticModel()
         {
-            var bindingResult = Binder.Bind((CompilationUnitSyntax) SyntaxTree.Root);
+            var bindingResult = Binder.Bind(SyntaxTree.Root);
             return new SemanticModel(this, bindingResult);
         }
     }

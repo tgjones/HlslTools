@@ -11,7 +11,7 @@ namespace HlslTools.Binding
         private readonly IDictionary<SyntaxNode, BoundNode> _boundNodeFromSyntaxNode;
         private readonly IDictionary<BoundNode, Binder> _binderFromBoundNode;
 
-        public CompilationUnitSyntax Root { get; }
+        public SyntaxNode Root { get; }
 
         public BoundNode BoundRoot { get; }
 
@@ -19,7 +19,7 @@ namespace HlslTools.Binding
 
         public ImmutableArray<Diagnostic> Diagnostics { get; }
 
-        public BindingResult(CompilationUnitSyntax root, BoundCompilationUnit boundRoot, IDictionary<SyntaxNode, BoundNode> boundNodeFromSyntaxNode, IDictionary<BoundNode, Binder> binderFromBoundNode, IList<Diagnostic> diagnostics)
+        public BindingResult(SyntaxNode root, BoundNode boundRoot, IDictionary<SyntaxNode, BoundNode> boundNodeFromSyntaxNode, IDictionary<BoundNode, Binder> binderFromBoundNode, IList<Diagnostic> diagnostics)
         {
             Root = root;
             BoundRoot = boundRoot;

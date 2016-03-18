@@ -23,19 +23,32 @@ namespace HlslTools.Binding
 
         internal List<Diagnostic> Diagnostics => _sharedBinderState.Diagnostics;
 
-        public static BindingResult Bind(CompilationUnitSyntax compilationUnit)
+        public static BindingResult Bind(SyntaxNode syntaxRoot)
         {
             var sharedBinderState = new SharedBinderState();
 
             var intrinsicBinder = new IntrinsicBinder(sharedBinderState);
             var binder = new Binder(sharedBinderState, intrinsicBinder);
 
-            var boundCompilationUnit = binder.Bind(compilationUnit, binder.BindCompilationUnit);
+            var boundRoot = binder.Bind(syntaxRoot, binder.BindRoot);
 
-            return new BindingResult(compilationUnit, boundCompilationUnit, 
+            return new BindingResult(syntaxRoot, boundRoot, 
                 sharedBinderState.BoundNodeFromSyntaxNode, 
                 sharedBinderState.BinderFromBoundNode, 
                 sharedBinderState.Diagnostics);
+        }
+
+        private BoundNode BindRoot(SyntaxNode syntax)
+        {
+            var compilationUnit = syntax as CompilationUnitSyntax;
+            if (compilationUnit != null)
+                return BindCompilationUnit(compilationUnit);
+
+            var expressionSyntax = syntax as ExpressionSyntax;
+            if (expressionSyntax != null)
+                return BindExpression(expressionSyntax);
+
+            throw new InvalidOperationException();
         }
 
         private TResult Bind<TInput, TResult>(TInput node, Func<TInput, TResult> bindMethod)

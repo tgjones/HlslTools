@@ -122,6 +122,7 @@
     <Compile Include="Binding\Binder.Declarations.cs" />
     <Compile Include="Compilation\Compilation.cs" />
     <Compile Include="Compilation\SemanticModel.cs" />
+    <Compile Include="Diagnostics\DiagnosticSeverity.cs" />
     <Compile Include="Formatting\Edit.cs" />
     <Compile Include="Formatting\Formatter.cs" />
     <Compile Include="Formatting\FormattingOptions.cs" />

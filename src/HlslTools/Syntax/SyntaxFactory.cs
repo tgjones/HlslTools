@@ -19,9 +19,9 @@ namespace HlslTools.Syntax
             return (CompilationUnitSyntax) Parse(SourceText.From(text), null, fileSystem, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
         }
 
-        public static ExpressionSyntax ParseExpression(string text)
+        public static SyntaxTree ParseExpression(string text)
         {
-            return (ExpressionSyntax) Parse(SourceText.From(text), null, null, p => p.ParseExpression()).Root;
+            return Parse(SourceText.From(text), null, null, p => p.ParseExpression());
         }
 
         public static StatementSyntax ParseStatement(string text)

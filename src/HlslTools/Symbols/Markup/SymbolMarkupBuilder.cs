@@ -12,12 +12,6 @@ namespace HlslTools.Symbols.Markup
             {
                 case SymbolKind.Array:
                     break;
-                case SymbolKind.Struct:
-                    break;
-                case SymbolKind.Class:
-                    break;
-                case SymbolKind.Interface:
-                    break;
                 case SymbolKind.Field:
                     break;
                 case SymbolKind.Function:
@@ -29,7 +23,7 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Variable:
                     break;
                 case SymbolKind.Parameter:
-                    markup.AppendParameterSymbolInfo((ParameterSymbol)symbol);
+                    markup.AppendParameterSymbolInfo((ParameterSymbol) symbol);
                     break;
                 case SymbolKind.Indexer:
                     break;
@@ -37,6 +31,10 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.IntrinsicVectorType:
                 case SymbolKind.IntrinsicMatrixType:
                 case SymbolKind.IntrinsicObjectType:
+                case SymbolKind.Struct:
+                case SymbolKind.Class:
+                case SymbolKind.Interface:
+                    markup.AppendType((TypeSymbol) symbol);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

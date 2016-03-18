@@ -46,6 +46,8 @@
         AmbiguousType,
         AmbiguousField,
         CannotConvert,
-        InvocationRequiresParenthesis
+        InvocationRequiresParenthesis,
+        CannotApplyUnaryOperator,
+        CannotApplyBinaryOperator
     }
 }

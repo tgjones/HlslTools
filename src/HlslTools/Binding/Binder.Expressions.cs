@@ -159,6 +159,9 @@ namespace HlslTools.Binding
 
         private TypeSymbol GetBinaryExpressionType(BinaryOperatorKind operatorKind, BoundExpression boundLeft, BoundExpression boundRight)
         {
+            if (boundLeft.Type.IsError() || boundRight.Type.IsError())
+                return TypeFacts.Unknown;
+
             switch (operatorKind)
             {
                 case BinaryOperatorKind.Less:
@@ -167,9 +170,9 @@ namespace HlslTools.Binding
                 case BinaryOperatorKind.GreaterEqual:
                 case BinaryOperatorKind.Equal:
                 case BinaryOperatorKind.NotEqual:
+                    return IntrinsicTypes.Bool;
                 case BinaryOperatorKind.LogicalAnd:
                 case BinaryOperatorKind.LogicalOr:
-                    return IntrinsicTypes.Bool;
                 case BinaryOperatorKind.Multiply:
                 case BinaryOperatorKind.Divide:
                 case BinaryOperatorKind.Modulo:
