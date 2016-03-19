@@ -416,12 +416,12 @@ namespace HlslTools.Tests.Parser
 
         private static ExpressionSyntax ParseExpression(string text)
         {
-            var expression = SyntaxFactory.ParseExpression(text);
+            var expression = SyntaxFactory.ParseExpression(text).Root;
 
             Assert.AreEqual(0, expression.GetDiagnostics().Count());
             Assert.AreEqual(text, expression.ToString());
 
-            return (ExpressionSyntax) expression.Root;
+            return (ExpressionSyntax) expression;
         }
     }
 }
