@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using HlslTools.Binding.BoundNodes;
 using HlslTools.Properties;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
@@ -177,6 +178,14 @@ namespace HlslTools.Diagnostics
         public static void ReportInvocationRequiresParenthesis(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
         {
             diagnostics.Report(name.Span, DiagnosticId.InvocationRequiresParenthesis, name.ValueText);
+        }
+
+        public static void ReportCannotApplyBinaryOperator(this ICollection<Diagnostic> diagnostics, TextSpan span, SyntaxToken operatorToken, TypeSymbol leftType, TypeSymbol rightType)
+        {
+            var operatorName = operatorToken.Text;
+            var leftTypeName = leftType.ToDisplayName();
+            var rightTypeName = rightType.ToDisplayName();
+            diagnostics.Report(span, DiagnosticId.CannotApplyBinaryOperator, operatorName, leftTypeName, rightTypeName);
         }
 
         #endregion

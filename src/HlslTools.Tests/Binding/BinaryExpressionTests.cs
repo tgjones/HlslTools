@@ -11,6 +11,9 @@ namespace HlslTools.Tests.Binding
     [TestFixture]
     public class BinaryExpressionTests
     {
+        [TestCase("|", "float", "int", "#inapplicable")]
+        [TestCase("|", "bool", "float", "#inapplicable")]
+        [TestCase("|", "bool", "int", "int")]
         [TestCase("*", "float", "int", "float")]
         [TestCase("*", "int", "float", "float")]
         [TestCase("*", "int2", "float2", "float2")]

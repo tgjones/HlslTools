@@ -149,7 +149,7 @@ namespace HlslTools.Binding
             var boundLeft = Bind(syntax.Left, BindExpression);
             var boundRight = Bind(syntax.Right, BindExpression);
 
-            var expressionType = GetBinaryExpressionType(operatorKind, boundLeft, boundRight);
+            var expressionType = GetBinaryExpressionType(syntax.OperatorToken, operatorKind, boundLeft, boundRight);
 
             return new BoundBinaryExpression(
                 operatorKind,
@@ -157,10 +157,22 @@ namespace HlslTools.Binding
                 expressionType);
         }
 
-        private TypeSymbol GetBinaryExpressionType(BinaryOperatorKind operatorKind, BoundExpression boundLeft, BoundExpression boundRight)
+        private TypeSymbol GetBinaryExpressionType(SyntaxToken operatorToken, BinaryOperatorKind operatorKind, BoundExpression boundLeft, BoundExpression boundRight)
         {
             if (boundLeft.Type.IsError() || boundRight.Type.IsError())
                 return TypeFacts.Unknown;
+
+            var leftType = boundLeft.Type;
+            var rightType = boundRight.Type;
+
+            var requiresNumericType = operatorKind.RequiresNumericTypes();
+            var requiresIntegralType = operatorKind.RequiresIntegralTypes();
+            if (!ValidateTypeForBinaryExpression(leftType, requiresIntegralType, requiresNumericType)
+                || !ValidateTypeForBinaryExpression(rightType, requiresIntegralType, requiresNumericType))
+            {
+                Diagnostics.ReportCannotApplyBinaryOperator(operatorToken.GetTextSpanSafe(), operatorToken, leftType, rightType);
+                return TypeFacts.Unknown;
+            }
 
             switch (operatorKind)
             {
@@ -187,6 +199,23 @@ namespace HlslTools.Binding
                 default:
                     throw new ArgumentOutOfRangeException(nameof(operatorKind), operatorKind, null);
             }
+        }
+
+        private static bool ValidateTypeForBinaryExpression(TypeSymbol type,
+            bool requiresIntegralType, bool requiresNumericType)
+        {
+            IntrinsicNumericTypeSymbol numericType = null;
+            if (requiresIntegralType || requiresNumericType)
+            {
+                numericType = type as IntrinsicNumericTypeSymbol;
+                if (numericType == null)
+                    return false;
+            }
+
+            if (requiresIntegralType && !numericType.ScalarType.IsIntegral())
+                return false;
+
+            return true;
         }
 
         private BoundExpression BindCastExpression(CastExpressionSyntax syntax)

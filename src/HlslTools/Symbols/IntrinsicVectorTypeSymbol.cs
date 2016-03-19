@@ -4,16 +4,14 @@ using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
-    public sealed class IntrinsicVectorTypeSymbol : IntrinsicTypeSymbol
+    public sealed class IntrinsicVectorTypeSymbol : IntrinsicNumericTypeSymbol
     {
         public IntrinsicVectorTypeSymbol(string name, string documentation, ScalarType scalarType, int numComponents, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers = null)
-            : base(SymbolKind.IntrinsicVectorType, name, documentation, lazyMembers)
+            : base(SymbolKind.IntrinsicVectorType, name, documentation, scalarType, lazyMembers)
         {
-            ScalarType = scalarType;
             NumComponents = numComponents;
         }
 
-        public ScalarType ScalarType { get; }
         public int NumComponents { get; }
     }
 }
