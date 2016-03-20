@@ -216,7 +216,7 @@ namespace HlslTools.Parser
                 Mode = mode;
                 GreaterThanTokenIsNotOperator = greaterThanTokenIsNotOperator;
                 AllowLinearAndPointAsIdentifiers = allowLinearAndPointAsIdentifiers;
-                CommaIsSeparatorStack = new Stack<bool>(commaIsSeparatorStack);
+                CommaIsSeparatorStack = new Stack<bool>(commaIsSeparatorStack.Reverse());
                 TermState = termState;
             }
         }
