@@ -76,9 +76,7 @@ namespace HlslTools.Binding
             foreach (var declarator in syntax.Variables)
             {
                 var variableType = LookupType(syntax.Type);
-
-                foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
-                    variableType = new ArraySymbol(variableType);
+                variableType = BindArrayRankSpecifiers(declarator, variableType);
 
                 var symbol = new VariableSymbol(declarator, null, variableType);
                 AddSymbol(symbol);
@@ -91,6 +89,22 @@ namespace HlslTools.Binding
             }
 
             return new BoundMultipleVariableDeclarations(boundDeclarations.ToImmutableArray());
+        }
+
+        private TypeSymbol BindArrayRankSpecifiers(VariableDeclaratorSyntax declarator, TypeSymbol variableType)
+        {
+            foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
+            {
+                int? dimension = null;
+                if (arrayRankSpecifier.Dimension != null)
+                {
+                    var boundRankSpecifier = Bind(arrayRankSpecifier.Dimension, BindExpression);
+                    if (boundRankSpecifier.Kind == BoundNodeKind.LiteralExpression)
+                        dimension = Convert.ToInt32(((BoundLiteralExpression) boundRankSpecifier).Value);
+                }
+                variableType = new ArraySymbol(variableType, dimension);
+            }
+            return variableType;
         }
 
         private BoundFunction BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
@@ -224,9 +238,7 @@ namespace HlslTools.Binding
             foreach (var declarator in declaration.Variables)
             {
                 var variableType = LookupType(declaration.Type);
-
-                foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
-                    variableType = new ArraySymbol(variableType);
+                variableType = BindArrayRankSpecifiers(declarator, variableType);
 
                 yield return new SourceFieldSymbol(declarator, parentType, variableType);
             }
