@@ -64,6 +64,8 @@ void main()
         }
 
         [TestCase("float", "float", "float, float")]
+        [TestCase("float", "half", "float, float")]
+        [TestCase("half2", "half", "#ambiguous")]
         public void TestFunctionOverloadResolution2Args(string type1, string type2, string expectedMatchTypes)
         {
             var code = $@"void foo(int x, float y);
