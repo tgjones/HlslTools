@@ -96,7 +96,7 @@ namespace HlslTools.Diagnostics
 
         public static void ReportUndeclaredType(this ICollection<Diagnostic> diagnostics, TypeSyntax type)
         {
-            diagnostics.Report(type.GetTextSpanSafe(), DiagnosticId.UndeclaredType, type.ToString());
+            diagnostics.Report(type.GetTextSpanSafe(), DiagnosticId.UndeclaredType, type.ToStringIgnoringMacroReferences());
         }
 
         public static void ReportUndeclaredFunction(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax node, IEnumerable<TypeSymbol> argumentTypes)

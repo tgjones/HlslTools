@@ -93,7 +93,7 @@ namespace HlslTools.Parser
                 if (expandedTokens[i].Kind == SyntaxKind.IdentifierToken)
                 {
                     var relexedToken = new HlslLexer(new StringText(expandedTokens[i].Text)).Lex(LexerMode.Syntax);
-                    expandedTokens[i] = expandedTokens[i].WithKind(relexedToken.Kind);
+                    expandedTokens[i] = expandedTokens[i].WithKind(relexedToken.Kind).WithContextualKind(relexedToken.ContextualKind);
                 }
 
             var localExpandedTokens = expandedTokens;

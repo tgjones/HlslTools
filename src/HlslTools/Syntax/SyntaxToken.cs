@@ -120,6 +120,11 @@ namespace HlslTools.Syntax
             return new SyntaxToken(kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
+        public SyntaxToken WithContextualKind(SyntaxKind kind)
+        {
+            return new SyntaxToken(Kind, kind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
+        }
+
         public SyntaxToken WithSpan(SourceRange sourceRange, TextSpan span)
         {
             return new SyntaxToken(Kind, ContextualKind, IsMissing, sourceRange, span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
