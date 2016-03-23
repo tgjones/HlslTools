@@ -123,6 +123,23 @@ namespace HlslTools.Symbols
                 || type.Kind == SymbolKind.Interface;
         }
 
+        public static int GetDimensionSize(this IntrinsicNumericTypeSymbol type, int dimension)
+        {
+            switch (type.Kind)
+            {
+                case SymbolKind.IntrinsicMatrixType:
+                    var matrixType = (IntrinsicMatrixTypeSymbol) type;
+                    return dimension == 0 ? matrixType.Rows : matrixType.Cols;
+                case SymbolKind.IntrinsicVectorType:
+                    var vectorType = (IntrinsicVectorTypeSymbol) type;
+                    return dimension == 0 ? vectorType.NumComponents : 1;
+                case SymbolKind.IntrinsicScalarType:
+                    return 1;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
         public static int GetNumElements(this TypeSymbol type)
         {
             switch (type.Kind)

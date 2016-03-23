@@ -57,6 +57,7 @@ namespace HlslTools.Binding
             ulong f2hConversions = 0;
             ulong f2dConversions = 0;
             ulong scalarPromotions = 0;
+            ulong sameSizeTruncations = 0;
             ulong truncations = 0;
             // ReSharper restore InconsistentNaming
 
@@ -135,17 +136,75 @@ namespace HlslTools.Binding
                         intConversions++;
                     }
 
-                    if (argumentType.GetNumElements() > parameterType.GetNumElements())
+                    var parameterDimension0 = numericParameterType.GetDimensionSize(0);
+                    var parameterDimension1 = numericParameterType.GetDimensionSize(1);
+                    var argumentDimension0 = numericArgumentType.GetDimensionSize(0);
+                    var argumentDimension1 = numericArgumentType.GetDimensionSize(1);
+
+                    if ((argumentDimension0 == parameterDimension0 && argumentDimension1 == parameterDimension1)
+                        || argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)
                     {
+                        if ((argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicVectorType)
+                            || (argumentType.Kind == SymbolKind.IntrinsicVectorType && parameterType.Kind == SymbolKind.IntrinsicScalarType))
+                        {
+                            // float1x1 => float1
+                            // float1   => float
+                            sameSizeTruncations++;
+                        }
+                        if (argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicScalarType)
+                        {
+                            // float1x1 => float
+                            sameSizeTruncations++;
+                        }
+                        else if ((argumentType.Kind == SymbolKind.IntrinsicScalarType && parameterType.Kind == SymbolKind.IntrinsicVectorType)
+                            || (argumentType.Kind == SymbolKind.IntrinsicVectorType && parameterType.Kind == SymbolKind.IntrinsicMatrixType))
+                        {
+                            // float  => float1
+                            // float1 => float1x1
+                            scalarPromotions++;
+                        }
+                        else if (argumentType.Kind == SymbolKind.IntrinsicScalarType && parameterType.Kind == SymbolKind.IntrinsicMatrixType)
+                        {
+                            // float => float1x1
+                            scalarPromotions++;
+                        }
+                    }
+                    else if (argumentType.Kind == SymbolKind.IntrinsicVectorType && parameterType.Kind == SymbolKind.IntrinsicMatrixType
+                        && ((argumentDimension0 == parameterDimension1 && argumentDimension1 == parameterDimension0)
+                        || (argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)))
+                    {
+                        // float1   => float1x3
+                        scalarPromotions++;
+                    }
+                    else if (argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicVectorType
+                        && ((argumentDimension0 == parameterDimension1 && argumentDimension1 == parameterDimension0)
+                        || (argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)))
+                    {
+                        // float1x3 => float1
                         truncations++;
                     }
-                    else if (argumentType.Kind == SymbolKind.IntrinsicScalarType && parameterType.Kind != SymbolKind.IntrinsicScalarType)
+                    else if (argumentDimension0 == 1 && argumentDimension1 == 1)
                     {
+                        // float => float2x4
+                        // float => float2
                         scalarPromotions++;
                     }
-                    else if (argumentType.Kind == SymbolKind.IntrinsicVectorType && parameterType.Kind == SymbolKind.IntrinsicMatrixType)
+                    else if ((argumentDimension0 >= parameterDimension0 && argumentDimension1 >= parameterDimension1)
+                        || (argumentDimension1 >= parameterDimension0 && argumentDimension0 >= parameterDimension1))
                     {
-                        scalarPromotions++;
+                        // float4x4 => float3x3
+                        // float4   => float3
+                        // float1   => float
+                        ulong diff = (ulong) (argumentDimension0 + argumentDimension1 - parameterDimension0 - parameterDimension1);
+                        if (argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicScalarType)
+                        {
+                            truncations++;
+                        }
+                        else
+                        {
+                            truncations++;
+                        }
+                        
                     }
                 }
             }
@@ -155,6 +214,7 @@ namespace HlslTools.Binding
 
             // Worse to better.
             score = (score << numBits) | (truncations & mask);
+            score = (score << numBits) | (sameSizeTruncations & mask);
             score = (score << numBits) | (scalarPromotions & mask);
             score = (score << numBits) | (f2iConversions & mask);
             score = (score << numBits) | (f2hConversions & mask);

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using HlslTools.Binding.BoundNodes;
 using HlslTools.Properties;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
