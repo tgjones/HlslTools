@@ -204,6 +204,12 @@ namespace HlslTools.Symbols
                 }
                 case PredefinedObjectType.ByteAddressBuffer:
                     return IntrinsicTypes.ByteAddressBuffer;
+                case PredefinedObjectType.BlendState:
+                    return IntrinsicTypes.BlendState;
+                case PredefinedObjectType.DepthStencilState:
+                    return IntrinsicTypes.DepthStencilState;
+                case PredefinedObjectType.RasterizerState:
+                    return IntrinsicTypes.RasterizerState;
                 case PredefinedObjectType.RWByteAddressBuffer:
                 case PredefinedObjectType.RWStructuredBuffer:
                 case PredefinedObjectType.PointStream:

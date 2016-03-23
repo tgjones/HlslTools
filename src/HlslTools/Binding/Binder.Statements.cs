@@ -24,6 +24,8 @@ namespace HlslTools.Binding
                     return BindBreakStatement((BreakStatementSyntax) syntax);
                 case SyntaxKind.DiscardStatement:
                     return BindDiscardStatement((DiscardStatementSyntax) syntax);
+                case SyntaxKind.DoStatement:
+                    return BindDoStatement((DoStatementSyntax) syntax);
                 case SyntaxKind.ExpressionStatement:
                     return BindExpressionStatement((ExpressionStatementSyntax) syntax);
                 case SyntaxKind.ForStatement:
@@ -36,9 +38,25 @@ namespace HlslTools.Binding
                     return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) syntax);
                 case SyntaxKind.SwitchStatement:
                     return BindSwitchStatement((SwitchStatementSyntax) syntax);
+                case SyntaxKind.WhileStatement:
+                    return BindWhileStatement((WhileStatementSyntax) syntax);
                 default:
                     throw new NotSupportedException("Not supported: " + syntax.Kind);
             }
+        }
+
+        private BoundStatement BindDoStatement(DoStatementSyntax syntax)
+        {
+            return new BoundDoStatement(
+                Bind(syntax.Condition, BindExpression),
+                Bind(syntax.Statement, BindStatement));
+        }
+
+        private BoundStatement BindWhileStatement(WhileStatementSyntax syntax)
+        {
+            return new BoundWhileStatement(
+                Bind(syntax.Condition, BindExpression),
+                Bind(syntax.Statement, BindStatement));
         }
 
         private BoundStatement BindSwitchStatement(SwitchStatementSyntax syntax)

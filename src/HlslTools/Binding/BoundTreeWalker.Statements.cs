@@ -24,6 +24,9 @@ namespace HlslTools.Binding
                 case BoundNodeKind.DiscardStatement:
                     VisitDiscardStatement((BoundDiscardStatement) node);
                     break;
+                case BoundNodeKind.DoStatement:
+                    VisitDoStatement((BoundDoStatement) node);
+                    break;
                 case BoundNodeKind.ExpressionStatement:
                     VisitExpressionStatement((BoundExpressionStatement) node);
                     break;
@@ -45,9 +48,24 @@ namespace HlslTools.Binding
                 case BoundNodeKind.SwitchStatement:
                     VisitSwitchStatement((BoundSwitchStatement) node);
                     break;
+                case BoundNodeKind.WhileStatement:
+                    VisitWhileStatement((BoundWhileStatement) node);
+                    break;
                 default:
                     throw new InvalidOperationException(node.Kind.ToString());
             }
+        }
+
+        protected virtual void VisitWhileStatement(BoundWhileStatement node)
+        {
+            VisitExpression(node.Condition);
+            VisitStatement(node.Body);
+        }
+
+        private void VisitDoStatement(BoundDoStatement node)
+        {
+            VisitStatement(node.Body);
+            VisitExpression(node.Condition);
         }
 
         protected virtual void VisitBreakStatement(BoundBreakStatement node)

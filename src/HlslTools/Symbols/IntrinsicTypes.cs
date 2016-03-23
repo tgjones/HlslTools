@@ -179,6 +179,10 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol SamplerComparisonState;
         public static readonly TypeSymbol LegacyTexture;
 
+        public static readonly TypeSymbol BlendState;
+        public static readonly TypeSymbol DepthStencilState;
+        public static readonly TypeSymbol RasterizerState;
+
         public static readonly TypeSymbol[] AllIntrinsicTypes;
 
         static IntrinsicTypes()
@@ -634,8 +638,13 @@ namespace HlslTools.Symbols
 
             LegacyTexture = new IntrinsicObjectTypeSymbol("texture", "");
 
+            BlendState = new IntrinsicObjectTypeSymbol("BlendState", "");
+            DepthStencilState = new IntrinsicObjectTypeSymbol("DepthStencilState", "");
+            RasterizerState = new IntrinsicObjectTypeSymbol("RasterizerState", "");
+
             AllIntrinsicTypes = AllNumericTypes
                 .Union(new[] { Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
+                .Union(new[] { BlendState, DepthStencilState, RasterizerState })
                 .ToArray();
         }
 
@@ -907,7 +916,6 @@ namespace HlslTools.Symbols
 
             switch (textureType)
             {
-                case PredefinedObjectType.Buffer:
                 case PredefinedObjectType.TextureCube:
                 case PredefinedObjectType.TextureCubeArray:
                     break;
