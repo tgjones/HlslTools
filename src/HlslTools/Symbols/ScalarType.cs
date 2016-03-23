@@ -1,8 +1,9 @@
-﻿namespace HlslTools.Syntax
+﻿namespace HlslTools.Symbols
 {
     public enum ScalarType
     {
         Void,
+
         Bool,
         Int,
         Uint,

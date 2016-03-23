@@ -15,6 +15,11 @@ namespace HlslTools.Binding.Signatures
 
         public override TypeSymbol ReturnType => Symbol.ReturnType;
 
+        public override ParameterDirection GetParameterDirection(int index)
+        {
+            return Symbol.Parameters[index].Direction;
+        }
+
         public override TypeSymbol GetParameterType(int index)
         {
             return Symbol.Parameters[index].ValueType;

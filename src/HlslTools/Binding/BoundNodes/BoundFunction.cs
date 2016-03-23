@@ -1,15 +1,18 @@
-﻿using HlslTools.Symbols;
+﻿using System.Collections.Immutable;
+using HlslTools.Symbols;
 
 namespace HlslTools.Binding.BoundNodes
 {
-    internal sealed class BoundFunction : BoundNode
+    internal abstract class BoundFunction : BoundNode
     {
         public FunctionSymbol FunctionSymbol { get; }
+        public ImmutableArray<BoundVariableDeclaration> Parameters { get; }
 
-        public BoundFunction(FunctionSymbol functionSymbol)
-            : base(BoundNodeKind.Function)
+        protected BoundFunction(BoundNodeKind kind, FunctionSymbol functionSymbol, ImmutableArray<BoundVariableDeclaration> parameters)
+            : base(kind)
         {
             FunctionSymbol = functionSymbol;
+            Parameters = parameters;
         }
     }
 }

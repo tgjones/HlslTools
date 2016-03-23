@@ -231,4 +231,10 @@
   <data name="CannotConvert" xml:space="preserve">
     <value>Cannot convert type '{0}' to '{1}'.</value>
   </data>
+  <data name="FunctionMissingImplementation" xml:space="preserve">
+    <value>Function '{0}' missing implementation.</value>
+  </data>
+  <data name="SymbolRedefined" xml:space="preserve">
+    <value>Redefinition of '{0}'.</value>
+  </data>
 </root>

@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using HlslTools.Symbols;
 using HlslTools.Symbols.Markup;
 using HlslTools.Syntax;
@@ -23,7 +24,7 @@ namespace HlslTools.Tests.Binding
         [TestCase("float3x1", "#ambiguous")]
         [TestCase("float2x3", "float")]
         [TestCase("float3x3", "float3x3")]
-        [TestCase("half2x3", "float")]
+        [TestCase("half2x3", "#ambiguous")]
         [TestCase("int2x2", "int")]
         [TestCase("MyStruct", "#undeclared")]
         public void TestFunctionOverloadResolution1Arg(string type, string expectedMatchType)
@@ -31,13 +32,13 @@ namespace HlslTools.Tests.Binding
             var code = $@"
 struct MyStruct {{}};
 
-void foo(int x);
-void foo(float x);
-void foo(double x);
-void foo(int2 x);
-void foo(float2 x);
-void foo(double2 x);
-void foo(float3x3 x);
+int foo(int x)      {{ return 1; }}
+int foo(float x)    {{ return 2; }}
+int foo(double x)   {{ return 3; }}
+int foo(int2 x)     {{ return 4; }}
+int foo(float2 x)   {{ return 5; }}
+int foo(double2 x)  {{ return 6; }}
+int foo(float3x3 x) {{ return 7; }}
 
 void main()
 {{
@@ -55,30 +56,65 @@ void main()
 
             var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
+            var combinedDiagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToList();
+
+            foreach (var d in combinedDiagnostics)
+                Debug.WriteLine(d);
 
             var invokedFunctionSymbol = (FunctionSymbol) semanticModel.GetSymbol(expression);
-            var matchType = (invokedFunctionSymbol != null)
-                ? SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[0].ValueType).ToString()
-                : "#undeclared";
-            Assert.AreEqual(expectedMatchType, matchType, $"Expression should have matched the function overload taking a '{expectedMatchType}' but it actually matched '{matchType}'.");
+            var diagnostic = combinedDiagnostics.SingleOrDefault();
+            var result = diagnostic == null
+                ? ExpressionTestUtility.GetExpressionTypeString(invokedFunctionSymbol.Parameters[0].ValueType)
+                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+
+            Assert.AreEqual(expectedMatchType, result, $"Expression should have matched the function overload '{expectedMatchType}' but it actually matched '{result}'.");
         }
 
         [TestCase("float", "float", "float, float")]
-        [TestCase("float", "half", "float, float")]
+        [TestCase("float", "half", "#ambiguous")]
+        [TestCase("half", "half", "#ambiguous")]
         [TestCase("half2", "half", "#ambiguous")]
+        [TestCase("float", "half", "#ambiguous")]
+        [TestCase("double", "half", "double, float")]
+        [TestCase("double", "double", "#ambiguous")]
+        [TestCase("double", "bool", "#ambiguous")]
+        [TestCase("double", "int", "double, int")]
+        [TestCase("float2", "int", "float2, float")]
+        [TestCase("float2", "half", "float2, float")]
+        [TestCase("float2", "float", "float2, float")]
+        [TestCase("float2", "double", "float2, float")]
+        [TestCase("float3", "bool", "#ambiguous")]
+        [TestCase("float3", "int", "float, int")]
+        [TestCase("float3", "float", "#ambiguous")]
+        [TestCase("int3", "float", "#ambiguous")]
+        [TestCase("int3", "int", "#ambiguous")]
+        [TestCase("float3", "double", "float, double")]
+        [TestCase("float3x3", "bool", "float3x3, float")]
+        [TestCase("float3x3", "half", "float3x3, float")]
+        [TestCase("float3x3", "float", "float3x3, float")]
+        [TestCase("float3x3", "double", "float3x3, float")]
+        [TestCase("float", "int2", "float, int")]
+        [TestCase("float", "half2", "#ambiguous")]
+        [TestCase("float", "float2", "float, float")]
+        [TestCase("float", "double2", "float, double")]
+        [TestCase("float4x4", "float", "#ambiguous")]
         public void TestFunctionOverloadResolution2Args(string type1, string type2, string expectedMatchTypes)
         {
-            var code = $@"void foo(int x, float y);
-void foo(float x, float y);
-void foo(double x, float y);
-void foo(int2 x, float y);
-void foo(float2 x, float y);
-void foo(double2 x, float y);
-void foo(float3x3 x, float y);
+            var code = $@"
+int foo(int x, float y)       {{ return 1; }}
+int foo(float x, float y)     {{ return 2; }}
+int foo(double x, float y)    {{ return 3; }}
+int foo(float x, int y)       {{ return 4; }}
+int foo(float x, double y)    {{ return 5; }}
+int foo(double x, int y)      {{ return 6; }}
+int foo(int2 x, float y)      {{ return 7; }}
+int foo(float2 x, float y)    {{ return 8; }}
+int foo(double2 x, float y)   {{ return 9; }}
+int foo(float3x3 x, float y)  {{ return 10; }}
 
 void main()
 {{
-    foo(({type1}) 0, ({type2}) 0);
+    foo({ExpressionTestUtility.GetValue(type1)}, {ExpressionTestUtility.GetValue(type2)});
 }}";
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
             var syntaxTreeSource = syntaxTree.Root.ToFullString();
@@ -92,12 +128,40 @@ void main()
 
             var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
+            var combinedDiagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToList();
+
+            foreach (var d in combinedDiagnostics)
+                Debug.WriteLine(d);
 
             var invokedFunctionSymbol = (FunctionSymbol) semanticModel.GetSymbol(expression);
-            var matchTypes = (invokedFunctionSymbol != null)
+
+            var diagnostic = combinedDiagnostics.SingleOrDefault();
+            var result = diagnostic == null
                 ? $"{SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[0].ValueType)}, {SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[1].ValueType)}"
-                : "#undeclared";
-            Assert.AreEqual(expectedMatchTypes, matchTypes, $"Expression should have matched the function overload taking '{expectedMatchTypes}' but it actually matched '{matchTypes}'.");
+                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+
+            Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
+        }
+
+        [TestCase("min", "float", "float")]
+        [TestCase("mul", "float4", "float4x4")]
+        [TestCase("lerp", "float", "float", "float")]
+        public void TestIntrinsicFunctionOverloading(string function, params string[] types)
+        {
+            var arguments = string.Join(",", types.Select(x => $"({x}) 0"));
+            var expressionCode = $"{function}({arguments})";
+            var syntaxTree = SyntaxFactory.ParseExpression(expressionCode);
+            var syntaxTreeSource = syntaxTree.Root.ToFullString();
+            Assert.AreEqual(expressionCode, syntaxTreeSource, $"Source should have been {expressionCode} but is {syntaxTreeSource}.");
+
+            var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
+            var semanticModel = compilation.GetSemanticModel();
+            var combinedDiagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToList();
+
+            foreach (var d in combinedDiagnostics)
+                Debug.WriteLine(d);
+
+            Assert.IsEmpty(combinedDiagnostics);
         }
     }
 }

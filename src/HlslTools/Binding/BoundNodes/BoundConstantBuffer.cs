@@ -4,9 +4,9 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundConstantBuffer : BoundNode
     {
-        public ImmutableArray<BoundNode> Variables { get; }
+        public ImmutableArray<BoundMultipleVariableDeclarations> Variables { get; }
 
-        public BoundConstantBuffer(ImmutableArray<BoundNode> variables)
+        public BoundConstantBuffer(ImmutableArray<BoundMultipleVariableDeclarations> variables)
             : base(BoundNodeKind.ConstantBuffer)
         {
             Variables = variables;

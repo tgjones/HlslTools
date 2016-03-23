@@ -270,7 +270,7 @@ namespace HlslTools.Symbols
                "x", "The first vector.",
                "y", "The second vector."));
 
-            allFunctions.Add(new FunctionSymbol("errorf", "Submits an error message to the information queue.", IntrinsicTypes.Void, f => new[]
+            allFunctions.Add(new FunctionSymbol("errorf", "Submits an error message to the information queue.", null, IntrinsicTypes.Void, f => new[]
             {
                 new ParameterSymbol("format", "The format string.", f, IntrinsicTypes.String),
                 new VariadicParameterSymbol("arguments...", "Optional arguments.", f),
@@ -577,7 +577,7 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create3(
                 "lerp",
                 "Performs a linear interpolation.",
-                IntrinsicTypes.AllFloatVectorTypes,
+                IntrinsicTypes.AllFloatTypes,
                 "x", "The first floating-point value.",
                 "y", "The second floating-point value.",
                 "s", "A value that linearly interpolates between the x parameter and the y parameter."));
@@ -830,7 +830,7 @@ namespace HlslTools.Symbols
                 allFunctions.Add(new FunctionSymbol(
                     "mul",
                     "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
-                    overload6Result[i],
+                    null, overload6Result[i],
                     f => new[]
                     {
                         new ParameterSymbol("x", "The x input value. If x is a vector, it treated as a row vector.", f, overload6Parameter1[i1]),
@@ -966,7 +966,7 @@ namespace HlslTools.Symbols
                 allFunctions.Add(new FunctionSymbol(
                     "mul",
                     "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
-                    overload8Result[i],
+                    null, overload8Result[i],
                     f => new[]
                     {
                         new ParameterSymbol("x", "The x input value. If x is a vector, it treated as a row vector.", f, overload8Parameter1[i1]),
@@ -1376,7 +1376,7 @@ namespace HlslTools.Symbols
                 allFunctions.Add(new FunctionSymbol(
                     "mul",
                     "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
-                    overload9Result[i],
+                    null, overload9Result[i],
                     f => new[]
                     {
                         new ParameterSymbol("x", "The x input value. If x is a vector, it treated as a row vector.", f, overload9Parameter1[i1]),
@@ -1404,7 +1404,7 @@ namespace HlslTools.Symbols
                 "x", "The specified value.",
                 "y", "The specified power."));
 
-            allFunctions.Add(new FunctionSymbol("printf", "Submits a custom shader message to the information queue.", IntrinsicTypes.Void, f => new[]
+            allFunctions.Add(new FunctionSymbol("printf", "Submits a custom shader message to the information queue.", null, IntrinsicTypes.Void, f => new[]
             {
                 new ParameterSymbol("format", "The format string.", f, IntrinsicTypes.String),
                 new VariadicParameterSymbol("arguments...", "Optional arguments.", f),
@@ -1415,7 +1415,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "Process2DQuadTessFactorsAvg",
                 "Generates the corrected tessellation factors for a quad patch.",
-                IntrinsicTypes.Void,
+                null, IntrinsicTypes.Void,
                 f => new[]
                 {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float4),
@@ -1428,7 +1428,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "Process2DQuadTessFactorsMax",
                 "Generates the corrected tessellation factors for a quad patch.",
-                IntrinsicTypes.Void,
+                null, IntrinsicTypes.Void,
                 f => new[]
                 {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float4),
@@ -1441,7 +1441,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "Process2DQuadTessFactorsMin",
                 "Generates the corrected tessellation factors for a quad patch.",
-                IntrinsicTypes.Void,
+                null, IntrinsicTypes.Void,
                 f => new[]
                 {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float4),
@@ -1454,7 +1454,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "ProcessIsolineTessFactors",
                 "Generates the rounded tessellation factors for an isoline.",
-                IntrinsicTypes.Void,
+                null, IntrinsicTypes.Void,
                 f => new[]
                 {
                     new ParameterSymbol("rawDetailFactor", "The desired detail factor.", f, IntrinsicTypes.Float),
@@ -1466,7 +1466,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "ProcessQuadTessFactorsAvg",
                 "Generates the corrected tessellation factors for a quad patch.",
-                IntrinsicTypes.Void,
+                null, IntrinsicTypes.Void,
                 f => new[]
                 {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float4),
@@ -1479,7 +1479,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                "ProcessQuadTessFactorsMax",
                "Generates the corrected tessellation factors for a quad patch.",
-               IntrinsicTypes.Void,
+               null, IntrinsicTypes.Void,
                f => new[]
                {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float4),
@@ -1492,7 +1492,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                "ProcessQuadTessFactorsMin",
                "Generates the corrected tessellation factors for a quad patch.",
-               IntrinsicTypes.Void,
+               null, IntrinsicTypes.Void,
                f => new[]
                {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float4),
@@ -1505,7 +1505,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                "ProcessTriTessFactorsAvg",
                "Generates the corrected tessellation factors for a tri patch.",
-               IntrinsicTypes.Void,
+               null, IntrinsicTypes.Void,
                f => new[]
                {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float3),
@@ -1518,7 +1518,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                "ProcessTriTessFactorsMax",
                "Generates the corrected tessellation factors for a tri patch.",
-               IntrinsicTypes.Void,
+               null, IntrinsicTypes.Void,
                f => new[]
                {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float3),
@@ -1531,7 +1531,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                "ProcessTriTessFactorsMin",
                "Generates the corrected tessellation factors for a tri patch.",
-               IntrinsicTypes.Void,
+               null, IntrinsicTypes.Void,
                f => new[]
                {
                     new ParameterSymbol("rawEdgeFactors", "The edge tessellation factors, passed into the tessellator stage.", f, IntrinsicTypes.Float3),
@@ -1659,7 +1659,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex1D",
                 "Samples a 1D texture.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
@@ -1668,7 +1668,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex1D",
                 "Samples a 1D texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
@@ -1680,7 +1680,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex1Dbias",
                 "Samples a 1D texture after biasing the mip level by t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
@@ -1690,7 +1690,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex1Dgrad",
                 "Samples a 1D texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
@@ -1702,7 +1702,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex1Dlod",
                 "Samples a 1D texture with mipmaps. The mipmap LOD is specified in t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
@@ -1712,7 +1712,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex1Dproj",
                 "Samples a 1D texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler1D),
@@ -1722,7 +1722,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex2D",
                 "Samples a 2D texture.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
@@ -1731,7 +1731,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex2D",
                 "Samples a 2D texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
@@ -1743,7 +1743,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex2Dbias",
                 "Samples a 2D texture after biasing the mip level by t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
@@ -1753,7 +1753,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex2Dgrad",
                 "Samples a 2D texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
@@ -1765,7 +1765,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex2Dlod",
                 "Samples a 2D texture with mipmaps. The mipmap LOD is specified in t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
@@ -1775,7 +1775,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex2Dproj",
                 "Samples a 2D texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler2D),
@@ -1785,7 +1785,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex3D",
                 "Samples a 3D texture.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
@@ -1794,7 +1794,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex3D",
                 "Samples a 3D texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
@@ -1806,7 +1806,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex3Dbias",
                 "Samples a 3D texture after biasing the mip level by t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
@@ -1816,7 +1816,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex3Dgrad",
                 "Samples a 3D texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
@@ -1828,7 +1828,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex3Dlod",
                 "Samples a 3D texture with mipmaps. The mipmap LOD is specified in t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
@@ -1838,7 +1838,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "tex3Dproj",
                 "Samples a 3D texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.Sampler3D),
@@ -1848,7 +1848,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "texCUBE",
                 "Samples a cube texture.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
@@ -1857,7 +1857,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "texCUBE",
                 "Samples a cube texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
@@ -1869,7 +1869,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "texCUBEbias",
                 "Samples a cube texture after biasing the mip level by t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
@@ -1879,7 +1879,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "texCUBEgrad",
                 "Samples a cube texture using a gradient to select the mip level.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
@@ -1891,7 +1891,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "texCUBElod",
                 "Samples a cube texture with mipmaps. The mipmap LOD is specified in t.w.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
@@ -1901,7 +1901,7 @@ namespace HlslTools.Symbols
             allFunctions.Add(new FunctionSymbol(
                 "texCUBEproj",
                 "Samples a cube texture using a projective divide; the texture coordinate is divided by t.w before the lookup takes place.",
-                IntrinsicTypes.Float4,
+                null, IntrinsicTypes.Float4,
                 f => new[]
                 {
                     new ParameterSymbol("s", "The sampler state.", f, IntrinsicTypes.SamplerCube),
@@ -1984,7 +1984,7 @@ namespace HlslTools.Symbols
         private static FunctionSymbol Create0(string name, string documentation, TypeSymbol returnType)
         {
             return new FunctionSymbol(
-                name, documentation, returnType,
+                name, documentation, null, returnType,
                 f => new ParameterSymbol[0]);
         }
 
@@ -1999,7 +1999,7 @@ namespace HlslTools.Symbols
                 overrideReturnTypes = Enumerable.Repeat(overrideReturnTypes[0], types.Length).ToArray();
 
             return types.Select((type, i) => new FunctionSymbol(
-                name, documentation, overrideReturnTypes?[i] ?? type,
+                name, documentation, null, overrideReturnTypes?[i] ?? type,
                 f => new []
                 {
                     new ParameterSymbol(parameterName ?? "value", parameterDocumentation ?? "The specified value.", f, type)
@@ -2016,7 +2016,7 @@ namespace HlslTools.Symbols
             ParameterDirection overrideParameterDirection2 = ParameterDirection.In)
         {
             return types.Select(type => new FunctionSymbol(
-                name, documentation, overrideReturnType ?? type,
+                name, documentation, null, overrideReturnType ?? type,
                 f => new[]
                 {
                     new ParameterSymbol(parameterName1, parameterDocumentation1, f, overrideParameterType1 ?? type),
@@ -2036,7 +2036,7 @@ namespace HlslTools.Symbols
             ParameterDirection overrideParameterDirection3 = ParameterDirection.In)
         {
             return types.Select(type => new FunctionSymbol(
-                name, documentation, overrideReturnType ?? type,
+                name, documentation, null, overrideReturnType ?? type,
                 f => new[]
                 {
                     new ParameterSymbol(parameterName1, parameterDocumentation1, f, type),
@@ -2055,7 +2055,7 @@ namespace HlslTools.Symbols
             ParameterDirection overrideParameterDirection4 = ParameterDirection.In)
         {
             return types.Select(type => new FunctionSymbol(
-                name, documentation, overrideReturnType ?? type,
+                name, documentation, null, overrideReturnType ?? type,
                 f => new[]
                 {
                     new ParameterSymbol(parameterName1, parameterDocumentation1, f, type),

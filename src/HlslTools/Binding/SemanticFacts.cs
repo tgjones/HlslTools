@@ -1,5 +1,6 @@
 ﻿using System;
 using HlslTools.Binding.BoundNodes;
+using HlslTools.Symbols;
 using HlslTools.Syntax;
 
 namespace HlslTools.Binding
@@ -79,6 +80,19 @@ namespace HlslTools.Binding
                 case ScalarType.Bool:
                 case ScalarType.Int:
                 case ScalarType.Uint:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsFloat(this ScalarType scalarType)
+        {
+            switch (scalarType)
+            {
+                case ScalarType.Half:
+                case ScalarType.Float:
+                case ScalarType.Double:
                     return true;
                 default:
                     return false;

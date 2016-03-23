@@ -12,24 +12,24 @@ namespace HlslTools.Binding
     {
         private BoundCompilationUnit BindCompilationUnit(CompilationUnitSyntax compilationUnit)
         {
-            return new BoundCompilationUnit(BindTopLevelDeclarations(compilationUnit.Declarations));
+            return new BoundCompilationUnit(BindTopLevelDeclarations(compilationUnit.Declarations, null));
         }
 
-        private ImmutableArray<BoundNode> BindTopLevelDeclarations(List<SyntaxNode> declarations)
+        private ImmutableArray<BoundNode> BindTopLevelDeclarations(List<SyntaxNode> declarations, Symbol parent)
         {
-            return declarations.Select(x => Bind(x, BindGlobalDeclaration)).ToImmutableArray();
+            return declarations.Select(x => Bind(x, y => BindGlobalDeclaration(y, parent))).ToImmutableArray();
         }
 
-        private BoundNode BindGlobalDeclaration(SyntaxNode declaration)
+        private BoundNode BindGlobalDeclaration(SyntaxNode declaration, Symbol parent)
         {
             switch (declaration.Kind)
             {
                 case SyntaxKind.VariableDeclarationStatement:
                     return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) declaration);
                 case SyntaxKind.FunctionDeclaration:
-                    return BindFunctionDeclaration((FunctionDeclarationSyntax) declaration);
+                    return BindFunctionDeclaration((FunctionDeclarationSyntax) declaration, parent);
                 case SyntaxKind.FunctionDefinition:
-                    return BindFunctionDefinition((FunctionDefinitionSyntax) declaration);
+                    return BindFunctionDefinition((FunctionDefinitionSyntax) declaration, parent);
                 case SyntaxKind.ConstantBufferDeclaration:
                     return BindConstantBufferDeclaration((ConstantBufferSyntax) declaration);
                 case SyntaxKind.TypeDeclarationStatement:
@@ -64,31 +64,41 @@ namespace HlslTools.Binding
             AddSymbol(namespaceSymbol);
 
             var namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
-            namespaceBinder.BindTopLevelDeclarations(declaration.Declarations);
+            var boundDeclarations = namespaceBinder.BindTopLevelDeclarations(declaration.Declarations, namespaceSymbol);
 
-            return new BoundNamespace(namespaceSymbol);
+            return new BoundNamespace(namespaceSymbol, boundDeclarations);
         }
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax)
+        {
+            return BindVariableDeclaration(syntax, (d, t) => new VariableSymbol(d, null, t));
+        }
+
+        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
         {
             var boundDeclarations = new List<BoundVariableDeclaration>();
 
             foreach (var declarator in syntax.Variables)
             {
                 var variableType = LookupType(syntax.Type);
-                variableType = BindArrayRankSpecifiers(declarator, variableType);
-
-                var symbol = new VariableSymbol(declarator, null, variableType);
-                AddSymbol(symbol);
-
-                BoundInitializer initializer = null;
-                if (declarator.Initializer != null)
-                    initializer = BindInitializer(declarator.Initializer);
-
-                boundDeclarations.Add(Bind(declarator, x => new BoundVariableDeclaration(symbol, variableType, initializer)));
+                boundDeclarations.Add(Bind(declarator, x => BindVariableDeclarator(x, variableType, createSymbol)));
             }
 
             return new BoundMultipleVariableDeclarations(boundDeclarations.ToImmutableArray());
+        }
+
+        private BoundVariableDeclaration BindVariableDeclarator(VariableDeclaratorSyntax syntax, TypeSymbol variableType, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
+        {
+            variableType = BindArrayRankSpecifiers(syntax, variableType);
+
+            var symbol = createSymbol(syntax, variableType);
+            AddSymbol(symbol);
+
+            BoundInitializer initializer = null;
+            if (syntax.Initializer != null)
+                initializer = BindInitializer(syntax.Initializer);
+
+            return new BoundVariableDeclaration(symbol, variableType, initializer);
         }
 
         private TypeSymbol BindArrayRankSpecifiers(VariableDeclaratorSyntax declarator, TypeSymbol variableType)
@@ -107,66 +117,60 @@ namespace HlslTools.Binding
             return variableType;
         }
 
-        private BoundFunction BindFunctionDeclaration(FunctionDeclarationSyntax declaration)
+        private BoundFunctionDeclaration BindFunctionDeclaration(FunctionDeclarationSyntax declaration, Symbol parent)
         {
             var returnType = LookupType(declaration.ReturnType);
 
-            Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
-            {
-                var parameterSymbols = new List<ParameterSymbol>();
-                foreach (var parameterSyntax in declaration.ParameterList.Parameters)
-                {
-                    var parameterValueType = LookupType(parameterSyntax.Type);
-                    var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
-
-                    parameterSymbols.Add(new SourceParameterSymbol(
-                        parameterSyntax,
-                        fd,
-                        parameterValueType,
-                        parameterDirection));
-                }
-                return parameterSymbols;
-            };
-
-            var symbol = new SourceFunctionSymbol(declaration, returnType, lazyParameterSymbols);
-            AddSymbol(symbol);
-
-            return new BoundFunction(symbol);
-        }
-
-        private BoundFunction BindFunctionDefinition(FunctionDefinitionSyntax declaration)
-        {
-            var returnType = LookupType(declaration.ReturnType);
-
-            var functionBinder = new Binder(_sharedBinderState, this);
-            
-            var functionSymbol = new SourceFunctionSymbol(declaration, returnType);
+            var functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
             AddSymbol(functionSymbol);
 
-            foreach (var parameterSyntax in declaration.ParameterList.Parameters)
+            var functionBinder = new Binder(_sharedBinderState, this);
+
+            var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
+
+            return new BoundFunctionDeclaration(functionSymbol, boundParameters.ToImmutableArray());
+        }
+
+        private BoundFunctionDefinition BindFunctionDefinition(FunctionDefinitionSyntax declaration, Symbol parent)
+        {
+            var returnType = LookupType(declaration.ReturnType);
+
+            var functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
+            AddSymbol(functionSymbol);
+
+            var functionBinder = new Binder(_sharedBinderState, this);
+
+            var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
+            var boundBody = functionBinder.Bind(declaration.Body, functionBinder.BindBlock);
+
+            return new BoundFunctionDefinition(functionSymbol, boundParameters.ToImmutableArray(), boundBody);
+        }
+
+        private ImmutableArray<BoundVariableDeclaration> BindParameters(ParameterListSyntax parameterList, Binder invocableBinder, InvocableSymbol invocableSymbol)
+        {
+            var boundParameters = new List<BoundVariableDeclaration>();
+            foreach (var parameterSyntax in parameterList.Parameters)
             {
                 var parameterValueType = LookupType(parameterSyntax.Type);
                 var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
-                var parameterSymbol = new SourceParameterSymbol(
-                    parameterSyntax,
-                    functionSymbol,
-                    parameterValueType,
-                    parameterDirection);
-
-                functionSymbol.AddParameter(parameterSymbol);
-
-                functionBinder.AddSymbol(parameterSymbol);
+                boundParameters.Add(invocableBinder.BindVariableDeclarator(parameterSyntax.Declarator, parameterValueType, (d, t) =>
+                    new SourceParameterSymbol(
+                        parameterSyntax,
+                        invocableSymbol,
+                        t,
+                        parameterDirection)));
             }
 
-            functionBinder.Bind(declaration.Body, functionBinder.BindBlock);
+            foreach (var parameter in invocableBinder.LocalSymbols)
+                invocableSymbol.AddParameter((ParameterSymbol) parameter);
 
-            return new BoundFunction(functionSymbol);
+            return boundParameters.ToImmutableArray();
         }
 
         private BoundConstantBuffer BindConstantBufferDeclaration(ConstantBufferSyntax declaration)
         {
-            var variables = new List<BoundNode>();
+            var variables = new List<BoundMultipleVariableDeclarations>();
 
             // Add constant buffer fields to global scope.
             foreach (var field in declaration.Declarations)
@@ -199,24 +203,29 @@ namespace HlslTools.Binding
             var classSymbol = new ClassSymbol(declaration, null, baseClass, baseInterfaces.ToImmutableArray()); // TODO: parent symbol could be namespace or function body
             AddSymbol(classSymbol);
 
+            var members = new List<BoundNode>();
+            var classBinder = new Binder(_sharedBinderState, this);
+
             foreach (var memberSyntax in declaration.Members)
             {
                 switch (memberSyntax.Kind)
                 {
                     case SyntaxKind.VariableDeclarationStatement:
-                        foreach (var field in BindFields((VariableDeclarationStatementSyntax)memberSyntax, classSymbol))
-                            classSymbol.AddMember(field);
+                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, classBinder.BindVariableDeclarationStatement));
                         break;
                     case SyntaxKind.FunctionDeclaration:
-                        classSymbol.AddMember(BindMethodDeclaration((FunctionDeclarationSyntax)memberSyntax, classSymbol));
+                        members.Add(classBinder.Bind((FunctionDeclarationSyntax) memberSyntax, x => classBinder.BindFunctionDeclaration(x, classSymbol)));
                         break;
                     case SyntaxKind.FunctionDefinition:
-                        classSymbol.AddMember(BindMethodDefinition((FunctionDefinitionSyntax)memberSyntax, classSymbol));
+                        members.Add(classBinder.Bind((FunctionDefinitionSyntax) memberSyntax, x => classBinder.BindFunctionDefinition(x, classSymbol)));
                         break;
                 }
             }
 
-            return new BoundClassType(classSymbol);
+            foreach (var member in classBinder.LocalSymbols)
+                classSymbol.AddMember(member);
+
+            return new BoundClassType(classSymbol, members.ToImmutableArray());
         }
 
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration)
@@ -224,24 +233,21 @@ namespace HlslTools.Binding
             var structSymbol = new StructSymbol(declaration, null);
             AddSymbol(structSymbol);
 
+            var variables = new List<BoundMultipleVariableDeclarations>();
             var structBinder = new Binder(_sharedBinderState, this);
-            foreach (var memberSyntax in declaration.Fields)
-                foreach (var fieldSymbol in structBinder.BindFields(memberSyntax, structSymbol))
-                    structSymbol.AddMember(fieldSymbol);
+            foreach (var variableDeclarationStatement in declaration.Fields)
+                variables.Add(structBinder.Bind(variableDeclarationStatement, x => structBinder.BindField(x, structSymbol)));
 
-            return new BoundStructType(structSymbol);
+            foreach (var member in structBinder.LocalSymbols)
+                structSymbol.AddMember(member);
+
+            return new BoundStructType(structSymbol, variables.ToImmutableArray());
         }
 
-        private IEnumerable<FieldSymbol> BindFields(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)
+        private BoundMultipleVariableDeclarations BindField(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)
         {
             var declaration = variableDeclarationStatementSyntax.Declaration;
-            foreach (var declarator in declaration.Variables)
-            {
-                var variableType = LookupType(declaration.Type);
-                variableType = BindArrayRankSpecifiers(declarator, variableType);
-
-                yield return new SourceFieldSymbol(declarator, parentType, variableType);
-            }
+            return BindVariableDeclaration(declaration, (d, t) => new SourceFieldSymbol(d, parentType, t));
         }
 
         private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
@@ -249,64 +255,15 @@ namespace HlslTools.Binding
             var interfaceSymbol = new InterfaceSymbol(declaration, null);
             AddSymbol(interfaceSymbol);
 
+            var methods = new List<BoundFunction>();
+            var interfaceBinder = new Binder(_sharedBinderState, this);
             foreach (var memberSyntax in declaration.Methods)
-                interfaceSymbol.AddMember(BindMethodDeclaration(memberSyntax, interfaceSymbol));
+                methods.Add(interfaceBinder.Bind(memberSyntax, x => interfaceBinder.BindFunctionDeclaration(x, interfaceSymbol)));
 
-            return new BoundInterfaceType(interfaceSymbol);
-        }
+            foreach (var member in interfaceBinder.LocalSymbols)
+                interfaceSymbol.AddMember(member);
 
-        private MethodSymbol BindMethodDeclaration(FunctionDeclarationSyntax declaration, TypeSymbol parentType)
-        {
-            var returnType = LookupType(declaration.ReturnType);
-
-            Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
-            {
-                var parameterSymbols = new List<ParameterSymbol>();
-                foreach (var parameterSyntax in declaration.ParameterList.Parameters)
-                {
-                    var parameterValueType = LookupType(parameterSyntax.Type);
-                    var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
-
-                    parameterSymbols.Add(new SourceParameterSymbol(
-                        parameterSyntax,
-                        fd,
-                        parameterValueType,
-                        parameterDirection));
-                }
-                return parameterSymbols;
-            };
-
-            var symbol = new SourceMethodSymbol(declaration, parentType, returnType, lazyParameterSymbols);
-            AddSymbol(symbol);
-
-            return symbol;
-        }
-
-        private MethodSymbol BindMethodDefinition(FunctionDefinitionSyntax declaration, TypeSymbol parentType)
-        {
-            var returnType = LookupType(declaration.ReturnType);
-
-            Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameterSymbols = fd =>
-            {
-                var parameterSymbols = new List<ParameterSymbol>();
-                foreach (var parameterSyntax in declaration.ParameterList.Parameters)
-                {
-                    var parameterValueType = LookupType(parameterSyntax.Type);
-                    var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
-
-                    parameterSymbols.Add(new SourceParameterSymbol(
-                        parameterSyntax,
-                        fd,
-                        parameterValueType,
-                        parameterDirection));
-                }
-                return parameterSymbols;
-            };
-
-            var symbol = new SourceMethodSymbol(declaration, parentType, returnType, lazyParameterSymbols);
-            AddSymbol(symbol);
-
-            return symbol;
+            return new BoundInterfaceType(interfaceSymbol, methods.ToImmutableArray());
         }
 
         private BoundTypeDeclaration BindTypeDeclaration(TypeDeclarationStatementSyntax declaration)
@@ -314,7 +271,7 @@ namespace HlslTools.Binding
             return new BoundTypeDeclaration(Bind(declaration.Type, BindTypeDefinition));
         }
 
-        private BoundNode BindTypeDefinition(TypeDefinitionSyntax syntax)
+        private BoundType BindTypeDefinition(TypeDefinitionSyntax syntax)
         {
             switch (syntax.Kind)
             {

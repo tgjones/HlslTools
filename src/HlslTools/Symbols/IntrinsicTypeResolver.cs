@@ -69,7 +69,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetTypeSymbol(this ScalarTypeSyntax node)
         {
-            var scalarType = SyntaxFacts.GetScalarType(node);
+            var scalarType = TypeFacts.GetScalarType(node);
             switch (scalarType)
             {
                 case ScalarType.Void:
@@ -93,7 +93,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetTypeSymbol(this VectorTypeSyntax node)
         {
-            var vectorType = SyntaxFacts.GetVectorType(node.TypeToken.Kind);
+            var vectorType = TypeFacts.GetVectorType(node.TypeToken.Kind);
             var scalarType = vectorType.Item1;
             var numComponents = vectorType.Item2;
 
@@ -102,7 +102,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetTypeSymbol(this GenericVectorTypeSyntax node)
         {
-            var scalarType = SyntaxFacts.GetScalarType(node.ScalarType);
+            var scalarType = TypeFacts.GetScalarType(node.ScalarType);
             var numComponents = (int) node.SizeToken.Value;
 
             return IntrinsicTypes.GetVectorType(scalarType, numComponents);
@@ -110,7 +110,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetTypeSymbol(this MatrixTypeSyntax node)
         {
-            var matrixType = SyntaxFacts.GetMatrixType(node.TypeToken.Kind);
+            var matrixType = TypeFacts.GetMatrixType(node.TypeToken.Kind);
             var scalarType = matrixType.Item1;
             var numRows = matrixType.Item2;
             var numCols = matrixType.Item3;
@@ -120,7 +120,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetTypeSymbol(this GenericMatrixTypeSyntax node)
         {
-            var scalarType = SyntaxFacts.GetScalarType(node.ScalarType);
+            var scalarType = TypeFacts.GetScalarType(node.ScalarType);
             var numRows = (int) node.RowsToken.Value;
             var numCols = (int) node.ColsToken.Value;
 
@@ -152,13 +152,13 @@ namespace HlslTools.Symbols
                         switch (valueTypeSyntax.Kind)
                         {
                             case SyntaxKind.PredefinedScalarType:
-                                scalarType = SyntaxFacts.GetScalarType((ScalarTypeSyntax) valueTypeSyntax);
+                                scalarType = TypeFacts.GetScalarType((ScalarTypeSyntax) valueTypeSyntax);
                                 break;
                             case SyntaxKind.PredefinedVectorType:
-                                scalarType = SyntaxFacts.GetVectorType(((VectorTypeSyntax) valueTypeSyntax).TypeToken.Kind).Item1;
+                                scalarType = TypeFacts.GetVectorType(((VectorTypeSyntax) valueTypeSyntax).TypeToken.Kind).Item1;
                                 break;
                             case SyntaxKind.PredefinedGenericVectorType:
-                                scalarType = SyntaxFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType);
+                                scalarType = TypeFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType);
                                 break;
                             default:
                                 throw new ArgumentOutOfRangeException();

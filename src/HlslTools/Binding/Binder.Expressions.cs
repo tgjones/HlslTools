@@ -119,7 +119,7 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.IsApplicable && c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, indexTypes);
             }
 
@@ -233,8 +233,8 @@ namespace HlslTools.Binding
         private BoundExpression BindConversion(TextSpan diagnosticSpan, BoundExpression expression, TypeSymbol targetType)
         {
             var sourceType = expression.Type;
-            var conversion = Conversion.Classify(sourceType, targetType);
-            if (conversion.IsIdentity)
+
+            if (sourceType.Equals(targetType))
                 return expression;
 
             // To avoid cascading errors, we'll only validate the result
@@ -243,11 +243,11 @@ namespace HlslTools.Binding
 
             if (!sourceType.IsError() && !targetType.IsError())
             {
-                if (!conversion.Exists)
+                if (!sourceType.HasExplicitConversionTo(targetType))
                     Diagnostics.ReportCannotConvert(diagnosticSpan, sourceType, targetType);
             }
 
-            return new BoundConversionExpression(expression, targetType, conversion);
+            return new BoundConversionExpression(expression, targetType);
         }
 
         private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax node)
@@ -372,7 +372,7 @@ namespace HlslTools.Binding
 
             var anyErrors = target.Type.IsError() || argumentTypes.Any(a => a.IsError());
             if (anyErrors)
-                return new BoundMethodInvocationExpression(target, arguments, OverloadResolutionResult<MethodSymbolSignature>.None);
+                return new BoundMethodInvocationExpression(syntax, target, arguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
 
             var result = LookupMethod(target.Type, name, argumentTypes);
 
@@ -385,7 +385,7 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.IsApplicable && c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
             }
 
@@ -393,7 +393,7 @@ namespace HlslTools.Binding
 
             var convertedArguments = arguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
 
-            return new BoundMethodInvocationExpression(target, convertedArguments, result);
+            return new BoundMethodInvocationExpression(syntax, target, convertedArguments, result);
         }
 
         private BoundExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)
@@ -404,7 +404,7 @@ namespace HlslTools.Binding
 
             var anyErrorsInArguments = argumentTypes.Any(a => a.IsError());
             if (anyErrorsInArguments)
-                return new BoundFunctionInvocationExpression(boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
+                return new BoundFunctionInvocationExpression(syntax, boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
 
             var result = LookupFunction(name, argumentTypes);
 
@@ -417,13 +417,13 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.IsApplicable && c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
             }
 
             var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
 
-            return new BoundFunctionInvocationExpression(convertedArguments, result);
+            return new BoundFunctionInvocationExpression(syntax, convertedArguments, result);
         }
 
         private static BoundExpression BindArgument<T>(BoundExpression expression, OverloadResolutionResult<T> result, int argumentIndex)
@@ -437,13 +437,12 @@ namespace HlslTools.Binding
                 return expression;
 
             var targetType = selected.Signature.GetParameterType(argumentIndex);
-            var conversion = selected.ArgumentConversions[argumentIndex];
 
             // TODO: We need check for ambiguous conversions here as well.
 
-            return conversion.IsIdentity
-                       ? expression
-                       : new BoundConversionExpression(expression, targetType, conversion);
+            return expression.Type.Equals(targetType)
+                ? expression
+                : new BoundConversionExpression(expression, targetType);
         }
 
         private BoundExpression BindFieldAccessExpression(FieldAccessExpressionSyntax node)

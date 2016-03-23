@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HlslTools.Binding.Signatures;
 using HlslTools.Symbols;
@@ -8,73 +8,161 @@ namespace HlslTools.Binding
 {
     internal static class OverloadResolution
     {
-        public static OverloadResolutionResult<T> Perform<T>(IEnumerable<T> signatures, IReadOnlyCollection<TypeSymbol> argumentTypes)
+        public static OverloadResolutionResult<T> Perform<T>(IEnumerable<T> signatures, IReadOnlyList<TypeSymbol> argumentTypes)
             where T : Signature
         {
-            var candidates = (from s in signatures
-                              let conversions = argumentTypes.Zip(s.GetParameterTypes(), Conversion.Classify).ToImmutableArray()
-                              select new OverloadResolutionCandidate<T>(s, argumentTypes, conversions)).ToArray();
+            var candidates = new List<OverloadResolutionCandidate<T>>();
+            foreach (var signature in signatures)
+            {
+                ulong score;
+                if (!TryRankArguments(signature, argumentTypes, out score))
+                    continue;
 
-            MarkApplicableCandidates(candidates, argumentTypes.Count);
-            MarkCandidatesScore(candidates, argumentTypes.Count);
+                candidates.Add(new OverloadResolutionCandidate<T>(signature, score));
+            }
 
-            OverloadResolutionCandidate<T> best;
-            OverloadResolutionCandidate<T> selected;
+            candidates.Sort((l, r) => l.Score.CompareTo(r.Score));
 
-            candidates = candidates.Where(x => x.IsApplicable).OrderBy(x => x.Score).ToArray();
-            best = selected = candidates.FirstOrDefault();
-            // TODO: Don't need "selected" anymore.
+            var selected = candidates.FirstOrDefault();
+
+            var best = (selected != null && (candidates.Count < 2 || candidates[1].Score > selected.Score))
+                ? selected
+                : null;
 
             return new OverloadResolutionResult<T>(best, selected, candidates);
         }
 
-        private static void MarkApplicableCandidates<T>(IList<OverloadResolutionCandidate<T>> candidates, int argumentCount)
+        private static bool TryRankArguments<T>(T signature, IReadOnlyList<TypeSymbol> argumentTypes, out ulong score)
             where T : Signature
         {
-            for (var i = 0; i < candidates.Count; i++)
-            {
-                if (!IsApplicable(candidates[i], argumentCount))
-                    continue;
+            score = 0;
 
-                candidates[i] = candidates[i].MarkApplicable();
+            var argumentCount = argumentTypes.Count;
+
+            if (signature.HasVariadicParameter)
+            {
+                if (argumentCount < signature.ParameterCount)
+                    return false;
             }
-        }
-
-        private static bool IsApplicable<T>(OverloadResolutionCandidate<T> candidate, int argumentCount)
-            where T : Signature
-        {
-            return (candidate.Signature.ParameterCount == argumentCount && candidate.ArgumentConversions.All(c => c.IsImplicit))
-                || (candidate.Signature.HasVariadicParameter && argumentCount >= candidate.Signature.ParameterCount); // TODO: Need to check that non-variadic argument / parameter types match.
-        }
-
-        private static void MarkCandidatesScore<T>(IList<OverloadResolutionCandidate<T>> candidates, int argumentCount)
-            where T : Signature
-        {
-            for (var i = 0; i < candidates.Count; i++)
+            else
             {
-                var x = candidates[i];
-                if (!x.IsApplicable)
-                    continue;
-
-                var score = GetScore(x, argumentCount);
-                candidates[i] = candidates[i].MarkScore(score);
-            }
-        }
-
-        private static int GetScore<T>(OverloadResolutionCandidate<T> x, int argumentCount)
-            where T : Signature
-        {
-            var score = 0;
-
-            for (var i = 0; i < argumentCount; i++)
-            {
-                var cX = x.ArgumentConversions[i];
-                var tX = x.Signature.GetParameterType(i);
-
-                score += Conversion.GetScore(x.ArgumentTypes[i], tX, cX);
+                if (signature.ParameterCount != argumentCount)
+                    return false;
             }
 
-            return score;
+            // ReSharper disable InconsistentNaming
+            ulong intConversions = 0;
+            ulong i2fConversions = 0;
+            ulong f2iConversions = 0;
+            ulong f2hConversions = 0;
+            ulong f2dConversions = 0;
+            ulong scalarPromotions = 0;
+            ulong truncations = 0;
+            // ReSharper restore InconsistentNaming
+
+            for (var i = 0; i < signature.ParameterCount; i++)
+            {
+                var parameterType = signature.GetParameterType(i);
+                var argumentType = argumentTypes[i];
+
+                if (parameterType.Equals(argumentType))
+                    continue; // i.e. score == 0 for this argument
+
+                // First, make sure we have an implicit conversion from argument to parameter.
+                switch (signature.GetParameterDirection(i))
+                {
+                    case ParameterDirection.In:
+                        if (!argumentType.HasImplicitConversionTo(parameterType))
+                            return false;
+                        break;
+                    case ParameterDirection.Out:
+                        if (!parameterType.HasImplicitConversionTo(argumentType))
+                            return false;
+                        break;
+                    case ParameterDirection.Inout:
+                        if (!argumentType.HasImplicitConversionTo(parameterType) || !parameterType.HasImplicitConversionTo(argumentType))
+                            return false;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                var numericParameterType = parameterType as IntrinsicNumericTypeSymbol;
+                var numericArgumentType = argumentType as IntrinsicNumericTypeSymbol;
+                if (numericParameterType != null && numericArgumentType != null)
+                {
+                    var parameterScalarType = numericParameterType.ScalarType;
+                    var argumentScalarType = numericArgumentType.ScalarType;
+
+                    if (argumentScalarType == ScalarType.Float && parameterScalarType == ScalarType.Half)
+                    {
+                        f2hConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Float && parameterScalarType == ScalarType.Double)
+                    {
+                        f2dConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Half && parameterScalarType == ScalarType.Float)
+                    {
+                        f2dConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Half && parameterScalarType == ScalarType.Double)
+                    {
+                        f2dConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Double && parameterScalarType == ScalarType.Half)
+                    {
+                        f2hConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Double && parameterScalarType == ScalarType.Float)
+                    {
+                        f2hConversions++;
+                    }
+                    else if (argumentScalarType.IsFloat() && !parameterScalarType.IsFloat())
+                    {
+                        f2iConversions++;
+                    }
+                    else if (!argumentScalarType.IsFloat() && parameterScalarType.IsFloat())
+                    {
+                        i2fConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Bool && parameterScalarType != ScalarType.Bool)
+                    {
+                        i2fConversions++;
+                    }
+                    else if (argumentScalarType != parameterScalarType)
+                    {
+                        intConversions++;
+                    }
+
+                    if (argumentType.GetNumElements() > parameterType.GetNumElements())
+                    {
+                        truncations++;
+                    }
+                    else if (argumentType.Kind == SymbolKind.IntrinsicScalarType && parameterType.Kind != SymbolKind.IntrinsicScalarType)
+                    {
+                        scalarPromotions++;
+                    }
+                    else if (argumentType.Kind == SymbolKind.IntrinsicVectorType && parameterType.Kind == SymbolKind.IntrinsicMatrixType)
+                    {
+                        scalarPromotions++;
+                    }
+                }
+            }
+
+            const int numBits = 4;
+            const ulong mask = (1 << 6) - 1;
+
+            // Worse to better.
+            score = (score << numBits) | (truncations & mask);
+            score = (score << numBits) | (scalarPromotions & mask);
+            score = (score << numBits) | (f2iConversions & mask);
+            score = (score << numBits) | (f2hConversions & mask);
+            score = (score << numBits) | (i2fConversions & mask);
+            score = (score << numBits) | (f2dConversions & mask);
+            score = (score << numBits) | (intConversions & mask);
+
+            return true;
         }
     }
 }

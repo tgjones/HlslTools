@@ -6,6 +6,7 @@ namespace HlslTools.Binding.Signatures
     internal abstract class Signature
     {
         public abstract TypeSymbol ReturnType { get; }
+        public abstract ParameterDirection GetParameterDirection(int index);
         public abstract TypeSymbol GetParameterType(int index);
         public abstract int ParameterCount { get; }
         public abstract bool HasVariadicParameter { get; }

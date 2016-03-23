@@ -40,13 +40,23 @@ namespace HlslTools.Binding
 
         private BoundNode BindRoot(SyntaxNode syntax)
         {
+            var functionImplementationChecker = new FunctionImplementationChecker(Diagnostics);
+
             var compilationUnit = syntax as CompilationUnitSyntax;
             if (compilationUnit != null)
-                return BindCompilationUnit(compilationUnit);
+            {
+                var result = BindCompilationUnit(compilationUnit);
+                functionImplementationChecker.VisitCompilationUnit(result);
+                return result;
+            }
 
             var expressionSyntax = syntax as ExpressionSyntax;
             if (expressionSyntax != null)
-                return BindExpression(expressionSyntax);
+            {
+                var result = BindExpression(expressionSyntax);
+                functionImplementationChecker.VisitExpression(result);
+                return result;
+            }
 
             throw new InvalidOperationException();
         }

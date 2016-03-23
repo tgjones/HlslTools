@@ -2,9 +2,9 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundTypeDeclaration : BoundNode
     {
-        public BoundNode BoundType { get; }
+        public BoundType BoundType { get; }
 
-        public BoundTypeDeclaration(BoundNode boundType)
+        public BoundTypeDeclaration(BoundType boundType)
             : base(BoundNodeKind.TypeDeclaration)
         {
             BoundType = boundType;

@@ -95,16 +95,16 @@ namespace HlslTools.Binding
             return OverloadResolution.Perform(signatures, argumentTypes);
         }
 
-        private IEnumerable<MethodSymbol> LookupMethod(TypeSymbol type, SyntaxToken name)
+        private IEnumerable<FunctionSymbol> LookupMethod(TypeSymbol type, SyntaxToken name)
         {
-            return type.LookupMembers<MethodSymbol>(name.Text);
+            return type.LookupMembers<FunctionSymbol>(name.Text);
         }
 
-        private OverloadResolutionResult<MethodSymbolSignature> LookupMethod(TypeSymbol type, SyntaxToken name, ImmutableArray<TypeSymbol> argumentTypes)
+        private OverloadResolutionResult<FunctionSymbolSignature> LookupMethod(TypeSymbol type, SyntaxToken name, ImmutableArray<TypeSymbol> argumentTypes)
         {
             if (name == null) throw new ArgumentNullException(nameof(name));
             var signatures = from m in LookupMethod(type, name)
-                             select new MethodSymbolSignature(m);
+                             select new FunctionSymbolSignature(m);
             return OverloadResolution.Perform(signatures, argumentTypes);
         }
 

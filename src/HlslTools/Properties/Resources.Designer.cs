@@ -169,6 +169,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Function &apos;{0}&apos; missing implementation..
+        /// </summary>
+        internal static string FunctionMissingImplementation {
+            get {
+                return ResourceManager.GetString("FunctionMissingImplementation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid character in input &apos;{0}&apos;..
         /// </summary>
         internal static string IllegalInputCharacter {
@@ -282,6 +291,15 @@ namespace HlslTools.Properties {
         internal static string NumberTooLarge {
             get {
                 return ResourceManager.GetString("NumberTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Redefinition of &apos;{0}&apos;..
+        /// </summary>
+        internal static string SymbolRedefined {
+            get {
+                return ResourceManager.GetString("SymbolRedefined", resourceCulture);
             }
         }
         

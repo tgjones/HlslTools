@@ -48,6 +48,8 @@
         CannotConvert,
         InvocationRequiresParenthesis,
         CannotApplyUnaryOperator,
-        CannotApplyBinaryOperator
+        CannotApplyBinaryOperator,
+        SymbolRedefined,
+        FunctionMissingImplementation
     }
 }

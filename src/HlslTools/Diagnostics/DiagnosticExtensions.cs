@@ -188,6 +188,16 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(span, DiagnosticId.CannotApplyBinaryOperator, operatorName, leftTypeName, rightTypeName);
         }
 
+        public static void ReportFunctionMissingImplementation(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax syntax)
+        {
+            diagnostics.Report(syntax.Name.Span, DiagnosticId.FunctionMissingImplementation, syntax.Name.Text);
+        }
+
+        public static void ReportMethodMissingImplementation(this ICollection<Diagnostic> diagnostics, MethodInvocationExpressionSyntax syntax)
+        {
+            diagnostics.Report(syntax.Name.Span, DiagnosticId.FunctionMissingImplementation, syntax.Name.Text);
+        }
+
         #endregion
     }
 }

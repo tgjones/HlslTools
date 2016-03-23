@@ -53,6 +53,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binding\BinaryExpressionTests.cs" />
+    <Compile Include="Binding\FunctionDeclarationTests.cs" />
+    <Compile Include="Binding\FunctionInvocationExpressionTests.cs" />
+    <Compile Include="Binding\GlobalDeclarationTests.cs" />
     <Compile Include="Compilation\SemanticModelTests.cs" />
     <Compile Include="Formatting\FormatterTests.cs" />
     <Compile Include="Formatting\IdempotentTests.cs" />

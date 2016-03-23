@@ -770,7 +770,7 @@ namespace HlslTools.Symbols
             return new IntrinsicObjectTypeSymbol(name, documentation, t => CreateTextureMethods(textureType, t, valueType, scalarType));
         }
 
-        private static IEnumerable<MethodSymbol> CreateTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
+        private static IEnumerable<FunctionSymbol> CreateTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
         {
             TypeSymbol locationType = null;
             switch (textureType)
@@ -836,13 +836,13 @@ namespace HlslTools.Symbols
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    yield return new MethodSymbol("CalculateLevelOfDetail", "Calculates the level of detail.", parent,
+                    yield return new FunctionSymbol("CalculateLevelOfDetail", "Calculates the level of detail.", parent,
                         Float, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
                             new ParameterSymbol("x", "The linear interpolation value, which is a floating-point number between 0.0 and 1.0 inclusive.", m, vectorType)
                         });
-                    yield return new MethodSymbol("CalculateLevelOfDetailUnclamped", "Calculates the LOD without clamping the result.", parent,
+                    yield return new FunctionSymbol("CalculateLevelOfDetailUnclamped", "Calculates the LOD without clamping the result.", parent,
                         Float, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -857,7 +857,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.Texture2DArray:
                 case PredefinedObjectType.TextureCube:
                 case PredefinedObjectType.TextureCubeArray:
-                    yield return new MethodSymbol("Gather", "Gets the four samples (red component only) that would be used for bilinear interpolation when sampling a texture.", parent,
+                    yield return new FunctionSymbol("Gather", "Gets the four samples (red component only) that would be used for bilinear interpolation when sampling a texture.", parent,
                         GetVectorType(scalarType, 4), m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -865,7 +865,7 @@ namespace HlslTools.Symbols
                         });
                     if (textureType == PredefinedObjectType.Texture2D || textureType == PredefinedObjectType.Texture2DArray)
                     {
-                        yield return new MethodSymbol("Gather", "Gets the four samples (red component only) that would be used for bilinear interpolation when sampling a texture.", parent,
+                        yield return new FunctionSymbol("Gather", "Gets the four samples (red component only) that would be used for bilinear interpolation when sampling a texture.", parent,
                             GetVectorType(scalarType, 4), m => new[]
                             {
                                 new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -879,7 +879,7 @@ namespace HlslTools.Symbols
             switch (textureType)
             {
                 case PredefinedObjectType.Buffer:
-                    yield return new MethodSymbol("GetDimensions", "Gets the length of the buffer.", parent,
+                    yield return new FunctionSymbol("GetDimensions", "Gets the length of the buffer.", parent,
                         Void, m => new[]
                         {
                             new ParameterSymbol("dim", "The length, in bytes, of the buffer.", m, Uint, ParameterDirection.Out)
@@ -897,7 +897,7 @@ namespace HlslTools.Symbols
             {
                 case PredefinedObjectType.Texture2DMS:
                 case PredefinedObjectType.Texture2DMSArray:
-                    yield return new MethodSymbol("GetSamplePosition", "Gets the position of the specified sample.", parent,
+                    yield return new FunctionSymbol("GetSamplePosition", "Gets the position of the specified sample.", parent,
                         Float2, m => new[]
                         {
                             new ParameterSymbol("sampleIndex", "The zero-based sample index.", m, Int)
@@ -934,7 +934,7 @@ namespace HlslTools.Symbols
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    yield return new MethodSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                    yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system. ", m, intLocationType)
@@ -943,7 +943,7 @@ namespace HlslTools.Symbols
                     {
                         case PredefinedObjectType.Texture2DMS:
                         case PredefinedObjectType.Texture2DMSArray:
-                            yield return new MethodSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system.", m, intLocationType),
@@ -952,7 +952,7 @@ namespace HlslTools.Symbols
                                 });
                             break;
                         default:
-                            yield return new MethodSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system.", m, intLocationType),
@@ -970,7 +970,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.Texture2DMSArray:
                     break;
                 default:
-                    yield return new MethodSymbol("Sample", "Samples a texture.", parent,
+                    yield return new FunctionSymbol("Sample", "Samples a texture.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState), 
@@ -982,7 +982,7 @@ namespace HlslTools.Symbols
                         case PredefinedObjectType.TextureCubeArray:
                             break;
                         default:
-                            yield return new MethodSymbol("Sample", "Samples a texture.", parent,
+                            yield return new FunctionSymbol("Sample", "Samples a texture.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1001,7 +1001,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.Texture2DMSArray:
                     break;
                 default:
-                    yield return new MethodSymbol("SampleBias", "Samples a texture, after applying the input bias to the mipmap level.", parent,
+                    yield return new FunctionSymbol("SampleBias", "Samples a texture, after applying the input bias to the mipmap level.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1014,7 +1014,7 @@ namespace HlslTools.Symbols
                         case PredefinedObjectType.TextureCubeArray:
                             break;
                         default:
-                            yield return new MethodSymbol("SampleBias", "Samples a texture, after applying the input bias to the mipmap level.", parent,
+                            yield return new FunctionSymbol("SampleBias", "Samples a texture, after applying the input bias to the mipmap level.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1035,14 +1035,14 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.Texture3D:
                     break;
                 default:
-                    yield return new MethodSymbol("SampleCmp", "Samples a texture and compares a single component against the specified comparison value.", parent,
+                    yield return new FunctionSymbol("SampleCmp", "Samples a texture and compares a single component against the specified comparison value.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler-comparison state, which is the sampler state plus a comparison state (a comparison function and a comparison filter)", m, SamplerComparisonState),
                             new ParameterSymbol("location", "The texture coordinates.", m, locationType),
                             new ParameterSymbol("compareValue", "A floating-point value to use as a comparison value.", m, Float)
                         });
-                    yield return new MethodSymbol("SampleCmpLevelZero", "Samples a texture on mipmap level 0 only and compares a single component against the specified comparison value.", parent,
+                    yield return new FunctionSymbol("SampleCmpLevelZero", "Samples a texture on mipmap level 0 only and compares a single component against the specified comparison value.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler-comparison state, which is the sampler state plus a comparison state (a comparison function and a comparison filter)", m, SamplerComparisonState),
@@ -1055,7 +1055,7 @@ namespace HlslTools.Symbols
                         case PredefinedObjectType.TextureCubeArray:
                             break;
                         default:
-                            yield return new MethodSymbol("SampleCmp", "Samples a texture and compares a single component against the specified comparison value.", parent,
+                            yield return new FunctionSymbol("SampleCmp", "Samples a texture and compares a single component against the specified comparison value.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("samplerState", "A sampler-comparison state, which is the sampler state plus a comparison state (a comparison function and a comparison filter)", m, SamplerComparisonState),
@@ -1063,7 +1063,7 @@ namespace HlslTools.Symbols
                                     new ParameterSymbol("compareValue", "A floating-point value to use as a comparison value.", m, Float),
                                     new ParameterSymbol("offset", "A texture coordinate offset, which can be used for any texture-object type; the offset is applied to the location before sampling. Use an offset only at an integer miplevel; otherwise, you may get results that do not translate well to hardware.", m, offsetType)
                                 });
-                            yield return new MethodSymbol("SampleCmpLevelZero", "Samples a texture on mipmap level 0 only and compares a single component against the specified comparison value.", parent,
+                            yield return new FunctionSymbol("SampleCmpLevelZero", "Samples a texture on mipmap level 0 only and compares a single component against the specified comparison value.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("samplerState", "A sampler-comparison state, which is the sampler state plus a comparison state (a comparison function and a comparison filter)", m, SamplerComparisonState),
@@ -1102,7 +1102,7 @@ namespace HlslTools.Symbols
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    yield return new MethodSymbol("SampleGrad", "Samples a texture using a gradient to influence the way the sample location is calculated.", parent,
+                    yield return new FunctionSymbol("SampleGrad", "Samples a texture using a gradient to influence the way the sample location is calculated.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1116,7 +1116,7 @@ namespace HlslTools.Symbols
                         case PredefinedObjectType.TextureCubeArray:
                             break;
                         default:
-                            yield return new MethodSymbol("SampleGrad", "Samples a texture using a gradient to influence the way the sample location is calculated.", parent,
+                            yield return new FunctionSymbol("SampleGrad", "Samples a texture using a gradient to influence the way the sample location is calculated.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1137,7 +1137,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.Texture2DMSArray:
                     break;
                 default:
-                    yield return new MethodSymbol("SampleLevel", "Samples a texture using a mipmap-level offset.", parent,
+                    yield return new FunctionSymbol("SampleLevel", "Samples a texture using a mipmap-level offset.", parent,
                         valueType, m => new[]
                         {
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1150,7 +1150,7 @@ namespace HlslTools.Symbols
                         case PredefinedObjectType.TextureCubeArray:
                             break;
                         default:
-                            yield return new MethodSymbol("SampleLevel", "Samples a texture using a mipmap-level offset.", parent,
+                            yield return new FunctionSymbol("SampleLevel", "Samples a texture using a mipmap-level offset.", parent,
                                 valueType, m => new[]
                                 {
                                     new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
@@ -1164,9 +1164,9 @@ namespace HlslTools.Symbols
             }
         }
 
-        private static MethodSymbol CreateTextureGetDimensionsWithMipLevelMethod(TypeSymbol parent, PredefinedObjectType textureType, TypeSymbol parameterType)
+        private static FunctionSymbol CreateTextureGetDimensionsWithMipLevelMethod(TypeSymbol parent, PredefinedObjectType textureType, TypeSymbol parameterType)
         {
-            return new MethodSymbol("GetDimensions", "Gets texture size information.", parent,
+            return new FunctionSymbol("GetDimensions", "Gets texture size information.", parent,
                 Void, m =>
                 {
                     var result = new List<ParameterSymbol>();
@@ -1201,9 +1201,9 @@ namespace HlslTools.Symbols
                 });
         }
 
-        private static MethodSymbol CreateTextureGetDimensionsMethod(TypeSymbol parent, PredefinedObjectType textureType, TypeSymbol parameterType)
+        private static FunctionSymbol CreateTextureGetDimensionsMethod(TypeSymbol parent, PredefinedObjectType textureType, TypeSymbol parameterType)
         {
-            return new MethodSymbol("GetDimensions", "Gets texture size information.", parent,
+            return new FunctionSymbol("GetDimensions", "Gets texture size information.", parent,
                 Void, m =>
                 {
                     var result = new List<ParameterSymbol>();
@@ -1242,12 +1242,12 @@ namespace HlslTools.Symbols
                 "Output buffer that appears as a stream the shader may append to. Only structured buffers can take T types that are structures.",
                 t => new[]
                 {
-                    new MethodSymbol("Append", "Appends a value to the end of the buffer.", t, Void,
+                    new FunctionSymbol("Append", "Appends a value to the end of the buffer.", t, Void,
                         m => new[]
                         {
                             new ParameterSymbol("value", "The input value.", m, valueType)
                         }),
-                    new MethodSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
                         m => new[]
                         {
                             new ParameterSymbol("numStructs", "The number of structures.", m, Uint, ParameterDirection.Out),
@@ -1266,51 +1266,51 @@ namespace HlslTools.Symbols
                 "A read-only buffer that is indexed in bytes.",
                 t => new[]
                 {
-                    new MethodSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
                         m => new[]
                         {
                             new ParameterSymbol("dim", "The length, in bytes, of the buffer.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load", "Gets one value and the status of the operation from a read-only buffer indexed in bytes.", t, Uint,
+                    new FunctionSymbol("Load", "Gets one value and the status of the operation from a read-only buffer indexed in bytes.", t, Uint,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
                             new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load", "Gets one value from a read-only buffer indexed in bytes.", t, Uint,
+                    new FunctionSymbol("Load", "Gets one value from a read-only buffer indexed in bytes.", t, Uint,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
                         }),
-                    new MethodSymbol("Load2", "Gets two values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint2,
+                    new FunctionSymbol("Load2", "Gets two values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint2,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
                             new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load2", "Gets two values from a read-only buffer indexed in bytes.", t, Uint2,
+                    new FunctionSymbol("Load2", "Gets two values from a read-only buffer indexed in bytes.", t, Uint2,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
                         }),
-                    new MethodSymbol("Load3", "Gets three values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint3,
+                    new FunctionSymbol("Load3", "Gets three values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint3,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
                             new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load3", "Gets three values from a read-only buffer indexed in bytes.", t, Uint3,
+                    new FunctionSymbol("Load3", "Gets three values from a read-only buffer indexed in bytes.", t, Uint3,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
                         }),
-                    new MethodSymbol("Load4", "Gets four values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint4,
+                    new FunctionSymbol("Load4", "Gets four values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint4,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
                             new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load4", "Gets four values from a read-only buffer indexed in bytes.", t, Uint4,
+                    new FunctionSymbol("Load4", "Gets four values from a read-only buffer indexed in bytes.", t, Uint4,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
@@ -1324,9 +1324,9 @@ namespace HlslTools.Symbols
                 "An input buffer that appears as a stream the shader may pull values from. Only structured buffers can take T types that are structures.",
                 t => new[]
                 {
-                    new MethodSymbol("Consume", "Removes a value from the end of the buffer.", t, valueType,
+                    new FunctionSymbol("Consume", "Removes a value from the end of the buffer.", t, valueType,
                         m => Enumerable.Empty<ParameterSymbol>()),
-                    new MethodSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
                         m => new[]
                         {
                             new ParameterSymbol("numStructs", "The number of structures.", m, Uint, ParameterDirection.Out),
@@ -1341,19 +1341,19 @@ namespace HlslTools.Symbols
                 "A read-only buffer, which can take a T type that is a structure.",
                 t => new[]
                 {
-                    new MethodSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
                         m => new[]
                         {
                             new ParameterSymbol("numStructs", "The number of structures.", m, Uint, ParameterDirection.Out),
                             new ParameterSymbol("stride", "The number of bytes in each element.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load", "Reads buffer data and returns status about the operation.", t, valueType,
+                    new FunctionSymbol("Load", "Reads buffer data and returns status about the operation.", t, valueType,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The location of the buffer.", m, Int),
                             new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
                         }),
-                    new MethodSymbol("Load", "Reads buffer data.", t, valueType,
+                    new FunctionSymbol("Load", "Reads buffer data.", t, valueType,
                         m => new[]
                         {
                             new ParameterSymbol("location", "The location of the buffer.", m, Int)

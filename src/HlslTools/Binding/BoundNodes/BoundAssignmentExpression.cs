@@ -11,7 +11,7 @@ namespace HlslTools.Binding.BoundNodes
         public BoundExpression Right { get; }
 
         public BoundAssignmentExpression(BoundExpression left, BinaryOperatorKind? operatorKind, BoundExpression right)
-            : base(BoundNodeKind.BinaryExpression)
+            : base(BoundNodeKind.AssignmentExpression)
         {
             OperatorKind = operatorKind;
             Left = left;

@@ -18,7 +18,7 @@ namespace HlslTools.Symbols.Markup
                     markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol);
                     break;
                 case SymbolKind.Method:
-                    markup.AppendMethodSymbolInfo((MethodSymbol) symbol);
+                    markup.AppendMethodSymbolInfo((FunctionSymbol) symbol);
                     break;
                 case SymbolKind.Variable:
                     break;
@@ -64,7 +64,7 @@ namespace HlslTools.Symbols.Markup
             markup.Append(SymbolMarkupKind.Whitespace, " ");
         }
 
-        private static void AppendMethodSymbolInfo(this ICollection<SymbolMarkupToken> markup, MethodSymbol symbol)
+        private static void AppendMethodSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
         {
             markup.AppendType(symbol.ReturnType);
             markup.AppendSpace();
