@@ -26,6 +26,8 @@
         ConsumeStructuredBuffer,
         StructuredBuffer,
 
+        ConstantBuffer,
+
         RasterizerOrderedBuffer,
         RasterizerOrderedByteAddressBuffer,
         RasterizerOrderedStructuredBuffer,

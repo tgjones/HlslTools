@@ -131,6 +131,13 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol GetTypeSymbol(this PredefinedObjectTypeSyntax node, Binder binder)
         {
+            if (node.ObjectTypeToken.ContextualKind == SyntaxKind.ConstantBufferKeyword)
+            {
+                var valueTypeSyntax = (TypeSyntax) node.TemplateArgumentList.Arguments[0];
+                var valueType = GetTypeSymbol(valueTypeSyntax, binder);
+                return IntrinsicTypes.CreateConstantBufferType(valueType);
+            }
+
             var predefinedObjectType = SyntaxFacts.GetPredefinedObjectType(node.ObjectTypeToken.Kind);
             switch (predefinedObjectType)
             {

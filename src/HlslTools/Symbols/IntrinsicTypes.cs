@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Syntax;
 
@@ -1477,6 +1478,16 @@ namespace HlslTools.Symbols
                         }),
                     new FunctionSymbol("RestartStrip", "Ends the current primitive strip and starts a new strip. If the current strip does not have enough vertices emitted to fill the primitive topology, the incomplete primitive at the end will be discarded.", t, Void)
                 });
+        }
+
+        public static TypeSymbol CreateConstantBufferType(TypeSymbol valueType)
+        {
+            var fields = (valueType.Kind == SymbolKind.Struct)
+                ? ((StructSymbol) valueType).Members
+                : ImmutableArray<Symbol>.Empty;
+            return new IntrinsicObjectTypeSymbol("ConstantBuffer", "",
+                PredefinedObjectType.ConstantBuffer,
+                t => fields);
         }
     }
 }
