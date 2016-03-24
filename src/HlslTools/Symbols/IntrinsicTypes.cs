@@ -1462,5 +1462,21 @@ namespace HlslTools.Symbols
                     new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType)
                 });
         }
+
+        public static TypeSymbol CreateStreamOutputType(PredefinedObjectType type, TypeSymbol valueType)
+        {
+            return new IntrinsicObjectTypeSymbol(type.ToString(),
+                "A stream-output object is a templated object that streams data out of the geometry-shader stage.",
+                type,
+                t => new Symbol[]
+                {
+                    new FunctionSymbol("Append", "Append geometry-shader-output data to an existing stream.", t, valueType,
+                        m => new[]
+                        {
+                            new ParameterSymbol("data", "The geometry-shader-output data to be appended.", m, valueType)
+                        }),
+                    new FunctionSymbol("RestartStrip", "Ends the current primitive strip and starts a new strip. If the current strip does not have enough vertices emitted to fill the primitive topology, the incomplete primitive at the end will be discarded.", t, Void)
+                });
+        }
     }
 }

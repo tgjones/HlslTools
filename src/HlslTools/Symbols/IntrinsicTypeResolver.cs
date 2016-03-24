@@ -185,6 +185,9 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.StructuredBuffer:
                 case PredefinedObjectType.InputPatch:
                 case PredefinedObjectType.OutputPatch:
+                case PredefinedObjectType.PointStream:
+                case PredefinedObjectType.LineStream:
+                case PredefinedObjectType.TriangleStream:
                 {
                     var valueTypeSyntax = (TypeSyntax) node.TemplateArgumentList.Arguments[0];
                     var valueType = GetTypeSymbol(valueTypeSyntax, binder);
@@ -200,6 +203,10 @@ namespace HlslTools.Symbols
                             return IntrinsicTypes.CreateInputPatchType(valueType);
                         case PredefinedObjectType.OutputPatch:
                             return IntrinsicTypes.CreateOutputPatchType(valueType);
+                        case PredefinedObjectType.PointStream:
+                        case PredefinedObjectType.LineStream:
+                        case PredefinedObjectType.TriangleStream:
+                            return IntrinsicTypes.CreateStreamOutputType(predefinedObjectType, valueType);
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
@@ -214,9 +221,6 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.RasterizerState;
                 case PredefinedObjectType.RWByteAddressBuffer:
                 case PredefinedObjectType.RWStructuredBuffer:
-                case PredefinedObjectType.PointStream:
-                case PredefinedObjectType.LineStream:
-                case PredefinedObjectType.TriangleStream:
                 case PredefinedObjectType.RasterizerOrderedBuffer:
                 case PredefinedObjectType.RasterizerOrderedByteAddressBuffer:
                 case PredefinedObjectType.RasterizerOrderedStructuredBuffer:
