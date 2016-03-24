@@ -1417,8 +1417,9 @@ namespace HlslTools.Symbols
             return new IntrinsicObjectTypeSymbol("StructuredBuffer",
                 "A read-only buffer, which can take a T type that is a structure.",
                 PredefinedObjectType.StructuredBuffer,
-                t => new[]
+                t => new Symbol[]
                 {
+                    new IndexerSymbol("[]", "Returns a read-only resource variable of a StructuredBuffer.", t, valueType),
                     new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
                         m => new[]
                         {

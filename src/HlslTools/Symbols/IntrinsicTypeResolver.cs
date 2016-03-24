@@ -179,7 +179,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.RWTexture2D:
                 case PredefinedObjectType.RWTexture2DArray:
                 case PredefinedObjectType.RWTexture3D:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException(predefinedObjectType.ToString());
                 case PredefinedObjectType.AppendStructuredBuffer:
                 case PredefinedObjectType.ConsumeStructuredBuffer:
                 case PredefinedObjectType.StructuredBuffer:
@@ -225,7 +225,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.RasterizerOrderedTexture2D:
                 case PredefinedObjectType.RasterizerOrderedTexture2DArray:
                 case PredefinedObjectType.RasterizerOrderedTexture3D:
-                    throw new NotImplementedException();
+                    throw new NotImplementedException(predefinedObjectType.ToString());
                 case PredefinedObjectType.Sampler:
                     return IntrinsicTypes.Sampler;
                 case PredefinedObjectType.Sampler1D:
