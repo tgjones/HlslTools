@@ -1332,67 +1332,162 @@ namespace HlslTools.Symbols
                 });
         }
 
-        private static TypeSymbol _byteAddressBuffer;
+        public static readonly TypeSymbol ByteAddressBuffer = new IntrinsicObjectTypeSymbol("ByteAddressBuffer",
+            "A read-only buffer that is indexed in bytes.",
+            PredefinedObjectType.ByteAddressBuffer,
+            CreateByteAddressBufferMethods);
 
-        public static TypeSymbol ByteAddressBuffer => _byteAddressBuffer ?? (_byteAddressBuffer = CreateByteAddressBufferType());
-
-        private static TypeSymbol CreateByteAddressBufferType()
-        {
-            return new IntrinsicObjectTypeSymbol("ByteAddressBuffer",
-                "A read-only buffer that is indexed in bytes.",
-                PredefinedObjectType.ByteAddressBuffer,
-                t => new[]
+        public static readonly TypeSymbol RWByteAddressBuffer = new IntrinsicObjectTypeSymbol("RWByteAddressBuffer",
+            "A read/write buffer that indexes in bytes.",
+            PredefinedObjectType.RWByteAddressBuffer,
+            t => CreateByteAddressBufferMethods(t)
+                .Union(new[]
                 {
-                    new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    new FunctionSymbol("InterlockedAdd", "Adds the value, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("dim", "The length, in bytes, of the buffer.", m, Uint, ParameterDirection.Out)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load", "Gets one value and the status of the operation from a read-only buffer indexed in bytes.", t, Uint,
+                    new FunctionSymbol("InterlockedAnd", "Ands the value, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load", "Gets one value from a read-only buffer indexed in bytes.", t, Uint,
+                    new FunctionSymbol("InterlockedCompareExchange", "Compares the input to the comparison value and exchanges the result, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("compareValue", "The comparison value.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load2", "Gets two values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint2,
+                    new FunctionSymbol("InterlockedCompareStore", "Compares the input to the comparison value, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("compareValue", "The comparison value.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint)
                         }),
-                    new FunctionSymbol("Load2", "Gets two values from a read-only buffer indexed in bytes.", t, Uint2,
+                    new FunctionSymbol("InterlockedExchange", "Exchanges a value, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load3", "Gets three values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint3,
+                    new FunctionSymbol("InterlockedMax", "Finds the maximum value, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load3", "Gets three values from a read-only buffer indexed in bytes.", t, Uint3,
+                    new FunctionSymbol("InterlockedMin", "Finds the minimum value, atomically.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load4", "Gets four values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint4,
+                    new FunctionSymbol("InterlockedOr", "Performs an atomic OR on the value.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                    new FunctionSymbol("Load4", "Gets four values from a read-only buffer indexed in bytes.", t, Uint4,
+                    new FunctionSymbol("InterlockedXor", "Performs an atomic XOR on the value.", t, Void,
                         m => new[]
                         {
-                            new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                            new ParameterSymbol("dest", "The destination address.", m, Uint),
+                            new ParameterSymbol("value", "The input value.", m, Uint),
+                            new ParameterSymbol("originalValue", "The original value.", m, Uint, ParameterDirection.Out)
                         }),
-                });
+
+                    new FunctionSymbol("Store", "Sets one value.", t, Void,
+                        m => new[]
+                        {
+                            new ParameterSymbol("address", "The input address in bytes, which must be a multiple of 4.", m, Uint),
+                            new ParameterSymbol("value", "One input value.", m, Uint)
+                        }),
+                    new FunctionSymbol("Store2", "Sets two values.", t, Void,
+                        m => new[]
+                        {
+                            new ParameterSymbol("address", "The input address in bytes, which must be a multiple of 4.", m, Uint),
+                            new ParameterSymbol("value", "Two input values.", m, Uint2)
+                        }),
+                    new FunctionSymbol("Store3", "Sets three values.", t, Void,
+                        m => new[]
+                        {
+                            new ParameterSymbol("address", "The input address in bytes, which must be a multiple of 4.", m, Uint),
+                            new ParameterSymbol("value", "Three input values.", m, Uint3)
+                        }),
+                    new FunctionSymbol("Store4", "Sets four values.", t, Void,
+                        m => new[]
+                        {
+                            new ParameterSymbol("address", "The input address in bytes, which must be a multiple of 4.", m, Uint),
+                            new ParameterSymbol("value", "Four input values.", m, Uint4)
+                        }),
+                }));
+
+        private static FunctionSymbol[] CreateByteAddressBufferMethods(TypeSymbol t)
+        {
+            return new[]
+            {
+                new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    m => new[]
+                    {
+                        new ParameterSymbol("dim", "The length, in bytes, of the buffer.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load", "Gets one value and the status of the operation from a read-only buffer indexed in bytes.", t, Uint,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load", "Gets one value from a read-only buffer indexed in bytes.", t, Uint,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                    }),
+                new FunctionSymbol("Load2", "Gets two values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint2,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load2", "Gets two values from a read-only buffer indexed in bytes.", t, Uint2,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                    }),
+                new FunctionSymbol("Load3", "Gets three values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint3,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load3", "Gets three values from a read-only buffer indexed in bytes.", t, Uint3,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                    }),
+                new FunctionSymbol("Load4", "Gets four values and the status of the operation from a read-only buffer indexed in bytes.", t, Uint4,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load4", "Gets four values from a read-only buffer indexed in bytes.", t, Uint4,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The input address in bytes, which must be a multiple of 4.", m, Int)
+                    })
+            };
         }
 
         public static TypeSymbol CreateConsumeStructuredBufferType(TypeSymbol valueType)

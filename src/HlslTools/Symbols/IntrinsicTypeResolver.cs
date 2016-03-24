@@ -227,6 +227,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.RasterizerState:
                     return IntrinsicTypes.RasterizerState;
                 case PredefinedObjectType.RWByteAddressBuffer:
+                    return IntrinsicTypes.RWByteAddressBuffer;
                 case PredefinedObjectType.RWStructuredBuffer:
                 case PredefinedObjectType.RasterizerOrderedBuffer:
                 case PredefinedObjectType.RasterizerOrderedByteAddressBuffer:
