@@ -10,13 +10,15 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
     {
         protected override QuickInfoModel CreateModel(SemanticModel semanticModel, SourceLocation position, FunctionDeclarationSyntax node)
         {
-            if (!node.Name.SourceRange.ContainsOrTouches(position))
+            var actualName = node.Name.GetUnqualifiedName().Name;
+
+            if (!actualName.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            if (!node.Name.Span.IsInRootFile)
+            if (!actualName.Span.IsInRootFile)
                 return null;
 
-            return new QuickInfoModel(semanticModel, node.Name.Span, $"(function) {node.GetDescription(true, true)}");
+            return new QuickInfoModel(semanticModel, actualName.Span, $"(function) {node.GetDescription(true, true)}");
         }
     }
 }

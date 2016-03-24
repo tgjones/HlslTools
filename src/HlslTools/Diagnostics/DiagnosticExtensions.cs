@@ -219,6 +219,11 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(syntax.Name.Span, DiagnosticId.FunctionMissingImplementation, syntax.Name.Text);
         }
 
+        public static void ReportSymbolRedefined(this ICollection<Diagnostic> diagnostics, TextSpan span, Symbol symbol)
+        {
+            diagnostics.Report(span, DiagnosticId.SymbolRedefined, symbol.Name);
+        }
+
         #endregion
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
+using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 
@@ -61,7 +62,7 @@ namespace HlslTools.Binding
             var enclosingNamespace = LookupEnclosingNamespace();
             var namespaceSymbol = new NamespaceSymbol(declaration.Name.Text, enclosingNamespace);
 
-            AddSymbol(namespaceSymbol);
+            AddSymbol(namespaceSymbol, declaration.Name.Span);
 
             var namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
             var boundDeclarations = namespaceBinder.BindTopLevelDeclarations(declaration.Declarations, namespaceSymbol);
@@ -92,7 +93,7 @@ namespace HlslTools.Binding
             variableType = BindArrayRankSpecifiers(syntax, variableType);
 
             var symbol = createSymbol(syntax, variableType);
-            AddSymbol(symbol);
+            AddSymbol(symbol, syntax.Identifier.Span);
 
             BoundInitializer initializer = null;
             if (syntax.Initializer != null)
@@ -121,8 +122,20 @@ namespace HlslTools.Binding
         {
             var returnType = LookupType(declaration.ReturnType);
 
-            var functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
-            AddSymbol(functionSymbol);
+            var functionSymbol = LocalSymbols.OfType<SourceFunctionSymbol>()
+                .FirstOrDefault(x => SyntaxFacts.HaveMatchingSignatures(
+                    x.DefinitionSyntax as FunctionSyntax ?? x.DeclarationSyntaxes[0],
+                    declaration));
+
+            if (functionSymbol != null)
+            {
+                functionSymbol.DeclarationSyntaxes.Add(declaration);
+            }
+            else
+            {
+                functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
+                AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
+            }
 
             var functionBinder = new Binder(_sharedBinderState, this);
 
@@ -135,9 +148,24 @@ namespace HlslTools.Binding
         {
             var returnType = LookupType(declaration.ReturnType);
 
-            var functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
-            AddSymbol(functionSymbol);
+            var functionSymbol = LocalSymbols.OfType<SourceFunctionSymbol>()
+                .FirstOrDefault(x => SyntaxFacts.HaveMatchingSignatures(
+                    x.DefinitionSyntax as FunctionSyntax ?? x.DeclarationSyntaxes[0],
+                    declaration));
 
+            if (functionSymbol != null)
+            {
+                if (functionSymbol.DefinitionSyntax != null)
+                    Diagnostics.ReportSymbolRedefined(declaration.Name.GetTextSpanSafe(), functionSymbol);
+                else
+                    functionSymbol.DefinitionSyntax = declaration;
+            }
+            else
+            {
+                functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
+                AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
+            }
+                
             var functionBinder = new Binder(_sharedBinderState, this);
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
@@ -201,7 +229,7 @@ namespace HlslTools.Binding
             }
 
             var classSymbol = new ClassSymbol(declaration, null, baseClass, baseInterfaces.ToImmutableArray()); // TODO: parent symbol could be namespace or function body
-            AddSymbol(classSymbol);
+            AddSymbol(classSymbol, declaration.Name.Span);
 
             var members = new List<BoundNode>();
             var classBinder = new Binder(_sharedBinderState, this);
@@ -231,7 +259,7 @@ namespace HlslTools.Binding
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration)
         {
             var structSymbol = new StructSymbol(declaration, null);
-            AddSymbol(structSymbol);
+            AddSymbol(structSymbol, declaration.Name.Span);
 
             var variables = new List<BoundMultipleVariableDeclarations>();
             var structBinder = new Binder(_sharedBinderState, this);
@@ -253,7 +281,7 @@ namespace HlslTools.Binding
         private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
         {
             var interfaceSymbol = new InterfaceSymbol(declaration, null);
-            AddSymbol(interfaceSymbol);
+            AddSymbol(interfaceSymbol, declaration.Name.Span);
 
             var methods = new List<BoundFunction>();
             var interfaceBinder = new Binder(_sharedBinderState, this);

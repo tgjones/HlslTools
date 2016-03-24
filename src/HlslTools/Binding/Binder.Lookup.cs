@@ -7,13 +7,17 @@ using HlslTools.Binding.Signatures;
 using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
+using HlslTools.Text;
 
 namespace HlslTools.Binding
 {
     internal partial class Binder
     {
-        private void AddSymbol(Symbol symbol)
+        private void AddSymbol(Symbol symbol, TextSpan diagnosticSpan, bool allowDuplicates = false)
         {
+            if (_symbols.Any(x => x.Name == symbol.Name && (!allowDuplicates || x.Kind != symbol.Kind)))
+                Diagnostics.ReportSymbolRedefined(diagnosticSpan, symbol);
+
             _symbols.Add(symbol);
         }
 

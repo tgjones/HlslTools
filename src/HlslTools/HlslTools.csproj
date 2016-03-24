@@ -177,6 +177,7 @@
     <Compile Include="Syntax\CompoundExpressionSyntax.cs" />
     <Compile Include="Syntax\DeclarationNameSyntax.cs" />
     <Compile Include="Syntax\FunctionLikeMacroReference.cs" />
+    <Compile Include="Syntax\FunctionSyntax.cs" />
     <Compile Include="Syntax\IdentifierDeclarationNameSyntax.cs" />
     <Compile Include="Syntax\LocatedNode.cs" />
     <Compile Include="Syntax\MacroArgumentListSyntax.cs" />

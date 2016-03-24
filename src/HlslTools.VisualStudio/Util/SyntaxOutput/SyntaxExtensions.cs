@@ -8,7 +8,7 @@ namespace HlslTools.VisualStudio.Util.SyntaxOutput
     {
         public static string GetDescription(this FunctionDeclarationSyntax syntax, bool includeReturnType, bool includeParameterNames)
         {
-            return GetFunctionDescription(syntax.ReturnType, syntax.Name, syntax.ParameterList, includeReturnType, includeParameterNames);
+            return GetFunctionDescription(syntax.ReturnType, syntax.Name.GetUnqualifiedName().Name, syntax.ParameterList, includeReturnType, includeParameterNames);
         }
 
         public static string GetDescription(this FunctionDefinitionSyntax syntax, bool includeReturnType, bool includeParameterNames)

@@ -9,5 +9,26 @@
         {
             Direction = direction;
         }
+
+        protected bool Equals(ParameterSymbol other)
+        {
+            return base.Equals(other) && Direction == other.Direction;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((ParameterSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ (int) Direction;
+            }
+        }
     }
 }

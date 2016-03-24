@@ -21,5 +21,29 @@ namespace HlslTools.Symbols
         {
             return SymbolMarkup.ForSymbol(this).ToString();
         }
+
+        protected bool Equals(Symbol other)
+        {
+            return Kind == other.Kind && string.Equals(Name, other.Name) && Equals(Parent, other.Parent);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Symbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var hashCode = (int) Kind;
+                hashCode = (hashCode * 397) ^ Name.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Parent?.GetHashCode() ?? 0);
+                return hashCode;
+            }
+        }
     }
 }

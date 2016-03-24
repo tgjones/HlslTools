@@ -105,7 +105,7 @@ namespace HlslTools.VisualStudio.Navigation
 
         public override IEnumerable<EditorNavigationTarget> VisitFunctionDeclaration(FunctionDeclarationSyntax node)
         {
-            yield return CreateTarget(node.Name, node.GetDescription(false, true), node.GetTextSpanSafe(), Glyph.Function);
+            yield return CreateTarget(node.Name.GetUnqualifiedName().Name, node.GetDescription(false, true), node.GetTextSpanSafe(), Glyph.Function);
         }
 
         public override IEnumerable<EditorNavigationTarget> VisitFunctionDefinition(FunctionDefinitionSyntax node)

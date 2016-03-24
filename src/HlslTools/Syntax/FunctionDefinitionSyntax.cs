@@ -2,26 +2,14 @@
 
 namespace HlslTools.Syntax
 {
-    public sealed class FunctionDefinitionSyntax : SyntaxNode
+    public sealed class FunctionDefinitionSyntax : FunctionSyntax
     {
-        public readonly List<AttributeSyntax> Attributes;
-        public readonly List<SyntaxToken> Modifiers;
-        public readonly TypeSyntax ReturnType;
-        public readonly DeclarationNameSyntax Name;
-        public readonly ParameterListSyntax ParameterList;
-        public readonly SemanticSyntax Semantic;
         public readonly BlockSyntax Body;
         public readonly SyntaxToken SemicolonToken;
 
         public FunctionDefinitionSyntax(List<AttributeSyntax> attributes, List<SyntaxToken> modifiers, TypeSyntax returnType, DeclarationNameSyntax name, ParameterListSyntax parameterList, SemanticSyntax semantic, BlockSyntax body, SyntaxToken semicolonToken)
-            : base(SyntaxKind.FunctionDefinition)
+            : base(SyntaxKind.FunctionDefinition, attributes, modifiers, returnType, name, parameterList, semantic)
         {
-            RegisterChildNodes(out Attributes, attributes);
-            RegisterChildNodes(out Modifiers, modifiers);
-            RegisterChildNode(out ReturnType, returnType);
-            RegisterChildNode(out Name, name);
-            RegisterChildNode(out ParameterList, parameterList);
-            RegisterChildNode(out Semantic, semantic);
             RegisterChildNode(out Body, body);
             RegisterChildNode(out SemicolonToken, semicolonToken);
         }

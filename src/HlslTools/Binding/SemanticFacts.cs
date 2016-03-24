@@ -1,4 +1,5 @@
-﻿using HlslTools.Binding.BoundNodes;
+﻿using System.Linq;
+using HlslTools.Binding.BoundNodes;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding

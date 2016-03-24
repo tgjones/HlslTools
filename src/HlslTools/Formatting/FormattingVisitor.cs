@@ -585,9 +585,7 @@ namespace HlslTools.Formatting
 
             Visit(node.ReturnType);
 
-            FormatToken(node.Name,
-                LeadingFormattingOperation.EnsureLeadingWhitespace,
-                TrailingFormattingOperation.RemoveTrailingWhitespace);
+            Visit(node.Name);
 
             Visit(node.ParameterList);
 

@@ -98,7 +98,7 @@ namespace HlslTools.VisualStudio.Navigation.NavigateTo
 
         public override void VisitFunctionDeclaration(FunctionDeclarationSyntax node)
         {
-            ProcessItem(node.Name, node.GetDescription(false, false), node.GetTextSpanSafe(), NavigateToItemKind.Method, node.Parent, Glyph.Function);
+            ProcessItem(node.Name.GetUnqualifiedName().Name, node.GetDescription(false, false), node.GetTextSpanSafe(), NavigateToItemKind.Method, node.Parent, Glyph.Function);
         }
 
         public override void VisitFunctionDefinition(FunctionDefinitionSyntax node)

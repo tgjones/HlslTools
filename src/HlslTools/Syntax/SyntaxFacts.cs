@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Symbols;
@@ -2036,6 +2035,38 @@ namespace HlslTools.Syntax
                 return ParameterDirection.Out;
 
             return ParameterDirection.In;
+        }
+
+        public static bool HaveMatchingSignatures(FunctionSyntax left, FunctionSyntax right)
+        {
+            // TODO: Whitespace differences will result in a false negative.
+
+            if (!ReferenceEquals(left.Parent, right.Parent))
+                return false;
+
+            if (left.Name.ToStringIgnoringMacroReferences() != right.Name.ToStringIgnoringMacroReferences())
+                return false;
+
+            if (left.ParameterList.Parameters.Count != right.ParameterList.Parameters.Count)
+                return false;
+
+            for (var i = 0; i < left.ParameterList.Parameters.Count; i++)
+            {
+                var leftParameter = left.ParameterList.Parameters[i];
+                var rightParameter = right.ParameterList.Parameters[i];
+
+                if (leftParameter.Type.ToStringIgnoringMacroReferences() != rightParameter.Type.ToStringIgnoringMacroReferences())
+                    return false;
+
+                if (leftParameter.Modifiers.Count != rightParameter.Modifiers.Count)
+                    return false;
+
+                for (var j = 0; j < leftParameter.Modifiers.Count; j++)
+                    if (leftParameter.Modifiers[j].Text != rightParameter.Modifiers[j].Text)
+                        return false;
+            }
+
+            return true;
         }
     }
 }

@@ -17,5 +17,26 @@ namespace HlslTools.Symbols
         }
 
         public TypeSymbol ValueType { get; }
+
+        protected bool Equals(VariableSymbol other)
+        {
+            return base.Equals(other) && ValueType.Equals(other.ValueType);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != GetType()) return false;
+            return Equals((VariableSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ ValueType.GetHashCode();
+            }
+        }
     }
 }

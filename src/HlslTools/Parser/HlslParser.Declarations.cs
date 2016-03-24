@@ -208,8 +208,7 @@ namespace HlslTools.Parser
 
                 Debug.Assert(name.Kind == SyntaxKind.IdentifierDeclarationName);
 
-                return new FunctionDeclarationSyntax(attributes, modifiers, returnType, 
-                    ((IdentifierDeclarationNameSyntax) name).Name, 
+                return new FunctionDeclarationSyntax(attributes, modifiers, returnType, name, 
                     new ParameterListSyntax(openParen, new SeparatedSyntaxList<ParameterSyntax>(parameters), closeParen), 
                     semantic, semicolon);
             }
