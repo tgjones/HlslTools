@@ -525,6 +525,14 @@ namespace HlslTools.Parser
                     return (divisor != 0)
                         ? EvaluateInt(((BinaryExpressionSyntax) expr).Left) / divisor
                         : int.MaxValue;
+                case SyntaxKind.GreaterThanExpression:
+                    return EvaluateInt(((BinaryExpressionSyntax)expr).Left) > EvaluateInt(((BinaryExpressionSyntax)expr).Right);
+                case SyntaxKind.GreaterThanOrEqualExpression:
+                    return EvaluateInt(((BinaryExpressionSyntax)expr).Left) >= EvaluateInt(((BinaryExpressionSyntax)expr).Right);
+                case SyntaxKind.LessThanExpression:
+                    return EvaluateInt(((BinaryExpressionSyntax)expr).Left) < EvaluateInt(((BinaryExpressionSyntax)expr).Right);
+                case SyntaxKind.LessThanOrEqualExpression:
+                    return EvaluateInt(((BinaryExpressionSyntax)expr).Left) <= EvaluateInt(((BinaryExpressionSyntax)expr).Right);
                 case SyntaxKind.IdentifierName:
                     var id = ((IdentifierNameSyntax)expr).Name.Text;
                     return IsDirectiveDefined(id);
