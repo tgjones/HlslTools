@@ -40,9 +40,8 @@ namespace HlslTools.VisualStudio
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension6)]
 
     [ProvideEditorFactory(typeof(HlslEditorFactory), 140, CommonPhysicalViewAttributes = (int) __VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
-    [ProvideEditorExtension(typeof(HlslEditorFactory), ".*", 1)]
     [ProvideEditorLogicalView(typeof(HlslEditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
-    [ProvideFileExtensionMapping("{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", "HLSL Tools", typeof(HlslEditorFactory), typeof(HlslLanguageInfo), GuidList.guidShaderStudio_VisualStudioPackagePkgString, 100)]
+    [ProvideFileExtensionMapping("{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", "HLSL Editor", typeof(HlslEditorFactory), typeof(HlslLanguageInfo), GuidList.guidShaderStudio_VisualStudioPackagePkgString, 100)]
 
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
