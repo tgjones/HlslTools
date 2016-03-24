@@ -64,10 +64,15 @@ namespace HlslTools.Symbols
                     var rightIntrinsicType = (IntrinsicObjectTypeSymbol) right;
                     if (leftIntrinsicType.PredefinedType == PredefinedObjectType.Sampler)
                     {
-                        if (rightIntrinsicType.PredefinedType == PredefinedObjectType.Sampler2D)
-                            return true;
-                        if (rightIntrinsicType.PredefinedType == PredefinedObjectType.SamplerState)
-                            return true;
+                        switch (rightIntrinsicType.PredefinedType)
+                        {
+                            case PredefinedObjectType.Sampler1D:
+                            case PredefinedObjectType.Sampler2D:
+                            case PredefinedObjectType.Sampler3D:
+                            case PredefinedObjectType.SamplerCube:
+                            case PredefinedObjectType.SamplerState:
+                                return true;
+                        }
                     }
                 }
                 return false;
