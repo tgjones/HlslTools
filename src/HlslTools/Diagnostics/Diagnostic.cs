@@ -10,12 +10,12 @@ namespace HlslTools.Diagnostics
         public string Message { get; }
         public DiagnosticSeverity Severity { get; }
 
-        public Diagnostic(TextSpan textSpan, DiagnosticId diagnosticId, string message, DiagnosticSeverity severity = DiagnosticSeverity.Error)
+        public Diagnostic(TextSpan textSpan, DiagnosticId diagnosticId, string message)
         {
             Span = textSpan;
             Message = message;
             DiagnosticId = diagnosticId;
-            Severity = severity;
+            Severity = DiagnosticFacts.GetSeverity(diagnosticId);
         }
 
         public static Diagnostic Format(TextSpan textSpan, DiagnosticId diagnosticId, params object[] args)

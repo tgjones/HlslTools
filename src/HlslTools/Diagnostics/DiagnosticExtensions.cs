@@ -164,14 +164,14 @@ namespace HlslTools.Diagnostics
         {
             var symbol1 = candidates[0];
             var symbol2 = candidates[1];
-            diagnostics.Report(name.Span, DiagnosticId.AmbiguousReference, name.ValueText, symbol1, symbol2);
+            diagnostics.Report(name.Span, DiagnosticId.AmbiguousReference, name.ValueText, symbol1.Name, symbol2.Name);
         }
 
         public static void ReportAmbiguousType(this ICollection<Diagnostic> diagnostics, SyntaxToken name, IReadOnlyList<Symbol> candidates)
         {
             var symbol1 = candidates[0];
             var symbol2 = candidates[1];
-            diagnostics.Report(name.Span, DiagnosticId.AmbiguousType, name.ValueText, symbol1, symbol2);
+            diagnostics.Report(name.Span, DiagnosticId.AmbiguousType, name.ValueText, symbol1.Name, symbol2.Name);
         }
 
         public static void ReportInvocationRequiresParenthesis(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
@@ -222,6 +222,11 @@ namespace HlslTools.Diagnostics
         public static void ReportSymbolRedefined(this ICollection<Diagnostic> diagnostics, TextSpan span, Symbol symbol)
         {
             diagnostics.Report(span, DiagnosticId.SymbolRedefined, symbol.Name);
+        }
+
+        public static void ReportLoopControlVariableConflict(this ICollection<Diagnostic> diagnostics, VariableDeclaratorSyntax syntax)
+        {
+            diagnostics.Report(syntax.Identifier.Span, DiagnosticId.LoopControlVariableConflict, syntax.Identifier.Text);
         }
 
         #endregion

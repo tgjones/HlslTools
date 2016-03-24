@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
 using HlslTools.Tests.Support;
@@ -29,7 +30,7 @@ namespace HlslTools.Tests.Compilation
             foreach (var diagnostic in semanticModel.GetDiagnostics())
                 Debug.WriteLine(diagnostic);
 
-            Assert.That(semanticModel.GetDiagnostics().Count(), Is.EqualTo(0));
+            Assert.That(semanticModel.GetDiagnostics().Count(x => x.Severity == DiagnosticSeverity.Error), Is.EqualTo(0));
         }
 
         [Test]

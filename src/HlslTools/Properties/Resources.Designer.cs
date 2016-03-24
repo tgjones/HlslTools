@@ -286,6 +286,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Loop control variable &apos;{0}&apos; conflicts with a previous declaration in the outer scope. The most recent declaration will be used..
+        /// </summary>
+        internal static string LoopControlVariableConflict {
+            get {
+                return ResourceManager.GetString("LoopControlVariableConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quoted file name, single-line comment or end-of-line expected..
         /// </summary>
         internal static string MissingPreprocessorFile {

@@ -2,6 +2,8 @@
 using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
+using HlslTools.Diagnostics;
+using HlslTools.Symbols;
 using HlslTools.Syntax;
 
 namespace HlslTools.Binding
@@ -104,19 +106,40 @@ namespace HlslTools.Binding
             return new BoundDiscardStatement();
         }
 
-        private BoundExpressionStatement BindExpressionStatement(ExpressionStatementSyntax syntax)
+        private BoundExpressionStatement BindExpressionStatement(ExpressionStatementSyntax syntax) 
         {
             return new BoundExpressionStatement(Bind(syntax.Expression, BindExpression));
         }
 
         private BoundForStatement BindForStatement(ForStatementSyntax syntax)
         {
+            var forStatementBinder = new Binder(_sharedBinderState, this);
+
+            // Note that we bind declarations in the current scope, not the for statement scope.
+
             return new BoundForStatement(
-                syntax.Declaration != null ? Bind(syntax.Declaration, BindVariableDeclaration) : null,
-                syntax.Initializer != null ? Bind(syntax.Initializer, BindExpression) : null,
-                Bind(syntax.Condition, BindExpression),
-                Bind(syntax.Incrementor, BindExpression),
-                Bind(syntax.Statement, BindStatement));
+                syntax.Declaration != null ? Bind(syntax.Declaration, BindForStatementDeclaration) : null,
+                syntax.Initializer != null ? forStatementBinder.Bind(syntax.Initializer, forStatementBinder.BindExpression) : null,
+                forStatementBinder.Bind(syntax.Condition, forStatementBinder.BindExpression),
+                forStatementBinder.Bind(syntax.Incrementor, forStatementBinder.BindExpression),
+                forStatementBinder.Bind(syntax.Statement, forStatementBinder.BindStatement));
+        }
+
+        private BoundMultipleVariableDeclarations BindForStatementDeclaration(VariableDeclarationSyntax syntax)
+        {
+            // When binding for loop declarations, allow redefinition of variables from enclosing scope. (X3078)
+            // Use most recently declared variable. Add a warning to diagnostics.
+
+            return BindVariableDeclaration(syntax, (d, t) =>
+            {
+                var existingSymbol = _symbols.FirstOrDefault(x => x.Name == d.Identifier.Text);
+                if (existingSymbol != null)
+                {
+                    _symbols.Remove(existingSymbol);
+                    Diagnostics.ReportLoopControlVariableConflict(d);
+                }
+                return new VariableSymbol(d, null, t);
+            });
         }
 
         private BoundIfStatement BindIfStatement(IfStatementSyntax syntax)

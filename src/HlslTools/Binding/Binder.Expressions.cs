@@ -236,6 +236,7 @@ namespace HlslTools.Binding
 
         private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax node)
         {
+            // TODO: Need to apply similar overload resolution as BindBinaryExpression.
             var operatorKind = (node.Kind != SyntaxKind.SimpleAssignmentExpression) ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(node.Kind) : null;
 
             return new BoundAssignmentExpression(BindExpression(node.Left), operatorKind, BindExpression(node.Right));

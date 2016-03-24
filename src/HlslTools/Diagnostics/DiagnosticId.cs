@@ -52,6 +52,7 @@
         AmbiguousUnaryOperator,
         AmbiguousBinaryOperator,
         SymbolRedefined,
-        FunctionMissingImplementation
+        FunctionMissingImplementation,
+        LoopControlVariableConflict
     }
 }
