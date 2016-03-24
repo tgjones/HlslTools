@@ -112,7 +112,7 @@ namespace HlslTools.Binding
         private BoundForStatement BindForStatement(ForStatementSyntax syntax)
         {
             return new BoundForStatement(
-                Bind(syntax.Declaration, BindVariableDeclaration),
+                syntax.Declaration != null ? Bind(syntax.Declaration, BindVariableDeclaration) : null,
                 syntax.Initializer != null ? Bind(syntax.Initializer, BindExpression) : null,
                 Bind(syntax.Condition, BindExpression),
                 Bind(syntax.Incrementor, BindExpression),

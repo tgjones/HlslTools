@@ -85,7 +85,8 @@ namespace HlslTools.Binding
 
         protected virtual void VisitForStatement(BoundForStatement node)
         {
-            VisitMultipleVariableDeclarations(node.Declarations);
+            if (node.Declarations != null)
+                VisitMultipleVariableDeclarations(node.Declarations);
 
             if (node.Initializer != null)
                 VisitExpression(node.Initializer);

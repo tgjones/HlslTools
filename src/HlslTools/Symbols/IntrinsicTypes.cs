@@ -16,35 +16,35 @@ namespace HlslTools.Symbols
         public static readonly IntrinsicScalarTypeSymbol Float;
         public static readonly IntrinsicScalarTypeSymbol Double;
 
-        public static readonly TypeSymbol Bool1;
-        public static readonly TypeSymbol Bool2;
-        public static readonly TypeSymbol Bool3;
-        public static readonly TypeSymbol Bool4;
+        public static readonly IntrinsicVectorTypeSymbol Bool1;
+        public static readonly IntrinsicVectorTypeSymbol Bool2;
+        public static readonly IntrinsicVectorTypeSymbol Bool3;
+        public static readonly IntrinsicVectorTypeSymbol Bool4;
 
-        public static readonly TypeSymbol Int1;
-        public static readonly TypeSymbol Int2;
-        public static readonly TypeSymbol Int3;
-        public static readonly TypeSymbol Int4;
+        public static readonly IntrinsicVectorTypeSymbol Int1;
+        public static readonly IntrinsicVectorTypeSymbol Int2;
+        public static readonly IntrinsicVectorTypeSymbol Int3;
+        public static readonly IntrinsicVectorTypeSymbol Int4;
 
-        public static readonly TypeSymbol Uint1;
-        public static readonly TypeSymbol Uint2;
-        public static readonly TypeSymbol Uint3;
-        public static readonly TypeSymbol Uint4;
+        public static readonly IntrinsicVectorTypeSymbol Uint1;
+        public static readonly IntrinsicVectorTypeSymbol Uint2;
+        public static readonly IntrinsicVectorTypeSymbol Uint3;
+        public static readonly IntrinsicVectorTypeSymbol Uint4;
 
-        public static readonly TypeSymbol Half1;
-        public static readonly TypeSymbol Half2;
-        public static readonly TypeSymbol Half3;
-        public static readonly TypeSymbol Half4;
+        public static readonly IntrinsicVectorTypeSymbol Half1;
+        public static readonly IntrinsicVectorTypeSymbol Half2;
+        public static readonly IntrinsicVectorTypeSymbol Half3;
+        public static readonly IntrinsicVectorTypeSymbol Half4;
 
-        public static readonly TypeSymbol Float1;
-        public static readonly TypeSymbol Float2;
-        public static readonly TypeSymbol Float3;
-        public static readonly TypeSymbol Float4;
+        public static readonly IntrinsicVectorTypeSymbol Float1;
+        public static readonly IntrinsicVectorTypeSymbol Float2;
+        public static readonly IntrinsicVectorTypeSymbol Float3;
+        public static readonly IntrinsicVectorTypeSymbol Float4;
 
-        public static readonly TypeSymbol Double1;
-        public static readonly TypeSymbol Double2;
-        public static readonly TypeSymbol Double3;
-        public static readonly TypeSymbol Double4;
+        public static readonly IntrinsicVectorTypeSymbol Double1;
+        public static readonly IntrinsicVectorTypeSymbol Double2;
+        public static readonly IntrinsicVectorTypeSymbol Double3;
+        public static readonly IntrinsicVectorTypeSymbol Double4;
 
         public static readonly TypeSymbol Bool1x1;
         public static readonly TypeSymbol Bool1x2;
@@ -197,12 +197,12 @@ namespace HlslTools.Symbols
             // Scalar types.
             Void = new IntrinsicScalarTypeSymbol("void", "Represents a void value.", ScalarType.Void);
             String = new IntrinsicScalarTypeSymbol("string", "Represents a string value.", ScalarType.String);
-            Bool = new IntrinsicScalarTypeSymbol("bool", "Represents a boolean value.", ScalarType.Bool, t => CreateVectorTypeFields(1, Bool, Bool1, Bool2, Bool3, Bool4));
-            Int = new IntrinsicScalarTypeSymbol("int", "Represents a 32-bit signed integer value.", ScalarType.Int, t => CreateVectorTypeFields(1, Int, Int1, Int2, Int3, Int4));
-            Uint = new IntrinsicScalarTypeSymbol("uint", "Represents a 32-bit unsigned integer value.", ScalarType.Uint, t => CreateVectorTypeFields(1, Uint, Uint1, Uint2, Uint3, Uint4));
-            Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half, t => CreateVectorTypeFields(1, Half, Half1, Half2, Half3, Half4));
-            Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float, t => CreateVectorTypeFields(1, Float, Float1, Float2, Float3, Float4));
-            Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double, t => CreateVectorTypeFields(1, Double, Double1, Double2, Double3, Double4));
+            Bool = new IntrinsicScalarTypeSymbol("bool", "Represents a boolean value.", ScalarType.Bool, t => CreateScalarTypeFields(1, Bool, Bool1, Bool2, Bool3, Bool4));
+            Int = new IntrinsicScalarTypeSymbol("int", "Represents a 32-bit signed integer value.", ScalarType.Int, t => CreateScalarTypeFields(1, Int, Int1, Int2, Int3, Int4));
+            Uint = new IntrinsicScalarTypeSymbol("uint", "Represents a 32-bit unsigned integer value.", ScalarType.Uint, t => CreateScalarTypeFields(1, Uint, Uint1, Uint2, Uint3, Uint4));
+            Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half, t => CreateScalarTypeFields(1, Half, Half1, Half2, Half3, Half4));
+            Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float, t => CreateScalarTypeFields(1, Float, Float1, Float2, Float3, Float4));
+            Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double, t => CreateScalarTypeFields(1, Double, Double1, Double2, Double3, Double4));
 
             // Vector types.
             Bool1 = new IntrinsicVectorTypeSymbol("bool1", "Represents a vector containing 1 boolean component.",  ScalarType.Bool, 1, t => CreateVectorTypeFields(1, Bool1, Bool, Bool2, Bool3, Bool4));
@@ -700,8 +700,8 @@ namespace HlslTools.Symbols
                 .ToArray();
         }
 
-        private static IEnumerable<FieldSymbol> CreateVectorTypeFields(int numComponents,
-            TypeSymbol vectorType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
+        private static IEnumerable<Symbol> CreateScalarTypeFields(int numComponents,
+            IntrinsicTypeSymbol parentType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
         {
             var componentNameSets = new[] { "xyzw", "rgba" }.Select(x => x.Substring(0, numComponents).ToCharArray()).ToList();
             var vectorTypes = new[] { v1, v2, v3, v4 };
@@ -709,7 +709,16 @@ namespace HlslTools.Symbols
             foreach (var componentNameSet in componentNameSets)
                 for (var i = 0; i < 4; i++)
                     foreach (var namePermutation in GetComponentNamePermutations(componentNameSet, i + 1))
-                        yield return new FieldSymbol(namePermutation, "", vectorType, vectorTypes[i]);
+                        yield return new FieldSymbol(namePermutation, "", parentType, vectorTypes[i]);
+        }
+
+        private static IEnumerable<Symbol> CreateVectorTypeFields(int numComponents,
+            IntrinsicVectorTypeSymbol vectorType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
+        {
+            yield return new IndexerSymbol("[]", "", vectorType, GetScalarType(vectorType.ScalarType));
+
+            foreach (var field in CreateScalarTypeFields(numComponents, vectorType, v1, v2, v3, v4))
+                yield return field;
         }
 
         private static IEnumerable<string> GetComponentNamePermutations(char[] components, int num)
@@ -766,6 +775,11 @@ namespace HlslTools.Symbols
                     yield return new FieldSymbol($"_m{row}{col}", "", matrixType, fieldType);
                     yield return new FieldSymbol($"_{row + 1}{col + 1}", "", matrixType, fieldType);
                 }
+        }
+
+        public static TypeSymbol GetScalarType(ScalarType scalarType)
+        {
+            return AllScalarTypes[(int)scalarType - 1];
         }
 
         public static TypeSymbol GetVectorType(ScalarType scalarType, int numComponents)
