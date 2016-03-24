@@ -201,6 +201,7 @@ namespace HlslTools.Syntax
         Technique10Keyword,
         Technique11Keyword,
         TextureKeyword,
+        Texture2DLegacyKeyword,
         Texture1DKeyword,
         Texture1DArrayKeyword,
         Texture2DKeyword,

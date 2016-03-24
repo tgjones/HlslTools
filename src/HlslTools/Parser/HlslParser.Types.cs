@@ -54,6 +54,7 @@ namespace HlslTools.Parser
                 case SyntaxKind.RasterizerStateKeyword:
                 case SyntaxKind.BlendStateKeyword:
                 case SyntaxKind.DepthStencilStateKeyword:
+                case SyntaxKind.Texture2DLegacyKeyword:
                 case SyntaxKind.SamplerKeyword:
                 case SyntaxKind.Sampler1DKeyword:
                 case SyntaxKind.Sampler2DKeyword:

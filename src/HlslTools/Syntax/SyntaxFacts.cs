@@ -553,6 +553,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerComparisonStateKeyword:
                 case SyntaxKind.StructuredBufferKeyword:
+                case SyntaxKind.Texture2DLegacyKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -654,6 +655,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.StructuredBufferKeyword:
                     return PredefinedObjectType.StructuredBuffer;
                 case SyntaxKind.TextureKeyword:
+                case SyntaxKind.Texture2DLegacyKeyword:
                     return PredefinedObjectType.Texture;
                 case SyntaxKind.Texture1DKeyword:
                     return PredefinedObjectType.Texture1D;
@@ -1206,6 +1208,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Technique10Keyword:
                 case SyntaxKind.Technique11Keyword:
                 case SyntaxKind.TextureKeyword:
+                case SyntaxKind.Texture2DLegacyKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -1775,6 +1778,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.Technique10Keyword;
                 case "technique11":
                     return SyntaxKind.Technique11Keyword;
+                case "texture2D":
+                    return SyntaxKind.Texture2DLegacyKeyword;
                 case "Texture1D":
                     return SyntaxKind.Texture1DKeyword;
                 case "Texture1DArray":
