@@ -121,5 +121,10 @@ namespace HlslTools.Binding
         {
             return BinaryOperator.Resolve(operatorKind, left.Type, right.Type);
         }
+
+        private static OverloadResolutionResult<UnaryOperatorSignature> LookupUnaryOperator(UnaryOperatorKind operatorKind, BoundExpression operand)
+        {
+            return UnaryOperator.Resolve(operatorKind, operand.Type);
+        }
     }
 }

@@ -106,6 +106,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Unary operator &apos;{0}&apos; invocation on type &apos;{1}&apos; is ambiguous..
+        /// </summary>
+        internal static string AmbiguousUnaryOperator {
+            get {
+                return ResourceManager.GetString("AmbiguousUnaryOperator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Preprocessor directives must appear as the first non-whitespace character on a line..
         /// </summary>
         internal static string BadDirectivePlacement {

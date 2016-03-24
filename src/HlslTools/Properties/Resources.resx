@@ -240,6 +240,9 @@
   <data name="AmbiguousBinaryOperator" xml:space="preserve">
     <value>Binary operator '{0}' invocation on types '{1}' and '{2}' is ambiguous.</value>
   </data>
+  <data name="AmbiguousUnaryOperator" xml:space="preserve">
+    <value>Unary operator '{0}' invocation on type '{1}' is ambiguous.</value>
+  </data>
   <data name="CannotApplyBinaryOperator" xml:space="preserve">
     <value>Cannot apply binary operator '{0}' on types '{1}' and '{2}'.</value>
   </data>

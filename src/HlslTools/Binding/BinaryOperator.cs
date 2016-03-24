@@ -44,13 +44,13 @@ namespace HlslTools.Binding
             BuiltInLeftShiftSignatures = IntrinsicTypes.AllIntegralTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.LeftShift, x)).ToArray();
             BuiltInRightShiftSignatures = IntrinsicTypes.AllIntegralTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.RightShift, x)).ToArray();
 
-            BuiltInEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.Equal, GetMatchingBoolType(x), x)).ToArray();
-            BuiltInNotEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.NotEqual, GetMatchingBoolType(x), x)).ToArray();
+            BuiltInEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.Equal, TypeFacts.GetMatchingBoolType(x), x)).ToArray();
+            BuiltInNotEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.NotEqual, TypeFacts.GetMatchingBoolType(x), x)).ToArray();
 
-            BuiltInLessSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.Less, GetMatchingBoolType(x), x)).ToArray();
-            BuiltInGreaterSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.Greater, GetMatchingBoolType(x), x)).ToArray();
-            BuiltInLessOrEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.LessEqual, GetMatchingBoolType(x), x)).ToArray();
-            BuiltInGreaterOrEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.GreaterEqual, GetMatchingBoolType(x), x)).ToArray();
+            BuiltInLessSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.Less, TypeFacts.GetMatchingBoolType(x), x)).ToArray();
+            BuiltInGreaterSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.Greater, TypeFacts.GetMatchingBoolType(x), x)).ToArray();
+            BuiltInLessOrEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.LessEqual, TypeFacts.GetMatchingBoolType(x), x)).ToArray();
+            BuiltInGreaterOrEqualSignatures = IntrinsicTypes.AllNumericTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.GreaterEqual, TypeFacts.GetMatchingBoolType(x), x)).ToArray();
 
             BuiltInBitAndSignatures = IntrinsicTypes.AllIntegralTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.BitwiseAnd, x)).ToArray();
             BuiltInBitOrSignatures = IntrinsicTypes.AllIntegralTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.BitwiseOr, x)).ToArray();
@@ -58,22 +58,6 @@ namespace HlslTools.Binding
 
             BuiltInLogicalAndSignatures = IntrinsicTypes.AllBoolTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.LogicalAnd, x)).ToArray();
             BuiltInLogicalOrSignatures = IntrinsicTypes.AllBoolTypes.Select(x => new BinaryOperatorSignature(BinaryOperatorKind.LogicalOr, x)).ToArray();
-        }
-
-        private static TypeSymbol GetMatchingBoolType(TypeSymbol numericType)
-        {
-            switch (numericType.Kind)
-            {
-                case SymbolKind.IntrinsicScalarType:
-                    return IntrinsicTypes.Bool;
-                case SymbolKind.IntrinsicVectorType:
-                    return IntrinsicTypes.GetVectorType(ScalarType.Bool, ((IntrinsicVectorTypeSymbol) numericType).NumComponents);
-                case SymbolKind.IntrinsicMatrixType:
-                    var matrixType = (IntrinsicMatrixTypeSymbol) numericType;
-                    return IntrinsicTypes.GetMatrixType(ScalarType.Bool, matrixType.Rows, matrixType.Cols);
-                default:
-                    throw new InvalidOperationException();
-            }
         }
 
         public static OverloadResolutionResult<BinaryOperatorSignature> Resolve(BinaryOperatorKind kind, TypeSymbol leftOperandType, TypeSymbol rightOperandType)

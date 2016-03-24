@@ -49,6 +49,7 @@
         InvocationRequiresParenthesis,
         CannotApplyUnaryOperator,
         CannotApplyBinaryOperator,
+        AmbiguousUnaryOperator,
         AmbiguousBinaryOperator,
         SymbolRedefined,
         FunctionMissingImplementation

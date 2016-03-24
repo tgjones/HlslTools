@@ -153,6 +153,7 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllBoolVectorTypes;
         public static readonly TypeSymbol[] AllIntVectorTypes;
         public static readonly TypeSymbol[] AllUintVectorTypes;
+        public static readonly TypeSymbol[] AllHalfVectorTypes;
         public static readonly TypeSymbol[] AllFloatVectorTypes;
         public static readonly TypeSymbol[] AllDoubleVectorTypes;
         public static readonly TypeSymbol[] AllVectorTypes;
@@ -160,6 +161,7 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllBoolMatrixTypes;
         public static readonly TypeSymbol[] AllIntMatrixTypes;
         public static readonly TypeSymbol[] AllUintMatrixTypes;
+        public static readonly TypeSymbol[] AllHalfMatrixTypes;
         public static readonly TypeSymbol[] AllFloatMatrixTypes;
         public static readonly TypeSymbol[] AllDoubleMatrixTypes;
         public static readonly TypeSymbol[] AllMatrixTypes;
@@ -167,10 +169,12 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllBoolTypes;
         public static readonly TypeSymbol[] AllIntTypes;
         public static readonly TypeSymbol[] AllUintTypes;
+        public static readonly TypeSymbol[] AllHalfTypes;
         public static readonly TypeSymbol[] AllFloatTypes;
         public static readonly TypeSymbol[] AllDoubleTypes;
 
         public static readonly TypeSymbol[] AllIntegralTypes;
+        public static readonly TypeSymbol[] AllNumericNonBoolTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
 
         public static readonly TypeSymbol Sampler1D;
@@ -357,6 +361,14 @@ namespace HlslTools.Symbols
                 Uint4
             };
 
+            AllHalfVectorTypes = new[]
+            {
+                Half1,
+                Half2,
+                Half3,
+                Half4
+            };
+
             AllFloatVectorTypes = new[]
             {
                 Float1,
@@ -459,6 +471,26 @@ namespace HlslTools.Symbols
                 Uint4x2,
                 Uint4x3,
                 Uint4x4
+            };
+
+            AllHalfMatrixTypes = new[]
+            {
+                Half1x1,
+                Half1x2,
+                Half1x3,
+                Half1x4,
+                Half2x1,
+                Half2x2,
+                Half2x3,
+                Half2x4,
+                Half3x1,
+                Half3x2,
+                Half3x3,
+                Half3x4,
+                Half4x1,
+                Half4x2,
+                Half4x3,
+                Half4x4
             };
 
             AllFloatMatrixTypes = new[]
@@ -616,6 +648,11 @@ namespace HlslTools.Symbols
                 .Union(AllUintMatrixTypes)
                 .ToArray();
 
+            AllHalfTypes = new[] { Half }
+                .Union(AllHalfVectorTypes)
+                .Union(AllHalfMatrixTypes)
+                .ToArray();
+
             AllFloatTypes = new[] { Float }
                 .Union(AllFloatVectorTypes)
                 .Union(AllFloatMatrixTypes)
@@ -628,6 +665,13 @@ namespace HlslTools.Symbols
 
             AllIntegralTypes = AllIntTypes
                 .Union(AllUintTypes)
+                .ToArray();
+
+            AllNumericNonBoolTypes = AllIntTypes
+                .Union(AllUintTypes)
+                .Union(AllHalfTypes)
+                .Union(AllFloatTypes)
+                .Union(AllDoubleTypes)
                 .ToArray();
 
             AllNumericTypes = AllScalarTypes

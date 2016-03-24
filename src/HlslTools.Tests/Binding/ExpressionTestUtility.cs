@@ -25,6 +25,7 @@ namespace HlslTools.Tests.Binding
                 case DiagnosticId.CannotApplyBinaryOperator:
                     return "#inapplicable";
                 case DiagnosticId.AmbiguousInvocation:
+                case DiagnosticId.AmbiguousUnaryOperator:
                 case DiagnosticId.AmbiguousBinaryOperator:
                     return "#ambiguous";
                 case DiagnosticId.UndeclaredFunction:

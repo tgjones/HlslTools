@@ -128,6 +128,8 @@
     <Compile Include="Binding\Signatures\Signature.cs" />
     <Compile Include="Binding\Binder.Statements.cs" />
     <Compile Include="Binding\Binder.Declarations.cs" />
+    <Compile Include="Binding\Signatures\UnaryOperatorSignature.cs" />
+    <Compile Include="Binding\UnaryOperator.cs" />
     <Compile Include="Compilation\Compilation.cs" />
     <Compile Include="Compilation\SemanticModel.cs" />
     <Compile Include="Diagnostics\DiagnosticSeverity.cs" />

@@ -20,7 +20,7 @@ namespace HlslTools.Binding.BoundNodes
             Expression = expression;
             Index = index;
             Result = result;
-            Type = Symbol?.ValueType;
+            Type = Symbol?.ValueType ?? TypeFacts.Unknown;
         }
     }
 }

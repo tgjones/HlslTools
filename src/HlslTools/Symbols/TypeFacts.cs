@@ -531,5 +531,21 @@ namespace HlslTools.Symbols
                     throw new ArgumentOutOfRangeException();
             }
         }
+
+        public static TypeSymbol GetMatchingBoolType(TypeSymbol numericType)
+        {
+            switch (numericType.Kind)
+            {
+                case SymbolKind.IntrinsicScalarType:
+                    return IntrinsicTypes.Bool;
+                case SymbolKind.IntrinsicVectorType:
+                    return IntrinsicTypes.GetVectorType(ScalarType.Bool, ((IntrinsicVectorTypeSymbol)numericType).NumComponents);
+                case SymbolKind.IntrinsicMatrixType:
+                    var matrixType = (IntrinsicMatrixTypeSymbol)numericType;
+                    return IntrinsicTypes.GetMatrixType(ScalarType.Bool, matrixType.Rows, matrixType.Cols);
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
     }
 }

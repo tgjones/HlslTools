@@ -195,6 +195,20 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(operatorToken.Span, DiagnosticId.AmbiguousBinaryOperator, operatorName, leftTypeName, rightTypeName);
         }
 
+        public static void ReportCannotApplyUnaryOperator(this ICollection<Diagnostic> diagnostics, SyntaxToken operatorToken, TypeSymbol type)
+        {
+            var operatorName = operatorToken.Text;
+            var typeName = type.ToDisplayName();
+            diagnostics.Report(operatorToken.Span, DiagnosticId.CannotApplyUnaryOperator, operatorName, typeName);
+        }
+
+        public static void ReportAmbiguousUnaryOperator(this ICollection<Diagnostic> diagnostics, SyntaxToken operatorToken, TypeSymbol type)
+        {
+            var operatorName = operatorToken.Text;
+            var typeName = type.ToDisplayName();
+            diagnostics.Report(operatorToken.Span, DiagnosticId.AmbiguousUnaryOperator, operatorName, typeName);
+        }
+
         public static void ReportFunctionMissingImplementation(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax syntax)
         {
             diagnostics.Report(syntax.Name.Span, DiagnosticId.FunctionMissingImplementation, syntax.Name.Text);

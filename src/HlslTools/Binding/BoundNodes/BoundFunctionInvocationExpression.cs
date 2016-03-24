@@ -16,7 +16,7 @@ namespace HlslTools.Binding.BoundNodes
             Result = result;
         }
 
-        public override TypeSymbol Type => Symbol?.ReturnType;
+        public override TypeSymbol Type => Symbol == null ? TypeFacts.Unknown : Symbol.ReturnType;
 
         public FunctionSymbol Symbol => Result.Selected?.Signature.Symbol;
 

@@ -1,19 +1,22 @@
+using HlslTools.Binding.Signatures;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundUnaryExpression : BoundExpression
     {
-        public BoundUnaryExpression(BoundExpression expression, UnaryOperatorKind operatorKind, TypeSymbol expressionType)
+        public UnaryOperatorKind OperatorKind { get; }
+        public BoundExpression Expression { get; }
+        public OverloadResolutionResult<UnaryOperatorSignature> Result { get; }
+
+        public override TypeSymbol Type => Result.Selected == null ? TypeFacts.Unknown : Result.Selected.Signature.ReturnType;
+
+        public BoundUnaryExpression(UnaryOperatorKind operatorKind, BoundExpression expression, OverloadResolutionResult<UnaryOperatorSignature> result)
             : base(BoundNodeKind.UnaryExpression)
         {
-            Expression = expression;
             OperatorKind = operatorKind;
-            Type = expressionType;
+            Expression = expression;
+            Result = result;
         }
-
-        public BoundExpression Expression { get; set; }
-        public UnaryOperatorKind OperatorKind { get; set; }
-        public override TypeSymbol Type { get; }
     }
 }

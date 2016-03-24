@@ -297,38 +297,46 @@ namespace HlslTools.Binding
 
         private BoundExpression BindPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
-            var expression = BindExpression(node.Operand);
             var operatorKind = SyntaxFacts.GetUnaryOperatorKind(node.Kind);
-            var expressionType = expression.Type;
+            var expression = Bind(node.Operand, BindExpression);
 
-            return new BoundUnaryExpression(expression, operatorKind, expressionType);
+            return BindUnaryExpression(node.OperatorToken, expression, operatorKind);
         }
 
         private BoundExpression BindPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
         {
-            var expression = BindExpression(node.Operand);
             var operatorKind = SyntaxFacts.GetUnaryOperatorKind(node.Kind);
+            var expression = Bind(node.Operand, BindExpression);
 
-            TypeSymbol expressionType;
-            switch (operatorKind)
+            return BindUnaryExpression(node.OperatorToken, expression, operatorKind);
+        }
+
+        private BoundExpression BindUnaryExpression(SyntaxToken operatorToken, BoundExpression expression, UnaryOperatorKind operatorKind)
+        {
+            // To avoid cascading errors, we'll return a unary expression that isn't bound to
+            // an operator if the expression couldn't be resolved.
+
+            if (expression.Type.IsError())
+                return new BoundUnaryExpression(operatorKind, expression, OverloadResolutionResult<UnaryOperatorSignature>.None);
+
+            var result = LookupUnaryOperator(operatorKind, expression);
+            if (result.Best == null)
             {
-                case UnaryOperatorKind.LogicalNot:
-                    expressionType = IntrinsicTypes.Bool;
-                    break;
-                case UnaryOperatorKind.BitwiseNot:
-                    expressionType = IntrinsicTypes.Uint;
-                    break;
-                case UnaryOperatorKind.Plus:
-                case UnaryOperatorKind.Minus:
-                case UnaryOperatorKind.PostIncrement:
-                case UnaryOperatorKind.PostDecrement:
-                    expressionType = expression.Type;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                if (result.Selected == null)
+                {
+                    Diagnostics.ReportCannotApplyUnaryOperator(operatorToken, expression.Type);
+                }
+                else
+                {
+                    Diagnostics.ReportAmbiguousUnaryOperator(operatorToken, expression.Type);
+                }
             }
 
-            return new BoundUnaryExpression(expression, operatorKind, expressionType);
+            // Convert argument (if necessary)
+
+            var convertedArgument = BindArgument(expression, result, 0);
+
+            return new BoundUnaryExpression(operatorKind, convertedArgument, result);
         }
 
         private BoundExpression BindNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax syntax)
