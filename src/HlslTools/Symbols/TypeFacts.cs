@@ -276,6 +276,8 @@ namespace HlslTools.Symbols
                     return ScalarType.Float;
                 case SyntaxKind.DoubleKeyword:
                     return ScalarType.Double;
+                case SyntaxKind.StringKeyword:
+                    return ScalarType.String;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

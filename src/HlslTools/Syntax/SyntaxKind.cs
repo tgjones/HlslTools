@@ -193,6 +193,7 @@ namespace HlslTools.Syntax
         SamplerStateLegacyKeyword,
         SharedKeyword,
         StaticKeyword,
+        StringKeyword,
         StructKeyword,
         StructuredBufferKeyword,
         SwitchKeyword,

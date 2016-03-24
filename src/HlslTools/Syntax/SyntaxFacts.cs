@@ -214,6 +214,8 @@ namespace HlslTools.Syntax
                     return "return";
                 case SyntaxKind.StaticKeyword:
                     return "static";
+                case SyntaxKind.StringKeyword:
+                    return "string";
                 case SyntaxKind.StructKeyword:
                     return "struct";
                 case SyntaxKind.SwitchKeyword:
@@ -363,6 +365,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.FloatKeyword:
                 case SyntaxKind.DoubleKeyword:
                 case SyntaxKind.VoidKeyword:
+                case SyntaxKind.StringKeyword:
                     return true;
 
                 default:
@@ -1200,6 +1203,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.SamplerStateLegacyKeyword:
                 case SyntaxKind.SharedKeyword:
                 case SyntaxKind.StaticKeyword:
+                case SyntaxKind.StringKeyword:
                 case SyntaxKind.StructKeyword:
                 case SyntaxKind.StructuredBufferKeyword:
                 case SyntaxKind.SwitchKeyword:
@@ -1763,6 +1767,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.SharedKeyword;
                 case "static":
                     return SyntaxKind.StaticKeyword;
+                case "string":
+                    return SyntaxKind.StringKeyword;
                 case "struct":
                     return SyntaxKind.StructKeyword;
                 case "StructuredBuffer":

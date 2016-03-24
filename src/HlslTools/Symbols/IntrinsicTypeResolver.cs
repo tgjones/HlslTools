@@ -86,6 +86,8 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.Float;
                 case ScalarType.Double:
                     return IntrinsicTypes.Double;
+                case ScalarType.String:
+                    return IntrinsicTypes.String;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
