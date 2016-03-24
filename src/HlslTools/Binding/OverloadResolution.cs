@@ -8,6 +8,12 @@ namespace HlslTools.Binding
 {
     internal static class OverloadResolution
     {
+        public static OverloadResolutionResult<T> Perform<T>(IEnumerable<T> signatures, params TypeSymbol[] argumentTypes)
+            where T : Signature
+        {
+            return Perform(signatures, (IReadOnlyList<TypeSymbol>) argumentTypes);
+        }
+
         public static OverloadResolutionResult<T> Perform<T>(IEnumerable<T> signatures, IReadOnlyList<TypeSymbol> argumentTypes)
             where T : Signature
         {
@@ -51,7 +57,8 @@ namespace HlslTools.Binding
             }
 
             // ReSharper disable InconsistentNaming
-            ulong intConversions = 0;
+            ulong i2uConversions = 0;
+            ulong u2iConversions = 0;
             ulong i2fConversions = 0;
             ulong f2iConversions = 0;
             ulong f2hConversions = 0;
@@ -131,9 +138,17 @@ namespace HlslTools.Binding
                     {
                         i2fConversions++;
                     }
+                    else if (argumentScalarType == ScalarType.Int && parameterScalarType == ScalarType.Uint)
+                    {
+                        i2uConversions++;
+                    }
+                    else if (argumentScalarType == ScalarType.Uint && parameterScalarType == ScalarType.Int)
+                    {
+                        u2iConversions++;
+                    }
                     else if (argumentScalarType != parameterScalarType)
                     {
-                        intConversions++;
+                        i2uConversions++;
                     }
 
                     var parameterDimension0 = numericParameterType.GetDimensionSize(0);
@@ -209,7 +224,7 @@ namespace HlslTools.Binding
                 }
             }
 
-            const int numBits = 4;
+            const int numBits = 3;
             const ulong mask = (1 << 6) - 1;
 
             // Worse to better.
@@ -220,7 +235,8 @@ namespace HlslTools.Binding
             score = (score << numBits) | (f2hConversions & mask);
             score = (score << numBits) | (i2fConversions & mask);
             score = (score << numBits) | (f2dConversions & mask);
-            score = (score << numBits) | (intConversions & mask);
+            score = (score << numBits) | (u2iConversions & mask);
+            score = (score << numBits) | (i2uConversions & mask);
 
             return true;
         }

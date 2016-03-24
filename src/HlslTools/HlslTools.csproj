@@ -121,6 +121,8 @@
     <Compile Include="Binding\OverloadResolutionResult.cs" />
     <Compile Include="Binding\SemanticFacts.cs" />
     <Compile Include="Binding\SharedBinderState.cs" />
+    <Compile Include="Binding\BinaryOperator.cs" />
+    <Compile Include="Binding\Signatures\BinaryOperatorSignature.cs" />
     <Compile Include="Binding\Signatures\FunctionSymbolSignature.cs" />
     <Compile Include="Binding\Signatures\IndexerSymbolSignature.cs" />
     <Compile Include="Binding\Signatures\Signature.cs" />

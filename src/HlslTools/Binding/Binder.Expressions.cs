@@ -149,18 +149,8 @@ namespace HlslTools.Binding
             var boundLeft = Bind(syntax.Left, BindExpression);
             var boundRight = Bind(syntax.Right, BindExpression);
 
-            var expressionType = GetBinaryExpressionType(syntax.OperatorToken, operatorKind, boundLeft, boundRight);
-
-            return new BoundBinaryExpression(
-                operatorKind,
-                boundLeft, boundRight,
-                expressionType);
-        }
-
-        private TypeSymbol GetBinaryExpressionType(SyntaxToken operatorToken, BinaryOperatorKind operatorKind, BoundExpression boundLeft, BoundExpression boundRight)
-        {
             if (boundLeft.Type.IsError() || boundRight.Type.IsError())
-                return TypeFacts.Unknown;
+                return new BoundBinaryExpression(operatorKind, boundLeft, boundRight, OverloadResolutionResult<BinaryOperatorSignature>.None);
 
             var leftType = boundLeft.Type;
             var rightType = boundRight.Type;
@@ -170,35 +160,29 @@ namespace HlslTools.Binding
             if (!ValidateTypeForBinaryExpression(leftType, requiresIntegralType, requiresNumericType)
                 || !ValidateTypeForBinaryExpression(rightType, requiresIntegralType, requiresNumericType))
             {
-                Diagnostics.ReportCannotApplyBinaryOperator(operatorToken.GetTextSpanSafe(), operatorToken, leftType, rightType);
-                return TypeFacts.Unknown;
+                Diagnostics.ReportCannotApplyBinaryOperator(syntax.OperatorToken, leftType, rightType);
+                return new BoundBinaryExpression(operatorKind, boundLeft, boundRight, OverloadResolutionResult<BinaryOperatorSignature>.None);
             }
 
-            switch (operatorKind)
+            var result = LookupBinaryOperator(operatorKind, boundLeft, boundRight);
+            if (result.Best == null)
             {
-                case BinaryOperatorKind.Less:
-                case BinaryOperatorKind.Greater:
-                case BinaryOperatorKind.LessEqual:
-                case BinaryOperatorKind.GreaterEqual:
-                case BinaryOperatorKind.Equal:
-                case BinaryOperatorKind.NotEqual:
-                    return IntrinsicTypes.Bool;
-                case BinaryOperatorKind.LogicalAnd:
-                case BinaryOperatorKind.LogicalOr:
-                case BinaryOperatorKind.Multiply:
-                case BinaryOperatorKind.Divide:
-                case BinaryOperatorKind.Modulo:
-                case BinaryOperatorKind.Add:
-                case BinaryOperatorKind.Subtract:
-                case BinaryOperatorKind.LeftShift:
-                case BinaryOperatorKind.RightShift:
-                case BinaryOperatorKind.BitwiseAnd:
-                case BinaryOperatorKind.BitwiseXor:
-                case BinaryOperatorKind.BitwiseOr:
-                    return boundLeft.Type; // TODO
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(operatorKind), operatorKind, null);
+                if (result.Selected == null)
+                {
+                    Diagnostics.ReportCannotApplyBinaryOperator(syntax.OperatorToken, boundLeft.Type, boundRight.Type);
+                }
+                else
+                {
+                    Diagnostics.ReportAmbiguousBinaryOperator(syntax.OperatorToken, boundLeft.Type, boundRight.Type);
+                }
             }
+
+            // Convert arguments (if necessary)
+
+            var convertedLeft = BindArgument(boundLeft, result, 0);
+            var convertedRight = BindArgument(boundRight, result, 1);
+
+            return new BoundBinaryExpression(operatorKind, convertedLeft, convertedRight, result);
         }
 
         private static bool ValidateTypeForBinaryExpression(TypeSymbol type,

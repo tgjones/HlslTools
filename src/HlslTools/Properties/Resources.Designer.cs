@@ -61,6 +61,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Binary operator &apos;{0}&apos; invocation on types &apos;{1}&apos; and &apos;{2}&apos; is ambiguous..
+        /// </summary>
+        internal static string AmbiguousBinaryOperator {
+            get {
+                return ResourceManager.GetString("AmbiguousBinaryOperator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Field &apos;{0}&apos; is ambiguous..
         /// </summary>
         internal static string AmbiguousField {
@@ -111,6 +120,24 @@ namespace HlslTools.Properties {
         internal static string BadEmbeddedStatement {
             get {
                 return ResourceManager.GetString("BadEmbeddedStatement", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot apply binary operator &apos;{0}&apos; on types &apos;{1}&apos; and &apos;{2}&apos;..
+        /// </summary>
+        internal static string CannotApplyBinaryOperator {
+            get {
+                return ResourceManager.GetString("CannotApplyBinaryOperator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot apply unary operator &apos;{0}&apos; on type &apos;{1}&apos;..
+        /// </summary>
+        internal static string CannotApplyUnaryOperator {
+            get {
+                return ResourceManager.GetString("CannotApplyUnaryOperator", resourceCulture);
             }
         }
         

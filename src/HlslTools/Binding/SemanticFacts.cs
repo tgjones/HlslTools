@@ -1,7 +1,5 @@
-﻿using System;
-using HlslTools.Binding.BoundNodes;
+﻿using HlslTools.Binding.BoundNodes;
 using HlslTools.Symbols;
-using HlslTools.Syntax;
 
 namespace HlslTools.Binding
 {

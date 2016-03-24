@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using HlslTools.Binding.BoundNodes;
 using HlslTools.Binding.Signatures;
 using HlslTools.Diagnostics;
 using HlslTools.Symbols;
@@ -114,6 +115,11 @@ namespace HlslTools.Binding
                              where name.Text == f.Name
                              select new FunctionSymbolSignature(f);
             return OverloadResolution.Perform(signatures, argumentTypes);
+        }
+
+        private static OverloadResolutionResult<BinaryOperatorSignature> LookupBinaryOperator(BinaryOperatorKind operatorKind, BoundExpression left, BoundExpression right)
+        {
+            return BinaryOperator.Resolve(operatorKind, left.Type, right.Type);
         }
     }
 }

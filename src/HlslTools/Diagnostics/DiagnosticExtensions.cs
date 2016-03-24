@@ -179,12 +179,20 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(name.Span, DiagnosticId.InvocationRequiresParenthesis, name.ValueText);
         }
 
-        public static void ReportCannotApplyBinaryOperator(this ICollection<Diagnostic> diagnostics, TextSpan span, SyntaxToken operatorToken, TypeSymbol leftType, TypeSymbol rightType)
+        public static void ReportCannotApplyBinaryOperator(this ICollection<Diagnostic> diagnostics, SyntaxToken operatorToken, TypeSymbol leftType, TypeSymbol rightType)
         {
             var operatorName = operatorToken.Text;
             var leftTypeName = leftType.ToDisplayName();
             var rightTypeName = rightType.ToDisplayName();
-            diagnostics.Report(span, DiagnosticId.CannotApplyBinaryOperator, operatorName, leftTypeName, rightTypeName);
+            diagnostics.Report(operatorToken.Span, DiagnosticId.CannotApplyBinaryOperator, operatorName, leftTypeName, rightTypeName);
+        }
+
+        public static void ReportAmbiguousBinaryOperator(this ICollection<Diagnostic> diagnostics, SyntaxToken operatorToken, TypeSymbol leftType, TypeSymbol rightType)
+        {
+            var operatorName = operatorToken.Text;
+            var leftTypeName = leftType.ToDisplayName();
+            var rightTypeName = rightType.ToDisplayName();
+            diagnostics.Report(operatorToken.Span, DiagnosticId.AmbiguousBinaryOperator, operatorName, leftTypeName, rightTypeName);
         }
 
         public static void ReportFunctionMissingImplementation(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax syntax)

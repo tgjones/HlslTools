@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using HlslTools.Diagnostics;
-using HlslTools.Symbols;
-using HlslTools.Symbols.Markup;
+﻿using System.Linq;
 using HlslTools.Syntax;
 using NUnit.Framework;
 
@@ -18,6 +14,7 @@ namespace HlslTools.Tests.Binding
         [TestCase("*", "int", "float", "float")]
         [TestCase("*", "int2", "float2", "float2")]
         [TestCase("*", "float2", "int2", "float2")]
+        [TestCase("<<", "int", "uint", "uint")]
         public void TestBinaryOperatorTypeConversions(string opText, string leftText, string rightText, string expectedResult)
         {
             var left = ExpressionTestUtility.GetValue(leftText);
@@ -47,37 +44,6 @@ namespace HlslTools.Tests.Binding
                 : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
 
             Assert.AreEqual(expectedResult, result, $"Expression {source} should have evaluated to '{expectedResult}' but was '{result}'");
-        }
-    }
-
-    internal static class ExpressionTestUtility
-    {
-        public static string GetValue(string type)
-        {
-            return $"(({type}) 1)";
-        }
-
-        public static string GetExpressionTypeString(TypeSymbol type)
-        {
-            return SymbolMarkup.ForSymbol(type).ToString();
-        }
-
-        public static string GetErrorString(DiagnosticId diagnosticId)
-        {
-            switch (diagnosticId)
-            {
-                case DiagnosticId.CannotApplyUnaryOperator:
-                case DiagnosticId.CannotApplyBinaryOperator:
-                    return "#inapplicable";
-                case DiagnosticId.AmbiguousInvocation:
-                    return "#ambiguous";
-                case DiagnosticId.UndeclaredFunction:
-                    return "#undeclared";
-                case DiagnosticId.CannotConvert:
-                    return "#cannotconvert";
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(diagnosticId));
-            }
         }
     }
 }

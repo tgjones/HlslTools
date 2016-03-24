@@ -169,6 +169,8 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllUintTypes;
         public static readonly TypeSymbol[] AllFloatTypes;
         public static readonly TypeSymbol[] AllDoubleTypes;
+
+        public static readonly TypeSymbol[] AllIntegralTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
 
         public static readonly TypeSymbol Sampler1D;
@@ -622,6 +624,10 @@ namespace HlslTools.Symbols
             AllDoubleTypes = new[] { Double }
                 .Union(AllDoubleVectorTypes)
                 .Union(AllDoubleMatrixTypes)
+                .ToArray();
+
+            AllIntegralTypes = AllIntTypes
+                .Union(AllUintTypes)
                 .ToArray();
 
             AllNumericTypes = AllScalarTypes
