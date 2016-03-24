@@ -224,6 +224,8 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.RasterizerOrderedTexture2DArray:
                 case PredefinedObjectType.RasterizerOrderedTexture3D:
                     throw new NotImplementedException();
+                case PredefinedObjectType.Sampler:
+                    return IntrinsicTypes.Sampler;
                 case PredefinedObjectType.Sampler1D:
                     return IntrinsicTypes.Sampler1D;
                 case PredefinedObjectType.Sampler2D:

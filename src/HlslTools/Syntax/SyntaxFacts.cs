@@ -640,6 +640,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Sampler1DKeyword:
                     return PredefinedObjectType.Sampler1D;
                 case SyntaxKind.SamplerKeyword:
+                    return PredefinedObjectType.Sampler;
                 case SyntaxKind.Sampler2DKeyword:
                     return PredefinedObjectType.Sampler2D;
                 case SyntaxKind.Sampler3DKeyword:

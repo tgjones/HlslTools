@@ -49,6 +49,7 @@
         BlendState,
         DepthStencilState,
         RasterizerState,
+        Sampler,
         Sampler1D,
         Sampler2D,
         Sampler3D,

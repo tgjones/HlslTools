@@ -177,6 +177,7 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol[] AllNumericNonBoolTypes;
         public static readonly TypeSymbol[] AllNumericTypes;
 
+        public static readonly TypeSymbol Sampler;
         public static readonly TypeSymbol Sampler1D;
         public static readonly TypeSymbol Sampler2D;
         public static readonly TypeSymbol Sampler3D;
@@ -679,21 +680,22 @@ namespace HlslTools.Symbols
                 .Union(AllMatrixTypes)
                 .ToArray();
 
-            Sampler1D = new IntrinsicObjectTypeSymbol("sampler1D", "");
-            Sampler2D = new IntrinsicObjectTypeSymbol("sampler2D", "");
-            Sampler3D = new IntrinsicObjectTypeSymbol("sampler3D", "");
-            SamplerCube = new IntrinsicObjectTypeSymbol("samplerCUBE", "");
-            SamplerState = new IntrinsicObjectTypeSymbol("SamplerState", "");
-            SamplerComparisonState = new IntrinsicObjectTypeSymbol("SamplerComparisonState", "");
+            Sampler = new IntrinsicObjectTypeSymbol("sampler", "", PredefinedObjectType.Sampler);
+            Sampler1D = new IntrinsicObjectTypeSymbol("sampler1D", "", PredefinedObjectType.Sampler1D);
+            Sampler2D = new IntrinsicObjectTypeSymbol("sampler2D", "", PredefinedObjectType.Sampler2D);
+            Sampler3D = new IntrinsicObjectTypeSymbol("sampler3D", "", PredefinedObjectType.Sampler3D);
+            SamplerCube = new IntrinsicObjectTypeSymbol("samplerCUBE", "", PredefinedObjectType.SamplerCube);
+            SamplerState = new IntrinsicObjectTypeSymbol("SamplerState", "", PredefinedObjectType.SamplerState);
+            SamplerComparisonState = new IntrinsicObjectTypeSymbol("SamplerComparisonState", "", PredefinedObjectType.SamplerComparisonState);
 
-            LegacyTexture = new IntrinsicObjectTypeSymbol("texture", "");
+            LegacyTexture = new IntrinsicObjectTypeSymbol("texture", "", PredefinedObjectType.Texture);
 
-            BlendState = new IntrinsicObjectTypeSymbol("BlendState", "");
-            DepthStencilState = new IntrinsicObjectTypeSymbol("DepthStencilState", "");
-            RasterizerState = new IntrinsicObjectTypeSymbol("RasterizerState", "");
+            BlendState = new IntrinsicObjectTypeSymbol("BlendState", "", PredefinedObjectType.BlendState);
+            DepthStencilState = new IntrinsicObjectTypeSymbol("DepthStencilState", "", PredefinedObjectType.DepthStencilState);
+            RasterizerState = new IntrinsicObjectTypeSymbol("RasterizerState", "", PredefinedObjectType.RasterizerState);
 
             AllIntrinsicTypes = AllNumericTypes
-                .Union(new[] { Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
+                .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
                 .Union(new[] { BlendState, DepthStencilState, RasterizerState })
                 .ToArray();
         }
@@ -826,7 +828,7 @@ namespace HlslTools.Symbols
                     throw new ArgumentOutOfRangeException();
             }
 
-            return new IntrinsicObjectTypeSymbol(name, documentation, t => CreateTextureMethods(textureType, t, valueType, scalarType));
+            return new IntrinsicObjectTypeSymbol(name, documentation, textureType, t => CreateTextureMethods(textureType, t, valueType, scalarType));
         }
 
         private static IEnumerable<FunctionSymbol> CreateTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
@@ -1298,6 +1300,7 @@ namespace HlslTools.Symbols
         {
             return new IntrinsicObjectTypeSymbol("AppendStructuredBuffer",
                 "Output buffer that appears as a stream the shader may append to. Only structured buffers can take T types that are structures.",
+                PredefinedObjectType.AppendStructuredBuffer,
                 t => new[]
                 {
                     new FunctionSymbol("Append", "Appends a value to the end of the buffer.", t, Void,
@@ -1322,6 +1325,7 @@ namespace HlslTools.Symbols
         {
             return new IntrinsicObjectTypeSymbol("ByteAddressBuffer",
                 "A read-only buffer that is indexed in bytes.",
+                PredefinedObjectType.ByteAddressBuffer,
                 t => new[]
                 {
                     new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
@@ -1380,6 +1384,7 @@ namespace HlslTools.Symbols
         {
             return new IntrinsicObjectTypeSymbol("ConsumeStructuredBuffer",
                 "An input buffer that appears as a stream the shader may pull values from. Only structured buffers can take T types that are structures.",
+                PredefinedObjectType.ConsumeStructuredBuffer,
                 t => new[]
                 {
                     new FunctionSymbol("Consume", "Removes a value from the end of the buffer.", t, valueType,
@@ -1397,6 +1402,7 @@ namespace HlslTools.Symbols
         {
             return new IntrinsicObjectTypeSymbol("StructuredBuffer",
                 "A read-only buffer, which can take a T type that is a structure.",
+                PredefinedObjectType.StructuredBuffer,
                 t => new[]
                 {
                     new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
@@ -1423,6 +1429,7 @@ namespace HlslTools.Symbols
         {
             return new IntrinsicObjectTypeSymbol("InputPatch",
                 "Represents an array of control points that are available to the hull shader as inputs.",
+                PredefinedObjectType.InputPatch,
                 t => new Symbol[]
                 {
                     new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType),
@@ -1434,6 +1441,7 @@ namespace HlslTools.Symbols
         {
             return new IntrinsicObjectTypeSymbol("OutputPatch",
                 "Represents an array of output control points that are available to the hull shader's patch-constant function as well as the domain shader.",
+                PredefinedObjectType.OutputPatch,
                 t => new Symbol[]
                 {
                     new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType)

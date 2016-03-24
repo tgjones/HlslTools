@@ -6,9 +6,9 @@ namespace HlslTools.Symbols
 {
     internal static class TypeFacts
     {
-        public static readonly TypeSymbol Missing = new IntrinsicObjectTypeSymbol("[Missing]", string.Empty);
-        public static readonly TypeSymbol Unknown = new IntrinsicObjectTypeSymbol("[Unknown]", string.Empty);
-        public static readonly TypeSymbol Variadic = new IntrinsicObjectTypeSymbol("[Variadic]", string.Empty);
+        public static readonly TypeSymbol Missing = new IntrinsicObjectTypeSymbol("[Missing]", string.Empty, PredefinedObjectType.Texture);
+        public static readonly TypeSymbol Unknown = new IntrinsicObjectTypeSymbol("[Unknown]", string.Empty, PredefinedObjectType.Texture);
+        public static readonly TypeSymbol Variadic = new IntrinsicObjectTypeSymbol("[Variadic]", string.Empty, PredefinedObjectType.Texture);
 
         public static bool IsMissing(this TypeSymbol type)
         {
@@ -57,7 +57,21 @@ namespace HlslTools.Symbols
                 return false;
 
             if (left.Kind == SymbolKind.IntrinsicObjectType || right.Kind == SymbolKind.IntrinsicObjectType)
+            {
+                if (left.Kind == SymbolKind.IntrinsicObjectType && right.Kind == SymbolKind.IntrinsicObjectType)
+                {
+                    var leftIntrinsicType = (IntrinsicObjectTypeSymbol) left;
+                    var rightIntrinsicType = (IntrinsicObjectTypeSymbol) right;
+                    if (leftIntrinsicType.PredefinedType == PredefinedObjectType.Sampler)
+                    {
+                        if (rightIntrinsicType.PredefinedType == PredefinedObjectType.Sampler2D)
+                            return true;
+                        if (rightIntrinsicType.PredefinedType == PredefinedObjectType.SamplerState)
+                            return true;
+                    }
+                }
                 return false;
+            }
 
             if (left.Kind == SymbolKind.Array || right.Kind == SymbolKind.Array)
                 return false;
