@@ -17,7 +17,7 @@ namespace HlslTools.Symbols
 
         private static IEnumerable<Symbol> CreateArrayMembers(TypeSymbol parent, TypeSymbol valueType)
         {
-            yield return new IndexerSymbol("[]", string.Empty, parent, valueType);
+            yield return new IndexerSymbol("[]", string.Empty, parent, IntrinsicTypes.Uint, valueType);
         }
     }
 }

@@ -725,7 +725,7 @@ namespace HlslTools.Symbols
         private static IEnumerable<Symbol> CreateVectorTypeFields(int numComponents,
             IntrinsicVectorTypeSymbol vectorType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
         {
-            yield return new IndexerSymbol("[]", "", vectorType, GetScalarType(vectorType.ScalarType));
+            yield return new IndexerSymbol("[]", "", vectorType, Uint, GetScalarType(vectorType.ScalarType));
 
             foreach (var field in CreateScalarTypeFields(numComponents, vectorType, v1, v2, v3, v4))
                 yield return field;
@@ -777,7 +777,7 @@ namespace HlslTools.Symbols
         {
             // TODO: Support composite fields like _m00_m01.
 
-            yield return new IndexerSymbol("[]", "", matrixType, GetVectorType(fieldType.ScalarType, numColumns));
+            yield return new IndexerSymbol("[]", "", matrixType, Uint, GetVectorType(fieldType.ScalarType, numColumns));
 
             for (var row = 0; row < numRows; row++)
                 for (var col = 0; col < numColumns; col++)
@@ -800,6 +800,90 @@ namespace HlslTools.Symbols
         public static TypeSymbol GetMatrixType(ScalarType scalarType, int numRows, int numCols)
         {
             return AllMatrixTypes[(((int)scalarType - 1) * 16) + ((numRows - 1) * 4) + (numCols - 1)];
+        }
+
+        public static IntrinsicTypeSymbol CreateRWTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
+        {
+            string name, documentation;
+
+            switch (textureType)
+            {
+                case PredefinedObjectType.RWBuffer:
+                    name = "RWBuffer";
+                    documentation = "A read-write buffer type";
+                    break;
+                case PredefinedObjectType.RWTexture1D:
+                    name = "RWTexture1D";
+                    documentation = "A read-write texture type";
+                    break;
+                case PredefinedObjectType.RWTexture1DArray:
+                    name = "RWTexture1DArray";
+                    documentation = "An array of read-write 1D textures";
+                    break;
+                case PredefinedObjectType.RWTexture2D:
+                    name = "RWTexture2D";
+                    documentation = "A read-write 2D texture type";
+                    break;
+                case PredefinedObjectType.RWTexture2DArray:
+                    name = "RWTexture2DArray";
+                    documentation = "An array of read-write 2D textures";
+                    break;
+                case PredefinedObjectType.RWTexture3D:
+                    name = "RWTexture3D";
+                    documentation = "A read-write 3D texture type";
+                    break;
+                case PredefinedObjectType.RasterizerOrderedBuffer:
+                    name = "RasterizerOrderedBuffer";
+                    documentation = "A read-write buffer type";
+                    break;
+                case PredefinedObjectType.RasterizerOrderedTexture1D:
+                    name = "RasterizerOrderedTexture1D";
+                    documentation = "A read-write texture type";
+                    break;
+                case PredefinedObjectType.RasterizerOrderedTexture1DArray:
+                    name = "RasterizerOrderedTexture1DArray";
+                    documentation = "An array of read-write 1D textures";
+                    break;
+                case PredefinedObjectType.RasterizerOrderedTexture2D:
+                    name = "RasterizerOrderedTexture2D";
+                    documentation = "A read-write 2D texture type";
+                    break;
+                case PredefinedObjectType.RasterizerOrderedTexture2DArray:
+                    name = "RasterizerOrderedTexture2DArray";
+                    documentation = "An array of read-write 2D textures";
+                    break;
+                case PredefinedObjectType.RasterizerOrderedTexture3D:
+                    name = "RasterizerOrderedTexture3D";
+                    documentation = "A read-write 3D texture type";
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
+            return new IntrinsicObjectTypeSymbol(name, documentation, textureType, t => CreateRWTextureMethods(textureType, t, valueType, scalarType));
+        }
+
+        private static IEnumerable<Symbol> CreateRWTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
+        {
+            yield return CreateTextureGetDimensionsMethod(parent, textureType, Uint);
+            yield return CreateTextureGetDimensionsMethod(parent, textureType, Float);
+
+            var intLocationType = GetTextureIntLocationType(textureType);
+
+            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                valueType, m => new[]
+                {
+                    new ParameterSymbol("location", "The texture coordinates", m, intLocationType)
+                });
+            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                valueType, m => new[]
+                {
+                    new ParameterSymbol("location", "The texture coordinates", m, intLocationType),
+                    new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                });
+
+            var indexType = GetTextureIndexType(textureType);
+            yield return new IndexerSymbol("[]", "Returns a resource variable.", parent, indexType, valueType, false);
         }
 
         public static IntrinsicTypeSymbol CreateTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
@@ -1008,28 +1092,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.TextureCubeArray:
                     break;
                 default:
-                    TypeSymbol intLocationType;
-                    switch (textureType)
-                    {
-                        case PredefinedObjectType.Buffer:
-                            intLocationType = Int;
-                            break;
-                        case PredefinedObjectType.Texture1D:
-                        case PredefinedObjectType.Texture2DMS:
-                            intLocationType = Int2;
-                            break;
-                        case PredefinedObjectType.Texture1DArray:
-                        case PredefinedObjectType.Texture2D:
-                        case PredefinedObjectType.Texture2DMSArray:
-                            intLocationType = Int3;
-                            break;
-                        case PredefinedObjectType.Texture2DArray:
-                        case PredefinedObjectType.Texture3D:
-                            intLocationType = Int4;
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
+                    var intLocationType = GetTextureIntLocationType(textureType);
                     switch (textureType)
                     {
                         case PredefinedObjectType.Texture2DMS:
@@ -1266,6 +1329,69 @@ namespace HlslTools.Symbols
             }
         }
 
+        private static TypeSymbol GetTextureIntLocationType(PredefinedObjectType textureType)
+        {
+            switch (textureType)
+            {
+                case PredefinedObjectType.Buffer:
+                case PredefinedObjectType.RWBuffer:
+                case PredefinedObjectType.RasterizerOrderedBuffer:
+                    return Int;
+                case PredefinedObjectType.Texture1D:
+                case PredefinedObjectType.RWTexture1D:
+                case PredefinedObjectType.RasterizerOrderedTexture1D:
+                case PredefinedObjectType.Texture2DMS:
+                    return Int2;
+                case PredefinedObjectType.Texture1DArray:
+                case PredefinedObjectType.RWTexture1DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture1DArray:
+                case PredefinedObjectType.Texture2D:
+                case PredefinedObjectType.RWTexture2D:
+                case PredefinedObjectType.RasterizerOrderedTexture2D:
+                case PredefinedObjectType.Texture2DMSArray:
+                    return Int3;
+                case PredefinedObjectType.Texture2DArray:
+                case PredefinedObjectType.RWTexture2DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture2DArray:
+                case PredefinedObjectType.Texture3D:
+                case PredefinedObjectType.RWTexture3D:
+                case PredefinedObjectType.RasterizerOrderedTexture3D:
+                    return Int4;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private static TypeSymbol GetTextureIndexType(PredefinedObjectType textureType)
+        {
+            switch (textureType)
+            {
+                case PredefinedObjectType.Buffer:
+                case PredefinedObjectType.RWBuffer:
+                case PredefinedObjectType.RasterizerOrderedBuffer:
+                case PredefinedObjectType.Texture1D:
+                case PredefinedObjectType.RWTexture1D:
+                case PredefinedObjectType.RasterizerOrderedTexture1D:
+                    return Int;
+                case PredefinedObjectType.Texture1DArray:
+                case PredefinedObjectType.RWTexture1DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture1DArray:
+                case PredefinedObjectType.Texture2D:
+                case PredefinedObjectType.RWTexture2D:
+                case PredefinedObjectType.RasterizerOrderedTexture2D:
+                    return Int2;
+                case PredefinedObjectType.Texture2DArray:
+                case PredefinedObjectType.RWTexture2DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture2DArray:
+                case PredefinedObjectType.Texture3D:
+                case PredefinedObjectType.RWTexture3D:
+                case PredefinedObjectType.RasterizerOrderedTexture3D:
+                    return Int3;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         private static IEnumerable<FunctionSymbol> CreateTextureGatherComponentMethods(Symbol parent, ScalarType scalarType, string componentName, TypeSymbol locationType, TypeSymbol offsetType)
         {
             var componentNameLower = componentName.ToLower();
@@ -1450,7 +1576,16 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol RWByteAddressBuffer = new IntrinsicObjectTypeSymbol("RWByteAddressBuffer",
             "A read/write buffer that indexes in bytes.",
             PredefinedObjectType.RWByteAddressBuffer,
-            t => CreateByteAddressBufferMethods(t)
+            CreateRWByteAddressBufferMethods);
+
+        public static readonly TypeSymbol RasterizerOrderedByteAddressBuffer = new IntrinsicObjectTypeSymbol("RasterizerOrderedByteAddressBuffer",
+            "A rasterizer ordered read/write buffer that indexes in bytes.",
+            PredefinedObjectType.RasterizerOrderedByteAddressBuffer,
+            CreateRWByteAddressBufferMethods);
+
+        private static FunctionSymbol[] CreateRWByteAddressBufferMethods(TypeSymbol t)
+        {
+            return CreateByteAddressBufferMethods(t)
                 .Union(new[]
                 {
                     new FunctionSymbol("InterlockedAdd", "Adds the value, atomically.", t, Void,
@@ -1542,7 +1677,9 @@ namespace HlslTools.Symbols
                             new ParameterSymbol("address", "The input address in bytes, which must be a multiple of 4.", m, Uint),
                             new ParameterSymbol("value", "Four input values.", m, Uint4)
                         }),
-                }));
+                })
+                .ToArray();
+        }
 
         private static FunctionSymbol[] CreateByteAddressBufferMethods(TypeSymbol t)
         {
@@ -1626,7 +1763,7 @@ namespace HlslTools.Symbols
                 t => CreateStructuredBufferMethods(t, valueType)
                     .Union(new Symbol[]
                     {
-                        new IndexerSymbol("[]", "Returns a read-only resource variable of a StructuredBuffer.", t, valueType)
+                        new IndexerSymbol("[]", "Returns a read-only resource variable of a StructuredBuffer.", t, Uint, valueType)
                     }));
         }
 
@@ -1635,13 +1772,27 @@ namespace HlslTools.Symbols
             return new IntrinsicObjectTypeSymbol("RWStructuredBuffer",
                 "A read/write buffer, which can take a T type that is a structure.",
                 PredefinedObjectType.RWStructuredBuffer,
-                t => CreateStructuredBufferMethods(t, valueType)
-                    .Union(new Symbol[]
-                    {
-                        new IndexerSymbol("[]", "Returns a resource variable.", t, valueType, false),
-                        new FunctionSymbol("DecrementCounter", "Decrements the object's hidden counter.", t, Uint),
-                        new FunctionSymbol("IncrementCounter", "Increments the object's hidden counter.", t, Uint)
-                    }));
+                t => CreateRWStructuredBufferMethods(t, valueType));
+        }
+
+        public static TypeSymbol CreateRasterizerOrderedStructuredBufferType(TypeSymbol valueType)
+        {
+            return new IntrinsicObjectTypeSymbol("RasterizerOrderedStructuredBuffer",
+                "A rasterizer ordered read/write buffer, which can take a T type that is a structure.",
+                PredefinedObjectType.RasterizerOrderedStructuredBuffer,
+                t => CreateRWStructuredBufferMethods(t, valueType));
+        }
+
+        private static Symbol[] CreateRWStructuredBufferMethods(TypeSymbol t, TypeSymbol valueType)
+        {
+            return CreateStructuredBufferMethods(t, valueType)
+                .Union(new Symbol[]
+                {
+                    new IndexerSymbol("[]", "Returns a resource variable.", t, Uint, valueType, false),
+                    new FunctionSymbol("DecrementCounter", "Decrements the object's hidden counter.", t, Uint),
+                    new FunctionSymbol("IncrementCounter", "Increments the object's hidden counter.", t, Uint)
+                })
+                .ToArray();
         }
 
         private static Symbol[] CreateStructuredBufferMethods(TypeSymbol t, TypeSymbol valueType)
@@ -1675,7 +1826,7 @@ namespace HlslTools.Symbols
                 PredefinedObjectType.InputPatch,
                 t => new Symbol[]
                 {
-                    new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType),
+                    new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, Uint, valueType),
                     new FieldSymbol("Length", "The number of control points.", t, Uint)
                 });
         }
@@ -1687,7 +1838,7 @@ namespace HlslTools.Symbols
                 PredefinedObjectType.OutputPatch,
                 t => new Symbol[]
                 {
-                    new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, valueType)
+                    new IndexerSymbol("[]", "Returns the nth control point in the patch.", t, Uint, valueType)
                 });
         }
 

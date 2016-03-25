@@ -23,8 +23,7 @@ namespace HlslTools.Symbols
                 case SyntaxKind.StructType:
                     {
                         // Inline struct.
-
-                        var structType = (StructTypeSyntax)node;
+                        var structType = (StructTypeSyntax) node;
                         
                         var symbol = binder.LookupTypeSymbol(structType);
                         if (symbol == null)
@@ -51,7 +50,7 @@ namespace HlslTools.Symbols
                         return symbols.First();
                     }
                 default:
-                    throw new NotImplementedException(node.Kind.ToString());
+                    throw new InvalidOperationException(node.Kind.ToString());
             }
         }
 
@@ -78,7 +77,7 @@ namespace HlslTools.Symbols
                     return GetTypeSymbol((PredefinedObjectTypeSyntax) type, binder);
 
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(type), "Unmapped intrinsic type");
+                    throw new ArgumentOutOfRangeException(nameof(type), type.Kind.ToString());
             }
         }
 
@@ -169,43 +168,32 @@ namespace HlslTools.Symbols
                 {
                     TypeSymbol valueType;
                     ScalarType scalarType;
-                    if (node.TemplateArgumentList != null)
-                    {
-                        var valueTypeSyntax = node.TemplateArgumentList.Arguments[0];
-                        valueType = GetTypeSymbol((PredefinedTypeSyntax) valueTypeSyntax, binder);
-                        switch (valueTypeSyntax.Kind)
-                        {
-                            case SyntaxKind.PredefinedScalarType:
-                                scalarType = TypeFacts.GetScalarType((ScalarTypeSyntax) valueTypeSyntax);
-                                break;
-                            case SyntaxKind.PredefinedVectorType:
-                                scalarType = TypeFacts.GetVectorType(((VectorTypeSyntax) valueTypeSyntax).TypeToken.Kind).Item1;
-                                break;
-                            case SyntaxKind.PredefinedGenericVectorType:
-                                scalarType = TypeFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType);
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException();
-                        }
-                    }
-                    else
-                    {
-                        valueType = IntrinsicTypes.Float4;
-                        scalarType = ScalarType.Float;
-                    }
+                    GetTextureValueAndScalarType(node, binder, out valueType, out scalarType);
                     return IntrinsicTypes.CreateTextureType(predefinedObjectType, valueType, scalarType);
                 }
                 case PredefinedObjectType.RWBuffer:
+                case PredefinedObjectType.RasterizerOrderedBuffer:
                 case PredefinedObjectType.RWTexture1D:
                 case PredefinedObjectType.RWTexture1DArray:
                 case PredefinedObjectType.RWTexture2D:
                 case PredefinedObjectType.RWTexture2DArray:
                 case PredefinedObjectType.RWTexture3D:
-                    throw new NotImplementedException(predefinedObjectType.ToString());
+                case PredefinedObjectType.RasterizerOrderedTexture1D:
+                case PredefinedObjectType.RasterizerOrderedTexture1DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture2D:
+                case PredefinedObjectType.RasterizerOrderedTexture2DArray:
+                case PredefinedObjectType.RasterizerOrderedTexture3D:
+                {
+                    TypeSymbol valueType;
+                    ScalarType scalarType;
+                    GetTextureValueAndScalarType(node, binder, out valueType, out scalarType);
+                    return IntrinsicTypes.CreateRWTextureType(predefinedObjectType, valueType, scalarType);
+                }
                 case PredefinedObjectType.AppendStructuredBuffer:
                 case PredefinedObjectType.ConsumeStructuredBuffer:
                 case PredefinedObjectType.StructuredBuffer:
                 case PredefinedObjectType.RWStructuredBuffer:
+                case PredefinedObjectType.RasterizerOrderedStructuredBuffer:
                 case PredefinedObjectType.InputPatch:
                 case PredefinedObjectType.OutputPatch:
                 case PredefinedObjectType.PointStream:
@@ -224,6 +212,8 @@ namespace HlslTools.Symbols
                             return IntrinsicTypes.CreateStructuredBufferType(valueType);
                         case PredefinedObjectType.RWStructuredBuffer:
                             return IntrinsicTypes.CreateRWStructuredBufferType(valueType);
+                        case PredefinedObjectType.RasterizerOrderedStructuredBuffer:
+                            return IntrinsicTypes.CreateRasterizerOrderedStructuredBufferType(valueType);
                         case PredefinedObjectType.InputPatch:
                             return IntrinsicTypes.CreateInputPatchType(valueType);
                         case PredefinedObjectType.OutputPatch:
@@ -244,17 +234,10 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.DepthStencilState;
                 case PredefinedObjectType.RasterizerState:
                     return IntrinsicTypes.RasterizerState;
+                case PredefinedObjectType.RasterizerOrderedByteAddressBuffer:
+                    return IntrinsicTypes.RasterizerOrderedByteAddressBuffer;
                 case PredefinedObjectType.RWByteAddressBuffer:
                     return IntrinsicTypes.RWByteAddressBuffer;
-                case PredefinedObjectType.RasterizerOrderedBuffer:
-                case PredefinedObjectType.RasterizerOrderedByteAddressBuffer:
-                case PredefinedObjectType.RasterizerOrderedStructuredBuffer:
-                case PredefinedObjectType.RasterizerOrderedTexture1D:
-                case PredefinedObjectType.RasterizerOrderedTexture1DArray:
-                case PredefinedObjectType.RasterizerOrderedTexture2D:
-                case PredefinedObjectType.RasterizerOrderedTexture2DArray:
-                case PredefinedObjectType.RasterizerOrderedTexture3D:
-                    throw new NotImplementedException(predefinedObjectType.ToString());
                 case PredefinedObjectType.Sampler:
                     return IntrinsicTypes.Sampler;
                 case PredefinedObjectType.Sampler1D:
@@ -279,6 +262,34 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.VertexShader;
                 default:
                     throw new InvalidOperationException(predefinedObjectType.ToString());
+            }
+        }
+
+        private static void GetTextureValueAndScalarType(PredefinedObjectTypeSyntax node, Binder binder, out TypeSymbol valueType, out ScalarType scalarType)
+        {
+            if (node.TemplateArgumentList != null)
+            {
+                var valueTypeSyntax = node.TemplateArgumentList.Arguments[0];
+                valueType = GetTypeSymbol((PredefinedTypeSyntax) valueTypeSyntax, binder);
+                switch (valueTypeSyntax.Kind)
+                {
+                    case SyntaxKind.PredefinedScalarType:
+                        scalarType = TypeFacts.GetScalarType((ScalarTypeSyntax) valueTypeSyntax);
+                        break;
+                    case SyntaxKind.PredefinedVectorType:
+                        scalarType = TypeFacts.GetVectorType(((VectorTypeSyntax) valueTypeSyntax).TypeToken.Kind).Item1;
+                        break;
+                    case SyntaxKind.PredefinedGenericVectorType:
+                        scalarType = TypeFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+            else
+            {
+                valueType = IntrinsicTypes.Float4;
+                scalarType = ScalarType.Float;
             }
         }
     }

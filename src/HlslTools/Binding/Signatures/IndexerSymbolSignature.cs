@@ -12,15 +12,9 @@ namespace HlslTools.Binding.Signatures
 
         public override TypeSymbol ReturnType => Symbol.ValueType;
 
-        public override ParameterDirection GetParameterDirection(int index)
-        {
-            return ParameterDirection.In;
-        }
+        public override ParameterDirection GetParameterDirection(int index) => ParameterDirection.In;
 
-        public override TypeSymbol GetParameterType(int index)
-        {
-            return IntrinsicTypes.Uint; // TODO: Is this always true?
-        }
+        public override TypeSymbol GetParameterType(int index) => Symbol.IndexType;
 
         public override int ParameterCount { get; } = 1;
         public override bool HasVariadicParameter { get; } = false;
