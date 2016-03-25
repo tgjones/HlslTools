@@ -478,7 +478,7 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
             Assert.That(varDeclStatement.Declaration.Variables[0].Annotations.Annotations, Has.Count.EqualTo(2));
 
             var annotation1 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[0];
-            Assert.That(annotation1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(annotation1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
             Assert.That(annotation1.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Build_TexComp_DdsFormat"));
             Assert.That(annotation1.Declaration.Variables[0].Initializer, Is.Not.Null);
             Assert.That(annotation1.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
@@ -487,7 +487,7 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
             Assert.That(((StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens[0].Text, Is.EqualTo("\"dxt5\""));
 
             var annotation2 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[1];
-            Assert.That(annotation2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.That(annotation2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
             Assert.That(annotation2.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Build_TexComp_IsPacked"));
             Assert.That(annotation2.Declaration.Variables[0].Initializer, Is.Not.Null);
             Assert.That(annotation2.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
@@ -515,8 +515,9 @@ string Bar = FOO(some/thing);
             Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
-            Assert.That(((IdentifierNameSyntax)varDeclStatement.Declaration.Type).Name.Text, Is.EqualTo("string"));
+            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
+            Assert.That(((ScalarTypeSyntax) varDeclStatement.Declaration.Type).TypeTokens, Has.Count.EqualTo(1));
+            Assert.That(((ScalarTypeSyntax) varDeclStatement.Declaration.Type).TypeTokens[0].Text, Is.EqualTo("string"));
             Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
             Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Bar"));
             Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);

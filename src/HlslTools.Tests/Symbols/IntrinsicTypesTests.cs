@@ -10,7 +10,7 @@ namespace HlslTools.Tests.Symbols
         public void VectorTypesHaveCorrectFields()
         {
             var float1Type = IntrinsicTypes.Float1;
-            Assert.That(float1Type.Members, Has.Length.EqualTo(8));
+            Assert.That(float1Type.Members, Has.Length.EqualTo(9));
             Assert.That(float1Type.Members[0].Name, Is.EqualTo("x"));
             Assert.That(float1Type.Members[1].Name, Is.EqualTo("xx"));
             Assert.That(float1Type.Members[2].Name, Is.EqualTo("xxx"));
@@ -21,7 +21,7 @@ namespace HlslTools.Tests.Symbols
             Assert.That(float1Type.Members[7].Name, Is.EqualTo("rrrr"));
 
             var float2Type = IntrinsicTypes.Float2;
-            Assert.That(float2Type.Members, Has.Length.EqualTo(60));
+            Assert.That(float2Type.Members, Has.Length.EqualTo(61));
             Assert.That(float2Type.Members[0].Name, Is.EqualTo("x"));
             Assert.That(float2Type.Members[1].Name, Is.EqualTo("y"));
             Assert.That(float2Type.Members[2].Name, Is.EqualTo("xx"));
@@ -56,10 +56,10 @@ namespace HlslTools.Tests.Symbols
             Assert.That(float2Type.Members[59].Name, Is.EqualTo("gggg"));
 
             var float3Type = IntrinsicTypes.Float3;
-            Assert.That(float3Type.Members, Has.Length.EqualTo(240));
+            Assert.That(float3Type.Members, Has.Length.EqualTo(241));
 
             var float4Type = IntrinsicTypes.Float4;
-            Assert.That(float4Type.Members, Has.Length.EqualTo(680));
+            Assert.That(float4Type.Members, Has.Length.EqualTo(681));
         }
     }
 }

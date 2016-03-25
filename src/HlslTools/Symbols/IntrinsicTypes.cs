@@ -725,10 +725,10 @@ namespace HlslTools.Symbols
         private static IEnumerable<Symbol> CreateVectorTypeFields(int numComponents,
             IntrinsicVectorTypeSymbol vectorType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
         {
-            yield return new IndexerSymbol("[]", "", vectorType, Uint, GetScalarType(vectorType.ScalarType));
-
             foreach (var field in CreateScalarTypeFields(numComponents, vectorType, v1, v2, v3, v4))
                 yield return field;
+
+            yield return new IndexerSymbol("[]", "", vectorType, Uint, GetScalarType(vectorType.ScalarType));
         }
 
         private static IEnumerable<string> GetComponentNamePermutations(char[] components, int num)
