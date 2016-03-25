@@ -68,7 +68,8 @@ namespace HlslTools.Binding
             ulong f2dConversions = 0;
             ulong scalarPromotions = 0;
             ulong sameSizeTruncations = 0;
-            ulong truncations = 0;
+            ulong rankTruncation = 0;
+            ulong dimensionTruncation = 0;
             // ReSharper restore InconsistentNaming
 
             for (var i = 0; i < signature.ParameterCount; i++)
@@ -205,7 +206,7 @@ namespace HlslTools.Binding
                     {
                         // float1x3 => float1
                         conversions[i] = Conversion.ImplicitNarrowing;
-                        truncations++;
+                        dimensionTruncation++;
                     }
                     else if (argumentDimension0 == 1 && argumentDimension1 == 1)
                     {
@@ -216,29 +217,31 @@ namespace HlslTools.Binding
                     else if ((argumentDimension0 >= parameterDimension0 && argumentDimension1 >= parameterDimension1)
                         || (argumentDimension1 >= parameterDimension0 && argumentDimension0 >= parameterDimension1))
                     {
-                        // float4x4 => float3x3
-                        // float4   => float3
-                        // float1   => float
-                        ulong diff = (ulong) (argumentDimension0 + argumentDimension1 - parameterDimension0 - parameterDimension1);
-                        if (argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicScalarType)
+                        conversions[i] = Conversion.ImplicitNarrowing;
+                        if (argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicMatrixType)
                         {
-                            conversions[i] = Conversion.ImplicitNarrowing;
-                            truncations++;
+                            // float4x4 => float3x3
+                            if (argumentDimension0 > parameterDimension0 && argumentDimension1 > parameterDimension1)
+                                rankTruncation += 2;
+                            else if (argumentDimension0 > parameterDimension0 || argumentDimension1 > parameterDimension1)
+                                rankTruncation++;
                         }
                         else
                         {
-                            conversions[i] = Conversion.ImplicitNarrowing;
-                            truncations++;
+                            // float4   => float3
+                            // float1   => float
+                            rankTruncation += 2;
                         }
                     }
                 }
             }
 
-            const int numBits = 3;
+            const int numBits = 6;
             const ulong mask = (1 << 6) - 1;
 
             // Worse to better.
-            score = (score << numBits) | (truncations & mask);
+            score = (score << numBits) | (dimensionTruncation & mask);
+            score = (score << numBits) | (rankTruncation & mask);
             score = (score << numBits) | (sameSizeTruncations & mask);
             score = (score << numBits) | (scalarPromotions & mask);
             score = (score << numBits) | (f2iConversions & mask);
