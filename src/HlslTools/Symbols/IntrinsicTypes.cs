@@ -948,16 +948,28 @@ namespace HlslTools.Symbols
                             new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
                             new ParameterSymbol("location", "The texture coordinates.", m, locationType)
                         });
-                    if (textureType == PredefinedObjectType.Texture2D || textureType == PredefinedObjectType.Texture2DArray)
-                    {
-                        yield return new FunctionSymbol("Gather", "Gets the four samples (red component only) that would be used for bilinear interpolation when sampling a texture.", parent,
-                            GetVectorType(scalarType, 4), m => new[]
-                            {
-                                new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
-                                new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                                new ParameterSymbol("offset", "An optional texture coordinate offset, which can be used for any texture-object types. The offset is applied to the location before sampling.", m, offsetType)
-                            });
-                    }
+                    foreach (var method in CreateTextureGatherComponentMethods(parent, scalarType, "Alpha", locationType, offsetType))
+                        yield return method;
+                    foreach (var method in CreateTextureGatherComponentMethods(parent, scalarType, "Red", locationType, offsetType))
+                        yield return method;
+                    foreach (var method in CreateTextureGatherComponentMethods(parent, scalarType, "Green", locationType, offsetType))
+                        yield return method;
+                    foreach (var method in CreateTextureGatherComponentMethods(parent, scalarType, "Blue", locationType, offsetType))
+                        yield return method;
+                    break;
+            }
+
+            switch (textureType)
+            {
+                case PredefinedObjectType.Texture2D:
+                case PredefinedObjectType.Texture2DArray:
+                    yield return new FunctionSymbol("Gather", "Gets the four samples (red component only) that would be used for bilinear interpolation when sampling a texture.", parent,
+                        GetVectorType(scalarType, 4), m => new[]
+                        {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("offset", "An optional texture coordinate offset, which can be used for any texture-object types. The offset is applied to the location before sampling.", m, offsetType)
+                        });
                     break;
             }
 
@@ -1252,6 +1264,89 @@ namespace HlslTools.Symbols
                     }
                     break;
             }
+        }
+
+        private static IEnumerable<FunctionSymbol> CreateTextureGatherComponentMethods(Symbol parent, ScalarType scalarType, string componentName, TypeSymbol locationType, TypeSymbol offsetType)
+        {
+            var componentNameLower = componentName.ToLower();
+
+            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
+                        GetVectorType(scalarType, 4), m => new[]
+                        {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType)
+                        });
+            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
+                GetVectorType(scalarType, 4), m => new[]
+                {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType)
+                });
+            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component along with status about the operation.", parent,
+                GetVectorType(scalarType, 4), m => new[]
+                {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType),
+                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                });
+            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component along with status about the operation.", parent,
+                GetVectorType(scalarType, 4), m => new[]
+                {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                });
+
+            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
+                        GetVectorType(scalarType, 4), m => new[]
+                        {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType)
+                        });
+            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
+                GetVectorType(scalarType, 4), m => new[]
+                {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType)
+                });
+            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component along with status about the operation.", parent,
+                GetVectorType(scalarType, 4), m => new[]
+                {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType),
+                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                });
+            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component along with status about the operation.", parent,
+                GetVectorType(scalarType, 4), m => new[]
+                {
+                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType),
+                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                });
         }
 
         private static FunctionSymbol CreateTextureGetDimensionsWithMipLevelMethod(TypeSymbol parent, PredefinedObjectType textureType, TypeSymbol parameterType)
