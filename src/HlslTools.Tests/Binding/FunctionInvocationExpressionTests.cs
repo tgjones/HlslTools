@@ -145,6 +145,7 @@ void main()
 
         [TestCase("min", "float", "float")]
         [TestCase("mul", "float4", "float4x4")]
+        [TestCase("mul", "float3", "float4x4")]
         [TestCase("lerp", "float", "float", "float")]
         public void TestIntrinsicFunctionOverloading(string function, params string[] types)
         {

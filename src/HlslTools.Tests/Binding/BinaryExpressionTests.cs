@@ -9,7 +9,9 @@ namespace HlslTools.Tests.Binding
     {
         [TestCase("|", "float", "int", "#inapplicable")]
         [TestCase("|", "bool", "float", "#inapplicable")]
-        [TestCase("|", "bool", "int", "int")]
+        [TestCase("|", "bool", "int", "bool")]
+        [TestCase("|", "int", "bool", "bool")]
+        [TestCase("|", "int", "int", "int")]
         [TestCase("*", "float", "int", "float")]
         [TestCase("*", "int", "float", "float")]
         [TestCase("*", "int2", "float2", "float2")]
