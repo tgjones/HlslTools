@@ -29,6 +29,7 @@ namespace HlslTools.Binding.BoundNodes
         ConversionExpression,
         CompoundExpression,
         ArrayInitializerExpression,
+        CompileExpression,
 
         // Statements
         Block,

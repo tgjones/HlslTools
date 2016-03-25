@@ -73,19 +73,55 @@ namespace HlslTools.Binding
             return LookupSymbols<TypeSymbol>(name);
         }
 
+        public TypeSymbol LookupTypeSymbol(StructTypeSyntax structType)
+        {
+            return LocalSymbols.OfType<StructSymbol>().FirstOrDefault(x => x.Syntax == structType);
+        }
+
+        protected virtual IEnumerable<Binder> GetAdditionalParentBinders()
+        {
+            yield break;
+        }
+
+        protected internal IEnumerable<Binder> GetBinderChain()
+        {
+            var parent = this;
+            while (parent != null)
+            {
+                yield return parent;
+                parent = parent.Parent;
+            }
+        }
+
         private IEnumerable<Symbol> LookupSymbols(SyntaxToken name, Func<Symbol, bool> filter)
         {
             var text = name.ValueText;
 
-            IEnumerable<Symbol> result;
-            var binder = this;
-            do
+            IEnumerable<Symbol> result = Enumerable.Empty<Symbol>();
+            foreach (var binder in GetBinderChain())
             {
-                result = binder.LookupSymbol(text).Where(filter);
-                binder = binder.Parent;
-            } while (!result.Any() && binder != null);
+                result = LookupSymbolRecursive(binder, text, filter);
+                if (result.Any())
+                    break;
+            }
 
             return result;
+        }
+
+        private static IEnumerable<Symbol> LookupSymbolRecursive(Binder binder, string text, Func<Symbol, bool> filter)
+        {
+            var result = binder.LookupSymbol(text).Where(filter);
+            if (result.Any())
+                return result;
+
+            foreach (var additionalBinder in binder.GetAdditionalParentBinders())
+            {
+                result = LookupSymbolRecursive(additionalBinder, text, filter);
+                if (result.Any())
+                    return result;
+            }
+
+            return Enumerable.Empty<Symbol>();
         }
 
         private IEnumerable<IndexerSymbol> LookupIndexer(TypeSymbol type)

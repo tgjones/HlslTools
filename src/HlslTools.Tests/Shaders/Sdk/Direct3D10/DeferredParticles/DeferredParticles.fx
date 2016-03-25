@@ -1,3 +1,6 @@
+#define MAX_INSTANCES 100
+#define MAX_GLOWLIGHTS 10
+
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL10.fx
 //

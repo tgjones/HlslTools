@@ -191,6 +191,10 @@ namespace HlslTools.Symbols
         public static readonly TypeSymbol DepthStencilState;
         public static readonly TypeSymbol RasterizerState;
 
+        public static readonly TypeSymbol GeometryShader;
+        public static readonly TypeSymbol PixelShader;
+        public static readonly TypeSymbol VertexShader;
+
         public static readonly TypeSymbol[] AllIntrinsicTypes;
 
         static IntrinsicTypes()
@@ -665,7 +669,8 @@ namespace HlslTools.Symbols
                 .Union(AllDoubleMatrixTypes)
                 .ToArray();
 
-            AllIntegralTypes = AllIntTypes
+            AllIntegralTypes = AllBoolTypes
+                .Union(AllIntTypes)
                 .Union(AllUintTypes)
                 .ToArray();
 
@@ -694,6 +699,10 @@ namespace HlslTools.Symbols
             BlendState = new IntrinsicObjectTypeSymbol("BlendState", "", PredefinedObjectType.BlendState);
             DepthStencilState = new IntrinsicObjectTypeSymbol("DepthStencilState", "", PredefinedObjectType.DepthStencilState);
             RasterizerState = new IntrinsicObjectTypeSymbol("RasterizerState", "", PredefinedObjectType.RasterizerState);
+
+            GeometryShader = new IntrinsicObjectTypeSymbol("GeometryShader", "", PredefinedObjectType.GeometryShader);
+            PixelShader = new IntrinsicObjectTypeSymbol("PixelShader", "", PredefinedObjectType.PixelShader);
+            VertexShader = new IntrinsicObjectTypeSymbol("VertexShader", "", PredefinedObjectType.VertexShader);
 
             AllIntrinsicTypes = AllNumericTypes
                 .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
@@ -1009,15 +1018,16 @@ namespace HlslTools.Symbols
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
-                    yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
-                        valueType, m => new[]
-                        {
-                            new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system. ", m, intLocationType)
-                        });
                     switch (textureType)
                     {
                         case PredefinedObjectType.Texture2DMS:
                         case PredefinedObjectType.Texture2DMSArray:
+                            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                                valueType, m => new[]
+                                {
+                                    new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system. ", m, intLocationType),
+                                    new ParameterSymbol("sampleIndex", "A sampling index.", m, Int),
+                                });
                             yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
                                 valueType, m => new[]
                                 {
@@ -1027,6 +1037,11 @@ namespace HlslTools.Symbols
                                 });
                             break;
                         default:
+                            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                                valueType, m => new[]
+                                {
+                                    new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system. ", m, intLocationType)
+                                });
                             yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
                                 valueType, m => new[]
                                 {
@@ -1513,27 +1528,49 @@ namespace HlslTools.Symbols
             return new IntrinsicObjectTypeSymbol("StructuredBuffer",
                 "A read-only buffer, which can take a T type that is a structure.",
                 PredefinedObjectType.StructuredBuffer,
-                t => new Symbol[]
-                {
-                    new IndexerSymbol("[]", "Returns a read-only resource variable of a StructuredBuffer.", t, valueType),
-                    new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
-                        m => new[]
-                        {
-                            new ParameterSymbol("numStructs", "The number of structures.", m, Uint, ParameterDirection.Out),
-                            new ParameterSymbol("stride", "The number of bytes in each element.", m, Uint, ParameterDirection.Out)
-                        }),
-                    new FunctionSymbol("Load", "Reads buffer data and returns status about the operation.", t, valueType,
-                        m => new[]
-                        {
-                            new ParameterSymbol("location", "The location of the buffer.", m, Int),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
-                        }),
-                    new FunctionSymbol("Load", "Reads buffer data.", t, valueType,
-                        m => new[]
-                        {
-                            new ParameterSymbol("location", "The location of the buffer.", m, Int)
-                        }),
-                });
+                t => CreateStructuredBufferMethods(t, valueType)
+                    .Union(new Symbol[]
+                    {
+                        new IndexerSymbol("[]", "Returns a read-only resource variable of a StructuredBuffer.", t, valueType)
+                    }));
+        }
+
+        public static TypeSymbol CreateRWStructuredBufferType(TypeSymbol valueType)
+        {
+            return new IntrinsicObjectTypeSymbol("RWStructuredBuffer",
+                "A read/write buffer, which can take a T type that is a structure.",
+                PredefinedObjectType.RWStructuredBuffer,
+                t => CreateStructuredBufferMethods(t, valueType)
+                    .Union(new Symbol[]
+                    {
+                        new IndexerSymbol("[]", "Returns a resource variable.", t, valueType, false),
+                        new FunctionSymbol("DecrementCounter", "Decrements the object's hidden counter.", t, Uint),
+                        new FunctionSymbol("IncrementCounter", "Increments the object's hidden counter.", t, Uint)
+                    }));
+        }
+
+        private static Symbol[] CreateStructuredBufferMethods(TypeSymbol t, TypeSymbol valueType)
+        {
+            return new Symbol[]
+            {
+                new FunctionSymbol("GetDimensions", "Gets the resource dimensions.", t, Void,
+                    m => new[]
+                    {
+                        new ParameterSymbol("numStructs", "The number of structures.", m, Uint, ParameterDirection.Out),
+                        new ParameterSymbol("stride", "The number of bytes in each element.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load", "Reads buffer data and returns status about the operation.", t, valueType,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The location of the buffer.", m, Int),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    }),
+                new FunctionSymbol("Load", "Reads buffer data.", t, valueType,
+                    m => new[]
+                    {
+                        new ParameterSymbol("location", "The location of the buffer.", m, Int)
+                    }),
+            };
         }
 
         public static TypeSymbol CreateInputPatchType(TypeSymbol valueType)

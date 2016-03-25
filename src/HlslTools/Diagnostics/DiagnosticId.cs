@@ -53,6 +53,10 @@
         AmbiguousBinaryOperator,
         SymbolRedefined,
         FunctionMissingImplementation,
-        LoopControlVariableConflict
+        LoopControlVariableConflict,
+        ImplicitTruncation,
+        UndeclaredNamespaceOrType,
+        AmbiguousNamespaceOrType,
+        UndeclaredFunctionInNamespaceOrClass
     }
 }

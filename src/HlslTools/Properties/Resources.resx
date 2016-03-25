@@ -249,7 +249,19 @@
   <data name="CannotApplyUnaryOperator" xml:space="preserve">
     <value>Cannot apply unary operator '{0}' on type '{1}'.</value>
   </data>
+  <data name="ImplicitTruncation" xml:space="preserve">
+    <value>Implicit truncation of vector type.</value>
+  </data>
   <data name="LoopControlVariableConflict" xml:space="preserve">
     <value>Loop control variable '{0}' conflicts with a previous declaration in the outer scope. The most recent declaration will be used.</value>
+  </data>
+  <data name="AmbiguousNamespaceOrType" xml:space="preserve">
+    <value>'{0}' is ambiguous between '{1}' and '{2}'.</value>
+  </data>
+  <data name="UndeclaredFunctionInNamespaceOrClass" xml:space="preserve">
+    <value>Namespace or class {0} does not contain a function or method '{1}'.</value>
+  </data>
+  <data name="UndeclaredNamespaceOrType" xml:space="preserve">
+    <value>A namespace or class '{0}' is not declared.</value>
   </data>
 </root>

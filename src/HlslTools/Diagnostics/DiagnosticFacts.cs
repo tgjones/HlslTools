@@ -7,6 +7,7 @@
             switch (id)
             {
                 case DiagnosticId.LoopControlVariableConflict:
+                case DiagnosticId.ImplicitTruncation:
                     return DiagnosticSeverity.Warning;
                 default:
                     return DiagnosticSeverity.Error;

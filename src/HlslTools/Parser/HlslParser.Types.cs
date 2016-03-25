@@ -55,6 +55,7 @@ namespace HlslTools.Parser
                 case SyntaxKind.BlendStateKeyword:
                 case SyntaxKind.DepthStencilStateKeyword:
                 case SyntaxKind.Texture2DLegacyKeyword:
+                case SyntaxKind.TextureCubeLegacyKeyword:
                 case SyntaxKind.SamplerKeyword:
                 case SyntaxKind.Sampler1DKeyword:
                 case SyntaxKind.Sampler2DKeyword:
@@ -99,11 +100,16 @@ namespace HlslTools.Parser
                     return ParseMultisampledTextureType(token);
             }
 
-            if (token.ContextualKind == SyntaxKind.TextureKeyword)
-                return new PredefinedObjectTypeSyntax(token.WithKind(token.ContextualKind), null);
-
-            if (token.ContextualKind == SyntaxKind.ConstantBufferKeyword)
-                return ParseTemplatedConstantBufferType(token);
+            switch (token.ContextualKind)
+            {
+                case SyntaxKind.TextureKeyword:
+                case SyntaxKind.GeometryShaderKeyword:
+                case SyntaxKind.PixelShaderKeyword:
+                case SyntaxKind.VertexShaderKeyword:
+                    return new PredefinedObjectTypeSyntax(token.WithKind(token.ContextualKind), null);
+                case SyntaxKind.ConstantBufferKeyword:
+                    return ParseTemplatedConstantBufferType(token);
+            }
 
             TemplateArgumentListSyntax templateArgumentList = null;
             if (Current.Kind == SyntaxKind.LessThanToken)

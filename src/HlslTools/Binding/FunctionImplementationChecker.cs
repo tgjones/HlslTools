@@ -19,7 +19,7 @@ namespace HlslTools.Binding
             var sourceFunctionSymbol = node.Symbol as SourceFunctionSymbol;
             if (sourceFunctionSymbol != null)
             {
-                if (sourceFunctionSymbol.DefinitionSyntax == null)
+                if (sourceFunctionSymbol.DefinitionSyntax == null && !IsInterfaceMethod(sourceFunctionSymbol))
                     _diagnostics.ReportFunctionMissingImplementation(node.Syntax);
             }
 
@@ -31,11 +31,16 @@ namespace HlslTools.Binding
             var sourceMethodSymbol = node.Symbol as SourceFunctionSymbol;
             if (sourceMethodSymbol != null)
             {
-                if (sourceMethodSymbol.DefinitionSyntax == null)
+                if (sourceMethodSymbol.DefinitionSyntax == null && !IsInterfaceMethod(sourceMethodSymbol))
                     _diagnostics.ReportMethodMissingImplementation(node.Syntax);
             }
 
             base.VisitMethodInvocationExpression(node);
+        }
+
+        private static bool IsInterfaceMethod(SourceFunctionSymbol symbol)
+        {
+            return symbol.Parent != null && symbol.Parent.Kind == SymbolKind.Interface;
         }
     }
 }

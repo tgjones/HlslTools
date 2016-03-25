@@ -53,6 +53,7 @@
     <Compile Include="Binding\Binder.Lookup.cs" />
     <Compile Include="Binding\BoundNodes\BoundArrayInitializerExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundAssignmentExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundCompileExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundCompoundExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundConversionExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundErrorExpression.cs" />
@@ -113,8 +114,10 @@
     <Compile Include="Binding\BoundTreeWalker.cs" />
     <Compile Include="Binding\BoundTreeWalker.Statements.cs" />
     <Compile Include="Binding\BoundTreeWalker.Expressions.cs" />
+    <Compile Include="Binding\ClassMethodBinder.cs" />
     <Compile Include="Binding\FunctionImplementationChecker.cs" />
     <Compile Include="Binding\IntrinsicBinder.cs" />
+    <Compile Include="Binding\ContainedFunctionBinder.cs" />
     <Compile Include="Binding\NamespaceBinder.cs" />
     <Compile Include="Binding\OverloadResolution.cs" />
     <Compile Include="Binding\OverloadResolutionCandidate.cs" />
@@ -131,6 +134,7 @@
     <Compile Include="Binding\Signatures\UnaryOperatorSignature.cs" />
     <Compile Include="Binding\UnaryOperator.cs" />
     <Compile Include="Compilation\Compilation.cs" />
+    <Compile Include="Compilation\Conversion.cs" />
     <Compile Include="Compilation\SemanticModel.cs" />
     <Compile Include="Diagnostics\DiagnosticFacts.cs" />
     <Compile Include="Diagnostics\DiagnosticSeverity.cs" />
@@ -147,6 +151,7 @@
     <Compile Include="Parser\ParserOptions.cs" />
     <Compile Include="Symbols\ArraySymbol.cs" />
     <Compile Include="Symbols\ClassSymbol.cs" />
+    <Compile Include="Symbols\ContainerSymbol.cs" />
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\IntrinsicMatrixTypeSymbol.cs" />
     <Compile Include="Symbols\IntrinsicNumericTypeSymbol.cs" />

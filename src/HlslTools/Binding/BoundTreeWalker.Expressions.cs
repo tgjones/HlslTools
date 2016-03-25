@@ -57,9 +57,17 @@ namespace HlslTools.Binding
                 case BoundNodeKind.VariableExpression:
                     VisitVariableExpression((BoundVariableExpression) node);
                     break;
+                case BoundNodeKind.CompileExpression:
+                    VisitCompileExpression((BoundCompileExpression)node);
+                    break;
                 default:
                     throw new InvalidOperationException(node.Kind.ToString());
             }
+        }
+
+        protected virtual void VisitCompileExpression(BoundCompileExpression node)
+        {
+            
         }
 
         protected virtual void VisitVariableExpression(BoundVariableExpression node)

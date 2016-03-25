@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Binding.Signatures;
+using HlslTools.Compilation;
 using HlslTools.Diagnostics;
 using HlslTools.Symbols;
 using HlslTools.Syntax;
@@ -85,9 +86,16 @@ namespace HlslTools.Binding
                     return BindElementAccessExpression((ElementAccessExpressionSyntax) node);
                 case SyntaxKind.ArrayInitializerExpression:
                     return BindArrayInitializerExpression((ArrayInitializerExpressionSyntax) node);
+                case SyntaxKind.CompileExpression:
+                    return BindCompileExpression((CompileExpressionSyntax) node);
                 default:
                     throw new ArgumentOutOfRangeException(node.Kind.ToString());
             }
+        }
+
+        private BoundExpression BindCompileExpression(CompileExpressionSyntax syntax)
+        {
+            return new BoundCompileExpression();
         }
 
         private BoundExpression BindArrayInitializerExpression(ArrayInitializerExpressionSyntax syntax)
@@ -119,13 +127,13 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => !Equals(c.Signature.Symbol, symbol1)).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, indexTypes);
             }
 
             // Convert all arguments (if necessary)
 
-            var convertedIndex = BindArgument(index, result, 0);
+            var convertedIndex = BindArgument(index, result, 0, syntax.Index.GetTextSpanSafe());
 
             return new BoundElementAccessExpression(target, convertedIndex, result);
         }
@@ -179,8 +187,8 @@ namespace HlslTools.Binding
 
             // Convert arguments (if necessary)
 
-            var convertedLeft = BindArgument(boundLeft, result, 0);
-            var convertedRight = BindArgument(boundRight, result, 1);
+            var convertedLeft = BindArgument(boundLeft, result, 0, syntax.Left.GetTextSpanSafe());
+            var convertedRight = BindArgument(boundRight, result, 1, syntax.Right.GetTextSpanSafe());
 
             return new BoundBinaryExpression(operatorKind, convertedLeft, convertedRight, result);
         }
@@ -218,7 +226,10 @@ namespace HlslTools.Binding
         {
             var sourceType = expression.Type;
 
-            if (sourceType.Equals(targetType))
+            // TODO: Need to do Conversion.Classify to see if this conversion is possible.
+            var conversion = sourceType.Equals(targetType) ? Conversion.Identity : Conversion.Explicit;
+
+            if (conversion.IsIdentity)
                 return expression;
 
             // To avoid cascading errors, we'll only validate the result
@@ -231,7 +242,7 @@ namespace HlslTools.Binding
                     Diagnostics.ReportCannotConvert(diagnosticSpan, sourceType, targetType);
             }
 
-            return new BoundConversionExpression(expression, targetType);
+            return new BoundConversionExpression(expression, targetType, conversion);
         }
 
         private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax node)
@@ -299,21 +310,21 @@ namespace HlslTools.Binding
         private BoundExpression BindPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
             var operatorKind = SyntaxFacts.GetUnaryOperatorKind(node.Kind);
-            var expression = Bind(node.Operand, BindExpression);
 
-            return BindUnaryExpression(node.OperatorToken, expression, operatorKind);
+            return BindUnaryExpression(node.OperatorToken, node.Operand, operatorKind);
         }
 
         private BoundExpression BindPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
         {
             var operatorKind = SyntaxFacts.GetUnaryOperatorKind(node.Kind);
-            var expression = Bind(node.Operand, BindExpression);
 
-            return BindUnaryExpression(node.OperatorToken, expression, operatorKind);
+            return BindUnaryExpression(node.OperatorToken, node.Operand, operatorKind);
         }
 
-        private BoundExpression BindUnaryExpression(SyntaxToken operatorToken, BoundExpression expression, UnaryOperatorKind operatorKind)
+        private BoundExpression BindUnaryExpression(SyntaxToken operatorToken, ExpressionSyntax operand, UnaryOperatorKind operatorKind)
         {
+            var expression = Bind(operand, BindExpression);
+
             // To avoid cascading errors, we'll return a unary expression that isn't bound to
             // an operator if the expression couldn't be resolved.
 
@@ -335,7 +346,7 @@ namespace HlslTools.Binding
 
             // Convert argument (if necessary)
 
-            var convertedArgument = BindArgument(expression, result, 0);
+            var convertedArgument = BindArgument(expression, result, 0, operand.GetTextSpanSafe());
 
             return new BoundUnaryExpression(operatorKind, convertedArgument, result);
         }
@@ -384,13 +395,19 @@ namespace HlslTools.Binding
 
             // Convert all arguments (if necessary)
 
-            var convertedArguments = arguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
+            var convertedArguments = arguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].GetTextSpanSafe())).ToImmutableArray();
 
             return new BoundMethodInvocationExpression(syntax, target, convertedArguments, result);
         }
 
         private BoundExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)
         {
+            // Don't try to bind CompileShader function calls, for now.
+            if (syntax.Name.ContextualKind == SyntaxKind.CompileShaderKeyword)
+                return new BoundFunctionInvocationExpression(syntax,
+                    syntax.ArgumentList.Arguments.Select(x => (BoundExpression) new BoundErrorExpression()).ToImmutableArray(),
+                    OverloadResolutionResult<FunctionSymbolSignature>.None);
+
             var name = syntax.Name;
             var boundArguments = BindArgumentList(syntax.ArgumentList);
             var argumentTypes = boundArguments.Select(a => a.Type).ToImmutableArray();
@@ -414,12 +431,12 @@ namespace HlslTools.Binding
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
             }
 
-            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i)).ToImmutableArray();
+            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].GetTextSpanSafe())).ToImmutableArray();
 
             return new BoundFunctionInvocationExpression(syntax, convertedArguments, result);
         }
 
-        private static BoundExpression BindArgument<T>(BoundExpression expression, OverloadResolutionResult<T> result, int argumentIndex)
+        private BoundExpression BindArgument<T>(BoundExpression expression, OverloadResolutionResult<T> result, int argumentIndex, TextSpan diagnosticSpan)
             where T : Signature
         {
             var selected = result.Selected;
@@ -430,12 +447,17 @@ namespace HlslTools.Binding
                 return expression;
 
             var targetType = selected.Signature.GetParameterType(argumentIndex);
+            var conversion = selected.ArgumentConversions[argumentIndex];
 
             // TODO: We need check for ambiguous conversions here as well.
 
-            return expression.Type.Equals(targetType)
+            // TODO
+            //if (conversion.IsImplicitNarrowing)
+            //    Diagnostics.ReportImplicitTruncation(diagnosticSpan);
+
+            return conversion.IsIdentity
                 ? expression
-                : new BoundConversionExpression(expression, targetType);
+                : new BoundConversionExpression(expression, targetType, conversion);
         }
 
         private BoundExpression BindFieldAccessExpression(FieldAccessExpressionSyntax node)

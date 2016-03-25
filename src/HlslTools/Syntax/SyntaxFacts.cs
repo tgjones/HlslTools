@@ -557,6 +557,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.SamplerComparisonStateKeyword:
                 case SyntaxKind.StructuredBufferKeyword:
                 case SyntaxKind.Texture2DLegacyKeyword:
+                case SyntaxKind.TextureCubeLegacyKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -574,6 +575,9 @@ namespace HlslTools.Syntax
                     {
                         case SyntaxKind.ConstantBufferKeyword:
                         case SyntaxKind.TextureKeyword:
+                        case SyntaxKind.GeometryShaderKeyword:
+                        case SyntaxKind.PixelShaderKeyword:
+                        case SyntaxKind.VertexShaderKeyword:
                             return true;
 
                         default:
@@ -659,6 +663,7 @@ namespace HlslTools.Syntax
                     return PredefinedObjectType.StructuredBuffer;
                 case SyntaxKind.TextureKeyword:
                 case SyntaxKind.Texture2DLegacyKeyword:
+                case SyntaxKind.TextureCubeLegacyKeyword:
                     return PredefinedObjectType.Texture;
                 case SyntaxKind.Texture1DKeyword:
                     return PredefinedObjectType.Texture1D;
@@ -696,6 +701,12 @@ namespace HlslTools.Syntax
                     return PredefinedObjectType.RasterizerOrderedTexture2D;
                 case SyntaxKind.RasterizerOrderedTexture3DKeyword:
                     return PredefinedObjectType.RasterizerOrderedTexture3D;
+                case SyntaxKind.GeometryShaderKeyword:
+                    return PredefinedObjectType.GeometryShader;
+                case SyntaxKind.PixelShaderKeyword:
+                    return PredefinedObjectType.PixelShader;
+                case SyntaxKind.VertexShaderKeyword:
+                    return PredefinedObjectType.VertexShader;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(kind), kind.ToString());
             }
@@ -1107,6 +1118,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Float4x3Keyword:
                 case SyntaxKind.Float4x4Keyword:
                 case SyntaxKind.ForKeyword:
+                case SyntaxKind.GeometryShaderKeyword:
                 case SyntaxKind.GroupsharedKeyword:
                 case SyntaxKind.HalfKeyword:
                 case SyntaxKind.Half1Keyword:
@@ -1169,6 +1181,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.OutputPatchKeyword:
                 case SyntaxKind.PackoffsetKeyword:
                 case SyntaxKind.PassKeyword:
+                case SyntaxKind.PixelShaderKeyword:
                 case SyntaxKind.PointKeyword:
                 case SyntaxKind.PointStreamKeyword:
                 case SyntaxKind.PreciseKeyword:
@@ -1213,6 +1226,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Technique11Keyword:
                 case SyntaxKind.TextureKeyword:
                 case SyntaxKind.Texture2DLegacyKeyword:
+                case SyntaxKind.TextureCubeLegacyKeyword:
                 case SyntaxKind.Texture1DKeyword:
                 case SyntaxKind.Texture1DArrayKeyword:
                 case SyntaxKind.Texture2DKeyword:
@@ -1249,6 +1263,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.Uint4x3Keyword:
                 case SyntaxKind.Uint4x4Keyword:
                 case SyntaxKind.VectorKeyword:
+                case SyntaxKind.VertexShaderKeyword:
                 case SyntaxKind.VolatileKeyword:
                 case SyntaxKind.VoidKeyword:
                 case SyntaxKind.WhileKeyword:
@@ -1684,6 +1699,7 @@ namespace HlslTools.Syntax
                     return SyntaxKind.LinearKeyword;
                 case "LineStream":
                     return SyntaxKind.LineStreamKeyword;
+                case "Matrix":
                 case "matrix":
                     return SyntaxKind.MatrixKeyword;
                 case "namespace":
@@ -1786,6 +1802,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.Technique11Keyword;
                 case "texture2D":
                     return SyntaxKind.Texture2DLegacyKeyword;
+                case "textureCUBE":
+                    return SyntaxKind.TextureCubeLegacyKeyword;
                 case "Texture1D":
                     return SyntaxKind.Texture1DKeyword;
                 case "Texture1DArray":
@@ -1896,6 +1914,12 @@ namespace HlslTools.Syntax
                     return SyntaxKind.LineKeyword;
                 case "texture":
                     return SyntaxKind.TextureKeyword;
+                case "GeometryShader":
+                    return SyntaxKind.GeometryShaderKeyword;
+                case "PixelShader":
+                    return SyntaxKind.PixelShaderKeyword;
+                case "VertexShader":
+                    return SyntaxKind.VertexShaderKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -2053,10 +2077,7 @@ namespace HlslTools.Syntax
         {
             // TODO: Whitespace differences will result in a false negative.
 
-            if (!ReferenceEquals(left.Parent, right.Parent))
-                return false;
-
-            if (left.Name.ToStringIgnoringMacroReferences() != right.Name.ToStringIgnoringMacroReferences())
+            if (left.Name.GetUnqualifiedName().Name.Text != right.Name.GetUnqualifiedName().Name.Text)
                 return false;
 
             if (left.ParameterList.Parameters.Count != right.ParameterList.Parameters.Count)

@@ -60,6 +60,10 @@
         SamplerCube,
 
         SamplerState,
-        SamplerComparisonState
+        SamplerComparisonState,
+
+        GeometryShader,
+        PixelShader,
+        VertexShader
     }
 }

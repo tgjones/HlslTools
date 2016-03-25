@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HlslTools.Binding.Signatures;
+using HlslTools.Compilation;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding
@@ -20,11 +21,12 @@ namespace HlslTools.Binding
             var candidates = new List<OverloadResolutionCandidate<T>>();
             foreach (var signature in signatures)
             {
+                Conversion[] conversions;
                 ulong score;
-                if (!TryRankArguments(signature, argumentTypes, out score))
+                if (!TryRankArguments(signature, argumentTypes, out conversions, out score))
                     continue;
 
-                candidates.Add(new OverloadResolutionCandidate<T>(signature, score));
+                candidates.Add(new OverloadResolutionCandidate<T>(signature, conversions, score));
             }
 
             candidates.Sort((l, r) => l.Score.CompareTo(r.Score));
@@ -38,9 +40,10 @@ namespace HlslTools.Binding
             return new OverloadResolutionResult<T>(best, selected, candidates);
         }
 
-        private static bool TryRankArguments<T>(T signature, IReadOnlyList<TypeSymbol> argumentTypes, out ulong score)
+        private static bool TryRankArguments<T>(T signature, IReadOnlyList<TypeSymbol> argumentTypes, out Conversion[] conversions, out ulong score)
             where T : Signature
         {
+            conversions = new Conversion[signature.ParameterCount];
             score = 0;
 
             var argumentCount = argumentTypes.Count;
@@ -74,7 +77,12 @@ namespace HlslTools.Binding
                 var argumentType = argumentTypes[i];
 
                 if (parameterType.Equals(argumentType))
+                {
+                    conversions[i] = Conversion.Identity;
                     continue; // i.e. score == 0 for this argument
+                }
+
+                conversions[i] = Conversion.ImplicitWidening;
 
                 // First, make sure we have an implicit conversion from argument to parameter.
                 switch (signature.GetParameterDirection(i))
@@ -196,6 +204,7 @@ namespace HlslTools.Binding
                         || (argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)))
                     {
                         // float1x3 => float1
+                        conversions[i] = Conversion.ImplicitNarrowing;
                         truncations++;
                     }
                     else if (argumentDimension0 == 1 && argumentDimension1 == 1)
@@ -213,13 +222,14 @@ namespace HlslTools.Binding
                         ulong diff = (ulong) (argumentDimension0 + argumentDimension1 - parameterDimension0 - parameterDimension1);
                         if (argumentType.Kind == SymbolKind.IntrinsicMatrixType && parameterType.Kind == SymbolKind.IntrinsicScalarType)
                         {
+                            conversions[i] = Conversion.ImplicitNarrowing;
                             truncations++;
                         }
                         else
                         {
+                            conversions[i] = Conversion.ImplicitNarrowing;
                             truncations++;
                         }
-                        
                     }
                 }
             }

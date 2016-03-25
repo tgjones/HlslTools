@@ -114,6 +114,12 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(node.GetTextSpanRoot(), DiagnosticId.UndeclaredMethod, declaringTypeName, name, argumentTypeNames);
         }
 
+        public static void ReportUndeclaredFunctionInNamespaceOrClass(this ICollection<Diagnostic> diagnostics, QualifiedDeclarationNameSyntax name)
+        {
+            var declaringTypeName = name.Left.ToStringIgnoringMacroReferences();
+            diagnostics.Report(name.GetTextSpanSafe(), DiagnosticId.UndeclaredFunctionInNamespaceOrClass, declaringTypeName, name.GetUnqualifiedName().Name.Text);
+        }
+
         public static void ReportUndeclaredIndexer(this ICollection<Diagnostic> diagnostics, ElementAccessExpressionSyntax node, TypeSymbol declaringType, IEnumerable<TypeSymbol> argumentTypes)
         {
             var declaringTypeName = declaringType.ToDisplayName();
@@ -131,6 +137,12 @@ namespace HlslTools.Diagnostics
             var typeName = type.ToDisplayName();
             var propertyName = node.Name.ValueText;
             diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredField, typeName, propertyName);
+        }
+
+        public static void ReportUndeclaredNamespaceOrType(this ICollection<Diagnostic> diagnostics, QualifiedDeclarationNameSyntax node)
+        {
+            var typeName = node.Left.ToStringIgnoringMacroReferences();
+            diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredNamespaceOrType, typeName);
         }
 
         public static void ReportAmbiguousInvocation(this ICollection<Diagnostic> diagnostics, TextSpan span, InvocableSymbol symbol1, InvocableSymbol symbol2, IReadOnlyList<TypeSymbol> argumentTypes)
@@ -172,6 +184,13 @@ namespace HlslTools.Diagnostics
             var symbol1 = candidates[0];
             var symbol2 = candidates[1];
             diagnostics.Report(name.Span, DiagnosticId.AmbiguousType, name.ValueText, symbol1.Name, symbol2.Name);
+        }
+
+        public static void ReportAmbiguousNamespaceOrType(this ICollection<Diagnostic> diagnostics, QualifiedDeclarationNameSyntax syntax, IReadOnlyList<Symbol> candidates)
+        {
+            var symbol1 = candidates[0];
+            var symbol2 = candidates[1];
+            diagnostics.Report(syntax.GetTextSpanSafe(), DiagnosticId.AmbiguousNamespaceOrType, syntax.ToStringIgnoringMacroReferences(), symbol1.Name, symbol2.Name);
         }
 
         public static void ReportInvocationRequiresParenthesis(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
@@ -227,6 +246,11 @@ namespace HlslTools.Diagnostics
         public static void ReportLoopControlVariableConflict(this ICollection<Diagnostic> diagnostics, VariableDeclaratorSyntax syntax)
         {
             diagnostics.Report(syntax.Identifier.Span, DiagnosticId.LoopControlVariableConflict, syntax.Identifier.Text);
+        }
+
+        public static void ReportImplicitTruncation(this ICollection<Diagnostic> diagnostics, TextSpan span)
+        {
+            diagnostics.Report(span, DiagnosticId.ImplicitTruncation);
         }
 
         #endregion

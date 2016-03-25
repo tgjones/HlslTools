@@ -1,3 +1,5 @@
+#define BUCKETS 256
+
 // Splash.fx
 // Copyright (c) 2005 Microsoft Corporation. All rights reserved.
 //

@@ -88,6 +88,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is ambiguous between &apos;{1}&apos; and &apos;{2}&apos;..
+        /// </summary>
+        internal static string AmbiguousNamespaceOrType {
+            get {
+                return ResourceManager.GetString("AmbiguousNamespaceOrType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name &apos;{0}&apos; is ambiguous between &apos;{1}&apos; and &apos;{2}&apos;..
         /// </summary>
         internal static string AmbiguousReference {
@@ -219,6 +228,15 @@ namespace HlslTools.Properties {
         internal static string IllegalInputCharacter {
             get {
                 return ResourceManager.GetString("IllegalInputCharacter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Implicit truncation of vector type..
+        /// </summary>
+        internal static string ImplicitTruncation {
+            get {
+                return ResourceManager.GetString("ImplicitTruncation", resourceCulture);
             }
         }
         
@@ -394,6 +412,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Namespace or class {0} does not contain a function or method &apos;{1}&apos;..
+        /// </summary>
+        internal static string UndeclaredFunctionInNamespaceOrClass {
+            get {
+                return ResourceManager.GetString("UndeclaredFunctionInNamespaceOrClass", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type &apos;{0}&apos; does not have an indexer &apos;[{1}]&apos;..
         /// </summary>
         internal static string UndeclaredIndexer {
@@ -408,6 +435,15 @@ namespace HlslTools.Properties {
         internal static string UndeclaredMethod {
             get {
                 return ResourceManager.GetString("UndeclaredMethod", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A namespace or class &apos;{0}&apos; is not declared..
+        /// </summary>
+        internal static string UndeclaredNamespaceOrType {
+            get {
+                return ResourceManager.GetString("UndeclaredNamespaceOrType", resourceCulture);
             }
         }
         

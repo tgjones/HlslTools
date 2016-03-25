@@ -20,6 +20,21 @@ namespace HlslTools.Symbols
                 case SyntaxKind.PredefinedGenericMatrixType:
                 case SyntaxKind.PredefinedObjectType:
                     return ((PredefinedTypeSyntax) node).GetTypeSymbol(binder);
+                case SyntaxKind.StructType:
+                    {
+                        // Inline struct.
+
+                        var structType = (StructTypeSyntax)node;
+                        
+                        var symbol = binder.LookupTypeSymbol(structType);
+                        if (symbol == null)
+                        {
+                            binder.Diagnostics.ReportUndeclaredType(node);
+                            return TypeFacts.Unknown;
+                        }
+
+                        return symbol;
+                    }
                 case SyntaxKind.IdentifierName:
                     {
                         var identifierName = (IdentifierNameSyntax) node;
@@ -190,6 +205,7 @@ namespace HlslTools.Symbols
                 case PredefinedObjectType.AppendStructuredBuffer:
                 case PredefinedObjectType.ConsumeStructuredBuffer:
                 case PredefinedObjectType.StructuredBuffer:
+                case PredefinedObjectType.RWStructuredBuffer:
                 case PredefinedObjectType.InputPatch:
                 case PredefinedObjectType.OutputPatch:
                 case PredefinedObjectType.PointStream:
@@ -206,6 +222,8 @@ namespace HlslTools.Symbols
                             return IntrinsicTypes.CreateConsumeStructuredBufferType(valueType);
                         case PredefinedObjectType.StructuredBuffer:
                             return IntrinsicTypes.CreateStructuredBufferType(valueType);
+                        case PredefinedObjectType.RWStructuredBuffer:
+                            return IntrinsicTypes.CreateRWStructuredBufferType(valueType);
                         case PredefinedObjectType.InputPatch:
                             return IntrinsicTypes.CreateInputPatchType(valueType);
                         case PredefinedObjectType.OutputPatch:
@@ -228,7 +246,6 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.RasterizerState;
                 case PredefinedObjectType.RWByteAddressBuffer:
                     return IntrinsicTypes.RWByteAddressBuffer;
-                case PredefinedObjectType.RWStructuredBuffer:
                 case PredefinedObjectType.RasterizerOrderedBuffer:
                 case PredefinedObjectType.RasterizerOrderedByteAddressBuffer:
                 case PredefinedObjectType.RasterizerOrderedStructuredBuffer:
@@ -254,6 +271,12 @@ namespace HlslTools.Symbols
                     return IntrinsicTypes.SamplerComparisonState;
                 case PredefinedObjectType.Texture:
                     return IntrinsicTypes.LegacyTexture;
+                case PredefinedObjectType.GeometryShader:
+                    return IntrinsicTypes.GeometryShader;
+                case PredefinedObjectType.PixelShader:
+                    return IntrinsicTypes.PixelShader;
+                case PredefinedObjectType.VertexShader:
+                    return IntrinsicTypes.VertexShader;
                 default:
                     throw new InvalidOperationException(predefinedObjectType.ToString());
             }

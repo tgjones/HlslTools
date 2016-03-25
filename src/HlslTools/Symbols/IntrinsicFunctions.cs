@@ -594,19 +594,19 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "log",
                 "Returns the base-e logarithm of the specified value.",
-                IntrinsicTypes.AllFloatVectorTypes,
+                IntrinsicTypes.AllFloatTypes,
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create1(
                 "log10",
                 "Returns the base-10 logarithm of the specified value.",
-                IntrinsicTypes.AllFloatVectorTypes,
+                IntrinsicTypes.AllFloatTypes,
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create1(
                 "log2",
                 "Returns the base-2 logarithm of the specified value.",
-                IntrinsicTypes.AllFloatVectorTypes,
+                IntrinsicTypes.AllFloatTypes,
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create3(
@@ -1977,6 +1977,15 @@ namespace HlslTools.Symbols
               "Truncates a floating-point value to the integer component.",
               IntrinsicTypes.AllFloatTypes,
               "value", "The specified input."));
+
+            allFunctions.Add(new FunctionSymbol(
+                "ConstructGSWithSO", "",
+                null, IntrinsicTypes.GeometryShader,
+                f => new[]
+                {
+                    new ParameterSymbol("shaderVar", "A vertex shader variable.", f, IntrinsicTypes.VertexShader),
+                    new ParameterSymbol("outputDecl0", "A string defining which shader outputs in stream 0 are streamed out.", f, IntrinsicTypes.String)
+                }));
 
             AllFunctions = allFunctions;
         }
