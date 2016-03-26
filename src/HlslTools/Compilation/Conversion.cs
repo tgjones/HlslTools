@@ -60,137 +60,155 @@ namespace HlslTools.Compilation
             var numericSourceType = sourceType as IntrinsicNumericTypeSymbol;
             if (numericTargetType != null && numericSourceType != null)
             {
-                var parameterScalarType = numericTargetType.ScalarType;
-                var argumentScalarType = numericSourceType.ScalarType;
+                conversionType |= ClassifyTypeConversion(numericSourceType, numericTargetType);
+                conversionType |= ClassifyDimensionConversion(numericSourceType, numericTargetType);
+            }
 
-                if (argumentScalarType == ScalarType.Float && parameterScalarType == ScalarType.Half)
-                {
-                    conversionType |= ConversionTypes.FloatTruncation;
-                }
-                else if (argumentScalarType == ScalarType.Float && parameterScalarType == ScalarType.Double)
-                {
-                    conversionType |= ConversionTypes.FloatPromotion;
-                }
-                else if (argumentScalarType == ScalarType.Half && parameterScalarType == ScalarType.Float)
-                {
-                    conversionType |= ConversionTypes.FloatPromotion;
-                }
-                else if (argumentScalarType == ScalarType.Half && parameterScalarType == ScalarType.Double)
-                {
-                    conversionType |= ConversionTypes.FloatPromotion;
-                }
-                else if (argumentScalarType == ScalarType.Double && parameterScalarType == ScalarType.Half)
-                {
-                    conversionType |= ConversionTypes.FloatTruncation;
-                }
-                else if (argumentScalarType == ScalarType.Double && parameterScalarType == ScalarType.Float)
-                {
-                    conversionType |= ConversionTypes.FloatTruncation;
-                }
-                else if (argumentScalarType.IsFloat() && !parameterScalarType.IsFloat())
-                {
-                    conversionType |= ConversionTypes.FloatToIntConversion;
-                }
-                else if (!argumentScalarType.IsFloat() && parameterScalarType.IsFloat())
-                {
-                    conversionType |= ConversionTypes.IntToFloatConversion;
-                }
-                else if (argumentScalarType == ScalarType.Bool && parameterScalarType != ScalarType.Bool)
-                {
-                    conversionType |= ConversionTypes.IntToFloatConversion;
-                }
-                else if (argumentScalarType == ScalarType.Int && parameterScalarType == ScalarType.Uint)
-                {
-                    conversionType |= ConversionTypes.SignedToUnsigned;
-                }
-                else if (argumentScalarType == ScalarType.Uint && parameterScalarType == ScalarType.Int)
-                {
-                    conversionType |= ConversionTypes.UnsignedToSigned;
-                }
-                else if (argumentScalarType != parameterScalarType)
-                {
-                    // TODO: Need this, or can throw exception if we get here?
-                    conversionType |= ConversionTypes.SignedToUnsigned;
-                }
+            // TODO: Non-numeric implicit conversions.
 
-                var parameterDimension0 = numericTargetType.GetDimensionSize(0);
-                var parameterDimension1 = numericTargetType.GetDimensionSize(1);
-                var argumentDimension0 = numericSourceType.GetDimensionSize(0);
-                var argumentDimension1 = numericSourceType.GetDimensionSize(1);
+            return new Conversion(true, false, false, conversionType);
+        }
 
-                if ((argumentDimension0 == parameterDimension0 && argumentDimension1 == parameterDimension1)
-                    || argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)
-                {
-                    if ((sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicVectorType)
-                        || (sourceType.Kind == SymbolKind.IntrinsicVectorType && targetType.Kind == SymbolKind.IntrinsicScalarType))
+        private static ConversionTypes ClassifyTypeConversion(IntrinsicNumericTypeSymbol numericSourceType, IntrinsicNumericTypeSymbol numericTargetType)
+        {
+            var parameterScalarType = numericTargetType.ScalarType;
+            var argumentScalarType = numericSourceType.ScalarType;
+
+            if (argumentScalarType.IsFloat() && !parameterScalarType.IsFloat())
+                return ConversionTypes.FloatToIntConversion;
+
+            if (!argumentScalarType.IsFloat() && parameterScalarType.IsFloat())
+                return ConversionTypes.IntToFloatConversion;
+
+            switch (argumentScalarType)
+            {
+                case ScalarType.Float:
+                    switch (parameterScalarType)
                     {
-                        // float1x1 => float1
-                        // float1   => float
-                        conversionType |= ConversionTypes.SameSizeTruncation;
+                        case ScalarType.Half:
+                            return ConversionTypes.FloatTruncation;
+                        case ScalarType.Double:
+                            return ConversionTypes.FloatPromotion;
                     }
-                    if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicScalarType)
+                    break;
+                case ScalarType.Half:
+                    switch (parameterScalarType)
                     {
-                        // float1x1 => float
-                        conversionType |= ConversionTypes.SameSizeTruncation;
+                        case ScalarType.Float:
+                        case ScalarType.Double:
+                            return ConversionTypes.FloatPromotion;
                     }
-                    else if ((sourceType.Kind == SymbolKind.IntrinsicScalarType && targetType.Kind == SymbolKind.IntrinsicVectorType)
-                        || (sourceType.Kind == SymbolKind.IntrinsicVectorType && targetType.Kind == SymbolKind.IntrinsicMatrixType))
+                    break;
+                case ScalarType.Double:
+                    switch (parameterScalarType)
                     {
-                        // float  => float1
-                        // float1 => float1x1
-                        conversionType |= ConversionTypes.ScalarPromotion;
+                        case ScalarType.Half:
+                        case ScalarType.Float:
+                            return ConversionTypes.FloatTruncation;
                     }
-                    else if (sourceType.Kind == SymbolKind.IntrinsicScalarType && targetType.Kind == SymbolKind.IntrinsicMatrixType)
-                    {
-                        // float => float1x1
-                        conversionType |= ConversionTypes.ScalarPromotion;
-                    }
-                }
-                else if (sourceType.Kind == SymbolKind.IntrinsicVectorType && targetType.Kind == SymbolKind.IntrinsicMatrixType
-                    && ((argumentDimension0 == parameterDimension1 && argumentDimension1 == parameterDimension0)
-                        || (argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)))
+                    break;
+                case ScalarType.Bool:
+                    if (parameterScalarType != ScalarType.Bool)
+                        return ConversionTypes.IntToFloatConversion;
+                    break;
+                case ScalarType.Int:
+                    if (parameterScalarType == ScalarType.Uint)
+                        return ConversionTypes.SignedToUnsigned;
+                    break;
+                case ScalarType.Uint:
+                    if (parameterScalarType == ScalarType.Int)
+                        return ConversionTypes.UnsignedToSigned;
+                    break;
+            }
+
+            if (argumentScalarType != parameterScalarType)
+                return ConversionTypes.SignedToUnsigned; // TODO: Check this. Int/Uint => Bool?
+
+            return ConversionTypes.None;
+        }
+
+        private static ConversionTypes ClassifyDimensionConversion(IntrinsicNumericTypeSymbol sourceType, IntrinsicNumericTypeSymbol targetType)
+        {
+            var targetDim0 = targetType.GetDimensionSize(0);
+            var targetDim1 = targetType.GetDimensionSize(1);
+            var sourceDim0 = sourceType.GetDimensionSize(0);
+            var sourceDim1 = sourceType.GetDimensionSize(1);
+
+            if ((sourceDim0 == targetDim0 && sourceDim1 == targetDim1) || (sourceDim1 == targetDim0 && sourceDim0 == targetDim1))
+            {
+                switch (sourceType.Kind)
                 {
-                    // float1   => float1x3
-                    conversionType |= ConversionTypes.ScalarPromotion;
-                }
-                else if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicVectorType
-                    && ((argumentDimension0 == parameterDimension1 && argumentDimension1 == parameterDimension0)
-                        || (argumentDimension1 == parameterDimension0 && argumentDimension0 == parameterDimension1)))
-                {
-                    // float1x3 => float1
-                    conversionType |= ConversionTypes.DimensionTruncation;
-                }
-                else if (argumentDimension0 == 1 && argumentDimension1 == 1)
-                {
-                    // float => float2x4
-                    // float => float2
-                    conversionType |= ConversionTypes.ScalarPromotion;
-                }
-                else if ((argumentDimension0 >= parameterDimension0 && argumentDimension1 >= parameterDimension1)
-                    || (argumentDimension1 >= parameterDimension0 && argumentDimension0 >= parameterDimension1))
-                {
-                    if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicMatrixType)
-                    {
-                        // float4x4 => float3x3
-                        if (argumentDimension0 > parameterDimension0 && argumentDimension1 > parameterDimension1)
+                    case SymbolKind.IntrinsicMatrixType:
+                        switch (targetType.Kind)
                         {
-                            conversionType |= ConversionTypes.RankTruncation2;
+                            case SymbolKind.IntrinsicVectorType: // float1x1 => float1
+                            case SymbolKind.IntrinsicScalarType: // float1x1 => float
+                                return ConversionTypes.SameSizeTruncation;
                         }
-                        else if (argumentDimension0 > parameterDimension0 || argumentDimension1 > parameterDimension1)
+                        break;
+                    case SymbolKind.IntrinsicVectorType:
+                        switch (targetType.Kind)
                         {
-                            conversionType |= ConversionTypes.RankTruncation;
+                            case SymbolKind.IntrinsicMatrixType: // float1 => float1x1
+                                return ConversionTypes.ScalarPromotion;
+                            case SymbolKind.IntrinsicScalarType: // float1 => float
+                                return ConversionTypes.SameSizeTruncation;
                         }
-                    }
-                    else
-                    {
-                        // float4   => float3
-                        // float1   => float
-                        conversionType |= ConversionTypes.RankTruncation2;
-                    }
+                        break;
+                    case SymbolKind.IntrinsicScalarType:
+                        switch (targetType.Kind)
+                        {
+                            case SymbolKind.IntrinsicMatrixType: // float => float1x1
+                            case SymbolKind.IntrinsicVectorType: // float => float1
+                                return ConversionTypes.ScalarPromotion;
+                        }
+                        break;
+                }
+            }
+            else if ((sourceDim0 == targetDim1 && sourceDim1 == targetDim0) || (sourceDim1 == targetDim0 && sourceDim0 == targetDim1))
+            {
+                switch (sourceType.Kind)
+                {
+                    case SymbolKind.IntrinsicMatrixType:
+                        switch (targetType.Kind)
+                        {
+                            case SymbolKind.IntrinsicVectorType: // float1x3 => float1
+                                return ConversionTypes.DimensionTruncation;
+                        }
+                        break;
+                    case SymbolKind.IntrinsicVectorType:
+                        switch (targetType.Kind)
+                        {
+                            case SymbolKind.IntrinsicMatrixType: // float1 => float1x3
+                                return ConversionTypes.ScalarPromotion;
+                        }
+                        break;
+                }
+            }
+            else if (sourceDim0 == 1 && sourceDim1 == 1)
+            {
+                // float => float2x4
+                // float => float2
+                return ConversionTypes.ScalarPromotion;
+            }
+            else if ((sourceDim0 >= targetDim0 && sourceDim1 >= targetDim1) || (sourceDim1 >= targetDim0 && sourceDim0 >= targetDim1))
+            {
+                if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicMatrixType)
+                {
+                    if (sourceDim0 > targetDim0 && sourceDim1 > targetDim1) // float4x4 => float3x3
+                        return ConversionTypes.RankTruncation2;
+                    if (sourceDim0 > targetDim0 || sourceDim1 > targetDim1) // float4x4 => float4x3
+                        return ConversionTypes.RankTruncation;
+                }
+                else
+                {
+                    // float4   => float3
+                    // float1   => float
+                    return ConversionTypes.RankTruncation2;
                 }
             }
 
-            return new Conversion(true, false, false, conversionType);
+            return ConversionTypes.None;
         }
     }
 }
