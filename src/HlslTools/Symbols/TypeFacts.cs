@@ -78,6 +78,7 @@ namespace HlslTools.Symbols
                 return false;
             }
 
+            // TODO: Implicitly convert from array to vector.
             if (left.Kind == SymbolKind.Array || right.Kind == SymbolKind.Array)
                 return false;
 

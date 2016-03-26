@@ -135,6 +135,7 @@
     <Compile Include="Binding\UnaryOperator.cs" />
     <Compile Include="Compilation\Compilation.cs" />
     <Compile Include="Compilation\Conversion.cs" />
+    <Compile Include="Compilation\ConversionTypes.cs" />
     <Compile Include="Compilation\SemanticModel.cs" />
     <Compile Include="Diagnostics\DiagnosticFacts.cs" />
     <Compile Include="Diagnostics\DiagnosticSeverity.cs" />
