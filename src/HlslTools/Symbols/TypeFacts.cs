@@ -78,9 +78,21 @@ namespace HlslTools.Symbols
                 return false;
             }
 
-            // TODO: Implicitly convert from array to vector.
-            if (left.Kind == SymbolKind.Array || right.Kind == SymbolKind.Array)
-                return false;
+            switch (left.Kind)
+            {
+                case SymbolKind.Array:
+                    switch (right.Kind)
+                    {
+                        case SymbolKind.Array:
+                        {
+                            var leftArray = (ArraySymbol) left;
+                            var rightArray = (ArraySymbol) right;
+                            return leftArray.ValueType.HasImplicitConversionTo(rightArray.ValueType);
+                        }
+                        default:
+                            return false;
+                    }
+            }
 
             if (left.Kind == SymbolKind.IntrinsicScalarType || right.Kind == SymbolKind.IntrinsicScalarType)
                 return true;
@@ -95,10 +107,22 @@ namespace HlslTools.Symbols
                         case SymbolKind.IntrinsicVectorType:
                             return ((IntrinsicVectorTypeSymbol) left).NumComponents >= ((IntrinsicVectorTypeSymbol) right).NumComponents;
                         case SymbolKind.IntrinsicMatrixType:
+                        {
                             var leftVector = (IntrinsicVectorTypeSymbol) left;
                             var rightMatrix = (IntrinsicMatrixTypeSymbol) right;
                             return (leftVector.NumComponents >= rightMatrix.Cols && rightMatrix.Rows == 1)
                                 || (leftVector.NumComponents >= rightMatrix.Rows && rightMatrix.Cols == 1);
+                        }
+                        case SymbolKind.Array:
+                        {
+                            var leftVector = (IntrinsicVectorTypeSymbol) left;
+                            var rightArray = (ArraySymbol) right;
+                            if (!leftVector.HasImplicitConversionTo(rightArray.ValueType))
+                                return false;
+                            if (rightArray.Dimension == null)
+                                return true;
+                            return leftVector.NumComponents >= rightArray.Dimension.Value;
+                        }
                     }
                     break;
                 case SymbolKind.IntrinsicMatrixType:

@@ -212,7 +212,10 @@ namespace HlslTools.Binding
 
         private BoundExpression BindCastExpression(CastExpressionSyntax syntax)
         {
-            return BindConversion(syntax.GetTextSpanSafe(), Bind(syntax.Expression, BindExpression), LookupType(syntax.Type));
+            var targetType = LookupType(syntax.Type);
+            targetType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, targetType);
+
+            return BindConversion(syntax.GetTextSpanSafe(), Bind(syntax.Expression, BindExpression), targetType);
         }
 
         private BoundExpression BindCompoundExpression(CompoundExpressionSyntax syntax)

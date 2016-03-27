@@ -102,7 +102,7 @@ namespace HlslTools.Binding
 
         private BoundVariableDeclaration BindVariableDeclarator(VariableDeclaratorSyntax syntax, TypeSymbol variableType, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
         {
-            variableType = BindArrayRankSpecifiers(syntax, variableType);
+            variableType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, variableType);
 
             var symbol = createSymbol(syntax, variableType);
             AddSymbol(symbol, syntax.Identifier.Span);
@@ -114,9 +114,9 @@ namespace HlslTools.Binding
             return new BoundVariableDeclaration(symbol, variableType, initializer);
         }
 
-        private TypeSymbol BindArrayRankSpecifiers(VariableDeclaratorSyntax declarator, TypeSymbol variableType)
+        private TypeSymbol BindArrayRankSpecifiers(List<ArrayRankSpecifierSyntax> arrayRankSpecifiers, TypeSymbol variableType)
         {
-            foreach (var arrayRankSpecifier in declarator.ArrayRankSpecifiers)
+            foreach (var arrayRankSpecifier in arrayRankSpecifiers)
             {
                 int? dimension = null;
                 if (arrayRankSpecifier.Dimension != null)

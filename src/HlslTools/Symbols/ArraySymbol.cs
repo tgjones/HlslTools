@@ -4,6 +4,7 @@ namespace HlslTools.Symbols
 {
     public sealed class ArraySymbol : TypeSymbol
     {
+        public TypeSymbol ValueType { get; }
         public int? Dimension { get; }
 
         internal ArraySymbol(TypeSymbol valueType, int? dimension)
@@ -12,6 +13,7 @@ namespace HlslTools.Symbols
             foreach (var member in CreateArrayMembers(this, valueType))
                 AddMember(member);
 
+            ValueType = valueType;
             Dimension = dimension;
         }
 
