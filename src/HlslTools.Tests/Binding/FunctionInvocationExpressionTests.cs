@@ -147,6 +147,7 @@ void main()
         [TestCase("mul", "float4", "float4x4")]
         [TestCase("mul", "float3", "float4x4")]
         [TestCase("lerp", "float", "float", "float")]
+        [TestCase("dot", "int", "uint")]
         public void TestIntrinsicFunctionOverloading(string function, params string[] types)
         {
             var arguments = string.Join(",", types.Select(x => $"({x}) 0"));
