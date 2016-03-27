@@ -94,14 +94,14 @@ namespace HlslTools.Diagnostics
 
         #region Semantic errors
 
-        public static void ReportUndeclaredType(this ICollection<Diagnostic> diagnostics, TypeSyntax type)
+        public static void ReportUndeclaredType(this ICollection<Diagnostic> diagnostics, SyntaxNode type)
         {
             diagnostics.Report(type.GetTextSpanSafe(), DiagnosticId.UndeclaredType, type.ToStringIgnoringMacroReferences());
         }
 
         public static void ReportUndeclaredFunction(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax node, IEnumerable<TypeSymbol> argumentTypes)
         {
-            var name = node.Name.ValueText;
+            var name = node.ToStringIgnoringMacroReferences();
             var argumentTypeList = string.Join(@", ", argumentTypes.Select(t => t.ToDisplayName()));
             diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredFunction, name, argumentTypeList);
         }
@@ -230,7 +230,7 @@ namespace HlslTools.Diagnostics
 
         public static void ReportFunctionMissingImplementation(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax syntax)
         {
-            diagnostics.Report(syntax.Name.Span, DiagnosticId.FunctionMissingImplementation, syntax.Name.Text);
+            diagnostics.Report(syntax.Name.GetTextSpanSafe(), DiagnosticId.FunctionMissingImplementation, syntax.Name.ToStringIgnoringMacroReferences());
         }
 
         public static void ReportMethodMissingImplementation(this ICollection<Diagnostic> diagnostics, MethodInvocationExpressionSyntax syntax)

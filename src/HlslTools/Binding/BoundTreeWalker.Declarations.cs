@@ -33,9 +33,17 @@ namespace HlslTools.Binding
                 case BoundNodeKind.Technique:
                     VisitTechnique((BoundTechnique) node);
                     break;
+                case BoundNodeKind.Error:
+                    VisitError((BoundErrorNode) node);
+                    break;
                 default:
                     throw new InvalidOperationException(node.Kind.ToString());
             }
+        }
+
+        protected virtual void VisitError(BoundErrorNode node)
+        {
+            
         }
 
         protected virtual void VisitMultipleVariableDeclarations(BoundMultipleVariableDeclarations node)

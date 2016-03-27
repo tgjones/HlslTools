@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using HlslTools.Binding;
 
 namespace HlslTools.Symbols
 {
@@ -9,6 +10,8 @@ namespace HlslTools.Symbols
         private readonly List<Symbol> _members;
         private ImmutableArray<Symbol> _membersArray = ImmutableArray<Symbol>.Empty;
         private bool _lazyMembersComputed;
+
+        internal Binder Binder { get; set; }
 
         public ImmutableArray<Symbol> Members
         {
@@ -36,7 +39,7 @@ namespace HlslTools.Symbols
         {
         }
 
-        protected ContainerSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
+        internal ContainerSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
             : base(kind, name, documentation, parent)
         {
             _members = new List<Symbol>();

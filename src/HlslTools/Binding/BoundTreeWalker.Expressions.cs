@@ -51,7 +51,7 @@ namespace HlslTools.Binding
                 case BoundNodeKind.ArrayInitializerExpression:
                     VisitArrayInitializerExpression((BoundArrayInitializerExpression) node);
                     break;
-                case BoundNodeKind.Error:
+                case BoundNodeKind.ErrorExpression:
                     VisitErrorExpression((BoundErrorExpression) node);
                     break;
                 case BoundNodeKind.VariableExpression:

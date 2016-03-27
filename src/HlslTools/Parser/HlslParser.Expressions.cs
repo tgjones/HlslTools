@@ -26,7 +26,7 @@ namespace HlslTools.Parser
             {
                 var compile = Match(SyntaxKind.CompileKeyword);
                 var shaderTarget = Match(SyntaxKind.IdentifierToken);
-                var shaderFunctionName = Match(SyntaxKind.IdentifierToken);
+                var shaderFunctionName = ParseIdentifier();
                 var shaderFunction = new FunctionInvocationExpressionSyntax(shaderFunctionName, ParseParenthesizedArgumentList(false));
                 return new CompileExpressionSyntax(compile, shaderTarget, shaderFunction);
             }
@@ -187,14 +187,14 @@ namespace HlslTools.Parser
 
         private ExpressionSyntax ParseIdentifierOrFunctionInvocationExpression()
         {
-            return Lookahead.Kind == SyntaxKind.OpenParenToken
+            return Lookahead.Kind == SyntaxKind.OpenParenToken || Lookahead.Kind == SyntaxKind.ColonColonToken
                 ? (ExpressionSyntax) ParseFunctionInvocationExpression()
                 : ParseIdentifier();
         }
 
         private FunctionInvocationExpressionSyntax ParseFunctionInvocationExpression()
         {
-            var name = Match(SyntaxKind.IdentifierToken);
+            var name = ParseName();
             var arguments = ParseParenthesizedArgumentList(false);
             return new FunctionInvocationExpressionSyntax(name, arguments);
         }

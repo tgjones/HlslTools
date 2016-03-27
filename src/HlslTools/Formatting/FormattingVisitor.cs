@@ -616,7 +616,7 @@ namespace HlslTools.Formatting
 
         public override void VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
         {
-            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+            Visit(node.Name);
 
             Visit(node.ArgumentList);
         }

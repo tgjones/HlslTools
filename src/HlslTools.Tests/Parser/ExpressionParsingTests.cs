@@ -285,7 +285,8 @@ namespace HlslTools.Tests.Parser
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
             Assert.NotNull(cs.Name);
             Assert.AreEqual(0, cs.ArgumentList.Arguments.Count);
-            Assert.AreEqual("a", cs.Name.Text);
+            Assert.AreEqual(SyntaxKind.IdentifierName, cs.Name.Kind);
+            Assert.AreEqual("a", ((IdentifierNameSyntax) cs.Name).Name.Text);
         }
 
         [Test]
@@ -327,7 +328,8 @@ namespace HlslTools.Tests.Parser
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
             Assert.NotNull(cs.Name);
             Assert.AreEqual(2, cs.ArgumentList.Arguments.Count);
-            Assert.AreEqual("a", cs.Name.Text);
+            Assert.AreEqual(SyntaxKind.IdentifierName, cs.Name.Kind);
+            Assert.AreEqual("a", ((IdentifierNameSyntax) cs.Name).Name.Text);
             Assert.AreEqual("b", cs.ArgumentList.Arguments[0].ToString());
             Assert.AreEqual("c", cs.ArgumentList.Arguments[1].ToString());
         }

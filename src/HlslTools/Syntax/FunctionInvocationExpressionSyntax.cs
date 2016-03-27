@@ -2,10 +2,10 @@ namespace HlslTools.Syntax
 {
     public class FunctionInvocationExpressionSyntax : ExpressionSyntax
     {
-        public readonly SyntaxToken Name;
+        public readonly NameSyntax Name;
         public readonly ArgumentListSyntax ArgumentList;
 
-        public FunctionInvocationExpressionSyntax(SyntaxToken name, ArgumentListSyntax argumentList)
+        public FunctionInvocationExpressionSyntax(NameSyntax name, ArgumentListSyntax argumentList)
             : base(SyntaxKind.FunctionInvocationExpression)
         {
             RegisterChildNode(out Name, name);

@@ -656,9 +656,9 @@
     <Content Include="Shaders\Sdk\Direct3D10\ProceduralMaterials\Noise.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Shaders\Sdk\Direct3D10\ProceduralMaterials\ProceduralHelpers.fx">
+    <None Include="Shaders\Sdk\Direct3D10\ProceduralMaterials\ProceduralHelpers.fxh">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    </None>
     <Content Include="Shaders\Sdk\Direct3D10\ProceduralMaterials\ProceduralMaterials.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

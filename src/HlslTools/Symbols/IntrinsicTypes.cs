@@ -939,7 +939,7 @@ namespace HlslTools.Symbols
             return new IntrinsicObjectTypeSymbol(name, documentation, textureType, t => CreateTextureMethods(textureType, t, valueType, scalarType));
         }
 
-        private static IEnumerable<FunctionSymbol> CreateTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
+        private static IEnumerable<Symbol> CreateTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
         {
             TypeSymbol locationType = null;
             switch (textureType)
@@ -1325,6 +1325,16 @@ namespace HlslTools.Symbols
                                 });
                             break;
                     }
+                    break;
+            }
+
+            switch (textureType)
+            {
+                case PredefinedObjectType.Buffer:
+                    yield return new IndexerSymbol("[]", "", parent, Uint, valueType);
+                    break;
+                case PredefinedObjectType.Texture2D:
+                    yield return new IndexerSymbol("[]", "", parent, Uint2, valueType);
                     break;
             }
         }

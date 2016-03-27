@@ -18,7 +18,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelPr
             var functionSignatures = semanticModel
                 .LookupSymbols(name.SourceRange.Start)
                 .OfType<FunctionSymbol>()
-                .Where(f => name.Text == f.Name)
+                .Where(f => name.ToStringIgnoringMacroReferences() == f.Name) // TODO
                 .ToSignatureItems();
 
             var signatures = functionSignatures.OrderBy(s => s.Parameters.Length).ToImmutableArray();

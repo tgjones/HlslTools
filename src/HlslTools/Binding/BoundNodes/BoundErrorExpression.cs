@@ -5,7 +5,7 @@ namespace HlslTools.Binding.BoundNodes
     internal sealed class BoundErrorExpression : BoundExpression
     {
         public BoundErrorExpression()
-            : base(BoundNodeKind.Error)
+            : base(BoundNodeKind.ErrorExpression)
         {
             Type = TypeFacts.Unknown;
         }

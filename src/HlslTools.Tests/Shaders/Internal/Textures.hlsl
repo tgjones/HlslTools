@@ -23,6 +23,8 @@ namespace Outer
 	}
 }
 
+void Outer::foo() { }
+
 int Outer::Nested::MyClass::TestFunc()
 {
 	return 0;
@@ -83,6 +85,8 @@ PixelShaderInput VS(Outer::Nested::VertexShaderInput input)
 
 float4 PS(PixelShaderInput input) : SV_Target
 {
+	Outer::foo();
+
 	float lod = Picture.CalculateLevelOfDetail(PictureSampler, input.tex);
 	float lodUnclamped = Picture.CalculateLevelOfDetailUnclamped(PictureSampler, input.tex);
 	float4 gathered = Picture.Gather(PictureSampler, input.tex, int2(0, 1));

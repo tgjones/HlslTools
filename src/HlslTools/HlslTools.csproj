@@ -61,6 +61,7 @@
     <Compile Include="Binding\BoundNodes\BoundCompilationUnit.cs" />
     <Compile Include="Binding\BoundNodes\BoundConstantBuffer.cs" />
     <Compile Include="Binding\BoundNodes\BoundEqualsValue.cs" />
+    <Compile Include="Binding\BoundNodes\BoundErrorNode.cs" />
     <Compile Include="Binding\BoundNodes\BoundFunction.cs" />
     <Compile Include="Binding\BoundNodes\BoundFunctionDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundFunctionDefinition.cs" />

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace HlslTools.Binding
@@ -9,6 +10,8 @@ namespace HlslTools.Binding
         public ContainedFunctionBinder(SharedBinderState sharedBinderState, Binder parent, Binder containerBinder)
             : base(sharedBinderState, parent)
         {
+            if (containerBinder == null)
+                throw new ArgumentNullException(nameof(containerBinder));
             _containerBinder = containerBinder;
         }
 

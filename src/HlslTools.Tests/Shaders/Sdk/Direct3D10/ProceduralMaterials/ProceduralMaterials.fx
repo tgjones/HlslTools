@@ -61,7 +61,7 @@ SamplerState g_samPoint
 };
 
 // Include proceduralhelpers.fx here so we can peek at any globals
-#include "proceduralhelpers.fx"
+#include "proceduralhelpers.fxh"
 
 //--------------------------------------------------------------------------------------
 // States

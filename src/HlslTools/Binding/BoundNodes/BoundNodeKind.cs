@@ -61,6 +61,7 @@ namespace HlslTools.Binding.BoundNodes
         StateInitializer,
         StateArrayInitializer,
         SamplerState,
+        ErrorExpression,
         Error
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace HlslTools.Symbols
+﻿using HlslTools.Binding;
+
+namespace HlslTools.Symbols
 {
     public abstract class TypeSymbol : ContainerSymbol
     {
-        protected TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
+        internal TypeSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
             : base(kind, name, documentation, parent)
         {
             

@@ -401,7 +401,7 @@ namespace HlslTools.Parser
                 _lexer.ExpandMacros = true;
 
                 var closeParen = Match(SyntaxKind.CloseParenToken);
-                expr = new FunctionInvocationExpressionSyntax(((IdentifierNameSyntax) expr).Name, new ArgumentListSyntax(
+                expr = new FunctionInvocationExpressionSyntax((IdentifierNameSyntax) expr, new ArgumentListSyntax(
                     openParen,
                     new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { name }),
                     closeParen));

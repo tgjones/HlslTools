@@ -403,7 +403,7 @@ namespace HlslTools.Binding
         private BoundExpression BindFunctionInvocationExpression(FunctionInvocationExpressionSyntax syntax)
         {
             // Don't try to bind CompileShader function calls, for now.
-            if (syntax.Name.ContextualKind == SyntaxKind.CompileShaderKeyword)
+            if ((syntax.Name.Kind == SyntaxKind.IdentifierName) && ((IdentifierNameSyntax) syntax.Name).Name.ContextualKind == SyntaxKind.CompileShaderKeyword)
                 return new BoundFunctionInvocationExpression(syntax,
                     syntax.ArgumentList.Arguments.Select(x => (BoundExpression) new BoundErrorExpression()).ToImmutableArray(),
                     OverloadResolutionResult<FunctionSymbolSignature>.None);
@@ -416,7 +416,23 @@ namespace HlslTools.Binding
             if (anyErrorsInArguments)
                 return new BoundFunctionInvocationExpression(syntax, boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
 
-            var result = LookupFunction(name, argumentTypes);
+            ContainerSymbol containerSymbol;
+            SyntaxToken actualName;
+            switch (name.Kind)
+            {
+                case SyntaxKind.IdentifierName:
+                    containerSymbol = null;
+                    actualName = ((IdentifierNameSyntax) name).Name;
+                    break;
+                case SyntaxKind.QualifiedName:
+                    containerSymbol = LookupContainer((QualifiedNameSyntax) syntax.Name);
+                    actualName = ((QualifiedNameSyntax) name).Right.Name;
+                    break;
+                default:
+                    throw new InvalidOperationException();
+            }
+
+            var result = (containerSymbol?.Binder ?? this).LookupFunction(actualName, argumentTypes);
 
             if (result.Best == null)
             {

@@ -33,6 +33,12 @@ namespace HlslTools.Symbols
             ReturnType = returnType;
         }
 
+        internal void ClearParameters()
+        {
+            _parameters.Clear();
+            _parametersArray = ImmutableArray<ParameterSymbol>.Empty;
+        }
+
         internal void AddParameter(ParameterSymbol parameter)
         {
             _parameters.Add(parameter);

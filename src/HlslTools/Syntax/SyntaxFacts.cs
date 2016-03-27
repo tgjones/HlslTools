@@ -2076,6 +2076,7 @@ namespace HlslTools.Syntax
         public static bool HaveMatchingSignatures(FunctionSyntax left, FunctionSyntax right)
         {
             // TODO: Whitespace differences will result in a false negative.
+            // Instead we should do this test on FunctionSymbol objects.
 
             if (left.Name.GetUnqualifiedName().Name.Text != right.Name.GetUnqualifiedName().Name.Text)
                 return false;
@@ -2090,6 +2091,21 @@ namespace HlslTools.Syntax
 
                 if (leftParameter.Type.ToStringIgnoringMacroReferences() != rightParameter.Type.ToStringIgnoringMacroReferences())
                     return false;
+
+                if (leftParameter.Declarator.ArrayRankSpecifiers.Count != rightParameter.Declarator.ArrayRankSpecifiers.Count)
+                    return false;
+
+                for (var j = 0; j < leftParameter.Declarator.ArrayRankSpecifiers.Count; j++)
+                {
+                    var leftDimension = leftParameter.Declarator.ArrayRankSpecifiers[j].Dimension;
+                    var rightDimension = rightParameter.Declarator.ArrayRankSpecifiers[j].Dimension;
+                    if ((leftDimension != null) != (rightDimension != null))
+                        return false;
+                    if (leftDimension == null)
+                        return false;
+                    if (leftDimension.ToStringIgnoringMacroReferences() != rightDimension.ToStringIgnoringMacroReferences())
+                        return false;
+                }
 
                 if (leftParameter.Modifiers.Count != rightParameter.Modifiers.Count)
                     return false;

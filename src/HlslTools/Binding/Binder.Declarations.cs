@@ -64,6 +64,8 @@ namespace HlslTools.Binding
             AddSymbol(namespaceSymbol, declaration.Name.Span);
 
             var namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
+            namespaceSymbol.Binder = namespaceBinder;
+
             var boundDeclarations = namespaceBinder.BindTopLevelDeclarations(declaration.Declarations, namespaceSymbol);
 
             foreach (var member in namespaceBinder.LocalSymbols)
@@ -154,61 +156,34 @@ namespace HlslTools.Binding
             return new BoundFunctionDeclaration(functionSymbol, boundParameters.ToImmutableArray());
         }
 
-        private IEnumerable<Symbol> LookupParent(DeclarationNameSyntax nameSyntax)
-        {
-            switch (nameSyntax.Kind)
-            {
-                case SyntaxKind.IdentifierDeclarationName:
-                    var identifierName = (IdentifierDeclarationNameSyntax) nameSyntax;
-                    return LookupSymbols<NamespaceSymbol>(identifierName.Name)
-                        .Cast<Symbol>()
-                        .Union(LookupSymbols<ClassSymbol>(identifierName.Name));
-                case SyntaxKind.QualifiedDeclarationName:
-                    var qualifiedName = (QualifiedDeclarationNameSyntax) nameSyntax;
-                    return LookupParent(qualifiedName.Left);
-                default:
-                    throw new InvalidOperationException();
-            }
-        }
-
-        private BoundFunctionDefinition BindFunctionDefinition(FunctionDefinitionSyntax declaration, Symbol parent)
+        private BoundNode BindFunctionDefinition(FunctionDefinitionSyntax declaration, Symbol parent)
         {
             var returnType = LookupType(declaration.ReturnType);
 
             var isQualifiedName = false;
-            SyntaxNode qualifiedNameParentSyntax = null;
 
+            ContainerSymbol containerSymbol;
+            Symbol functionOwner;
             switch (declaration.Name.Kind)
             {
                 case SyntaxKind.IdentifierDeclarationName:
+                    containerSymbol = null;
+                    functionOwner = parent;
                     break;
                 case SyntaxKind.QualifiedDeclarationName:
-                    var qualifiedName = (QualifiedDeclarationNameSyntax) declaration.Name;
-                    var result = LookupParent(qualifiedName.Left).ToImmutableArray();
-                    if (result.Length == 1)
-                    {
-                        parent = result.First();
-                        isQualifiedName = true;
-                        qualifiedNameParentSyntax = (parent.Kind == SymbolKind.Namespace)
-                            ? (SyntaxNode) ((NamespaceSymbol) parent).Syntax
-                            : ((ClassSymbol) parent).Syntax;
-                    }
-                    else if (result.Length == 0)
-                    {
-                        Diagnostics.ReportUndeclaredNamespaceOrType(qualifiedName);
-                    }
-                    else
-                    {
-                        Diagnostics.ReportAmbiguousNamespaceOrType(qualifiedName, result);
-                    }
+                    containerSymbol = LookupContainer((QualifiedDeclarationNameSyntax) declaration.Name);
+                    if (containerSymbol == null)
+                        return new BoundErrorNode();
+                    isQualifiedName = true;
+                    functionOwner = containerSymbol;
                     break;
                 default:
                     throw new InvalidOperationException();
             }
 
-            var symbolTable = isQualifiedName
-                ? ((ContainerSymbol) parent).Members
-                : LocalSymbols;
+            var containerBinder = containerSymbol?.Binder ?? this;
+
+            var symbolTable = containerBinder.LocalSymbols;
 
             var functionSymbol = symbolTable.OfType<SourceFunctionSymbol>()
                 .FirstOrDefault(x => SyntaxFacts.HaveMatchingSignatures(
@@ -227,15 +202,15 @@ namespace HlslTools.Binding
                 if (isQualifiedName)
                     Diagnostics.ReportUndeclaredFunctionInNamespaceOrClass((QualifiedDeclarationNameSyntax) declaration.Name);
                 functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
-                AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
+                containerBinder.AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
             }
 
-            var functionBinder = parent != null && parent.Kind == SymbolKind.Class
-                ? new ClassMethodBinder(_sharedBinderState, this, (ClassSymbol) parent)
+            var functionBinder = (functionOwner != null && functionOwner.Kind == SymbolKind.Class)
+                ? new ClassMethodBinder(_sharedBinderState, this, (ClassSymbol) functionOwner)
                 : new Binder(_sharedBinderState, this);
 
             if (isQualifiedName)
-                functionBinder = new ContainedFunctionBinder(_sharedBinderState, functionBinder, _sharedBinderState.BinderFromBoundNode[_sharedBinderState.BoundNodeFromSyntaxNode[qualifiedNameParentSyntax]]);
+                functionBinder = new ContainedFunctionBinder(_sharedBinderState, functionBinder, containerSymbol.Binder);
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
             var boundBody = functionBinder.Bind(declaration.Body, functionBinder.BindBlock);
@@ -259,6 +234,7 @@ namespace HlslTools.Binding
                         parameterDirection)));
             }
 
+            invocableSymbol.ClearParameters();
             foreach (var parameter in invocableBinder.LocalSymbols)
                 invocableSymbol.AddParameter((ParameterSymbol) parameter);
 

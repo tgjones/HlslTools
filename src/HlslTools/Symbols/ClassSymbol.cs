@@ -12,8 +12,6 @@ namespace HlslTools.Symbols
         public ClassSymbol BaseClass { get; }
         public ImmutableArray<InterfaceSymbol> BaseInterfaces { get; }
 
-        internal Binder Binder { get; }
-
         internal ClassSymbol(ClassTypeSyntax syntax, Symbol parent, ClassSymbol baseClass, ImmutableArray<InterfaceSymbol> baseInterfaces, Binder binder)
             : base(SymbolKind.Class, syntax.Name.Text, string.Empty, parent)
         {

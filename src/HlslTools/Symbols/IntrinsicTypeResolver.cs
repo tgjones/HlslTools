@@ -21,34 +21,39 @@ namespace HlslTools.Symbols
                 case SyntaxKind.PredefinedObjectType:
                     return ((PredefinedTypeSyntax) node).GetTypeSymbol(binder);
                 case SyntaxKind.StructType:
-                    {
-                        // Inline struct.
-                        var structType = (StructTypeSyntax) node;
-                        
-                        var symbol = binder.LookupTypeSymbol(structType);
-                        if (symbol == null)
-                        {
-                            binder.Diagnostics.ReportUndeclaredType(node);
-                            return TypeFacts.Unknown;
-                        }
+                {
+                    // Inline struct.
+                    var structType = (StructTypeSyntax) node;
 
-                        return symbol;
+                    var symbol = binder.LookupTypeSymbol(structType);
+                    if (symbol == null)
+                    {
+                        binder.Diagnostics.ReportUndeclaredType(node);
+                        return TypeFacts.Unknown;
                     }
+
+                    return symbol;
+                }
                 case SyntaxKind.IdentifierName:
+                {
+                    var identifierName = (IdentifierNameSyntax) node;
+                    var symbols = binder.LookupTypeSymbol(identifierName.Name).ToImmutableArray();
+                    if (symbols.Length == 0)
                     {
-                        var identifierName = (IdentifierNameSyntax) node;
-                        var symbols = binder.LookupTypeSymbol(identifierName.Name).ToImmutableArray();
-                        if (symbols.Length == 0)
-                        {
-                            binder.Diagnostics.ReportUndeclaredType(node);
-                            return TypeFacts.Unknown;
-                        }
-
-                        if (symbols.Length > 1)
-                            binder.Diagnostics.ReportAmbiguousType(identifierName.Name, symbols);
-
-                        return symbols.First();
+                        binder.Diagnostics.ReportUndeclaredType(node);
+                        return TypeFacts.Unknown;
                     }
+
+                    if (symbols.Length > 1)
+                        binder.Diagnostics.ReportAmbiguousType(identifierName.Name, symbols);
+
+                    return symbols.First();
+                }
+                case SyntaxKind.QualifiedName:
+                {
+                    var qualifiedName = (QualifiedNameSyntax) node;
+                    return binder.LookupQualifiedType(qualifiedName);
+                }
                 default:
                     throw new InvalidOperationException(node.Kind.ToString());
             }

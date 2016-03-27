@@ -42,7 +42,7 @@ namespace HlslTools.Binding
             return null;
         }
 
-        private TypeSymbol LookupType(TypeSyntax syntax)
+        public TypeSymbol LookupType(TypeSyntax syntax)
         {
             var type = syntax.GetTypeSymbol(this);
             if (type != null)
@@ -122,6 +122,85 @@ namespace HlslTools.Binding
             }
 
             return Enumerable.Empty<Symbol>();
+        }
+
+        private IEnumerable<ContainerSymbol> LookupNamespaceOrClass(SyntaxToken name)
+        {
+            return LookupSymbols<NamespaceSymbol>(name)
+                .Cast<ContainerSymbol>()
+                .Union(LookupSymbols<ClassSymbol>(name));
+        }
+
+        public TypeSymbol LookupQualifiedType(QualifiedNameSyntax qualifiedName)
+        {
+            var container = LookupContainer(qualifiedName);
+
+            var symbols = container.Members.OfType<TypeSymbol>()
+                .Where(x => x.Name == qualifiedName.Right.Name.Text)
+                .ToImmutableArray();
+
+            if (symbols.Length == 0)
+            {
+                Diagnostics.ReportUndeclaredType(qualifiedName);
+                return TypeFacts.Unknown;
+            }
+
+            if (symbols.Length > 1)
+                Diagnostics.ReportAmbiguousType(qualifiedName.Right.Name, symbols);
+
+            return symbols.First();
+        }
+
+        private ContainerSymbol LookupContainer(NameSyntax name)
+        {
+            switch (name.Kind)
+            {
+                case SyntaxKind.IdentifierName:
+                    var containers = LookupNamespaceOrClass(((IdentifierNameSyntax) name).Name).ToImmutableArray();
+
+                    if (containers.Length == 0)
+                    {
+                        Diagnostics.ReportUndeclaredType(name);
+                        return TypeFacts.Unknown;
+                    }
+
+                    if (containers.Length > 1)
+                        Diagnostics.ReportAmbiguousType(((IdentifierNameSyntax) name).Name, containers);
+
+                    return containers.First();
+                case SyntaxKind.QualifiedName:
+                    var leftType = LookupContainer(((QualifiedNameSyntax) name).Left);
+                    if ((leftType is TypeSymbol && ((TypeSymbol) leftType).IsError()))
+                        return TypeFacts.Unknown;
+                    return leftType;
+                default:
+                    throw new InvalidOperationException();
+            }
+        }
+
+        private ContainerSymbol LookupContainer(DeclarationNameSyntax name)
+        {
+            switch (name.Kind)
+            {
+                case SyntaxKind.IdentifierDeclarationName:
+                    var containers = LookupNamespaceOrClass(((IdentifierDeclarationNameSyntax) name).Name).ToImmutableArray();
+
+                    if (containers.Length == 0)
+                    {
+                        Diagnostics.ReportUndeclaredType(name);
+                        return null;
+                    }
+
+                    if (containers.Length > 1)
+                        Diagnostics.ReportAmbiguousType(((IdentifierDeclarationNameSyntax) name).Name, containers);
+
+                    return containers.First();
+                case SyntaxKind.QualifiedDeclarationName:
+                    var qualifiedName = (QualifiedDeclarationNameSyntax) name;
+                    return LookupContainer(qualifiedName.Left);
+                default:
+                    throw new InvalidOperationException();
+            }
         }
 
         private IEnumerable<IndexerSymbol> LookupIndexer(TypeSymbol type)
