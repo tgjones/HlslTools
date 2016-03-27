@@ -61,5 +61,36 @@ namespace HlslTools.Tests.Symbols
             var float4Type = IntrinsicTypes.Float4;
             Assert.That(float4Type.Members, Has.Length.EqualTo(681));
         }
+
+        [Test]
+        public void MatrixTypesHaveCorrectFields()
+        {
+            var matrix1x1Type = IntrinsicTypes.Float1x1;
+            Assert.That(matrix1x1Type.Members, Has.Length.EqualTo(9));
+            Assert.That(matrix1x1Type.Members[0].Name, Is.EqualTo("_m00"));
+            Assert.That(matrix1x1Type.Members[1].Name, Is.EqualTo("_m00_m00"));
+            Assert.That(matrix1x1Type.Members[2].Name, Is.EqualTo("_m00_m00_m00"));
+            Assert.That(matrix1x1Type.Members[3].Name, Is.EqualTo("_m00_m00_m00_m00"));
+            Assert.That(matrix1x1Type.Members[4].Name, Is.EqualTo("_11"));
+            Assert.That(matrix1x1Type.Members[5].Name, Is.EqualTo("_11_11"));
+            Assert.That(matrix1x1Type.Members[6].Name, Is.EqualTo("_11_11_11"));
+            Assert.That(matrix1x1Type.Members[7].Name, Is.EqualTo("_11_11_11_11"));
+
+            var matrix1x2Type = IntrinsicTypes.Float1x2;
+            Assert.That(matrix1x2Type.Members, Has.Length.EqualTo(61));
+            Assert.That(matrix1x1Type.Members[0].Name, Is.EqualTo("_m00"));
+            Assert.That(matrix1x2Type.Members[1].Name, Is.EqualTo("_m01"));
+            Assert.That(matrix1x2Type.Members[2].Name, Is.EqualTo("_m00_m00"));
+            Assert.That(matrix1x2Type.Members[3].Name, Is.EqualTo("_m00_m01"));
+            Assert.That(matrix1x2Type.Members[4].Name, Is.EqualTo("_m01_m00"));
+            Assert.That(matrix1x2Type.Members[5].Name, Is.EqualTo("_m01_m01"));
+            Assert.That(matrix1x2Type.Members[6].Name, Is.EqualTo("_m00_m00_m00"));
+
+            var matrix2x2Type = IntrinsicTypes.Float2x2;
+            Assert.That(matrix2x2Type.Members, Has.Length.EqualTo(681));
+
+            var matrix4x4Type = IntrinsicTypes.Float4x4;
+            Assert.That(matrix4x4Type.Members, Has.Length.EqualTo(139809));
+        }
     }
 }
