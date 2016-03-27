@@ -7,7 +7,7 @@ namespace HlslTools.Compilation
     public sealed class Conversion
     {
         // Make sure the number of values in ConversionTypes doesn't overflow a ulong.
-        internal const int NumConversionBits = 6;
+        internal const int NumConversionBits = 5;
 
         private Conversion(bool exists, bool isIdentity, bool isExplicit, ConversionTypes implicitConversionType)
         {
@@ -150,7 +150,7 @@ namespace HlslTools.Compilation
                         switch (targetType.Kind)
                         {
                             case SymbolKind.IntrinsicMatrixType: // float1 => float1x1
-                                return ConversionTypes.ScalarPromotion;
+                                return ConversionTypes.SameSizePromotion;
                             case SymbolKind.IntrinsicScalarType: // float1 => float
                                 return ConversionTypes.SameSizeTruncation;
                         }
@@ -160,7 +160,7 @@ namespace HlslTools.Compilation
                         {
                             case SymbolKind.IntrinsicMatrixType: // float => float1x1
                             case SymbolKind.IntrinsicVectorType: // float => float1
-                                return ConversionTypes.ScalarPromotion;
+                                return ConversionTypes.SameSizePromotion;
                         }
                         break;
                 }

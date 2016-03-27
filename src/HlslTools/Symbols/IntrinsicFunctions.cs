@@ -251,14 +251,14 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create2(
                "dot",
                "Returns the dot product of two vectors.",
-               new[] { IntrinsicTypes.Float }.Union(IntrinsicTypes.AllFloatVectorTypes).ToArray(),
+               IntrinsicTypes.AllFloatVectorTypes,
                "x", "The first vector.",
                "y", "The second vector.",
                IntrinsicTypes.Float));
             allFunctions.AddRange(Create2(
                "dot",
                "Returns the dot product of two vectors.",
-               new[] { IntrinsicTypes.Int }.Union(IntrinsicTypes.AllIntVectorTypes).ToArray(),
+               IntrinsicTypes.AllIntVectorTypes,
                "x", "The first vector.",
                "y", "The second vector.",
                IntrinsicTypes.Int));
