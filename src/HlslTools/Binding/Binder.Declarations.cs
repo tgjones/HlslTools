@@ -171,7 +171,7 @@ namespace HlslTools.Binding
                     functionOwner = parent;
                     break;
                 case SyntaxKind.QualifiedDeclarationName:
-                    containerSymbol = LookupContainer((QualifiedDeclarationNameSyntax) declaration.Name);
+                    containerSymbol = LookupContainer(((QualifiedDeclarationNameSyntax) declaration.Name).Left);
                     if (containerSymbol == null)
                         return new BoundErrorNode();
                     isQualifiedName = true;

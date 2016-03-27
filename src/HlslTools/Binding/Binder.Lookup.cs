@@ -133,7 +133,10 @@ namespace HlslTools.Binding
 
         public TypeSymbol LookupQualifiedType(QualifiedNameSyntax qualifiedName)
         {
-            var container = LookupContainer(qualifiedName);
+            var container = LookupContainer(qualifiedName.Left);
+
+            if (container == null)
+                return TypeFacts.Unknown;
 
             var symbols = container.Members.OfType<TypeSymbol>()
                 .Where(x => x.Name == qualifiedName.Right.Name.Text)
@@ -161,7 +164,7 @@ namespace HlslTools.Binding
                     if (containers.Length == 0)
                     {
                         Diagnostics.ReportUndeclaredType(name);
-                        return TypeFacts.Unknown;
+                        return null;
                     }
 
                     if (containers.Length > 1)
@@ -169,13 +172,34 @@ namespace HlslTools.Binding
 
                     return containers.First();
                 case SyntaxKind.QualifiedName:
-                    var leftType = LookupContainer(((QualifiedNameSyntax) name).Left);
-                    if ((leftType is TypeSymbol && ((TypeSymbol) leftType).IsError()))
-                        return TypeFacts.Unknown;
-                    return leftType;
+                    var qualifiedName = (QualifiedNameSyntax) name;
+                    var leftContainer = LookupContainer(qualifiedName.Left);
+                    return LookupContainerMember(leftContainer, qualifiedName.Right.Name);
                 default:
                     throw new InvalidOperationException();
             }
+        }
+
+        private ContainerSymbol LookupContainerMember(ContainerSymbol container, SyntaxToken name)
+        {
+            if (container == null)
+                return null;
+
+            var members = container.LookupMembers<NamespaceSymbol>(name.Text)
+                .Cast<ContainerSymbol>()
+                .Union(container.LookupMembers<ClassSymbol>(name.Text))
+                .ToImmutableArray();
+
+            if (members.Length == 0)
+            {
+                Diagnostics.ReportUndeclaredType(name);
+                return null;
+            }
+
+            if (members.Length > 1)
+                Diagnostics.ReportAmbiguousType(name, members);
+
+            return members.First();
         }
 
         private ContainerSymbol LookupContainer(DeclarationNameSyntax name)
@@ -197,7 +221,9 @@ namespace HlslTools.Binding
                     return containers.First();
                 case SyntaxKind.QualifiedDeclarationName:
                     var qualifiedName = (QualifiedDeclarationNameSyntax) name;
-                    return LookupContainer(qualifiedName.Left);
+                    var leftContainer = LookupContainer(qualifiedName.Left);
+                    return LookupContainerMember(leftContainer, qualifiedName.Right.Name);
+
                 default:
                     throw new InvalidOperationException();
             }

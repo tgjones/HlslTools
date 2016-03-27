@@ -425,7 +425,7 @@ namespace HlslTools.Binding
                     actualName = ((IdentifierNameSyntax) name).Name;
                     break;
                 case SyntaxKind.QualifiedName:
-                    containerSymbol = LookupContainer((QualifiedNameSyntax) syntax.Name);
+                    containerSymbol = LookupContainer(((QualifiedNameSyntax) syntax.Name).Left);
                     actualName = ((QualifiedNameSyntax) name).Right.Name;
                     break;
                 default:
