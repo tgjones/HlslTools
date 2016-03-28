@@ -81,8 +81,12 @@ namespace HlslTools.VisualStudio.Parsing
 
                         cancellationToken.ThrowIfCancellationRequested();
 
+                        var semanticModel = snapshot.GetSemanticModel(_sourceTextFactory, cancellationToken);
+
+                        cancellationToken.ThrowIfCancellationRequested();
+
                         await RaiseSyntaxTreeAvailable(
-                            new SnapshotSyntaxTree(snapshot, syntaxTree),
+                            new SnapshotSyntaxTree(snapshot, syntaxTree, semanticModel),
                             cancellationToken);
                     }
                 }

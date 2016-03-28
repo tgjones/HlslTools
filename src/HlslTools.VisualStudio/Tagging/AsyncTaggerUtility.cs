@@ -23,7 +23,9 @@ namespace HlslTools.VisualStudio.Tagging
                     Task.Run(async () =>
                     {
                         var snapshot = textBuffer.CurrentSnapshot;
-                        var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None));
+                        var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot,
+                            snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None),
+                            snapshot.GetSemanticModel(sourceTextFactory, CancellationToken.None));
                         await tagger.InvalidateTags(snapshotSyntaxTree, CancellationToken.None);
                     });
                     return tagger as ITagger<T>;

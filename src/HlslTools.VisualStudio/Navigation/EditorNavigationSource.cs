@@ -34,7 +34,9 @@ namespace HlslTools.VisualStudio.Navigation
             await Task.Run(async () =>
             {
                 var snapshot = _textBuffer.CurrentSnapshot;
-                var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, snapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None));
+                var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot,
+                    snapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None),
+                    snapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
                 await InvalidateTargets(snapshotSyntaxTree, CancellationToken.None);
             });
         }

@@ -35,7 +35,9 @@ namespace HlslTools.VisualStudio.ErrorList
                 Line = line.LineNumber,
                 Column = span.Start - line.Start.Position,
                 Category = TaskCategory.CodeSense,
-                ErrorCategory = TaskErrorCategory.Error,
+                ErrorCategory = (diagnostic.Severity == DiagnosticSeverity.Error)
+                    ? TaskErrorCategory.Error 
+                    : TaskErrorCategory.Warning,
                 Priority = TaskPriority.Normal,
                 Document = span.Filename ?? _textDocument.FilePath
             };

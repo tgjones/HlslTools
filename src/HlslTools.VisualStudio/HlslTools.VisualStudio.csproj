@@ -221,8 +221,6 @@
     <Compile Include="Editing\Commenting\CommentingExtensions.cs" />
     <Compile Include="Editing\Commenting\CommentingTextViewCreationListener.cs" />
     <Compile Include="Editing\Commenting\UncommentCommandTarget.cs" />
-    <Compile Include="ErrorList\ErrorExtensions.cs" />
-    <Compile Include="ErrorList\ErrorListManager.cs" />
     <Compile Include="ErrorList\ErrorListHelper.cs" />
     <Compile Include="ErrorList\IErrorListHelper.cs" />
     <Compile Include="Formatting\FormattingExtensions.cs" />
@@ -365,6 +363,8 @@
     <Compile Include="Tagging\Outlining\OutliningTextViewCreationListener.cs" />
     <Compile Include="Tagging\Outlining\OutliningCommandTarget.cs" />
     <Compile Include="Tagging\Squiggles\ErrorTagger.cs" />
+    <Compile Include="Tagging\Squiggles\SemanticErrorTagger.cs" />
+    <Compile Include="Tagging\Squiggles\SemanticErrorTaggerProvider.cs" />
     <Compile Include="Tagging\Squiggles\SyntaxErrorTagger.cs" />
     <Compile Include="Tagging\Squiggles\SyntaxErrorTaggerProvider.cs" />
     <Compile Include="Text\VisualStudioFileSystem.cs" />

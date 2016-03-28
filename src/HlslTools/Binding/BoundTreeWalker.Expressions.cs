@@ -7,6 +7,9 @@ namespace HlslTools.Binding
     {
         public virtual void VisitExpression(BoundExpression node)
         {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
             switch (node.Kind)
             {
                 case BoundNodeKind.LiteralExpression:

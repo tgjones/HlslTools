@@ -27,7 +27,8 @@ namespace HlslTools.VisualStudio.Tests.Tagging
             var backgroundParser = new BackgroundParser(textBuffer, sourceTextFactory);
             var snapshot = textBuffer.CurrentSnapshot;
             var syntaxTree = snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None);
-            var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, syntaxTree);
+            var semanticModel = snapshot.GetSemanticModel(sourceTextFactory, CancellationToken.None);
+            var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, syntaxTree, semanticModel);
             var tagger = CreateTagger(backgroundParser, snapshot);
 
             // Act.

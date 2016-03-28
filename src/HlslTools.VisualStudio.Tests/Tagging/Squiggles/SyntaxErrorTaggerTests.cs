@@ -1,4 +1,5 @@
-﻿using HlslTools.VisualStudio.ErrorList;
+﻿using System;
+using HlslTools.VisualStudio.ErrorList;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Tagging.Squiggles;
@@ -14,17 +15,11 @@ namespace HlslTools.VisualStudio.Tests.Tagging.Squiggles
     [TestFixture]
     internal class SyntaxErrorTaggerTests : AsyncTaggerTestsBase<SyntaxErrorTagger, IErrorTag>
     {
-        private IErrorListHelper _errorListHelper;
-
-        protected override void OnTestFixtureSetUp()
-        {
-            _errorListHelper = Substitute.For<IErrorListHelper>();
-            base.OnTestFixtureSetUp();
-        }
-
         protected override SyntaxErrorTagger CreateTagger(BackgroundParser backgroundParser, ITextSnapshot snapshot)
         {
-            return new SyntaxErrorTagger(Substitute.For<ITextView>(), backgroundParser, _errorListHelper, new FakeOptionsService());
+            return new SyntaxErrorTagger(
+                Substitute.For<ITextView>(), backgroundParser, new FakeOptionsService(),
+                Substitute.For<IServiceProvider>(), Substitute.For<ITextDocumentFactoryService>());
         }
 
         protected override bool MustCreateTagSpans => false;

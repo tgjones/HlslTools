@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using HlslTools.Diagnostics;
 using HlslTools.VisualStudio.Options;
@@ -9,9 +9,9 @@ using Microsoft.VisualStudio.Text.Editor;
 
 namespace HlslTools.VisualStudio.Tagging.Squiggles
 {
-    internal sealed class SyntaxErrorTagger : ErrorTagger
+    internal sealed class SemanticErrorTagger : ErrorTagger
     {
-        public SyntaxErrorTagger(ITextView textView, BackgroundParser backgroundParser,
+        public SemanticErrorTagger(ITextView textView, BackgroundParser backgroundParser,
             IOptionsService optionsService, IServiceProvider serviceProvider,
             ITextDocumentFactoryService textDocumentFactoryService)
             : base(PredefinedErrorTypeNames.SyntaxError, textView, backgroundParser, optionsService, serviceProvider, textDocumentFactoryService)
@@ -21,7 +21,7 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
 
         protected override IEnumerable<Diagnostic> GetDiagnostics(SnapshotSyntaxTree snapshotSyntaxTree)
         {
-            return snapshotSyntaxTree.SyntaxTree.GetDiagnostics();
+            return snapshotSyntaxTree.SemanticModel.GetDiagnostics();
         }
     }
 }

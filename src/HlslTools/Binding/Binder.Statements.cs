@@ -42,9 +42,16 @@ namespace HlslTools.Binding
                     return BindSwitchStatement((SwitchStatementSyntax) syntax);
                 case SyntaxKind.WhileStatement:
                     return BindWhileStatement((WhileStatementSyntax) syntax);
+                case SyntaxKind.EmptyStatement:
+                    return BindEmptyStatement((EmptyStatementSyntax) syntax);
                 default:
                     throw new NotSupportedException("Not supported: " + syntax.Kind);
             }
+        }
+
+        private BoundStatement BindEmptyStatement(EmptyStatementSyntax syntax)
+        {
+            return new BoundNoOpStatement();
         }
 
         private BoundStatement BindDoStatement(DoStatementSyntax syntax)
@@ -121,7 +128,7 @@ namespace HlslTools.Binding
                 syntax.Declaration != null ? Bind(syntax.Declaration, BindForStatementDeclaration) : null,
                 syntax.Initializer != null ? forStatementBinder.Bind(syntax.Initializer, forStatementBinder.BindExpression) : null,
                 forStatementBinder.Bind(syntax.Condition, forStatementBinder.BindExpression),
-                forStatementBinder.Bind(syntax.Incrementor, forStatementBinder.BindExpression),
+                syntax.Incrementor != null ? forStatementBinder.Bind(syntax.Incrementor, forStatementBinder.BindExpression) : null,
                 forStatementBinder.Bind(syntax.Statement, forStatementBinder.BindStatement));
         }
 

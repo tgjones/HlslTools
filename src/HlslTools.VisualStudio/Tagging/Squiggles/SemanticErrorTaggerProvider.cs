@@ -13,7 +13,7 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
     [Export(typeof(IViewTaggerProvider))]
     [TagType(typeof(IErrorTag))]
     [ContentType(HlslConstants.ContentTypeName)]
-    internal sealed class SyntaxErrorTaggerProvider : IViewTaggerProvider
+    internal sealed class SemanticErrorTaggerProvider : IViewTaggerProvider
     {
         [Import]
         public IOptionsService OptionsService { get; set; }
@@ -27,10 +27,11 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
         [Import]
         public ITextDocumentFactoryService TextDocumentFactoryService { get; set; }
 
-        public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
+        public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer)
+            where T : ITag
         {
-            return AsyncTaggerUtility.CreateTagger<SyntaxErrorTagger, T>(buffer,
-                () => new SyntaxErrorTagger(textView, buffer.GetBackgroundParser(SourceTextFactory), OptionsService, ServiceProvider, TextDocumentFactoryService),
+            return AsyncTaggerUtility.CreateTagger<SemanticErrorTagger, T>(buffer,
+                () => new SemanticErrorTagger(textView, buffer.GetBackgroundParser(SourceTextFactory), OptionsService, ServiceProvider, TextDocumentFactoryService),
                 SourceTextFactory);
         }
     }

@@ -51,9 +51,17 @@ namespace HlslTools.Binding
                 case BoundNodeKind.WhileStatement:
                     VisitWhileStatement((BoundWhileStatement) node);
                     break;
+                case BoundNodeKind.NoOpStatement:
+                    VisitNoOpStatement((BoundNoOpStatement) node);
+                    break;
                 default:
                     throw new InvalidOperationException(node.Kind.ToString());
             }
+        }
+
+        protected virtual void VisitNoOpStatement(BoundNoOpStatement node)
+        {
+            
         }
 
         protected virtual void VisitWhileStatement(BoundWhileStatement node)
@@ -93,7 +101,8 @@ namespace HlslTools.Binding
 
             VisitExpression(node.Condition);
 
-            VisitExpression(node.Incrementor);
+            if (node.Incrementor != null)
+                VisitExpression(node.Incrementor);
 
             VisitStatement(node.Body);
         }

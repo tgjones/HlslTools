@@ -15,6 +15,9 @@ namespace HlslTools.Binding
     {
         private BoundExpression BindExpression(ExpressionSyntax node)
         {
+            if (node == null)
+                throw new ArgumentNullException(nameof(node));
+
             switch (node.Kind)
             {
                 case SyntaxKind.TrueLiteralExpression:
