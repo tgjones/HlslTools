@@ -13,6 +13,9 @@
         Variable,
         Parameter,
         Keyword,
-        Semantic
+        Semantic,
+        Field,
+        Method,
+        Intrinsic
     }
 }

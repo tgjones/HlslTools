@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using HlslTools.Diagnostics;
 
@@ -33,6 +34,11 @@ namespace HlslTools.Syntax
         public override SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             return new IdentifierNameSyntax(Name, diagnostics);
+        }
+
+        public override IdentifierNameSyntax GetUnqualifiedName()
+        {
+            return this;
         }
     }
 }

@@ -23,5 +23,10 @@
         {
             return visitor.VisitQualifiedName(this);
         }
+
+        public override IdentifierNameSyntax GetUnqualifiedName()
+        {
+            return Right;
+        }
     }
 }

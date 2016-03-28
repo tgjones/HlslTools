@@ -16,5 +16,7 @@ namespace HlslTools.Syntax
         {
             
         }
+
+        public abstract IdentifierNameSyntax GetUnqualifiedName();
     }
 }

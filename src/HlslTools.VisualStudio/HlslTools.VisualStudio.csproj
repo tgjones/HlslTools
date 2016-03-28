@@ -251,6 +251,7 @@
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModel.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionDeclarationQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionDefinitionQuickInfoModelProvider.cs" />
+    <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionInvocationQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\IQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\ClassDefinitionQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\MacroDefinitionQuickInfoModelProvider.cs" />

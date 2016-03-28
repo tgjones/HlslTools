@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Media;
+using HlslTools.Symbols;
 using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace HlslTools.VisualStudio.Glyphs
@@ -32,6 +33,12 @@ namespace HlslTools.VisualStudio.Glyphs
                     return StandardGlyphGroup.GlyphKeyword;
                 case Glyph.Semantic:
                     return StandardGlyphGroup.GlyphGroupConstant;
+                case Glyph.Field:
+                    return StandardGlyphGroup.GlyphGroupField;
+                case Glyph.Method:
+                    return StandardGlyphGroup.GlyphGroupMethod;
+                case Glyph.Intrinsic:
+                    return StandardGlyphGroup.GlyphGroupIntrinsic;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(glyph), glyph, null);
             }
@@ -45,6 +52,47 @@ namespace HlslTools.VisualStudio.Glyphs
         public static Icon GetIcon(this Glyph glyph, DispatcherGlyphService glyphService)
         {
             return glyphService.GetIcon(glyph.GetStandardGlyphGroup(), StandardGlyphItem.GlyphItemPublic);
+        }
+
+        public static Glyph GetGlyph(this Symbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Array:
+                    return Glyph.Class;
+                case SymbolKind.Namespace:
+                    return Glyph.Namespace;
+                case SymbolKind.Struct:
+                    return Glyph.Struct;
+                case SymbolKind.Class:
+                    return Glyph.Class;
+                case SymbolKind.Interface:
+                    return Glyph.Interface;
+                case SymbolKind.Field:
+                    return Glyph.Field;
+                case SymbolKind.Function:
+                    return Glyph.Function;
+                case SymbolKind.Method:
+                    return Glyph.Method;
+                case SymbolKind.Variable:
+                    return Glyph.Variable;
+                case SymbolKind.Parameter:
+                    return Glyph.Parameter;
+                case SymbolKind.Indexer:
+                    return Glyph.Function;
+                case SymbolKind.IntrinsicObjectType:
+                    return Glyph.Intrinsic;
+                case SymbolKind.IntrinsicVectorType:
+                    return Glyph.Intrinsic;
+                case SymbolKind.IntrinsicMatrixType:
+                    return Glyph.Intrinsic;
+                case SymbolKind.IntrinsicScalarType:
+                    return Glyph.Intrinsic;
+                case SymbolKind.Semantic:
+                    return Glyph.Semantic;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }
