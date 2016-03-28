@@ -54,8 +54,44 @@ namespace HlslTools.Binding
 
         protected virtual void VisitVariableDeclaration(BoundVariableDeclaration node)
         {
+            foreach (var qualifier in node.Qualifiers)
+                VisitVariableQualifier(qualifier);
+
             if (node.InitializerOpt != null)
                 VisitInitializer(node.InitializerOpt);
+        }
+
+        protected virtual void VisitVariableQualifier(BoundVariableQualifier node)
+        {
+            switch (node.Kind)
+            {
+                case BoundNodeKind.Semantic:
+                    VisitSemantic((BoundSemantic) node);
+                    break;
+                case BoundNodeKind.RegisterLocation:
+                    VisitRegisterLocation((BoundRegisterLocation) node);
+                    break;
+                case BoundNodeKind.PackOffsetLocation:
+                    VisitPackOffsetLocation((BoundPackOffsetLocation)node);
+                    break;
+                default:
+                    throw new InvalidOperationException(node.Kind.ToString());
+            }
+        }
+
+        protected virtual void VisitSemantic(BoundSemantic node)
+        {
+            
+        }
+
+        protected virtual void VisitRegisterLocation(BoundRegisterLocation node)
+        {
+            
+        }
+
+        protected virtual void VisitPackOffsetLocation(BoundPackOffsetLocation node)
+        {
+            
         }
 
         protected virtual void VisitFunctionDeclaration(BoundFunctionDeclaration node)

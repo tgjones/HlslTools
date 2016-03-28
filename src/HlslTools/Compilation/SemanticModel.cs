@@ -62,6 +62,12 @@ namespace HlslTools.Compilation
             return result?.FunctionSymbol;
         }
 
+        public Symbol GetSymbol(SemanticSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundSemantic;
+            return result?.SemanticSymbol;
+        }
+
         public Symbol GetSymbol(ExpressionSyntax expression)
         {
             var boundExpression = GetBoundExpression(expression);

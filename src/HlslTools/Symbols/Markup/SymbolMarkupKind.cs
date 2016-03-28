@@ -12,6 +12,7 @@
         MethodName,
         TypeName,
         NamespaceName,
+        SemanticName,
         PlainText
     }
 }

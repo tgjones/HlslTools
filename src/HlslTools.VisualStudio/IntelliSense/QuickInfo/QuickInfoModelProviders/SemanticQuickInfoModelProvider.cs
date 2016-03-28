@@ -15,7 +15,11 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
             if (!node.Semantic.Span.IsInRootFile)
                 return null;
 
-            return new QuickInfoModel(semanticModel, node.Semantic.Span, $"(semantic) {node.Semantic}");
+            var symbol = semanticModel.GetSymbol(node);
+            if (symbol == null)
+                return null;
+
+            return QuickInfoModel.ForSymbol(semanticModel, node.Semantic.Span, symbol);
         }
     }
 }

@@ -71,8 +71,11 @@
     <Compile Include="Binding\BoundNodes\BoundMethodInvocationExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundNamespace.cs" />
     <Compile Include="Binding\BoundNodes\BoundNumericConstructorInvocationExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundPackOffsetLocation.cs" />
     <Compile Include="Binding\BoundNodes\BoundPass.cs" />
+    <Compile Include="Binding\BoundNodes\BoundRegisterLocation.cs" />
     <Compile Include="Binding\BoundNodes\BoundSamplerStateInitializer.cs" />
+    <Compile Include="Binding\BoundNodes\BoundSemantic.cs" />
     <Compile Include="Binding\BoundNodes\BoundStateArrayInitializer.cs" />
     <Compile Include="Binding\BoundNodes\BoundStateInitializer.cs" />
     <Compile Include="Binding\BoundNodes\BoundStringLiteralExpression.cs" />
@@ -109,6 +112,7 @@
     <Compile Include="Binding\BoundNodes\BoundUnaryExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundVariableQualifier.cs" />
     <Compile Include="Binding\BoundNodes\BoundWhileStatement.cs" />
     <Compile Include="Binding\Binder.Expressions.cs" />
     <Compile Include="Binding\BoundTreeWalker.Declarations.cs" />

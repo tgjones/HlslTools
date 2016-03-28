@@ -61,6 +61,9 @@ namespace HlslTools.Binding.BoundNodes
         StateInitializer,
         StateArrayInitializer,
         SamplerState,
+        Semantic,
+        PackOffsetLocation,
+        RegisterLocation,
         ErrorExpression,
         Error
     }

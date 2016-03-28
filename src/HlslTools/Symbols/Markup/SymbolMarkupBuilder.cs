@@ -39,6 +39,9 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Namespace:
                     markup.AppendNamespace((NamespaceSymbol) symbol);
                     break;
+                case SymbolKind.Semantic:
+                    markup.AppendSemantic((SemanticSymbol) symbol);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -158,6 +161,14 @@ namespace HlslTools.Symbols.Markup
                 markup.AppendParentScope(symbol.Parent);
 
             markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+        }
+
+        private static void AppendSemantic(this ICollection<SymbolMarkupToken> markup, SemanticSymbol symbol)
+        {
+            markup.AppendPlainText("(semantic)");
+            markup.AppendSpace();
+
+            markup.AppendName(SymbolMarkupKind.SemanticName, symbol.Name);
         }
 
         private static void AppendNamespace(this ICollection<SymbolMarkupToken> markup, NamespaceSymbol symbol)

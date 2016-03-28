@@ -107,11 +107,33 @@ namespace HlslTools.Binding
             var symbol = createSymbol(syntax, variableType);
             AddSymbol(symbol, syntax.Identifier.Span);
 
+            var boundQualifiers = new List<BoundVariableQualifier>();
+            foreach (var qualifier in syntax.Qualifiers)
+                boundQualifiers.Add(Bind(qualifier, BindVariableQualifier));
+
             BoundInitializer initializer = null;
             if (syntax.Initializer != null)
                 initializer = BindInitializer(syntax.Initializer);
 
-            return new BoundVariableDeclaration(symbol, variableType, initializer);
+            return new BoundVariableDeclaration(symbol, variableType, boundQualifiers.ToImmutableArray(), initializer);
+        }
+
+        private BoundVariableQualifier BindVariableQualifier(VariableDeclaratorQualifierSyntax syntax)
+        {
+            switch (syntax.Kind)
+            {
+                case SyntaxKind.SemanticName:
+                    var semanticSyntax = (SemanticSyntax) syntax;
+                    var semanticSymbol = IntrinsicSemantics.AllSemantics.FirstOrDefault(x => string.Equals(x.Name, semanticSyntax.Semantic.Text, StringComparison.OrdinalIgnoreCase))
+                        ?? new SemanticSymbol(semanticSyntax.Semantic.Text, string.Empty, false, SemanticUsages.AllShaders);
+                    return new BoundSemantic(semanticSymbol);
+                case SyntaxKind.RegisterLocation:
+                    return new BoundRegisterLocation();
+                case SyntaxKind.PackOffsetLocation:
+                    return new BoundPackOffsetLocation();
+                default:
+                    throw new ArgumentOutOfRangeException(syntax.Kind.ToString());
+            }
         }
 
         private TypeSymbol BindArrayRankSpecifiers(List<ArrayRankSpecifierSyntax> arrayRankSpecifiers, TypeSymbol variableType)

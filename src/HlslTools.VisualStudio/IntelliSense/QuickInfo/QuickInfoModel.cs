@@ -12,7 +12,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
         {
             var glyph = symbol.GetGlyph();
             var symbolMarkup = SymbolMarkup.ForSymbol(symbol);
-            return new QuickInfoModel(semanticModel, span, glyph, symbolMarkup);
+            return new QuickInfoModel(semanticModel, span, glyph, symbolMarkup, symbol.Documentation);
         }
 
         // TODO: Remove this.
@@ -23,17 +23,19 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             Text = text;
         }
 
-        public QuickInfoModel(SemanticModel semanticModel, TextSpan span, Glyph glyph, SymbolMarkup markup)
+        public QuickInfoModel(SemanticModel semanticModel, TextSpan span, Glyph glyph, SymbolMarkup markup, string documentation)
         {
             SemanticModel = semanticModel;
             Span = span;
             Glyph = glyph;
             Text = markup.ToString();
+            Documentation = documentation;
         }
 
         public SemanticModel SemanticModel { get; }
         public TextSpan Span { get; }
         public Glyph Glyph { get; }
         public string Text { get; }
+        public string Documentation { get; }
     }
 }

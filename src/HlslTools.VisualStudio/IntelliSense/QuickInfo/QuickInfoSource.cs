@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using HlslTools.VisualStudio.Tagging.Classification;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 
@@ -26,6 +26,9 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             var content = model.Text;
             if (content == null)
                 return;
+
+            if (!string.IsNullOrEmpty(model.Documentation))
+                content += Environment.NewLine + model.Documentation;
 
             applicableToSpan = currentSnapshot.CreateTrackingSpan(span, SpanTrackingMode.EdgeNegative);
             quickInfoContent.Add(content);
