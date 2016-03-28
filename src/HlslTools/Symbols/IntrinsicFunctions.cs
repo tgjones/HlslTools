@@ -164,20 +164,20 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "countbits",
                 "Counts the number of bits (per component) in the input integer.",
-                new [] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new TypeSymbol[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The input value."));
 
             allFunctions.AddRange(Create2(
                 "cross",
                 "Returns the cross product of two floating-point, 3D vectors.",
-                new[] { IntrinsicTypes.Float3 },
+                new TypeSymbol[] { IntrinsicTypes.Float3 },
                 "x", "The first floating-point, 3D vector.",
                 "y", "The second floating-point, 3D vector."));
 
             allFunctions.AddRange(Create1(
                 "D3DCOLORtoUBYTE4",
                 "Converts a floating-point, 4D vector set by a D3DCOLOR to a UBYTE4.",
-                new[] { IntrinsicTypes.Float4 },
+                new TypeSymbol[] { IntrinsicTypes.Float4 },
                 "value", "The floating-point vector4 to convert.",
                 IntrinsicTypes.Int4));
 
@@ -313,16 +313,16 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "f16tof32",
                 "Converts the float16 stored in the low-half of the uint to a float.",
-                new[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new TypeSymbol[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The input value.",
-                new[] { IntrinsicTypes.Float }.Concat(IntrinsicTypes.AllFloatVectorTypes).ToArray()));
+                new TypeSymbol[] { IntrinsicTypes.Float }.Concat(IntrinsicTypes.AllFloatVectorTypes).ToArray()));
 
             allFunctions.AddRange(Create1(
                 "f32tof16",
                 "Converts an input into a float16 type.",
-                new[] { IntrinsicTypes.Float }.Concat(IntrinsicTypes.AllFloatVectorTypes).ToArray(),
+                new TypeSymbol[] { IntrinsicTypes.Float }.Concat(IntrinsicTypes.AllFloatVectorTypes).ToArray(),
                 "value", "The input value.",
-                new[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray()));
+                new TypeSymbol[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray()));
 
             allFunctions.AddRange(Create3(
                 "faceforward",
@@ -335,13 +335,13 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "firstbithigh",
                 "Gets the location of the first set bit starting from the highest order bit and working downward, per component.",
-                new [] { IntrinsicTypes.Int }.Concat(IntrinsicTypes.AllIntVectorTypes).Concat(new[] { IntrinsicTypes.Uint }).Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new TypeSymbol[] { IntrinsicTypes.Int }.Concat(IntrinsicTypes.AllIntVectorTypes).Concat(new[] { IntrinsicTypes.Uint }).Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create1(
                 "firstbitlow",
                 "Returns the location of the first set bit starting from the lowest order bit and working upward, per component.",
-                new[] { IntrinsicTypes.Int }.Concat(IntrinsicTypes.AllIntVectorTypes).Concat(new[] { IntrinsicTypes.Uint }).Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new TypeSymbol[] { IntrinsicTypes.Int }.Concat(IntrinsicTypes.AllIntVectorTypes).Concat(new[] { IntrinsicTypes.Uint }).Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The specified value."));
 
             allFunctions.AddRange(Create1(
@@ -1572,7 +1572,7 @@ namespace HlslTools.Symbols
             allFunctions.AddRange(Create1(
                 "reversebits",
                 "Reverses the order of the bits, per component.",
-                new[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
+                new TypeSymbol[] { IntrinsicTypes.Uint }.Concat(IntrinsicTypes.AllUintVectorTypes).ToArray(),
                 "value", "The input value."));
 
             allFunctions.AddRange(Create1(

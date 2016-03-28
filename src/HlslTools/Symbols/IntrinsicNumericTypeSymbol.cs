@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
-
 namespace HlslTools.Symbols
 {
     public abstract class IntrinsicNumericTypeSymbol : IntrinsicTypeSymbol
     {
         public ScalarType ScalarType { get; }
 
-        protected IntrinsicNumericTypeSymbol(SymbolKind kind, string name, string documentation, ScalarType scalarType, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers = null)
-            : base(kind, name, documentation, lazyMembers)
+        protected IntrinsicNumericTypeSymbol(SymbolKind kind, string name, string documentation, ScalarType scalarType)
+            : base(kind, name, documentation)
         {
             ScalarType = scalarType;
         }

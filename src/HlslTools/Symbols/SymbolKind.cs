@@ -17,6 +17,7 @@
         IntrinsicVectorType,
         IntrinsicMatrixType,
         IntrinsicScalarType,
-        Semantic
+        Semantic,
+        Technique
     }
 }

@@ -90,6 +90,8 @@ namespace HlslTools.VisualStudio.Glyphs
                     return Glyph.Intrinsic;
                 case SymbolKind.Semantic:
                     return Glyph.Semantic;
+                case SymbolKind.Technique:
+                    return Glyph.Technique;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

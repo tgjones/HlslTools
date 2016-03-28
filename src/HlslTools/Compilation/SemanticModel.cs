@@ -62,6 +62,12 @@ namespace HlslTools.Compilation
             return result?.FunctionSymbol;
         }
 
+        public TechniqueSymbol GetDeclaredSymbol(TechniqueSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundTechnique;
+            return result?.TechniqueSymbol;
+        }
+
         public Symbol GetSymbol(SemanticSyntax syntax)
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundSemantic;

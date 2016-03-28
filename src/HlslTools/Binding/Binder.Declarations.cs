@@ -46,9 +46,12 @@ namespace HlslTools.Binding
 
         private BoundNode BindTechniqueDeclaration(TechniqueSyntax declaration)
         {
+            var techniqueSymbol = new TechniqueSymbol(declaration.Name.Text);
+            AddSymbol(techniqueSymbol, declaration.Name.Span);
+
             var techniqueBinder = new Binder(_sharedBinderState, this);
             var boundPasses = declaration.Passes.Select(x => techniqueBinder.Bind(x, techniqueBinder.BindPass));
-            return new BoundTechnique(boundPasses.ToImmutableArray());
+            return new BoundTechnique(techniqueSymbol, boundPasses.ToImmutableArray());
         }
 
         private BoundPass BindPass(PassSyntax syntax)

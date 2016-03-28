@@ -47,136 +47,136 @@ namespace HlslTools.Symbols
         public static readonly IntrinsicVectorTypeSymbol Double3;
         public static readonly IntrinsicVectorTypeSymbol Double4;
 
-        public static readonly TypeSymbol Bool1x1;
-        public static readonly TypeSymbol Bool1x2;
-        public static readonly TypeSymbol Bool1x3;
-        public static readonly TypeSymbol Bool1x4;
-        public static readonly TypeSymbol Bool2x1;
-        public static readonly TypeSymbol Bool2x2;
-        public static readonly TypeSymbol Bool2x3;
-        public static readonly TypeSymbol Bool2x4;
-        public static readonly TypeSymbol Bool3x1;
-        public static readonly TypeSymbol Bool3x2;
-        public static readonly TypeSymbol Bool3x3;
-        public static readonly TypeSymbol Bool3x4;
-        public static readonly TypeSymbol Bool4x1;
-        public static readonly TypeSymbol Bool4x2;
-        public static readonly TypeSymbol Bool4x3;
-        public static readonly TypeSymbol Bool4x4;
+        public static readonly IntrinsicMatrixTypeSymbol Bool1x1;
+        public static readonly IntrinsicMatrixTypeSymbol Bool1x2;
+        public static readonly IntrinsicMatrixTypeSymbol Bool1x3;
+        public static readonly IntrinsicMatrixTypeSymbol Bool1x4;
+        public static readonly IntrinsicMatrixTypeSymbol Bool2x1;
+        public static readonly IntrinsicMatrixTypeSymbol Bool2x2;
+        public static readonly IntrinsicMatrixTypeSymbol Bool2x3;
+        public static readonly IntrinsicMatrixTypeSymbol Bool2x4;
+        public static readonly IntrinsicMatrixTypeSymbol Bool3x1;
+        public static readonly IntrinsicMatrixTypeSymbol Bool3x2;
+        public static readonly IntrinsicMatrixTypeSymbol Bool3x3;
+        public static readonly IntrinsicMatrixTypeSymbol Bool3x4;
+        public static readonly IntrinsicMatrixTypeSymbol Bool4x1;
+        public static readonly IntrinsicMatrixTypeSymbol Bool4x2;
+        public static readonly IntrinsicMatrixTypeSymbol Bool4x3;
+        public static readonly IntrinsicMatrixTypeSymbol Bool4x4;
 
-        public static readonly TypeSymbol Int1x1;
-        public static readonly TypeSymbol Int1x2;
-        public static readonly TypeSymbol Int1x3;
-        public static readonly TypeSymbol Int1x4;
-        public static readonly TypeSymbol Int2x1;
-        public static readonly TypeSymbol Int2x2;
-        public static readonly TypeSymbol Int2x3;
-        public static readonly TypeSymbol Int2x4;
-        public static readonly TypeSymbol Int3x1;
-        public static readonly TypeSymbol Int3x2;
-        public static readonly TypeSymbol Int3x3;
-        public static readonly TypeSymbol Int3x4;
-        public static readonly TypeSymbol Int4x1;
-        public static readonly TypeSymbol Int4x2;
-        public static readonly TypeSymbol Int4x3;
-        public static readonly TypeSymbol Int4x4;
+        public static readonly IntrinsicMatrixTypeSymbol Int1x1;
+        public static readonly IntrinsicMatrixTypeSymbol Int1x2;
+        public static readonly IntrinsicMatrixTypeSymbol Int1x3;
+        public static readonly IntrinsicMatrixTypeSymbol Int1x4;
+        public static readonly IntrinsicMatrixTypeSymbol Int2x1;
+        public static readonly IntrinsicMatrixTypeSymbol Int2x2;
+        public static readonly IntrinsicMatrixTypeSymbol Int2x3;
+        public static readonly IntrinsicMatrixTypeSymbol Int2x4;
+        public static readonly IntrinsicMatrixTypeSymbol Int3x1;
+        public static readonly IntrinsicMatrixTypeSymbol Int3x2;
+        public static readonly IntrinsicMatrixTypeSymbol Int3x3;
+        public static readonly IntrinsicMatrixTypeSymbol Int3x4;
+        public static readonly IntrinsicMatrixTypeSymbol Int4x1;
+        public static readonly IntrinsicMatrixTypeSymbol Int4x2;
+        public static readonly IntrinsicMatrixTypeSymbol Int4x3;
+        public static readonly IntrinsicMatrixTypeSymbol Int4x4;
 
-        public static readonly TypeSymbol Uint1x1;
-        public static readonly TypeSymbol Uint1x2;
-        public static readonly TypeSymbol Uint1x3;
-        public static readonly TypeSymbol Uint1x4;
-        public static readonly TypeSymbol Uint2x1;
-        public static readonly TypeSymbol Uint2x2;
-        public static readonly TypeSymbol Uint2x3;
-        public static readonly TypeSymbol Uint2x4;
-        public static readonly TypeSymbol Uint3x1;
-        public static readonly TypeSymbol Uint3x2;
-        public static readonly TypeSymbol Uint3x3;
-        public static readonly TypeSymbol Uint3x4;
-        public static readonly TypeSymbol Uint4x1;
-        public static readonly TypeSymbol Uint4x2;
-        public static readonly TypeSymbol Uint4x3;
-        public static readonly TypeSymbol Uint4x4;
+        public static readonly IntrinsicMatrixTypeSymbol Uint1x1;
+        public static readonly IntrinsicMatrixTypeSymbol Uint1x2;
+        public static readonly IntrinsicMatrixTypeSymbol Uint1x3;
+        public static readonly IntrinsicMatrixTypeSymbol Uint1x4;
+        public static readonly IntrinsicMatrixTypeSymbol Uint2x1;
+        public static readonly IntrinsicMatrixTypeSymbol Uint2x2;
+        public static readonly IntrinsicMatrixTypeSymbol Uint2x3;
+        public static readonly IntrinsicMatrixTypeSymbol Uint2x4;
+        public static readonly IntrinsicMatrixTypeSymbol Uint3x1;
+        public static readonly IntrinsicMatrixTypeSymbol Uint3x2;
+        public static readonly IntrinsicMatrixTypeSymbol Uint3x3;
+        public static readonly IntrinsicMatrixTypeSymbol Uint3x4;
+        public static readonly IntrinsicMatrixTypeSymbol Uint4x1;
+        public static readonly IntrinsicMatrixTypeSymbol Uint4x2;
+        public static readonly IntrinsicMatrixTypeSymbol Uint4x3;
+        public static readonly IntrinsicMatrixTypeSymbol Uint4x4;
 
-        public static readonly TypeSymbol Half1x1;
-        public static readonly TypeSymbol Half1x2;
-        public static readonly TypeSymbol Half1x3;
-        public static readonly TypeSymbol Half1x4;
-        public static readonly TypeSymbol Half2x1;
-        public static readonly TypeSymbol Half2x2;
-        public static readonly TypeSymbol Half2x3;
-        public static readonly TypeSymbol Half2x4;
-        public static readonly TypeSymbol Half3x1;
-        public static readonly TypeSymbol Half3x2;
-        public static readonly TypeSymbol Half3x3;
-        public static readonly TypeSymbol Half3x4;
-        public static readonly TypeSymbol Half4x1;
-        public static readonly TypeSymbol Half4x2;
-        public static readonly TypeSymbol Half4x3;
-        public static readonly TypeSymbol Half4x4;
+        public static readonly IntrinsicMatrixTypeSymbol Half1x1;
+        public static readonly IntrinsicMatrixTypeSymbol Half1x2;
+        public static readonly IntrinsicMatrixTypeSymbol Half1x3;
+        public static readonly IntrinsicMatrixTypeSymbol Half1x4;
+        public static readonly IntrinsicMatrixTypeSymbol Half2x1;
+        public static readonly IntrinsicMatrixTypeSymbol Half2x2;
+        public static readonly IntrinsicMatrixTypeSymbol Half2x3;
+        public static readonly IntrinsicMatrixTypeSymbol Half2x4;
+        public static readonly IntrinsicMatrixTypeSymbol Half3x1;
+        public static readonly IntrinsicMatrixTypeSymbol Half3x2;
+        public static readonly IntrinsicMatrixTypeSymbol Half3x3;
+        public static readonly IntrinsicMatrixTypeSymbol Half3x4;
+        public static readonly IntrinsicMatrixTypeSymbol Half4x1;
+        public static readonly IntrinsicMatrixTypeSymbol Half4x2;
+        public static readonly IntrinsicMatrixTypeSymbol Half4x3;
+        public static readonly IntrinsicMatrixTypeSymbol Half4x4;
 
-        public static readonly TypeSymbol Float1x1;
-        public static readonly TypeSymbol Float1x2;
-        public static readonly TypeSymbol Float1x3;
-        public static readonly TypeSymbol Float1x4;
-        public static readonly TypeSymbol Float2x1;
-        public static readonly TypeSymbol Float2x2;
-        public static readonly TypeSymbol Float2x3;
-        public static readonly TypeSymbol Float2x4;
-        public static readonly TypeSymbol Float3x1;
-        public static readonly TypeSymbol Float3x2;
-        public static readonly TypeSymbol Float3x3;
-        public static readonly TypeSymbol Float3x4;
-        public static readonly TypeSymbol Float4x1;
-        public static readonly TypeSymbol Float4x2;
-        public static readonly TypeSymbol Float4x3;
-        public static readonly TypeSymbol Float4x4;
+        public static readonly IntrinsicMatrixTypeSymbol Float1x1;
+        public static readonly IntrinsicMatrixTypeSymbol Float1x2;
+        public static readonly IntrinsicMatrixTypeSymbol Float1x3;
+        public static readonly IntrinsicMatrixTypeSymbol Float1x4;
+        public static readonly IntrinsicMatrixTypeSymbol Float2x1;
+        public static readonly IntrinsicMatrixTypeSymbol Float2x2;
+        public static readonly IntrinsicMatrixTypeSymbol Float2x3;
+        public static readonly IntrinsicMatrixTypeSymbol Float2x4;
+        public static readonly IntrinsicMatrixTypeSymbol Float3x1;
+        public static readonly IntrinsicMatrixTypeSymbol Float3x2;
+        public static readonly IntrinsicMatrixTypeSymbol Float3x3;
+        public static readonly IntrinsicMatrixTypeSymbol Float3x4;
+        public static readonly IntrinsicMatrixTypeSymbol Float4x1;
+        public static readonly IntrinsicMatrixTypeSymbol Float4x2;
+        public static readonly IntrinsicMatrixTypeSymbol Float4x3;
+        public static readonly IntrinsicMatrixTypeSymbol Float4x4;
 
-        public static readonly TypeSymbol Double1x1;
-        public static readonly TypeSymbol Double1x2;
-        public static readonly TypeSymbol Double1x3;
-        public static readonly TypeSymbol Double1x4;
-        public static readonly TypeSymbol Double2x1;
-        public static readonly TypeSymbol Double2x2;
-        public static readonly TypeSymbol Double2x3;
-        public static readonly TypeSymbol Double2x4;
-        public static readonly TypeSymbol Double3x1;
-        public static readonly TypeSymbol Double3x2;
-        public static readonly TypeSymbol Double3x3;
-        public static readonly TypeSymbol Double3x4;
-        public static readonly TypeSymbol Double4x1;
-        public static readonly TypeSymbol Double4x2;
-        public static readonly TypeSymbol Double4x3;
-        public static readonly TypeSymbol Double4x4;
+        public static readonly IntrinsicMatrixTypeSymbol Double1x1;
+        public static readonly IntrinsicMatrixTypeSymbol Double1x2;
+        public static readonly IntrinsicMatrixTypeSymbol Double1x3;
+        public static readonly IntrinsicMatrixTypeSymbol Double1x4;
+        public static readonly IntrinsicMatrixTypeSymbol Double2x1;
+        public static readonly IntrinsicMatrixTypeSymbol Double2x2;
+        public static readonly IntrinsicMatrixTypeSymbol Double2x3;
+        public static readonly IntrinsicMatrixTypeSymbol Double2x4;
+        public static readonly IntrinsicMatrixTypeSymbol Double3x1;
+        public static readonly IntrinsicMatrixTypeSymbol Double3x2;
+        public static readonly IntrinsicMatrixTypeSymbol Double3x3;
+        public static readonly IntrinsicMatrixTypeSymbol Double3x4;
+        public static readonly IntrinsicMatrixTypeSymbol Double4x1;
+        public static readonly IntrinsicMatrixTypeSymbol Double4x2;
+        public static readonly IntrinsicMatrixTypeSymbol Double4x3;
+        public static readonly IntrinsicMatrixTypeSymbol Double4x4;
 
-        public static readonly TypeSymbol[] AllScalarTypes;
+        public static readonly IntrinsicScalarTypeSymbol[] AllScalarTypes;
 
-        public static readonly TypeSymbol[] AllBoolVectorTypes;
-        public static readonly TypeSymbol[] AllIntVectorTypes;
-        public static readonly TypeSymbol[] AllUintVectorTypes;
-        public static readonly TypeSymbol[] AllHalfVectorTypes;
-        public static readonly TypeSymbol[] AllFloatVectorTypes;
-        public static readonly TypeSymbol[] AllDoubleVectorTypes;
-        public static readonly TypeSymbol[] AllVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllBoolVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllIntVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllUintVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllHalfVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllFloatVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllDoubleVectorTypes;
+        public static readonly IntrinsicVectorTypeSymbol[] AllVectorTypes;
 
-        public static readonly TypeSymbol[] AllBoolMatrixTypes;
-        public static readonly TypeSymbol[] AllIntMatrixTypes;
-        public static readonly TypeSymbol[] AllUintMatrixTypes;
-        public static readonly TypeSymbol[] AllHalfMatrixTypes;
-        public static readonly TypeSymbol[] AllFloatMatrixTypes;
-        public static readonly TypeSymbol[] AllDoubleMatrixTypes;
-        public static readonly TypeSymbol[] AllMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllBoolMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllIntMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllUintMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllHalfMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllFloatMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllDoubleMatrixTypes;
+        public static readonly IntrinsicMatrixTypeSymbol[] AllMatrixTypes;
 
-        public static readonly TypeSymbol[] AllBoolTypes;
-        public static readonly TypeSymbol[] AllIntTypes;
-        public static readonly TypeSymbol[] AllUintTypes;
-        public static readonly TypeSymbol[] AllHalfTypes;
-        public static readonly TypeSymbol[] AllFloatTypes;
-        public static readonly TypeSymbol[] AllDoubleTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllBoolTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllIntTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllUintTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllHalfTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllFloatTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllDoubleTypes;
 
-        public static readonly TypeSymbol[] AllIntegralTypes;
-        public static readonly TypeSymbol[] AllNumericNonBoolTypes;
-        public static readonly TypeSymbol[] AllNumericTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllIntegralTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllNumericNonBoolTypes;
+        public static readonly IntrinsicNumericTypeSymbol[] AllNumericTypes;
 
         public static readonly TypeSymbol Sampler;
         public static readonly TypeSymbol Sampler1D;
@@ -202,136 +202,265 @@ namespace HlslTools.Symbols
             // Scalar types.
             Void = new IntrinsicScalarTypeSymbol("void", "Represents a void value.", ScalarType.Void);
             String = new IntrinsicScalarTypeSymbol("string", "Represents a string value.", ScalarType.String);
-            Bool = new IntrinsicScalarTypeSymbol("bool", "Represents a boolean value.", ScalarType.Bool, t => CreateScalarTypeFields(1, Bool, Bool1, Bool2, Bool3, Bool4));
-            Int = new IntrinsicScalarTypeSymbol("int", "Represents a 32-bit signed integer value.", ScalarType.Int, t => CreateScalarTypeFields(1, Int, Int1, Int2, Int3, Int4));
-            Uint = new IntrinsicScalarTypeSymbol("uint", "Represents a 32-bit unsigned integer value.", ScalarType.Uint, t => CreateScalarTypeFields(1, Uint, Uint1, Uint2, Uint3, Uint4));
-            Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half, t => CreateScalarTypeFields(1, Half, Half1, Half2, Half3, Half4));
-            Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float, t => CreateScalarTypeFields(1, Float, Float1, Float2, Float3, Float4));
-            Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double, t => CreateScalarTypeFields(1, Double, Double1, Double2, Double3, Double4));
+            Bool = new IntrinsicScalarTypeSymbol("bool", "Represents a boolean value.", ScalarType.Bool);
+            Int = new IntrinsicScalarTypeSymbol("int", "Represents a 32-bit signed integer value.", ScalarType.Int);
+            Uint = new IntrinsicScalarTypeSymbol("uint", "Represents a 32-bit unsigned integer value.", ScalarType.Uint);
+            Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half);
+            Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float);
+            Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double);
 
             // Vector types.
-            Bool1 = new IntrinsicVectorTypeSymbol("bool1", "Represents a vector containing 1 boolean component.",  ScalarType.Bool, 1, t => CreateVectorTypeFields(1, Bool1, Bool, Bool2, Bool3, Bool4));
-            Bool2 = new IntrinsicVectorTypeSymbol("bool2", "Represents a vector containing 2 boolean components.", ScalarType.Bool, 2, t => CreateVectorTypeFields(2, Bool2, Bool, Bool2, Bool3, Bool4));
-            Bool3 = new IntrinsicVectorTypeSymbol("bool3", "Represents a vector containing 3 boolean components.", ScalarType.Bool, 3, t => CreateVectorTypeFields(3, Bool3, Bool, Bool2, Bool3, Bool4));
-            Bool4 = new IntrinsicVectorTypeSymbol("bool4", "Represents a vector containing 4 boolean components.", ScalarType.Bool, 4, t => CreateVectorTypeFields(4, Bool4, Bool, Bool2, Bool3, Bool4));
-            Int1 = new IntrinsicVectorTypeSymbol("int1", "Represents a vector containing 1 signed integer component.",  ScalarType.Int, 1, t => CreateVectorTypeFields(1, Int1, Int, Int2, Int3, Int4));
-            Int2 = new IntrinsicVectorTypeSymbol("int2", "Represents a vector containing 2 signed integer components.", ScalarType.Int, 2, t => CreateVectorTypeFields(2, Int2, Int, Int2, Int3, Int4));
-            Int3 = new IntrinsicVectorTypeSymbol("int3", "Represents a vector containing 3 signed integer components.", ScalarType.Int, 3, t => CreateVectorTypeFields(3, Int3, Int, Int2, Int3, Int4));
-            Int4 = new IntrinsicVectorTypeSymbol("int4", "Represents a vector containing 4 signed integer components.", ScalarType.Int, 4, t => CreateVectorTypeFields(4, Int4, Int, Int2, Int3, Int4));
-            Uint1 = new IntrinsicVectorTypeSymbol("uint1", "Represents a vector containing 1 unsigned integer component.",  ScalarType.Uint, 1, t => CreateVectorTypeFields(1, Uint1, Uint, Uint2, Uint3, Uint4));
-            Uint2 = new IntrinsicVectorTypeSymbol("uint2", "Represents a vector containing 2 unsigned integer components.", ScalarType.Uint, 2, t => CreateVectorTypeFields(2, Uint2, Uint, Uint2, Uint3, Uint4));
-            Uint3 = new IntrinsicVectorTypeSymbol("uint3", "Represents a vector containing 3 unsigned integer components.", ScalarType.Uint, 3, t => CreateVectorTypeFields(3, Uint3, Uint, Uint2, Uint3, Uint4));
-            Uint4 = new IntrinsicVectorTypeSymbol("uint4", "Represents a vector containing 4 unsigned integer components.", ScalarType.Uint, 4, t => CreateVectorTypeFields(4, Uint4, Uint, Uint2, Uint3, Uint4));
-            Half1 = new IntrinsicVectorTypeSymbol("half1", "Represents a vector containing 1 floating point component.",  ScalarType.Half, 1, t => CreateVectorTypeFields(1, Half1, Half, Half2, Half3, Half4));
-            Half2 = new IntrinsicVectorTypeSymbol("half2", "Represents a vector containing 2 floating point components.", ScalarType.Half, 2, t => CreateVectorTypeFields(2, Half2, Half, Half2, Half3, Half4));
-            Half3 = new IntrinsicVectorTypeSymbol("half3", "Represents a vector containing 3 floating point components.", ScalarType.Half, 3, t => CreateVectorTypeFields(3, Half3, Half, Half2, Half3, Half4));
-            Half4 = new IntrinsicVectorTypeSymbol("half4", "Represents a vector containing 4 floating point components.", ScalarType.Half, 4, t => CreateVectorTypeFields(4, Half4, Half, Half2, Half3, Half4));
-            Float1 = new IntrinsicVectorTypeSymbol("float1", "Represents a vector containing 1 floating point component.",  ScalarType.Float, 1, t => CreateVectorTypeFields(1, Float1, Float, Float2, Float3, Float4));
-            Float2 = new IntrinsicVectorTypeSymbol("float2", "Represents a vector containing 2 floating point components.", ScalarType.Float, 2, t => CreateVectorTypeFields(2, Float2, Float, Float2, Float3, Float4));
-            Float3 = new IntrinsicVectorTypeSymbol("float3", "Represents a vector containing 3 floating point components.", ScalarType.Float, 3, t => CreateVectorTypeFields(3, Float3, Float, Float2, Float3, Float4));
-            Float4 = new IntrinsicVectorTypeSymbol("float4", "Represents a vector containing 4 floating point components.", ScalarType.Float, 4, t => CreateVectorTypeFields(4, Float4, Float, Float2, Float3, Float4));
-            Double1 = new IntrinsicVectorTypeSymbol("double1", "Represents a vector containing 1 floating point component.",  ScalarType.Double, 1, t => CreateVectorTypeFields(1, Double1, Double, Double2, Double3, Double4));
-            Double2 = new IntrinsicVectorTypeSymbol("double2", "Represents a vector containing 2 floating point components.", ScalarType.Double, 2, t => CreateVectorTypeFields(2, Double2, Double, Double2, Double3, Double4));
-            Double3 = new IntrinsicVectorTypeSymbol("double3", "Represents a vector containing 3 floating point components.", ScalarType.Double, 3, t => CreateVectorTypeFields(3, Double3, Double, Double2, Double3, Double4));
-            Double4 = new IntrinsicVectorTypeSymbol("double4", "Represents a vector containing 4 floating point components.", ScalarType.Double, 4, t => CreateVectorTypeFields(4, Double4, Double, Double2, Double3, Double4));
+            Bool1 = new IntrinsicVectorTypeSymbol("bool1", "Represents a vector containing 1 boolean component.",  ScalarType.Bool, 1);
+            Bool2 = new IntrinsicVectorTypeSymbol("bool2", "Represents a vector containing 2 boolean components.", ScalarType.Bool, 2);
+            Bool3 = new IntrinsicVectorTypeSymbol("bool3", "Represents a vector containing 3 boolean components.", ScalarType.Bool, 3);
+            Bool4 = new IntrinsicVectorTypeSymbol("bool4", "Represents a vector containing 4 boolean components.", ScalarType.Bool, 4);
+            Int1 = new IntrinsicVectorTypeSymbol("int1", "Represents a vector containing 1 signed integer component.",  ScalarType.Int, 1);
+            Int2 = new IntrinsicVectorTypeSymbol("int2", "Represents a vector containing 2 signed integer components.", ScalarType.Int, 2);
+            Int3 = new IntrinsicVectorTypeSymbol("int3", "Represents a vector containing 3 signed integer components.", ScalarType.Int, 3);
+            Int4 = new IntrinsicVectorTypeSymbol("int4", "Represents a vector containing 4 signed integer components.", ScalarType.Int, 4);
+            Uint1 = new IntrinsicVectorTypeSymbol("uint1", "Represents a vector containing 1 unsigned integer component.",  ScalarType.Uint, 1);
+            Uint2 = new IntrinsicVectorTypeSymbol("uint2", "Represents a vector containing 2 unsigned integer components.", ScalarType.Uint, 2);
+            Uint3 = new IntrinsicVectorTypeSymbol("uint3", "Represents a vector containing 3 unsigned integer components.", ScalarType.Uint, 3);
+            Uint4 = new IntrinsicVectorTypeSymbol("uint4", "Represents a vector containing 4 unsigned integer components.", ScalarType.Uint, 4);
+            Half1 = new IntrinsicVectorTypeSymbol("half1", "Represents a vector containing 1 floating point component.",  ScalarType.Half, 1);
+            Half2 = new IntrinsicVectorTypeSymbol("half2", "Represents a vector containing 2 floating point components.", ScalarType.Half, 2);
+            Half3 = new IntrinsicVectorTypeSymbol("half3", "Represents a vector containing 3 floating point components.", ScalarType.Half, 3);
+            Half4 = new IntrinsicVectorTypeSymbol("half4", "Represents a vector containing 4 floating point components.", ScalarType.Half, 4);
+            Float1 = new IntrinsicVectorTypeSymbol("float1", "Represents a vector containing 1 floating point component.",  ScalarType.Float, 1);
+            Float2 = new IntrinsicVectorTypeSymbol("float2", "Represents a vector containing 2 floating point components.", ScalarType.Float, 2);
+            Float3 = new IntrinsicVectorTypeSymbol("float3", "Represents a vector containing 3 floating point components.", ScalarType.Float, 3);
+            Float4 = new IntrinsicVectorTypeSymbol("float4", "Represents a vector containing 4 floating point components.", ScalarType.Float, 4);
+            Double1 = new IntrinsicVectorTypeSymbol("double1", "Represents a vector containing 1 floating point component.",  ScalarType.Double, 1);
+            Double2 = new IntrinsicVectorTypeSymbol("double2", "Represents a vector containing 2 floating point components.", ScalarType.Double, 2);
+            Double3 = new IntrinsicVectorTypeSymbol("double3", "Represents a vector containing 3 floating point components.", ScalarType.Double, 3);
+            Double4 = new IntrinsicVectorTypeSymbol("double4", "Represents a vector containing 4 floating point components.", ScalarType.Double, 4);
+
+            Bool.AddMembers(CreateScalarTypeFields(1, Bool, Bool1, Bool2, Bool3, Bool4));
+            Int.AddMembers(CreateScalarTypeFields(1, Int, Int1, Int2, Int3, Int4));
+            Uint.AddMembers(CreateScalarTypeFields(1, Uint, Uint1, Uint2, Uint3, Uint4));
+            Half.AddMembers(CreateScalarTypeFields(1, Half, Half1, Half2, Half3, Half4));
+            Float.AddMembers(CreateScalarTypeFields(1, Float, Float1, Float2, Float3, Float4));
+            Double.AddMembers(CreateScalarTypeFields(1, Double, Double1, Double2, Double3, Double4));
+
+            Bool1.AddMembers(CreateVectorTypeFields(1, Bool1, Bool, Bool1, Bool2, Bool3, Bool4));
+            Bool2.AddMembers(CreateVectorTypeFields(2, Bool2, Bool, Bool1, Bool2, Bool3, Bool4));
+            Bool3.AddMembers(CreateVectorTypeFields(3, Bool3, Bool, Bool1, Bool2, Bool3, Bool4));
+            Bool4.AddMembers(CreateVectorTypeFields(4, Bool4, Bool, Bool1, Bool2, Bool3, Bool4));
+            Int1.AddMembers(CreateVectorTypeFields(1, Int1, Int, Int1, Int2, Int3, Int4));
+            Int2.AddMembers(CreateVectorTypeFields(2, Int2, Int, Int1, Int2, Int3, Int4));
+            Int3.AddMembers(CreateVectorTypeFields(3, Int3, Int, Int1, Int2, Int3, Int4));
+            Int4.AddMembers(CreateVectorTypeFields(4, Int4, Int, Int1, Int2, Int3, Int4));
+            Uint1.AddMembers(CreateVectorTypeFields(1, Uint1, Uint, Uint1, Uint2, Uint3, Uint4));
+            Uint2.AddMembers(CreateVectorTypeFields(2, Uint2, Uint, Uint1, Uint2, Uint3, Uint4));
+            Uint3.AddMembers(CreateVectorTypeFields(3, Uint3, Uint, Uint1, Uint2, Uint3, Uint4));
+            Uint4.AddMembers(CreateVectorTypeFields(4, Uint4, Uint, Uint1, Uint2, Uint3, Uint4));
+            Half1.AddMembers(CreateVectorTypeFields(1, Half1, Half, Half1, Half2, Half3, Half4));
+            Half2.AddMembers(CreateVectorTypeFields(2, Half2, Half, Half1, Half2, Half3, Half4));
+            Half3.AddMembers(CreateVectorTypeFields(3, Half3, Half, Half1, Half2, Half3, Half4));
+            Half4.AddMembers(CreateVectorTypeFields(4, Half4, Half, Half1, Half2, Half3, Half4));
+            Float1.AddMembers(CreateVectorTypeFields(1, Float1, Float, Float1, Float2, Float3, Float4));
+            Float2.AddMembers(CreateVectorTypeFields(2, Float2, Float, Float1, Float2, Float3, Float4));
+            Float3.AddMembers(CreateVectorTypeFields(3, Float3, Float, Float1, Float2, Float3, Float4));
+            Float4.AddMembers(CreateVectorTypeFields(4, Float4, Float, Float1, Float2, Float3, Float4));
+            Double1.AddMembers(CreateVectorTypeFields(1, Double1, Double, Double1, Double2, Double3, Double4));
+            Double2.AddMembers(CreateVectorTypeFields(2, Double2, Double, Double1, Double2, Double3, Double4));
+            Double3.AddMembers(CreateVectorTypeFields(3, Double3, Double, Double1, Double2, Double3, Double4));
+            Double4.AddMembers(CreateVectorTypeFields(4, Double4, Double, Double1, Double2, Double3, Double4));
 
             // Matrix types.
-            Bool1x1 = new IntrinsicMatrixTypeSymbol("bool1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Bool, 1, 1, t => CreateMatrixTypeMembers(1, 1, Bool1x1, Bool, AllBoolVectorTypes));
-            Bool1x2 = new IntrinsicMatrixTypeSymbol("bool1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Bool, 1, 2, t => CreateMatrixTypeMembers(1, 2, Bool1x2, Bool, AllBoolVectorTypes));
-            Bool1x3 = new IntrinsicMatrixTypeSymbol("bool1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Bool, 1, 3, t => CreateMatrixTypeMembers(1, 3, Bool1x3, Bool, AllBoolVectorTypes));
-            Bool1x4 = new IntrinsicMatrixTypeSymbol("bool1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Bool, 1, 4, t => CreateMatrixTypeMembers(1, 4, Bool1x4, Bool, AllBoolVectorTypes));
-            Bool2x1 = new IntrinsicMatrixTypeSymbol("bool2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Bool, 2, 1, t => CreateMatrixTypeMembers(2, 1, Bool2x1, Bool, AllBoolVectorTypes));
-            Bool2x2 = new IntrinsicMatrixTypeSymbol("bool2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Bool, 2, 2, t => CreateMatrixTypeMembers(2, 2, Bool2x2, Bool, AllBoolVectorTypes));
-            Bool2x3 = new IntrinsicMatrixTypeSymbol("bool2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Bool, 2, 3, t => CreateMatrixTypeMembers(2, 3, Bool2x3, Bool, AllBoolVectorTypes));
-            Bool2x4 = new IntrinsicMatrixTypeSymbol("bool2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Bool, 2, 4, t => CreateMatrixTypeMembers(2, 4, Bool2x4, Bool, AllBoolVectorTypes));
-            Bool3x1 = new IntrinsicMatrixTypeSymbol("bool3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Bool, 3, 1, t => CreateMatrixTypeMembers(3, 1, Bool3x1, Bool, AllBoolVectorTypes));
-            Bool3x2 = new IntrinsicMatrixTypeSymbol("bool3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Bool, 3, 2, t => CreateMatrixTypeMembers(3, 2, Bool3x2, Bool, AllBoolVectorTypes));
-            Bool3x3 = new IntrinsicMatrixTypeSymbol("bool3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Bool, 3, 3, t => CreateMatrixTypeMembers(3, 3, Bool3x3, Bool, AllBoolVectorTypes));
-            Bool3x4 = new IntrinsicMatrixTypeSymbol("bool3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Bool, 3, 4, t => CreateMatrixTypeMembers(3, 4, Bool3x4, Bool, AllBoolVectorTypes));
-            Bool4x1 = new IntrinsicMatrixTypeSymbol("bool4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Bool, 4, 1, t => CreateMatrixTypeMembers(4, 1, Bool4x1, Bool, AllBoolVectorTypes));
-            Bool4x2 = new IntrinsicMatrixTypeSymbol("bool4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Bool, 4, 2, t => CreateMatrixTypeMembers(4, 2, Bool4x2, Bool, AllBoolVectorTypes));
-            Bool4x3 = new IntrinsicMatrixTypeSymbol("bool4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Bool, 4, 3, t => CreateMatrixTypeMembers(4, 3, Bool4x3, Bool, AllBoolVectorTypes));
-            Bool4x4 = new IntrinsicMatrixTypeSymbol("bool4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Bool, 4, 4, t => CreateMatrixTypeMembers(4, 4, Bool4x4, Bool, AllBoolVectorTypes));
-            Int1x1 = new IntrinsicMatrixTypeSymbol("int1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Int, 1, 1, t => CreateMatrixTypeMembers(1, 1, Int1x1, Int, AllIntVectorTypes));
-            Int1x2 = new IntrinsicMatrixTypeSymbol("int1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Int, 1, 2, t => CreateMatrixTypeMembers(1, 2, Int1x2, Int, AllIntVectorTypes));
-            Int1x3 = new IntrinsicMatrixTypeSymbol("int1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Int, 1, 3, t => CreateMatrixTypeMembers(1, 3, Int1x3, Int, AllIntVectorTypes));
-            Int1x4 = new IntrinsicMatrixTypeSymbol("int1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Int, 1, 4, t => CreateMatrixTypeMembers(1, 4, Int1x4, Int, AllIntVectorTypes));
-            Int2x1 = new IntrinsicMatrixTypeSymbol("int2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Int, 2, 1, t => CreateMatrixTypeMembers(2, 1, Int2x1, Int, AllIntVectorTypes));
-            Int2x2 = new IntrinsicMatrixTypeSymbol("int2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Int, 2, 2, t => CreateMatrixTypeMembers(2, 2, Int2x2, Int, AllIntVectorTypes));
-            Int2x3 = new IntrinsicMatrixTypeSymbol("int2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Int, 2, 3, t => CreateMatrixTypeMembers(2, 3, Int2x3, Int, AllIntVectorTypes));
-            Int2x4 = new IntrinsicMatrixTypeSymbol("int2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Int, 2, 4, t => CreateMatrixTypeMembers(2, 4, Int2x4, Int, AllIntVectorTypes));
-            Int3x1 = new IntrinsicMatrixTypeSymbol("int3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Int, 3, 1, t => CreateMatrixTypeMembers(3, 1, Int3x1, Int, AllIntVectorTypes));
-            Int3x2 = new IntrinsicMatrixTypeSymbol("int3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Int, 3, 2, t => CreateMatrixTypeMembers(3, 2, Int3x2, Int, AllIntVectorTypes));
-            Int3x3 = new IntrinsicMatrixTypeSymbol("int3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Int, 3, 3, t => CreateMatrixTypeMembers(3, 3, Int3x3, Int, AllIntVectorTypes));
-            Int3x4 = new IntrinsicMatrixTypeSymbol("int3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Int, 3, 4, t => CreateMatrixTypeMembers(3, 4, Int3x4, Int, AllIntVectorTypes));
-            Int4x1 = new IntrinsicMatrixTypeSymbol("int4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Int, 4, 1, t => CreateMatrixTypeMembers(4, 1, Int4x1, Int, AllIntVectorTypes));
-            Int4x2 = new IntrinsicMatrixTypeSymbol("int4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Int, 4, 2, t => CreateMatrixTypeMembers(4, 2, Int4x2, Int, AllIntVectorTypes));
-            Int4x3 = new IntrinsicMatrixTypeSymbol("int4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Int, 4, 3, t => CreateMatrixTypeMembers(4, 3, Int4x3, Int, AllIntVectorTypes));
-            Int4x4 = new IntrinsicMatrixTypeSymbol("int4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Int, 4, 4, t => CreateMatrixTypeMembers(4, 4, Int4x4, Int, AllIntVectorTypes));
-            Uint1x1 = new IntrinsicMatrixTypeSymbol("uint1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Uint, 1, 1, t => CreateMatrixTypeMembers(1, 1, Uint1x1, Uint, AllUintVectorTypes));
-            Uint1x2 = new IntrinsicMatrixTypeSymbol("uint1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Uint, 1, 2, t => CreateMatrixTypeMembers(1, 2, Uint1x2, Uint, AllUintVectorTypes));
-            Uint1x3 = new IntrinsicMatrixTypeSymbol("uint1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Uint, 1, 3, t => CreateMatrixTypeMembers(1, 3, Uint1x3, Uint, AllUintVectorTypes));
-            Uint1x4 = new IntrinsicMatrixTypeSymbol("uint1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Uint, 1, 4, t => CreateMatrixTypeMembers(1, 4, Uint1x4, Uint, AllUintVectorTypes));
-            Uint2x1 = new IntrinsicMatrixTypeSymbol("uint2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Uint, 2, 1, t => CreateMatrixTypeMembers(2, 1, Uint2x1, Uint, AllUintVectorTypes));
-            Uint2x2 = new IntrinsicMatrixTypeSymbol("uint2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Uint, 2, 2, t => CreateMatrixTypeMembers(2, 2, Uint2x2, Uint, AllUintVectorTypes));
-            Uint2x3 = new IntrinsicMatrixTypeSymbol("uint2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Uint, 2, 3, t => CreateMatrixTypeMembers(2, 3, Uint2x3, Uint, AllUintVectorTypes));
-            Uint2x4 = new IntrinsicMatrixTypeSymbol("uint2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Uint, 2, 4, t => CreateMatrixTypeMembers(2, 4, Uint2x4, Uint, AllUintVectorTypes));
-            Uint3x1 = new IntrinsicMatrixTypeSymbol("uint3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Uint, 3, 1, t => CreateMatrixTypeMembers(3, 1, Uint3x1, Uint, AllUintVectorTypes));
-            Uint3x2 = new IntrinsicMatrixTypeSymbol("uint3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Uint, 3, 2, t => CreateMatrixTypeMembers(3, 2, Uint3x2, Uint, AllUintVectorTypes));
-            Uint3x3 = new IntrinsicMatrixTypeSymbol("uint3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Uint, 3, 3, t => CreateMatrixTypeMembers(3, 3, Uint3x3, Uint, AllUintVectorTypes));
-            Uint3x4 = new IntrinsicMatrixTypeSymbol("uint3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Uint, 3, 4, t => CreateMatrixTypeMembers(3, 4, Uint3x4, Uint, AllUintVectorTypes));
-            Uint4x1 = new IntrinsicMatrixTypeSymbol("uint4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Uint, 4, 1, t => CreateMatrixTypeMembers(4, 1, Uint4x1, Uint, AllUintVectorTypes));
-            Uint4x2 = new IntrinsicMatrixTypeSymbol("uint4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Uint, 4, 2, t => CreateMatrixTypeMembers(4, 2, Uint4x2, Uint, AllUintVectorTypes));
-            Uint4x3 = new IntrinsicMatrixTypeSymbol("uint4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Uint, 4, 3, t => CreateMatrixTypeMembers(4, 3, Uint4x3, Uint, AllUintVectorTypes));
-            Uint4x4 = new IntrinsicMatrixTypeSymbol("uint4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Uint, 4, 4, t => CreateMatrixTypeMembers(4, 4, Uint4x4, Uint, AllUintVectorTypes));
-            Half1x1 = new IntrinsicMatrixTypeSymbol("half1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Half, 1, 1, t => CreateMatrixTypeMembers(1, 1, Half1x1, Half, AllHalfVectorTypes));
-            Half1x2 = new IntrinsicMatrixTypeSymbol("half1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Half, 1, 2, t => CreateMatrixTypeMembers(1, 2, Half1x2, Half, AllHalfVectorTypes));
-            Half1x3 = new IntrinsicMatrixTypeSymbol("half1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Half, 1, 3, t => CreateMatrixTypeMembers(1, 3, Half1x3, Half, AllHalfVectorTypes));
-            Half1x4 = new IntrinsicMatrixTypeSymbol("half1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Half, 1, 4, t => CreateMatrixTypeMembers(1, 4, Half1x4, Half, AllHalfVectorTypes));
-            Half2x1 = new IntrinsicMatrixTypeSymbol("half2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Half, 2, 1, t => CreateMatrixTypeMembers(2, 1, Half2x1, Half, AllHalfVectorTypes));
-            Half2x2 = new IntrinsicMatrixTypeSymbol("half2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Half, 2, 2, t => CreateMatrixTypeMembers(2, 2, Half2x2, Half, AllHalfVectorTypes));
-            Half2x3 = new IntrinsicMatrixTypeSymbol("half2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Half, 2, 3, t => CreateMatrixTypeMembers(2, 3, Half2x3, Half, AllHalfVectorTypes));
-            Half2x4 = new IntrinsicMatrixTypeSymbol("half2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Half, 2, 4, t => CreateMatrixTypeMembers(2, 4, Half2x4, Half, AllHalfVectorTypes));
-            Half3x1 = new IntrinsicMatrixTypeSymbol("half3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Half, 3, 1, t => CreateMatrixTypeMembers(3, 1, Half3x1, Half, AllHalfVectorTypes));
-            Half3x2 = new IntrinsicMatrixTypeSymbol("half3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Half, 3, 2, t => CreateMatrixTypeMembers(3, 2, Half3x2, Half, AllHalfVectorTypes));
-            Half3x3 = new IntrinsicMatrixTypeSymbol("half3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Half, 3, 3, t => CreateMatrixTypeMembers(3, 3, Half3x3, Half, AllHalfVectorTypes));
-            Half3x4 = new IntrinsicMatrixTypeSymbol("half3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Half, 3, 4, t => CreateMatrixTypeMembers(3, 4, Half3x4, Half, AllHalfVectorTypes));
-            Half4x1 = new IntrinsicMatrixTypeSymbol("half4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Half, 4, 1, t => CreateMatrixTypeMembers(4, 1, Half4x1, Half, AllHalfVectorTypes));
-            Half4x2 = new IntrinsicMatrixTypeSymbol("half4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Half, 4, 2, t => CreateMatrixTypeMembers(4, 2, Half4x2, Half, AllHalfVectorTypes));
-            Half4x3 = new IntrinsicMatrixTypeSymbol("half4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Half, 4, 3, t => CreateMatrixTypeMembers(4, 3, Half4x3, Half, AllHalfVectorTypes));
-            Half4x4 = new IntrinsicMatrixTypeSymbol("half4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Half, 4, 4, t => CreateMatrixTypeMembers(4, 4, Half4x4, Half, AllHalfVectorTypes));
-            Float1x1 = new IntrinsicMatrixTypeSymbol("float1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Float, 1, 1, t => CreateMatrixTypeMembers(1, 1, Float1x1, Float, AllFloatVectorTypes));
-            Float1x2 = new IntrinsicMatrixTypeSymbol("float1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Float, 1, 2, t => CreateMatrixTypeMembers(1, 2, Float1x2, Float, AllFloatVectorTypes));
-            Float1x3 = new IntrinsicMatrixTypeSymbol("float1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Float, 1, 3, t => CreateMatrixTypeMembers(1, 3, Float1x3, Float, AllFloatVectorTypes));
-            Float1x4 = new IntrinsicMatrixTypeSymbol("float1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Float, 1, 4, t => CreateMatrixTypeMembers(1, 4, Float1x4, Float, AllFloatVectorTypes));
-            Float2x1 = new IntrinsicMatrixTypeSymbol("float2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Float, 2, 1, t => CreateMatrixTypeMembers(2, 1, Float2x1, Float, AllFloatVectorTypes));
-            Float2x2 = new IntrinsicMatrixTypeSymbol("float2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Float, 2, 2, t => CreateMatrixTypeMembers(2, 2, Float2x2, Float, AllFloatVectorTypes));
-            Float2x3 = new IntrinsicMatrixTypeSymbol("float2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Float, 2, 3, t => CreateMatrixTypeMembers(2, 3, Float2x3, Float, AllFloatVectorTypes));
-            Float2x4 = new IntrinsicMatrixTypeSymbol("float2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Float, 2, 4, t => CreateMatrixTypeMembers(2, 4, Float2x4, Float, AllFloatVectorTypes));
-            Float3x1 = new IntrinsicMatrixTypeSymbol("float3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Float, 3, 1, t => CreateMatrixTypeMembers(3, 1, Float3x1, Float, AllFloatVectorTypes));
-            Float3x2 = new IntrinsicMatrixTypeSymbol("float3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Float, 3, 2, t => CreateMatrixTypeMembers(3, 2, Float3x2, Float, AllFloatVectorTypes));
-            Float3x3 = new IntrinsicMatrixTypeSymbol("float3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Float, 3, 3, t => CreateMatrixTypeMembers(3, 3, Float3x3, Float, AllFloatVectorTypes));
-            Float3x4 = new IntrinsicMatrixTypeSymbol("float3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Float, 3, 4, t => CreateMatrixTypeMembers(3, 4, Float3x4, Float, AllFloatVectorTypes));
-            Float4x1 = new IntrinsicMatrixTypeSymbol("float4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Float, 4, 1, t => CreateMatrixTypeMembers(4, 1, Float4x1, Float, AllFloatVectorTypes));
-            Float4x2 = new IntrinsicMatrixTypeSymbol("float4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Float, 4, 2, t => CreateMatrixTypeMembers(4, 2, Float4x2, Float, AllFloatVectorTypes));
-            Float4x3 = new IntrinsicMatrixTypeSymbol("float4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Float, 4, 3, t => CreateMatrixTypeMembers(4, 3, Float4x3, Float, AllFloatVectorTypes));
-            Float4x4 = new IntrinsicMatrixTypeSymbol("float4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Float, 4, 4, t => CreateMatrixTypeMembers(4, 4, Float4x4, Float, AllFloatVectorTypes));
-            Double1x1 = new IntrinsicMatrixTypeSymbol("double1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Double, 1, 1, t => CreateMatrixTypeMembers(1, 1, Double1x1, Double, AllDoubleVectorTypes));
-            Double1x2 = new IntrinsicMatrixTypeSymbol("double1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Double, 1, 2, t => CreateMatrixTypeMembers(1, 2, Double1x2, Double, AllDoubleVectorTypes));
-            Double1x3 = new IntrinsicMatrixTypeSymbol("double1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Double, 1, 3, t => CreateMatrixTypeMembers(1, 3, Double1x3, Double, AllDoubleVectorTypes));
-            Double1x4 = new IntrinsicMatrixTypeSymbol("double1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Double, 1, 4, t => CreateMatrixTypeMembers(1, 4, Double1x4, Double, AllDoubleVectorTypes));
-            Double2x1 = new IntrinsicMatrixTypeSymbol("double2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Double, 2, 1, t => CreateMatrixTypeMembers(2, 1, Double2x1, Double, AllDoubleVectorTypes));
-            Double2x2 = new IntrinsicMatrixTypeSymbol("double2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Double, 2, 2, t => CreateMatrixTypeMembers(2, 2, Double2x2, Double, AllDoubleVectorTypes));
-            Double2x3 = new IntrinsicMatrixTypeSymbol("double2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Double, 2, 3, t => CreateMatrixTypeMembers(2, 3, Double2x3, Double, AllDoubleVectorTypes));
-            Double2x4 = new IntrinsicMatrixTypeSymbol("double2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Double, 2, 4, t => CreateMatrixTypeMembers(2, 4, Double2x4, Double, AllDoubleVectorTypes));
-            Double3x1 = new IntrinsicMatrixTypeSymbol("double3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Double, 3, 1, t => CreateMatrixTypeMembers(3, 1, Double3x1, Double, AllDoubleVectorTypes));
-            Double3x2 = new IntrinsicMatrixTypeSymbol("double3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Double, 3, 2, t => CreateMatrixTypeMembers(3, 2, Double3x2, Double, AllDoubleVectorTypes));
-            Double3x3 = new IntrinsicMatrixTypeSymbol("double3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Double, 3, 3, t => CreateMatrixTypeMembers(3, 3, Double3x3, Double, AllDoubleVectorTypes));
-            Double3x4 = new IntrinsicMatrixTypeSymbol("double3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Double, 3, 4, t => CreateMatrixTypeMembers(3, 4, Double3x4, Double, AllDoubleVectorTypes));
-            Double4x1 = new IntrinsicMatrixTypeSymbol("double4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Double, 4, 1, t => CreateMatrixTypeMembers(4, 1, Double4x1, Double, AllDoubleVectorTypes));
-            Double4x2 = new IntrinsicMatrixTypeSymbol("double4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Double, 4, 2, t => CreateMatrixTypeMembers(4, 2, Double4x2, Double, AllDoubleVectorTypes));
-            Double4x3 = new IntrinsicMatrixTypeSymbol("double4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Double, 4, 3, t => CreateMatrixTypeMembers(4, 3, Double4x3, Double, AllDoubleVectorTypes));
-            Double4x4 = new IntrinsicMatrixTypeSymbol("double4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Double, 4, 4, t => CreateMatrixTypeMembers(4, 4, Double4x4, Double, AllDoubleVectorTypes));
+            Bool1x1 = new IntrinsicMatrixTypeSymbol("bool1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Bool, 1, 1);
+            Bool1x2 = new IntrinsicMatrixTypeSymbol("bool1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Bool, 1, 2);
+            Bool1x3 = new IntrinsicMatrixTypeSymbol("bool1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Bool, 1, 3);
+            Bool1x4 = new IntrinsicMatrixTypeSymbol("bool1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Bool, 1, 4);
+            Bool2x1 = new IntrinsicMatrixTypeSymbol("bool2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Bool, 2, 1);
+            Bool2x2 = new IntrinsicMatrixTypeSymbol("bool2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Bool, 2, 2);
+            Bool2x3 = new IntrinsicMatrixTypeSymbol("bool2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Bool, 2, 3);
+            Bool2x4 = new IntrinsicMatrixTypeSymbol("bool2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Bool, 2, 4);
+            Bool3x1 = new IntrinsicMatrixTypeSymbol("bool3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Bool, 3, 1);
+            Bool3x2 = new IntrinsicMatrixTypeSymbol("bool3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Bool, 3, 2);
+            Bool3x3 = new IntrinsicMatrixTypeSymbol("bool3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Bool, 3, 3);
+            Bool3x4 = new IntrinsicMatrixTypeSymbol("bool3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Bool, 3, 4);
+            Bool4x1 = new IntrinsicMatrixTypeSymbol("bool4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Bool, 4, 1);
+            Bool4x2 = new IntrinsicMatrixTypeSymbol("bool4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Bool, 4, 2);
+            Bool4x3 = new IntrinsicMatrixTypeSymbol("bool4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Bool, 4, 3);
+            Bool4x4 = new IntrinsicMatrixTypeSymbol("bool4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Bool, 4, 4);
+            Int1x1 = new IntrinsicMatrixTypeSymbol("int1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Int, 1, 1);
+            Int1x2 = new IntrinsicMatrixTypeSymbol("int1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Int, 1, 2);
+            Int1x3 = new IntrinsicMatrixTypeSymbol("int1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Int, 1, 3);
+            Int1x4 = new IntrinsicMatrixTypeSymbol("int1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Int, 1, 4);
+            Int2x1 = new IntrinsicMatrixTypeSymbol("int2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Int, 2, 1);
+            Int2x2 = new IntrinsicMatrixTypeSymbol("int2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Int, 2, 2);
+            Int2x3 = new IntrinsicMatrixTypeSymbol("int2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Int, 2, 3);
+            Int2x4 = new IntrinsicMatrixTypeSymbol("int2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Int, 2, 4);
+            Int3x1 = new IntrinsicMatrixTypeSymbol("int3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Int, 3, 1);
+            Int3x2 = new IntrinsicMatrixTypeSymbol("int3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Int, 3, 2);
+            Int3x3 = new IntrinsicMatrixTypeSymbol("int3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Int, 3, 3);
+            Int3x4 = new IntrinsicMatrixTypeSymbol("int3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Int, 3, 4);
+            Int4x1 = new IntrinsicMatrixTypeSymbol("int4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Int, 4, 1);
+            Int4x2 = new IntrinsicMatrixTypeSymbol("int4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Int, 4, 2);
+            Int4x3 = new IntrinsicMatrixTypeSymbol("int4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Int, 4, 3);
+            Int4x4 = new IntrinsicMatrixTypeSymbol("int4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Int, 4, 4);
+            Uint1x1 = new IntrinsicMatrixTypeSymbol("uint1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Uint, 1, 1);
+            Uint1x2 = new IntrinsicMatrixTypeSymbol("uint1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Uint, 1, 2);
+            Uint1x3 = new IntrinsicMatrixTypeSymbol("uint1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Uint, 1, 3);
+            Uint1x4 = new IntrinsicMatrixTypeSymbol("uint1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Uint, 1, 4);
+            Uint2x1 = new IntrinsicMatrixTypeSymbol("uint2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Uint, 2, 1);
+            Uint2x2 = new IntrinsicMatrixTypeSymbol("uint2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Uint, 2, 2);
+            Uint2x3 = new IntrinsicMatrixTypeSymbol("uint2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Uint, 2, 3);
+            Uint2x4 = new IntrinsicMatrixTypeSymbol("uint2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Uint, 2, 4);
+            Uint3x1 = new IntrinsicMatrixTypeSymbol("uint3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Uint, 3, 1);
+            Uint3x2 = new IntrinsicMatrixTypeSymbol("uint3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Uint, 3, 2);
+            Uint3x3 = new IntrinsicMatrixTypeSymbol("uint3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Uint, 3, 3);
+            Uint3x4 = new IntrinsicMatrixTypeSymbol("uint3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Uint, 3, 4);
+            Uint4x1 = new IntrinsicMatrixTypeSymbol("uint4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Uint, 4, 1);
+            Uint4x2 = new IntrinsicMatrixTypeSymbol("uint4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Uint, 4, 2);
+            Uint4x3 = new IntrinsicMatrixTypeSymbol("uint4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Uint, 4, 3);
+            Uint4x4 = new IntrinsicMatrixTypeSymbol("uint4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Uint, 4, 4);
+            Half1x1 = new IntrinsicMatrixTypeSymbol("half1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Half, 1, 1);
+            Half1x2 = new IntrinsicMatrixTypeSymbol("half1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Half, 1, 2);
+            Half1x3 = new IntrinsicMatrixTypeSymbol("half1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Half, 1, 3);
+            Half1x4 = new IntrinsicMatrixTypeSymbol("half1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Half, 1, 4);
+            Half2x1 = new IntrinsicMatrixTypeSymbol("half2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Half, 2, 1);
+            Half2x2 = new IntrinsicMatrixTypeSymbol("half2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Half, 2, 2);
+            Half2x3 = new IntrinsicMatrixTypeSymbol("half2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Half, 2, 3);
+            Half2x4 = new IntrinsicMatrixTypeSymbol("half2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Half, 2, 4);
+            Half3x1 = new IntrinsicMatrixTypeSymbol("half3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Half, 3, 1);
+            Half3x2 = new IntrinsicMatrixTypeSymbol("half3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Half, 3, 2);
+            Half3x3 = new IntrinsicMatrixTypeSymbol("half3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Half, 3, 3);
+            Half3x4 = new IntrinsicMatrixTypeSymbol("half3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Half, 3, 4);
+            Half4x1 = new IntrinsicMatrixTypeSymbol("half4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Half, 4, 1);
+            Half4x2 = new IntrinsicMatrixTypeSymbol("half4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Half, 4, 2);
+            Half4x3 = new IntrinsicMatrixTypeSymbol("half4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Half, 4, 3);
+            Half4x4 = new IntrinsicMatrixTypeSymbol("half4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Half, 4, 4);
+            Float1x1 = new IntrinsicMatrixTypeSymbol("float1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Float, 1, 1);
+            Float1x2 = new IntrinsicMatrixTypeSymbol("float1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Float, 1, 2);
+            Float1x3 = new IntrinsicMatrixTypeSymbol("float1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Float, 1, 3);
+            Float1x4 = new IntrinsicMatrixTypeSymbol("float1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Float, 1, 4);
+            Float2x1 = new IntrinsicMatrixTypeSymbol("float2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Float, 2, 1);
+            Float2x2 = new IntrinsicMatrixTypeSymbol("float2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Float, 2, 2);
+            Float2x3 = new IntrinsicMatrixTypeSymbol("float2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Float, 2, 3);
+            Float2x4 = new IntrinsicMatrixTypeSymbol("float2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Float, 2, 4);
+            Float3x1 = new IntrinsicMatrixTypeSymbol("float3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Float, 3, 1);
+            Float3x2 = new IntrinsicMatrixTypeSymbol("float3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Float, 3, 2);
+            Float3x3 = new IntrinsicMatrixTypeSymbol("float3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Float, 3, 3);
+            Float3x4 = new IntrinsicMatrixTypeSymbol("float3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Float, 3, 4);
+            Float4x1 = new IntrinsicMatrixTypeSymbol("float4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Float, 4, 1);
+            Float4x2 = new IntrinsicMatrixTypeSymbol("float4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Float, 4, 2);
+            Float4x3 = new IntrinsicMatrixTypeSymbol("float4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Float, 4, 3);
+            Float4x4 = new IntrinsicMatrixTypeSymbol("float4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Float, 4, 4);
+            Double1x1 = new IntrinsicMatrixTypeSymbol("double1x1", "Represents a matrix containing 1 row and 1 column.",   ScalarType.Double, 1, 1);
+            Double1x2 = new IntrinsicMatrixTypeSymbol("double1x2", "Represents a matrix containing 1 row and 2 columns.",  ScalarType.Double, 1, 2);
+            Double1x3 = new IntrinsicMatrixTypeSymbol("double1x3", "Represents a matrix containing 1 row and 3 columns.",  ScalarType.Double, 1, 3);
+            Double1x4 = new IntrinsicMatrixTypeSymbol("double1x4", "Represents a matrix containing 1 row and 4 columns.",  ScalarType.Double, 1, 4);
+            Double2x1 = new IntrinsicMatrixTypeSymbol("double2x1", "Represents a matrix containing 2 rows and 1 column.",  ScalarType.Double, 2, 1);
+            Double2x2 = new IntrinsicMatrixTypeSymbol("double2x2", "Represents a matrix containing 2 rows and 2 columns.", ScalarType.Double, 2, 2);
+            Double2x3 = new IntrinsicMatrixTypeSymbol("double2x3", "Represents a matrix containing 2 rows and 3 columns.", ScalarType.Double, 2, 3);
+            Double2x4 = new IntrinsicMatrixTypeSymbol("double2x4", "Represents a matrix containing 2 rows and 4 columns.", ScalarType.Double, 2, 4);
+            Double3x1 = new IntrinsicMatrixTypeSymbol("double3x1", "Represents a matrix containing 3 rows and 1 column.",  ScalarType.Double, 3, 1);
+            Double3x2 = new IntrinsicMatrixTypeSymbol("double3x2", "Represents a matrix containing 3 rows and 2 columns.", ScalarType.Double, 3, 2);
+            Double3x3 = new IntrinsicMatrixTypeSymbol("double3x3", "Represents a matrix containing 3 rows and 3 columns.", ScalarType.Double, 3, 3);
+            Double3x4 = new IntrinsicMatrixTypeSymbol("double3x4", "Represents a matrix containing 3 rows and 4 columns.", ScalarType.Double, 3, 4);
+            Double4x1 = new IntrinsicMatrixTypeSymbol("double4x1", "Represents a matrix containing 4 rows and 1 column.",  ScalarType.Double, 4, 1);
+            Double4x2 = new IntrinsicMatrixTypeSymbol("double4x2", "Represents a matrix containing 4 rows and 2 columns.", ScalarType.Double, 4, 2);
+            Double4x3 = new IntrinsicMatrixTypeSymbol("double4x3", "Represents a matrix containing 4 rows and 3 columns.", ScalarType.Double, 4, 3);
+            Double4x4 = new IntrinsicMatrixTypeSymbol("double4x4", "Represents a matrix containing 4 rows and 4 columns.", ScalarType.Double, 4, 4);
+
+            Bool1x1.AddMembers(CreateMatrixTypeMembers(Bool1x1, Bool1, Bool2, Bool3, Bool4));
+            Bool1x2.AddMembers(CreateMatrixTypeMembers(Bool1x2, Bool1, Bool2, Bool3, Bool4));
+            Bool1x3.AddMembers(CreateMatrixTypeMembers(Bool1x3, Bool1, Bool2, Bool3, Bool4));
+            Bool1x4.AddMembers(CreateMatrixTypeMembers(Bool1x4, Bool1, Bool2, Bool3, Bool4));
+            Bool2x1.AddMembers(CreateMatrixTypeMembers(Bool2x1, Bool1, Bool2, Bool3, Bool4));
+            Bool2x2.AddMembers(CreateMatrixTypeMembers(Bool2x2, Bool1, Bool2, Bool3, Bool4));
+            Bool2x3.AddMembers(CreateMatrixTypeMembers(Bool2x3, Bool1, Bool2, Bool3, Bool4));
+            Bool2x4.AddMembers(CreateMatrixTypeMembers(Bool2x4, Bool1, Bool2, Bool3, Bool4));
+            Bool3x1.AddMembers(CreateMatrixTypeMembers(Bool3x1, Bool1, Bool2, Bool3, Bool4));
+            Bool3x2.AddMembers(CreateMatrixTypeMembers(Bool3x2, Bool1, Bool2, Bool3, Bool4));
+            Bool3x3.AddMembers(CreateMatrixTypeMembers(Bool3x3, Bool1, Bool2, Bool3, Bool4));
+            Bool3x4.AddMembers(CreateMatrixTypeMembers(Bool3x4, Bool1, Bool2, Bool3, Bool4));
+            Bool4x1.AddMembers(CreateMatrixTypeMembers(Bool4x1, Bool1, Bool2, Bool3, Bool4));
+            Bool4x2.AddMembers(CreateMatrixTypeMembers(Bool4x2, Bool1, Bool2, Bool3, Bool4));
+            Bool4x3.AddMembers(CreateMatrixTypeMembers(Bool4x3, Bool1, Bool2, Bool3, Bool4));
+            Bool4x4.AddMembers(CreateMatrixTypeMembers(Bool4x4, Bool1, Bool2, Bool3, Bool4));
+            Int1x1.AddMembers(CreateMatrixTypeMembers(Int1x1, Int1, Int2, Int3, Int4));
+            Int1x2.AddMembers(CreateMatrixTypeMembers(Int1x2, Int1, Int2, Int3, Int4));
+            Int1x3.AddMembers(CreateMatrixTypeMembers(Int1x3, Int1, Int2, Int3, Int4));
+            Int1x4.AddMembers(CreateMatrixTypeMembers(Int1x4, Int1, Int2, Int3, Int4));
+            Int2x1.AddMembers(CreateMatrixTypeMembers(Int2x1, Int1, Int2, Int3, Int4));
+            Int2x2.AddMembers(CreateMatrixTypeMembers(Int2x2, Int1, Int2, Int3, Int4));
+            Int2x3.AddMembers(CreateMatrixTypeMembers(Int2x3, Int1, Int2, Int3, Int4));
+            Int2x4.AddMembers(CreateMatrixTypeMembers(Int2x4, Int1, Int2, Int3, Int4));
+            Int3x1.AddMembers(CreateMatrixTypeMembers(Int3x1, Int1, Int2, Int3, Int4));
+            Int3x2.AddMembers(CreateMatrixTypeMembers(Int3x2, Int1, Int2, Int3, Int4));
+            Int3x3.AddMembers(CreateMatrixTypeMembers(Int3x3, Int1, Int2, Int3, Int4));
+            Int3x4.AddMembers(CreateMatrixTypeMembers(Int3x4, Int1, Int2, Int3, Int4));
+            Int4x1.AddMembers(CreateMatrixTypeMembers(Int4x1, Int1, Int2, Int3, Int4));
+            Int4x2.AddMembers(CreateMatrixTypeMembers(Int4x2, Int1, Int2, Int3, Int4));
+            Int4x3.AddMembers(CreateMatrixTypeMembers(Int4x3, Int1, Int2, Int3, Int4));
+            Int4x4.AddMembers(CreateMatrixTypeMembers(Int4x4, Int1, Int2, Int3, Int4));
+            Uint1x1.AddMembers(CreateMatrixTypeMembers(Uint1x1, Uint1, Uint2, Uint3, Uint4));
+            Uint1x2.AddMembers(CreateMatrixTypeMembers(Uint1x2, Uint1, Uint2, Uint3, Uint4));
+            Uint1x3.AddMembers(CreateMatrixTypeMembers(Uint1x3, Uint1, Uint2, Uint3, Uint4));
+            Uint1x4.AddMembers(CreateMatrixTypeMembers(Uint1x4, Uint1, Uint2, Uint3, Uint4));
+            Uint2x1.AddMembers(CreateMatrixTypeMembers(Uint2x1, Uint1, Uint2, Uint3, Uint4));
+            Uint2x2.AddMembers(CreateMatrixTypeMembers(Uint2x2, Uint1, Uint2, Uint3, Uint4));
+            Uint2x3.AddMembers(CreateMatrixTypeMembers(Uint2x3, Uint1, Uint2, Uint3, Uint4));
+            Uint2x4.AddMembers(CreateMatrixTypeMembers(Uint2x4, Uint1, Uint2, Uint3, Uint4));
+            Uint3x1.AddMembers(CreateMatrixTypeMembers(Uint3x1, Uint1, Uint2, Uint3, Uint4));
+            Uint3x2.AddMembers(CreateMatrixTypeMembers(Uint3x2, Uint1, Uint2, Uint3, Uint4));
+            Uint3x3.AddMembers(CreateMatrixTypeMembers(Uint3x3, Uint1, Uint2, Uint3, Uint4));
+            Uint3x4.AddMembers(CreateMatrixTypeMembers(Uint3x4, Uint1, Uint2, Uint3, Uint4));
+            Uint4x1.AddMembers(CreateMatrixTypeMembers(Uint4x1, Uint1, Uint2, Uint3, Uint4));
+            Uint4x2.AddMembers(CreateMatrixTypeMembers(Uint4x2, Uint1, Uint2, Uint3, Uint4));
+            Uint4x3.AddMembers(CreateMatrixTypeMembers(Uint4x3, Uint1, Uint2, Uint3, Uint4));
+            Uint4x4.AddMembers(CreateMatrixTypeMembers(Uint4x4, Uint1, Uint2, Uint3, Uint4));
+            Half1x1.AddMembers(CreateMatrixTypeMembers(Half1x1, Half1, Half2, Half3, Half4));
+            Half1x2.AddMembers(CreateMatrixTypeMembers(Half1x2, Half1, Half2, Half3, Half4));
+            Half1x3.AddMembers(CreateMatrixTypeMembers(Half1x3, Half1, Half2, Half3, Half4));
+            Half1x4.AddMembers(CreateMatrixTypeMembers(Half1x4, Half1, Half2, Half3, Half4));
+            Half2x1.AddMembers(CreateMatrixTypeMembers(Half2x1, Half1, Half2, Half3, Half4));
+            Half2x2.AddMembers(CreateMatrixTypeMembers(Half2x2, Half1, Half2, Half3, Half4));
+            Half2x3.AddMembers(CreateMatrixTypeMembers(Half2x3, Half1, Half2, Half3, Half4));
+            Half2x4.AddMembers(CreateMatrixTypeMembers(Half2x4, Half1, Half2, Half3, Half4));
+            Half3x1.AddMembers(CreateMatrixTypeMembers(Half3x1, Half1, Half2, Half3, Half4));
+            Half3x2.AddMembers(CreateMatrixTypeMembers(Half3x2, Half1, Half2, Half3, Half4));
+            Half3x3.AddMembers(CreateMatrixTypeMembers(Half3x3, Half1, Half2, Half3, Half4));
+            Half3x4.AddMembers(CreateMatrixTypeMembers(Half3x4, Half1, Half2, Half3, Half4));
+            Half4x1.AddMembers(CreateMatrixTypeMembers(Half4x1, Half1, Half2, Half3, Half4));
+            Half4x2.AddMembers(CreateMatrixTypeMembers(Half4x2, Half1, Half2, Half3, Half4));
+            Half4x3.AddMembers(CreateMatrixTypeMembers(Half4x3, Half1, Half2, Half3, Half4));
+            Half4x4.AddMembers(CreateMatrixTypeMembers(Half4x4, Half1, Half2, Half3, Half4));
+            Float1x1.AddMembers(CreateMatrixTypeMembers(Float1x1, Float1, Float2, Float3, Float4));
+            Float1x2.AddMembers(CreateMatrixTypeMembers(Float1x2, Float1, Float2, Float3, Float4));
+            Float1x3.AddMembers(CreateMatrixTypeMembers(Float1x3, Float1, Float2, Float3, Float4));
+            Float1x4.AddMembers(CreateMatrixTypeMembers(Float1x4, Float1, Float2, Float3, Float4));
+            Float2x1.AddMembers(CreateMatrixTypeMembers(Float2x1, Float1, Float2, Float3, Float4));
+            Float2x2.AddMembers(CreateMatrixTypeMembers(Float2x2, Float1, Float2, Float3, Float4));
+            Float2x3.AddMembers(CreateMatrixTypeMembers(Float2x3, Float1, Float2, Float3, Float4));
+            Float2x4.AddMembers(CreateMatrixTypeMembers(Float2x4, Float1, Float2, Float3, Float4));
+            Float3x1.AddMembers(CreateMatrixTypeMembers(Float3x1, Float1, Float2, Float3, Float4));
+            Float3x2.AddMembers(CreateMatrixTypeMembers(Float3x2, Float1, Float2, Float3, Float4));
+            Float3x3.AddMembers(CreateMatrixTypeMembers(Float3x3, Float1, Float2, Float3, Float4));
+            Float3x4.AddMembers(CreateMatrixTypeMembers(Float3x4, Float1, Float2, Float3, Float4));
+            Float4x1.AddMembers(CreateMatrixTypeMembers(Float4x1, Float1, Float2, Float3, Float4));
+            Float4x2.AddMembers(CreateMatrixTypeMembers(Float4x2, Float1, Float2, Float3, Float4));
+            Float4x3.AddMembers(CreateMatrixTypeMembers(Float4x3, Float1, Float2, Float3, Float4));
+            Float4x4.AddMembers(CreateMatrixTypeMembers(Float4x4, Float1, Float2, Float3, Float4));
+            Double1x1.AddMembers(CreateMatrixTypeMembers(Double1x1, Double1, Double2, Double3, Double4));
+            Double1x2.AddMembers(CreateMatrixTypeMembers(Double1x2, Double1, Double2, Double3, Double4));
+            Double1x3.AddMembers(CreateMatrixTypeMembers(Double1x3, Double1, Double2, Double3, Double4));
+            Double1x4.AddMembers(CreateMatrixTypeMembers(Double1x4, Double1, Double2, Double3, Double4));
+            Double2x1.AddMembers(CreateMatrixTypeMembers(Double2x1, Double1, Double2, Double3, Double4));
+            Double2x2.AddMembers(CreateMatrixTypeMembers(Double2x2, Double1, Double2, Double3, Double4));
+            Double2x3.AddMembers(CreateMatrixTypeMembers(Double2x3, Double1, Double2, Double3, Double4));
+            Double2x4.AddMembers(CreateMatrixTypeMembers(Double2x4, Double1, Double2, Double3, Double4));
+            Double3x1.AddMembers(CreateMatrixTypeMembers(Double3x1, Double1, Double2, Double3, Double4));
+            Double3x2.AddMembers(CreateMatrixTypeMembers(Double3x2, Double1, Double2, Double3, Double4));
+            Double3x3.AddMembers(CreateMatrixTypeMembers(Double3x3, Double1, Double2, Double3, Double4));
+            Double3x4.AddMembers(CreateMatrixTypeMembers(Double3x4, Double1, Double2, Double3, Double4));
+            Double4x1.AddMembers(CreateMatrixTypeMembers(Double4x1, Double1, Double2, Double3, Double4));
+            Double4x2.AddMembers(CreateMatrixTypeMembers(Double4x2, Double1, Double2, Double3, Double4));
+            Double4x3.AddMembers(CreateMatrixTypeMembers(Double4x3, Double1, Double2, Double3, Double4));
+            Double4x4.AddMembers(CreateMatrixTypeMembers(Double4x4, Double1, Double2, Double3, Double4));
 
             AllScalarTypes = new[]
             {
@@ -639,32 +768,32 @@ namespace HlslTools.Symbols
                 Double4x4
             };
 
-            AllBoolTypes = new[] { Bool }
+            AllBoolTypes = new IntrinsicNumericTypeSymbol[] { Bool }
                 .Union(AllBoolVectorTypes)
                 .Union(AllBoolMatrixTypes)
                 .ToArray();
 
-            AllIntTypes = new[] { Int }
+            AllIntTypes = new IntrinsicNumericTypeSymbol[] { Int }
                 .Union(AllIntVectorTypes)
                 .Union(AllIntMatrixTypes)
                 .ToArray();
 
-            AllUintTypes = new[] { Uint }
+            AllUintTypes = new IntrinsicNumericTypeSymbol[] { Uint }
                 .Union(AllUintVectorTypes)
                 .Union(AllUintMatrixTypes)
                 .ToArray();
 
-            AllHalfTypes = new[] { Half }
+            AllHalfTypes = new IntrinsicNumericTypeSymbol[] { Half }
                 .Union(AllHalfVectorTypes)
                 .Union(AllHalfMatrixTypes)
                 .ToArray();
 
-            AllFloatTypes = new[] { Float }
+            AllFloatTypes = new IntrinsicNumericTypeSymbol[] { Float }
                 .Union(AllFloatVectorTypes)
                 .Union(AllFloatMatrixTypes)
                 .ToArray();
 
-            AllDoubleTypes = new[] { Double }
+            AllDoubleTypes = new IntrinsicNumericTypeSymbol[] { Double }
                 .Union(AllDoubleVectorTypes)
                 .Union(AllDoubleMatrixTypes)
                 .ToArray();
@@ -682,6 +811,7 @@ namespace HlslTools.Symbols
                 .ToArray();
 
             AllNumericTypes = AllScalarTypes
+                .Cast<IntrinsicNumericTypeSymbol>()
                 .Union(AllVectorTypes)
                 .Union(AllMatrixTypes)
                 .ToArray();
@@ -711,7 +841,11 @@ namespace HlslTools.Symbols
         }
 
         private static IEnumerable<Symbol> CreateScalarTypeFields(int numComponents,
-            IntrinsicTypeSymbol parentType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
+            IntrinsicNumericTypeSymbol parentType,
+            IntrinsicVectorTypeSymbol v1,
+            IntrinsicVectorTypeSymbol v2,
+            IntrinsicVectorTypeSymbol v3,
+            IntrinsicVectorTypeSymbol v4)
         {
             var componentNameSets = new[] { "xyzw", "rgba" }.Select(x => x.Substring(0, numComponents).ToCharArray()).ToList();
             var vectorTypes = new[] { v1, v2, v3, v4 };
@@ -722,13 +856,17 @@ namespace HlslTools.Symbols
                         yield return new FieldSymbol(namePermutation, "", parentType, vectorTypes[i]);
         }
 
-        private static IEnumerable<Symbol> CreateVectorTypeFields(int numComponents,
-            IntrinsicVectorTypeSymbol vectorType, TypeSymbol v1, TypeSymbol v2, TypeSymbol v3, TypeSymbol v4)
+        private static IEnumerable<Symbol> CreateVectorTypeFields(
+            int numComponents, IntrinsicVectorTypeSymbol vectorType, IntrinsicScalarTypeSymbol scalarType,
+            IntrinsicVectorTypeSymbol v1,
+            IntrinsicVectorTypeSymbol v2,
+            IntrinsicVectorTypeSymbol v3,
+            IntrinsicVectorTypeSymbol v4)
         {
             foreach (var field in CreateScalarTypeFields(numComponents, vectorType, v1, v2, v3, v4))
                 yield return field;
 
-            yield return new IndexerSymbol("[]", "", vectorType, Uint, GetScalarType(vectorType.ScalarType));
+            yield return new IndexerSymbol("[]", "", vectorType, Uint, scalarType);
         }
 
         private static IEnumerable<string> GetVectorComponentNamePermutations(char[] components, int num)
@@ -773,7 +911,11 @@ namespace HlslTools.Symbols
             }
         }
 
-        private static IEnumerable<Symbol> CreateMatrixTypeMembers(int numRows, int numColumns, TypeSymbol matrixType, IntrinsicScalarTypeSymbol fieldType, TypeSymbol[] vectorTypes)
+        private static IEnumerable<Symbol> CreateMatrixTypeMembers(IntrinsicMatrixTypeSymbol matrixType,
+            IntrinsicVectorTypeSymbol v1,
+            IntrinsicVectorTypeSymbol v2,
+            IntrinsicVectorTypeSymbol v3,
+            IntrinsicVectorTypeSymbol v4)
         {
             var componentNameSets = new[]
             {
@@ -791,14 +933,16 @@ namespace HlslTools.Symbols
                     { "_31", "_32", "_33", "_34" },
                     { "_41", "_42", "_43", "_44" }
                 }
-            }.Select(x => Slice(x, 0, numRows - 1, 0, numColumns - 1)).Select(x => x.Cast<string>().ToArray()).ToList();
+            }.Select(x => Slice(x, 0, matrixType.Rows - 1, 0, matrixType.Cols - 1)).Select(x => x.Cast<string>().ToArray()).ToList();
+
+            var vectorTypes = new[] { v1, v2, v3, v4 };
 
             foreach (var componentNameSet in componentNameSets)
                 for (var i = 0; i < 4; i++)
                     foreach (var namePermutation in GetMatrixComponentNamePermutations(componentNameSet, i + 1))
                         yield return new FieldSymbol(namePermutation, "", matrixType, vectorTypes[i]);
 
-            yield return new IndexerSymbol("[]", "", matrixType, Uint, GetVectorType(fieldType.ScalarType, numColumns));
+            yield return new IndexerSymbol("[]", "", matrixType, Uint, vectorTypes[matrixType.Cols - 1]);
         }
 
         private static T[,] Slice<T>(T[,] source, int fromIdxRank0, int toIdxRank0, int fromIdxRank1, int toIdxRank1)
@@ -860,17 +1004,17 @@ namespace HlslTools.Symbols
             }
         }
 
-        public static TypeSymbol GetScalarType(ScalarType scalarType)
+        public static IntrinsicScalarTypeSymbol GetScalarType(ScalarType scalarType)
         {
             return AllScalarTypes[(int)scalarType - 1];
         }
 
-        public static TypeSymbol GetVectorType(ScalarType scalarType, int numComponents)
+        public static IntrinsicVectorTypeSymbol GetVectorType(ScalarType scalarType, int numComponents)
         {
             return AllVectorTypes[(((int)scalarType - 1) * 4) + (numComponents - 1)];
         }
 
-        public static TypeSymbol GetMatrixType(ScalarType scalarType, int numRows, int numCols)
+        public static IntrinsicMatrixTypeSymbol GetMatrixType(ScalarType scalarType, int numRows, int numCols)
         {
             return AllMatrixTypes[(((int)scalarType - 1) * 16) + ((numRows - 1) * 4) + (numCols - 1)];
         }
@@ -933,7 +1077,7 @@ namespace HlslTools.Symbols
                     throw new ArgumentOutOfRangeException();
             }
 
-            return new IntrinsicObjectTypeSymbol(name, documentation, textureType, t => CreateRWTextureMethods(textureType, t, valueType, scalarType));
+            return CreatePredefinedObjectType(name, documentation, textureType, t => CreateRWTextureMethods(textureType, t, valueType, scalarType));
         }
 
         private static IEnumerable<Symbol> CreateRWTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
@@ -1009,7 +1153,7 @@ namespace HlslTools.Symbols
                     throw new ArgumentOutOfRangeException();
             }
 
-            return new IntrinsicObjectTypeSymbol(name, documentation, textureType, t => CreateTextureMethods(textureType, t, valueType, scalarType));
+            return CreatePredefinedObjectType(name, documentation, textureType, t => CreateTextureMethods(textureType, t, valueType, scalarType));
         }
 
         private static IEnumerable<Symbol> CreateTextureMethods(PredefinedObjectType textureType, TypeSymbol parent, TypeSymbol valueType, ScalarType scalarType)
@@ -1630,9 +1774,16 @@ namespace HlslTools.Symbols
                 });
         }
 
+        private static IntrinsicTypeSymbol CreatePredefinedObjectType(string name, string documentation, PredefinedObjectType predefinedObjectType, Func<TypeSymbol, IEnumerable<Symbol>> membersCallback)
+        {
+            var result = new IntrinsicObjectTypeSymbol(name, documentation, predefinedObjectType);
+            result.AddMembers(membersCallback(result));
+            return result;
+        }
+
         public static TypeSymbol CreateAppendStructuredBufferType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("AppendStructuredBuffer",
+            return CreatePredefinedObjectType("AppendStructuredBuffer",
                 "Output buffer that appears as a stream the shader may append to. Only structured buffers can take T types that are structures.",
                 PredefinedObjectType.AppendStructuredBuffer,
                 t => new[]
@@ -1651,17 +1802,17 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static readonly TypeSymbol ByteAddressBuffer = new IntrinsicObjectTypeSymbol("ByteAddressBuffer",
+        public static readonly TypeSymbol ByteAddressBuffer = CreatePredefinedObjectType("ByteAddressBuffer",
             "A read-only buffer that is indexed in bytes.",
             PredefinedObjectType.ByteAddressBuffer,
             CreateByteAddressBufferMethods);
 
-        public static readonly TypeSymbol RWByteAddressBuffer = new IntrinsicObjectTypeSymbol("RWByteAddressBuffer",
+        public static readonly TypeSymbol RWByteAddressBuffer = CreatePredefinedObjectType("RWByteAddressBuffer",
             "A read/write buffer that indexes in bytes.",
             PredefinedObjectType.RWByteAddressBuffer,
             CreateRWByteAddressBufferMethods);
 
-        public static readonly TypeSymbol RasterizerOrderedByteAddressBuffer = new IntrinsicObjectTypeSymbol("RasterizerOrderedByteAddressBuffer",
+        public static readonly TypeSymbol RasterizerOrderedByteAddressBuffer = CreatePredefinedObjectType("RasterizerOrderedByteAddressBuffer",
             "A rasterizer ordered read/write buffer that indexes in bytes.",
             PredefinedObjectType.RasterizerOrderedByteAddressBuffer,
             CreateRWByteAddressBufferMethods);
@@ -1822,7 +1973,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateConsumeStructuredBufferType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("ConsumeStructuredBuffer",
+            return CreatePredefinedObjectType("ConsumeStructuredBuffer",
                 "An input buffer that appears as a stream the shader may pull values from. Only structured buffers can take T types that are structures.",
                 PredefinedObjectType.ConsumeStructuredBuffer,
                 t => new[]
@@ -1840,7 +1991,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateStructuredBufferType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("StructuredBuffer",
+            return CreatePredefinedObjectType("StructuredBuffer",
                 "A read-only buffer, which can take a T type that is a structure.",
                 PredefinedObjectType.StructuredBuffer,
                 t => CreateStructuredBufferMethods(t, valueType)
@@ -1852,7 +2003,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateRWStructuredBufferType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("RWStructuredBuffer",
+            return CreatePredefinedObjectType("RWStructuredBuffer",
                 "A read/write buffer, which can take a T type that is a structure.",
                 PredefinedObjectType.RWStructuredBuffer,
                 t => CreateRWStructuredBufferMethods(t, valueType));
@@ -1860,7 +2011,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateRasterizerOrderedStructuredBufferType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("RasterizerOrderedStructuredBuffer",
+            return CreatePredefinedObjectType("RasterizerOrderedStructuredBuffer",
                 "A rasterizer ordered read/write buffer, which can take a T type that is a structure.",
                 PredefinedObjectType.RasterizerOrderedStructuredBuffer,
                 t => CreateRWStructuredBufferMethods(t, valueType));
@@ -1904,7 +2055,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateInputPatchType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("InputPatch",
+            return CreatePredefinedObjectType("InputPatch",
                 "Represents an array of control points that are available to the hull shader as inputs.",
                 PredefinedObjectType.InputPatch,
                 t => new Symbol[]
@@ -1916,7 +2067,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateOutputPatchType(TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol("OutputPatch",
+            return CreatePredefinedObjectType("OutputPatch",
                 "Represents an array of output control points that are available to the hull shader's patch-constant function as well as the domain shader.",
                 PredefinedObjectType.OutputPatch,
                 t => new Symbol[]
@@ -1927,7 +2078,7 @@ namespace HlslTools.Symbols
 
         public static TypeSymbol CreateStreamOutputType(PredefinedObjectType type, TypeSymbol valueType)
         {
-            return new IntrinsicObjectTypeSymbol(type.ToString(),
+            return CreatePredefinedObjectType(type.ToString(),
                 "A stream-output object is a templated object that streams data out of the geometry-shader stage.",
                 type,
                 t => new Symbol[]
@@ -1946,7 +2097,7 @@ namespace HlslTools.Symbols
             var fields = (valueType.Kind == SymbolKind.Struct)
                 ? ((StructSymbol) valueType).Members
                 : ImmutableArray<Symbol>.Empty;
-            return new IntrinsicObjectTypeSymbol("ConstantBuffer", "",
+            return CreatePredefinedObjectType("ConstantBuffer", "",
                 PredefinedObjectType.ConstantBuffer,
                 t => fields);
         }

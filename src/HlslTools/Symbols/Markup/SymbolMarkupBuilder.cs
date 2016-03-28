@@ -42,6 +42,9 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Semantic:
                     markup.AppendSemantic((SemanticSymbol) symbol);
                     break;
+                case SymbolKind.Technique:
+                    markup.AppendTechnique((TechniqueSymbol) symbol);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -169,6 +172,14 @@ namespace HlslTools.Symbols.Markup
             markup.AppendSpace();
 
             markup.AppendName(SymbolMarkupKind.SemanticName, symbol.Name);
+        }
+
+        private static void AppendTechnique(this ICollection<SymbolMarkupToken> markup, TechniqueSymbol symbol)
+        {
+            markup.AppendKeyword("technique");
+            markup.AppendSpace();
+
+            markup.AppendName(SymbolMarkupKind.TechniqueName, symbol.Name);
         }
 
         private static void AppendNamespace(this ICollection<SymbolMarkupToken> markup, NamespaceSymbol symbol)

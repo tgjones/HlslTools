@@ -9,7 +9,6 @@ namespace HlslTools.Symbols
     {
         private readonly List<Symbol> _members;
         private ImmutableArray<Symbol> _membersArray = ImmutableArray<Symbol>.Empty;
-        private bool _lazyMembersComputed;
 
         internal Binder Binder { get; set; }
 
@@ -18,25 +17,9 @@ namespace HlslTools.Symbols
             get
             {
                 if (_membersArray == ImmutableArray<Symbol>.Empty)
-                {
-                    EnsureLazyMembers();
                     _membersArray = _members.ToImmutableArray();
-                }
                 return _membersArray;
             }
-        }
-
-        private void EnsureLazyMembers()
-        {
-            if (!_lazyMembersComputed)
-            {
-                ComputeLazyMembers();
-                _lazyMembersComputed = true;
-            }
-        }
-
-        protected virtual void ComputeLazyMembers()
-        {
         }
 
         internal ContainerSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
@@ -60,13 +43,18 @@ namespace HlslTools.Symbols
         public virtual IEnumerable<T> LookupMembers<T>(string name)
             where T : Symbol
         {
-            EnsureLazyMembers();
             return _members.Where(x => x is T && x.Name == name).OfType<T>();
         }
 
         internal void AddMember(Symbol member)
         {
             _members.Add(member);
+            _membersArray = ImmutableArray<Symbol>.Empty;
+        }
+
+        internal void AddMembers(IEnumerable<Symbol> members)
+        {
+            _members.AddRange(members);
             _membersArray = ImmutableArray<Symbol>.Empty;
         }
     }

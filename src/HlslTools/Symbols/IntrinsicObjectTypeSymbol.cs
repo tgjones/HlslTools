@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using HlslTools.Syntax;
+﻿using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
@@ -8,8 +6,8 @@ namespace HlslTools.Symbols
     {
         public PredefinedObjectType PredefinedType { get; }
 
-        public IntrinsicObjectTypeSymbol(string name, string documentation, PredefinedObjectType predefinedType, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers = null)
-            : base(SymbolKind.IntrinsicObjectType, name, documentation, lazyMembers)
+        public IntrinsicObjectTypeSymbol(string name, string documentation, PredefinedObjectType predefinedType)
+            : base(SymbolKind.IntrinsicObjectType, name, documentation)
         {
             PredefinedType = predefinedType;
         }

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace HlslTools.Symbols
+﻿namespace HlslTools.Symbols
 {
     public sealed class IntrinsicMatrixTypeSymbol : IntrinsicNumericTypeSymbol
     {
-        public IntrinsicMatrixTypeSymbol(string name, string documentation, ScalarType scalarType, int rows, int cols, Func<TypeSymbol, IEnumerable<Symbol>> lazyMembers = null)
-            : base(SymbolKind.IntrinsicMatrixType, name, documentation, scalarType, lazyMembers)
+        internal IntrinsicMatrixTypeSymbol(string name, string documentation, ScalarType scalarType, int rows, int cols)
+            : base(SymbolKind.IntrinsicMatrixType, name, documentation, scalarType)
         {
             Rows = rows;
             Cols = cols;

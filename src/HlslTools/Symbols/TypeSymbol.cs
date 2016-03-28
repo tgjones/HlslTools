@@ -1,6 +1,4 @@
-﻿using HlslTools.Binding;
-
-namespace HlslTools.Symbols
+﻿namespace HlslTools.Symbols
 {
     public abstract class TypeSymbol : ContainerSymbol
     {

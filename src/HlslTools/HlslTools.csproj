@@ -166,6 +166,7 @@
     <Compile Include="Symbols\IntrinsicVectorTypeSymbol.cs" />
     <Compile Include="Symbols\NamespaceSymbol.cs" />
     <Compile Include="Symbols\ParameterDirection.cs" />
+    <Compile Include="Symbols\TechniqueSymbol.cs" />
     <Compile Include="Symbols\TypeFacts.cs" />
     <Compile Include="Symbols\VariableSymbol.cs" />
     <Compile Include="Symbols\InvocableSymbol.cs" />

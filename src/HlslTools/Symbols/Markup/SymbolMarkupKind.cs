@@ -13,6 +13,7 @@
         TypeName,
         NamespaceName,
         SemanticName,
+        TechniqueName,
         PlainText
     }
 }
