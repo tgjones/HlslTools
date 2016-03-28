@@ -31,10 +31,13 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.IntrinsicVectorType:
                 case SymbolKind.IntrinsicMatrixType:
                 case SymbolKind.IntrinsicObjectType:
-                case SymbolKind.Struct:
                 case SymbolKind.Class:
+                case SymbolKind.Struct:
                 case SymbolKind.Interface:
-                    markup.AppendType((TypeSymbol) symbol);
+                    markup.AppendTypeDeclaration((TypeSymbol) symbol);
+                    break;
+                case SymbolKind.Namespace:
+                    markup.AppendNamespace((NamespaceSymbol) symbol);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -108,6 +111,8 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendParameterSymbolInfo(this ICollection<SymbolMarkupToken> markup, ParameterSymbol symbol)
         {
+            markup.AppendPlainText("(parameter)");
+            markup.AppendSpace();
             markup.AppendType(symbol.ValueType);
             markup.AppendSpace();
             markup.AppendParameterName(symbol.Name);
@@ -118,9 +123,72 @@ namespace HlslTools.Symbols.Markup
             markup.AppendName(SymbolMarkupKind.ParameterName, text);
         }
 
+        private static void AppendPlainText(this ICollection<SymbolMarkupToken> markup, string text)
+        {
+            markup.AppendName(SymbolMarkupKind.PlainText, text);
+        }
+
         private static void AppendType(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol)
         {
-            markup.AppendName(SymbolMarkupKind.TypeName, symbol.FullName);
+            if (symbol.Parent != null)
+                markup.AppendParentScope(symbol.Parent);
+
+            markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+        }
+
+        private static void AppendTypeDeclaration(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Class:
+                    markup.AppendKeyword("class");
+                    markup.AppendSpace();
+                    break;
+                case SymbolKind.Interface:
+                    markup.AppendKeyword("interface");
+                    markup.AppendSpace();
+                    break;
+                case SymbolKind.Struct:
+                    markup.AppendKeyword("struct");
+                    markup.AppendSpace();
+                    break;
+            }
+
+            if (symbol.Parent != null)
+                markup.AppendParentScope(symbol.Parent);
+
+            markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+        }
+
+        private static void AppendNamespace(this ICollection<SymbolMarkupToken> markup, NamespaceSymbol symbol)
+        {
+            markup.AppendKeyword("namespace");
+            markup.AppendSpace();
+
+            if (symbol.Parent != null)
+                markup.AppendParentScope(symbol.Parent);
+
+            markup.AppendName(SymbolMarkupKind.NamespaceName, symbol.Name);
+        }
+
+        private static void AppendParentScope(this ICollection<SymbolMarkupToken> markup, Symbol symbol)
+        {
+            if (symbol.Parent != null)
+                AppendParentScope(markup, symbol.Parent);
+
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Namespace:
+                    markup.AppendName(SymbolMarkupKind.NamespaceName, symbol.Name);
+                    markup.AppendPunctuation("::");
+                    break;
+                case SymbolKind.Class:
+                    markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+                    markup.AppendPunctuation("::");
+                    break;
+                default:
+                    return;
+            }
         }
     }
 }

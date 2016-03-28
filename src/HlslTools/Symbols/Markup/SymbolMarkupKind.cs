@@ -5,14 +5,13 @@
         Whitespace,
         Punctuation,
         Keyword,
-        ClassName,
-        InterfaceName,
-        StructName,
         FieldName,
         VariableName,
         ParameterName,
         FunctionName,
         MethodName,
-        TypeName
+        TypeName,
+        NamespaceName,
+        PlainText
     }
 }

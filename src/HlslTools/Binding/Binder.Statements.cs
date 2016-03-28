@@ -37,7 +37,7 @@ namespace HlslTools.Binding
                 case SyntaxKind.ReturnStatement:
                     return BindReturnStatement((ReturnStatementSyntax) syntax);
                 case SyntaxKind.VariableDeclarationStatement:
-                    return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) syntax);
+                    return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) syntax, null);
                 case SyntaxKind.SwitchStatement:
                     return BindSwitchStatement((SwitchStatementSyntax) syntax);
                 case SyntaxKind.WhileStatement:
@@ -137,7 +137,7 @@ namespace HlslTools.Binding
             // When binding for loop declarations, allow redefinition of variables from enclosing scope. (X3078)
             // Use most recently declared variable. Add a warning to diagnostics.
 
-            return BindVariableDeclaration(syntax, (d, t) =>
+            return BindVariableDeclaration(syntax, null, (d, t) =>
             {
                 var existingSymbol = _symbols.FirstOrDefault(x => x.Name == d.Identifier.Text);
                 if (existingSymbol != null)
@@ -162,9 +162,9 @@ namespace HlslTools.Binding
             return new BoundReturnStatement(syntax.Expression != null ? Bind(syntax.Expression, BindExpression) : null);
         }
 
-        private BoundMultipleVariableDeclarations BindVariableDeclarationStatement(VariableDeclarationStatementSyntax syntax)
+        private BoundMultipleVariableDeclarations BindVariableDeclarationStatement(VariableDeclarationStatementSyntax syntax, Symbol parent)
         {
-            return BindVariableDeclaration(syntax.Declaration);
+            return BindVariableDeclaration(syntax.Declaration, parent);
         }
     }
 }

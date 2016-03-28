@@ -1,7 +1,6 @@
 using System.ComponentModel.Composition;
 using HlslTools.Compilation;
 using HlslTools.Syntax;
-using HlslTools.VisualStudio.Util.SyntaxOutput;
 
 namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
 {
@@ -16,7 +15,11 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
             if (!node.Name.Span.IsInRootFile)
                 return null;
 
-            return new QuickInfoModel(semanticModel, node.Name.Span, $"(struct) {node.Name.GetFullyQualifiedName()}");
+            var symbol = semanticModel.GetDeclaredSymbol(node);
+            if (symbol == null)
+                return null;
+
+            return QuickInfoModel.ForSymbol(semanticModel, node.Name.Span, symbol);
         }
     }
 }

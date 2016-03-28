@@ -20,6 +20,24 @@ namespace HlslTools.Compilation
             _bindingResult = bindingResult;
         }
 
+        public ParameterSymbol GetDeclaredSymbol(ParameterSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax.Declarator) as BoundVariableDeclaration;
+            return result?.VariableSymbol as ParameterSymbol;
+        }
+
+        public NamespaceSymbol GetDeclaredSymbol(NamespaceSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundNamespace;
+            return result?.NamespaceSymbol;
+        }
+
+        public ClassSymbol GetDeclaredSymbol(ClassTypeSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundClassType;
+            return result?.ClassSymbol;
+        }
+
         public StructSymbol GetDeclaredSymbol(StructTypeSyntax syntax)
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundStructType;

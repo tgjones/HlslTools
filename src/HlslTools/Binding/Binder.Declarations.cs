@@ -26,7 +26,7 @@ namespace HlslTools.Binding
             switch (declaration.Kind)
             {
                 case SyntaxKind.VariableDeclarationStatement:
-                    return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) declaration);
+                    return BindVariableDeclarationStatement((VariableDeclarationStatementSyntax) declaration, parent);
                 case SyntaxKind.FunctionDeclaration:
                     return BindFunctionDeclaration((FunctionDeclarationSyntax) declaration, parent);
                 case SyntaxKind.FunctionDefinition:
@@ -34,7 +34,7 @@ namespace HlslTools.Binding
                 case SyntaxKind.ConstantBufferDeclaration:
                     return BindConstantBufferDeclaration((ConstantBufferSyntax) declaration);
                 case SyntaxKind.TypeDeclarationStatement:
-                    return BindTypeDeclaration((TypeDeclarationStatementSyntax) declaration);
+                    return BindTypeDeclaration((TypeDeclarationStatementSyntax) declaration, parent);
                 case SyntaxKind.Namespace:
                     return BindNamespace((NamespaceSyntax) declaration);
                 case SyntaxKind.TechniqueDeclaration:
@@ -74,12 +74,12 @@ namespace HlslTools.Binding
             return new BoundNamespace(namespaceSymbol, boundDeclarations);
         }
 
-        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax)
+        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent)
         {
-            return BindVariableDeclaration(syntax, (d, t) => new VariableSymbol(d, null, t));
+            return BindVariableDeclaration(syntax, parent, (d, t) => new VariableSymbol(d, null, t));
         }
 
-        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
+        private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
         {
             var boundDeclarations = new List<BoundVariableDeclaration>();
 
@@ -87,7 +87,7 @@ namespace HlslTools.Binding
             {
                 case SyntaxKind.StructType:
                     var structType = (StructTypeSyntax) syntax.Type;
-                    Bind(structType, BindStructDeclaration);
+                    Bind(structType, x => BindStructDeclaration(x, parent));
                     break;
             }
 
@@ -226,12 +226,12 @@ namespace HlslTools.Binding
                 var parameterValueType = LookupType(parameterSyntax.Type);
                 var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
-                boundParameters.Add(invocableBinder.BindVariableDeclarator(parameterSyntax.Declarator, parameterValueType, (d, t) =>
+                boundParameters.Add(invocableBinder.Bind(parameterSyntax.Declarator, x => invocableBinder.BindVariableDeclarator(x, parameterValueType, (d, t) =>
                     new SourceParameterSymbol(
                         parameterSyntax,
                         invocableSymbol,
                         t,
-                        parameterDirection)));
+                        parameterDirection))));
             }
 
             invocableSymbol.ClearParameters();
@@ -247,12 +247,12 @@ namespace HlslTools.Binding
 
             // Add constant buffer fields to global scope.
             foreach (var field in declaration.Declarations)
-                variables.Add(BindVariableDeclarationStatement(field));
+                variables.Add(BindVariableDeclarationStatement(field, null));
 
             return new BoundConstantBuffer(variables.ToImmutableArray());
         }
 
-        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration)
+        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration, Symbol parent)
         {
             ClassSymbol baseClass = null;
             var baseInterfaces = new List<InterfaceSymbol>();
@@ -275,7 +275,7 @@ namespace HlslTools.Binding
 
             var classBinder = new Binder(_sharedBinderState, this);
 
-            var classSymbol = new ClassSymbol(declaration, null, baseClass, baseInterfaces.ToImmutableArray(), classBinder); // TODO: parent symbol could be namespace or function body
+            var classSymbol = new ClassSymbol(declaration, parent, baseClass, baseInterfaces.ToImmutableArray(), classBinder);
             AddSymbol(classSymbol, declaration.Name.Span);
 
             var members = new List<BoundNode>();
@@ -285,7 +285,7 @@ namespace HlslTools.Binding
                 switch (memberSyntax.Kind)
                 {
                     case SyntaxKind.VariableDeclarationStatement:
-                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, classBinder.BindVariableDeclarationStatement));
+                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, x => classBinder.BindVariableDeclarationStatement(x, classSymbol)));
                         break;
                     case SyntaxKind.FunctionDeclaration:
                         members.Add(classBinder.Bind((FunctionDeclarationSyntax) memberSyntax, x => classBinder.BindFunctionDeclaration(x, classSymbol)));
@@ -302,9 +302,9 @@ namespace HlslTools.Binding
             return new BoundClassType(classSymbol, members.ToImmutableArray());
         }
 
-        private BoundStructType BindStructDeclaration(StructTypeSyntax declaration)
+        private BoundStructType BindStructDeclaration(StructTypeSyntax declaration, Symbol parent)
         {
-            var structSymbol = new StructSymbol(declaration, null);
+            var structSymbol = new StructSymbol(declaration, parent);
             AddSymbol(structSymbol, declaration.Name?.Span ?? declaration.GetTextSpanSafe());
 
             var variables = new List<BoundMultipleVariableDeclarations>();
@@ -321,12 +321,12 @@ namespace HlslTools.Binding
         private BoundMultipleVariableDeclarations BindField(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)
         {
             var declaration = variableDeclarationStatementSyntax.Declaration;
-            return BindVariableDeclaration(declaration, (d, t) => new SourceFieldSymbol(d, parentType, t));
+            return BindVariableDeclaration(declaration, parentType, (d, t) => new SourceFieldSymbol(d, parentType, t));
         }
 
-        private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration)
+        private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration, Symbol parent)
         {
-            var interfaceSymbol = new InterfaceSymbol(declaration, null);
+            var interfaceSymbol = new InterfaceSymbol(declaration, parent);
             AddSymbol(interfaceSymbol, declaration.Name.Span);
 
             var methods = new List<BoundFunction>();
@@ -340,21 +340,21 @@ namespace HlslTools.Binding
             return new BoundInterfaceType(interfaceSymbol, methods.ToImmutableArray());
         }
 
-        private BoundTypeDeclaration BindTypeDeclaration(TypeDeclarationStatementSyntax declaration)
+        private BoundTypeDeclaration BindTypeDeclaration(TypeDeclarationStatementSyntax declaration, Symbol parent)
         {
-            return new BoundTypeDeclaration(Bind(declaration.Type, BindTypeDefinition));
+            return new BoundTypeDeclaration(Bind(declaration.Type, x => BindTypeDefinition(x, parent)));
         }
 
-        private BoundType BindTypeDefinition(TypeDefinitionSyntax syntax)
+        private BoundType BindTypeDefinition(TypeDefinitionSyntax syntax, Symbol parent)
         {
             switch (syntax.Kind)
             {
                 case SyntaxKind.ClassType:
-                    return BindClassDeclaration((ClassTypeSyntax) syntax);
+                    return BindClassDeclaration((ClassTypeSyntax) syntax, parent);
                 case SyntaxKind.StructType:
-                    return BindStructDeclaration((StructTypeSyntax) syntax);
+                    return BindStructDeclaration((StructTypeSyntax) syntax, parent);
                 case SyntaxKind.InterfaceType:
-                    return BindInterfaceDeclaration((InterfaceTypeSyntax) syntax);
+                    return BindInterfaceDeclaration((InterfaceTypeSyntax) syntax, parent);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
