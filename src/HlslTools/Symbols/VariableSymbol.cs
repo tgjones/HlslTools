@@ -4,7 +4,7 @@ namespace HlslTools.Symbols
 {
     public class VariableSymbol : Symbol
     {
-        internal VariableSymbol(VariableDeclaratorSyntax syntax, TypeSymbol parent, TypeSymbol valueType)
+        internal VariableSymbol(VariableDeclaratorSyntax syntax, Symbol parent, TypeSymbol valueType)
             : base(SymbolKind.Variable, syntax.Identifier.Text, string.Empty, parent)
         {
             ValueType = valueType;

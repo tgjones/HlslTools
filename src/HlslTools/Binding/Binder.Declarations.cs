@@ -79,7 +79,7 @@ namespace HlslTools.Binding
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent)
         {
-            return BindVariableDeclaration(syntax, parent, (d, t) => new VariableSymbol(d, null, t));
+            return BindVariableDeclaration(syntax, parent, (d, t) => new VariableSymbol(d, parent, t));
         }
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
@@ -238,7 +238,7 @@ namespace HlslTools.Binding
                 functionBinder = new ContainedFunctionBinder(_sharedBinderState, functionBinder, containerSymbol.Binder);
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
-            var boundBody = functionBinder.Bind(declaration.Body, functionBinder.BindBlock);
+            var boundBody = functionBinder.Bind(declaration.Body, x => functionBinder.BindBlock(x, functionSymbol));
 
             return new BoundFunctionDefinition(functionSymbol, boundParameters.ToImmutableArray(), boundBody);
         }

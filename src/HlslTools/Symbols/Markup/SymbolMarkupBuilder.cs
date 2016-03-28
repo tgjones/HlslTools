@@ -13,6 +13,7 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Array:
                     break;
                 case SymbolKind.Field:
+                    markup.AppendFieldSymbolInfo((FieldSymbol) symbol);
                     break;
                 case SymbolKind.Function:
                     markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol);
@@ -21,6 +22,7 @@ namespace HlslTools.Symbols.Markup
                     markup.AppendMethodSymbolInfo((FunctionSymbol) symbol);
                     break;
                 case SymbolKind.Variable:
+                    markup.AppendVariableSymbolInfo((VariableSymbol) symbol);
                     break;
                 case SymbolKind.Parameter:
                     markup.AppendParameterSymbolInfo((ParameterSymbol) symbol);
@@ -75,7 +77,7 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendMethodSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
         {
-            markup.AppendType(symbol.ReturnType);
+            markup.AppendType(symbol.ReturnType, false);
             markup.AppendSpace();
             markup.AppendName(SymbolMarkupKind.MethodName, symbol.Name);
             markup.AppendParameters(symbol.Parameters);
@@ -83,7 +85,7 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
         {
-            markup.AppendType(symbol.ReturnType);
+            markup.AppendType(symbol.ReturnType, false);
             markup.AppendSpace();
             markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
             markup.AppendParameters(symbol.Parameters);
@@ -119,9 +121,29 @@ namespace HlslTools.Symbols.Markup
         {
             markup.AppendPlainText("(parameter)");
             markup.AppendSpace();
-            markup.AppendType(symbol.ValueType);
+            markup.AppendType(symbol.ValueType, false);
             markup.AppendSpace();
             markup.AppendParameterName(symbol.Name);
+        }
+
+        private static void AppendFieldSymbolInfo(this ICollection<SymbolMarkupToken> markup, FieldSymbol symbol)
+        {
+            markup.AppendPlainText("(field)");
+            markup.AppendSpace();
+            markup.AppendType(symbol.ValueType, true);
+            markup.AppendSpace();
+            markup.AppendType((TypeSymbol) symbol.Parent, false);
+            markup.AppendPunctuation(".");
+            markup.AppendName(SymbolMarkupKind.FieldName, symbol.Name);
+        }
+
+        private static void AppendVariableSymbolInfo(this ICollection<SymbolMarkupToken> markup, VariableSymbol symbol)
+        {
+            markup.AppendPlainText(symbol.Parent == null ? "(global variable)" : "(local variable)");
+            markup.AppendSpace();
+            markup.AppendType(symbol.ValueType, true);
+            markup.AppendSpace();
+            markup.AppendName(SymbolMarkupKind.VariableName, symbol.Name);
         }
 
         private static void AppendParameterName(this ICollection<SymbolMarkupToken> markup, string text)
@@ -134,9 +156,9 @@ namespace HlslTools.Symbols.Markup
             markup.AppendName(SymbolMarkupKind.PlainText, text);
         }
 
-        private static void AppendType(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol)
+        private static void AppendType(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol, bool includeParentScope)
         {
-            if (symbol.Parent != null)
+            if (includeParentScope && symbol.Parent != null)
                 markup.AppendParentScope(symbol.Parent);
 
             markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);

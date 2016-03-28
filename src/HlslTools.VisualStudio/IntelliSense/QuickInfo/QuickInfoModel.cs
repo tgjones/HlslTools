@@ -1,6 +1,7 @@
 ﻿using HlslTools.Compilation;
 using HlslTools.Symbols;
 using HlslTools.Symbols.Markup;
+using HlslTools.Syntax;
 using HlslTools.Text;
 using HlslTools.VisualStudio.Glyphs;
 
@@ -15,15 +16,21 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             return new QuickInfoModel(semanticModel, span, glyph, symbolMarkup, symbol.Documentation);
         }
 
-        // TODO: Remove this.
-        public QuickInfoModel(SemanticModel semanticModel, TextSpan span, string text)
+        public static QuickInfoModel ForMacroDefinition(SemanticModel semanticModel, TextSpan span, DefineDirectiveTriviaSyntax macroDefinition)
         {
-            SemanticModel = semanticModel;
-            Span = span;
-            Text = text;
+            var glyph = Glyph.Macro;
+            var symbolMarkup = new SymbolMarkup(new[] { new SymbolMarkupToken(SymbolMarkupKind.PlainText, $"(macro definition) {macroDefinition}") });
+            return new QuickInfoModel(semanticModel, span, glyph, symbolMarkup, string.Empty);
         }
 
-        public QuickInfoModel(SemanticModel semanticModel, TextSpan span, Glyph glyph, SymbolMarkup markup, string documentation)
+        public static QuickInfoModel ForMacroReference(SemanticModel semanticModel, TextSpan span, MacroReference macroReference)
+        {
+            var glyph = Glyph.Macro;
+            var symbolMarkup = new SymbolMarkup(new[] { new SymbolMarkupToken(SymbolMarkupKind.PlainText, $"(macro reference) {macroReference.DefineDirective.ToString(true)}") });
+            return new QuickInfoModel(semanticModel, span, glyph, symbolMarkup, string.Empty);
+        }
+
+        private QuickInfoModel(SemanticModel semanticModel, TextSpan span, Glyph glyph, SymbolMarkup markup, string documentation)
         {
             SemanticModel = semanticModel;
             Span = span;

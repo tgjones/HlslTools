@@ -39,6 +39,8 @@ namespace HlslTools.VisualStudio.Glyphs
                     return StandardGlyphGroup.GlyphGroupMethod;
                 case Glyph.Intrinsic:
                     return StandardGlyphGroup.GlyphGroupIntrinsic;
+                case Glyph.Macro:
+                    return StandardGlyphGroup.GlyphGroupMacro;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(glyph), glyph, null);
             }

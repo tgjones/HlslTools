@@ -15,7 +15,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
             if (!node.MacroName.Span.IsInRootFile)
                 return null;
 
-            return new QuickInfoModel(semanticModel, node.MacroName.Span, $"(macro definition) {node}");
+            return QuickInfoModel.ForMacroDefinition(semanticModel, node.MacroName.Span, node);
         }
     }
 }

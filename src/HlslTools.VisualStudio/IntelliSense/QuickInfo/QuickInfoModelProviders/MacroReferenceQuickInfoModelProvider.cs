@@ -22,7 +22,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
             if (!nameToken.Span.IsInRootFile)
                 return null;
 
-            return new QuickInfoModel(semanticModel, nameToken.Span, $"(macro reference) {node.MacroReference.DefineDirective.ToString(true)}");
+            return QuickInfoModel.ForMacroReference(semanticModel, nameToken.Span, node.MacroReference);
         }
     }
 }

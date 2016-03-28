@@ -16,6 +16,7 @@
         Semantic,
         Field,
         Method,
-        Intrinsic
+        Intrinsic,
+        Macro
     }
 }
