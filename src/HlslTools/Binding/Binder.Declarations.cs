@@ -174,6 +174,9 @@ namespace HlslTools.Binding
                 AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
             }
 
+            if (declaration.Semantic != null)
+                Bind(declaration.Semantic, BindVariableQualifier);
+
             var functionBinder = new Binder(_sharedBinderState, this);
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
@@ -229,6 +232,9 @@ namespace HlslTools.Binding
                 functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
                 containerBinder.AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
             }
+
+            if (declaration.Semantic != null)
+                Bind(declaration.Semantic, BindVariableQualifier);
 
             var functionBinder = (functionOwner != null && functionOwner.Kind == SymbolKind.Class)
                 ? new ClassMethodBinder(_sharedBinderState, this, (ClassSymbol) functionOwner)

@@ -35,14 +35,14 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             SemanticModel = semanticModel;
             Span = span;
             Glyph = glyph;
-            Text = markup.ToString();
+            Markup = markup;
             Documentation = documentation;
         }
 
         public SemanticModel SemanticModel { get; }
         public TextSpan Span { get; }
         public Glyph Glyph { get; }
-        public string Text { get; }
+        public SymbolMarkup Markup { get; }
         public string Documentation { get; }
     }
 }

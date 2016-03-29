@@ -6,7 +6,7 @@ namespace HlslTools.Symbols
     {
         public PredefinedObjectType PredefinedType { get; }
 
-        public IntrinsicObjectTypeSymbol(string name, string documentation, PredefinedObjectType predefinedType)
+        internal IntrinsicObjectTypeSymbol(string name, string documentation, PredefinedObjectType predefinedType)
             : base(SymbolKind.IntrinsicObjectType, name, documentation)
         {
             PredefinedType = predefinedType;

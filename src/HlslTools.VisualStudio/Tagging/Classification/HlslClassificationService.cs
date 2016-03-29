@@ -42,6 +42,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         public IClassificationType StringLiteral => _standardClassificationService.StringLiteral;
         public IClassificationType PreprocessorKeyword => _standardClassificationService.PreprocessorKeyword;
         public IClassificationType ExcludedCode => _standardClassificationService.ExcludedCode;
+        public IClassificationType Other => _standardClassificationService.Other;
 
         public IClassificationType Punctuation => Get(ref _punctuation, SemanticClassificationMetadata.PunctuationClassificationTypeName);
         public IClassificationType Semantic => Get(ref _semantic, SemanticClassificationMetadata.SemanticClassificationTypeName);

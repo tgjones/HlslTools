@@ -25,7 +25,7 @@ namespace HlslTools.Symbols.Markup
                     markup.AppendVariableSymbolInfo((VariableSymbol) symbol);
                     break;
                 case SymbolKind.Parameter:
-                    markup.AppendParameterSymbolInfo((ParameterSymbol) symbol);
+                    markup.AppendParameterSymbolInfo((ParameterSymbol) symbol, true);
                     break;
                 case SymbolKind.Indexer:
                     break;
@@ -106,7 +106,7 @@ namespace HlslTools.Symbols.Markup
                     markup.AppendSpace();
                 }
 
-                markup.AppendParameterSymbolInfo(parameterSymbol);               
+                markup.AppendParameterSymbolInfo(parameterSymbol, false);
             }
 
             markup.AppendPunctuation(")");
@@ -117,10 +117,13 @@ namespace HlslTools.Symbols.Markup
             markup.Append(SymbolMarkupKind.Punctuation, text);
         }
 
-        private static void AppendParameterSymbolInfo(this ICollection<SymbolMarkupToken> markup, ParameterSymbol symbol)
+        private static void AppendParameterSymbolInfo(this ICollection<SymbolMarkupToken> markup, ParameterSymbol symbol, bool includeInfo)
         {
-            markup.AppendPlainText("(parameter)");
-            markup.AppendSpace();
+            if (includeInfo)
+            {
+                markup.AppendPlainText("(parameter)");
+                markup.AppendSpace();
+            }
             markup.AppendType(symbol.ValueType, false);
             markup.AppendSpace();
             markup.AppendParameterName(symbol.Name);
@@ -139,11 +142,12 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendVariableSymbolInfo(this ICollection<SymbolMarkupToken> markup, VariableSymbol symbol)
         {
-            markup.AppendPlainText(symbol.Parent == null ? "(global variable)" : "(local variable)");
+            var isGlobalVariable = symbol.Parent == null;
+            markup.AppendPlainText(isGlobalVariable ? "(global variable)" : "(local variable)");
             markup.AppendSpace();
             markup.AppendType(symbol.ValueType, true);
             markup.AppendSpace();
-            markup.AppendName(SymbolMarkupKind.VariableName, symbol.Name);
+            markup.AppendName(isGlobalVariable ? SymbolMarkupKind.GlobalVariableName : SymbolMarkupKind.LocalVariableName, symbol.Name);
         }
 
         private static void AppendParameterName(this ICollection<SymbolMarkupToken> markup, string text)
@@ -161,7 +165,7 @@ namespace HlslTools.Symbols.Markup
             if (includeParentScope && symbol.Parent != null)
                 markup.AppendParentScope(symbol.Parent);
 
-            markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+            markup.AppendTypeName(symbol);
         }
 
         private static void AppendTypeDeclaration(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol)
@@ -185,7 +189,30 @@ namespace HlslTools.Symbols.Markup
             if (symbol.Parent != null)
                 markup.AppendParentScope(symbol.Parent);
 
-            markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+            markup.AppendTypeName(symbol);
+        }
+
+        private static void AppendTypeName(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Class:
+                case SymbolKind.Interface:
+                case SymbolKind.Struct:
+                    markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+                    break;
+                case SymbolKind.IntrinsicMatrixType:
+                case SymbolKind.IntrinsicObjectType:
+                case SymbolKind.IntrinsicScalarType:
+                case SymbolKind.IntrinsicVectorType:
+                    // TODO: Need something better for templated predefined objects.
+                    markup.AppendName(SymbolMarkupKind.Keyword, symbol.Name);
+                    break;
+                case SymbolKind.Array:
+                    // TODO: Could separate out square brackets as punctuation.
+                    markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+                    break;
+            }
         }
 
         private static void AppendSemantic(this ICollection<SymbolMarkupToken> markup, SemanticSymbol symbol)

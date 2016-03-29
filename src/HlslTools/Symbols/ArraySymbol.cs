@@ -8,7 +8,7 @@ namespace HlslTools.Symbols
         public int? Dimension { get; }
 
         internal ArraySymbol(TypeSymbol valueType, int? dimension)
-            : base(SymbolKind.Array, $"{valueType.FullName}[]", "Array of " + valueType.Name, null)
+            : base(SymbolKind.Array, $"{valueType.FullName}[{dimension?.ToString() ?? string.Empty}]", "Array of " + valueType.Name, null)
         {
             foreach (var member in CreateArrayMembers(this, valueType))
                 AddMember(member);
