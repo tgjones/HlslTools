@@ -1,4 +1,6 @@
-﻿namespace HlslTools.Symbols
+﻿using System;
+
+namespace HlslTools.Symbols
 {
     public class ParameterSymbol : VariableSymbol
     {
@@ -7,6 +9,9 @@
         public ParameterSymbol(string name, string documentation, Symbol parent, TypeSymbol valueType, ParameterDirection direction = ParameterDirection.In)
             : base(SymbolKind.Parameter, name, documentation, parent, valueType)
         {
+            if (valueType == null)
+                throw new ArgumentNullException(nameof(valueType));
+
             Direction = direction;
         }
 

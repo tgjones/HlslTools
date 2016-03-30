@@ -189,6 +189,7 @@ namespace HlslTools.Compilation
             {
                 // float => float2x4
                 // float => float2
+                // float1 => float2
                 return ConversionTypes.ScalarPromotion;
             }
             else if ((sourceDim0 >= targetDim0 && sourceDim1 >= targetDim1) || (sourceDim1 >= targetDim0 && sourceDim0 >= targetDim1))

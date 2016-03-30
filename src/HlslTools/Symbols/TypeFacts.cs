@@ -105,7 +105,7 @@ namespace HlslTools.Symbols
                         case SymbolKind.IntrinsicScalarType:
                             return true;
                         case SymbolKind.IntrinsicVectorType:
-                            return ((IntrinsicVectorTypeSymbol) left).NumComponents >= ((IntrinsicVectorTypeSymbol) right).NumComponents;
+                            return ((IntrinsicVectorTypeSymbol) left).NumComponents == 1 || ((IntrinsicVectorTypeSymbol) left).NumComponents >= ((IntrinsicVectorTypeSymbol) right).NumComponents;
                         case SymbolKind.IntrinsicMatrixType:
                         {
                             var leftVector = (IntrinsicVectorTypeSymbol) left;

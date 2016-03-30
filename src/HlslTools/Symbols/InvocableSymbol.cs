@@ -24,6 +24,9 @@ namespace HlslTools.Symbols
         protected InvocableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol returnType, Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameters = null)
             : base(kind, name, documentation, parent)
         {
+            if (returnType == null)
+                throw new ArgumentNullException(nameof(returnType));
+
             _parameters = new List<ParameterSymbol>();
 
             if (lazyParameters != null)

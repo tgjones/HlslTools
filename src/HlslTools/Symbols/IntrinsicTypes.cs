@@ -838,6 +838,21 @@ namespace HlslTools.Symbols
                 .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
                 .Union(new[] { BlendState, DepthStencilState, RasterizerState })
                 .ToArray();
+
+            ByteAddressBuffer = CreatePredefinedObjectType("ByteAddressBuffer",
+                "A read-only buffer that is indexed in bytes.",
+                PredefinedObjectType.ByteAddressBuffer,
+                CreateByteAddressBufferMethods);
+
+            RWByteAddressBuffer = CreatePredefinedObjectType("RWByteAddressBuffer",
+                "A read/write buffer that indexes in bytes.",
+                PredefinedObjectType.RWByteAddressBuffer,
+                CreateRWByteAddressBufferMethods);
+
+            RasterizerOrderedByteAddressBuffer = CreatePredefinedObjectType("RasterizerOrderedByteAddressBuffer",
+                "A rasterizer ordered read/write buffer that indexes in bytes.",
+                PredefinedObjectType.RasterizerOrderedByteAddressBuffer,
+                CreateRWByteAddressBufferMethods);
         }
 
         private static IEnumerable<Symbol> CreateScalarTypeFields(int numComponents,
@@ -1334,12 +1349,13 @@ namespace HlslTools.Symbols
                                 {
                                     new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system. ", m, intLocationType)
                                 });
-                            yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
-                                valueType, m => new[]
-                                {
-                                    new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system.", m, intLocationType),
-                                    new ParameterSymbol("offset", "An offset applied to the texture coordinates before sampling.", m, offsetType)
-                                });
+                            if (offsetType != null)
+                                yield return new FunctionSymbol("Load", "Reads texel data without any filtering or sampling.", parent,
+                                    valueType, m => new[]
+                                    {
+                                        new ParameterSymbol("location", "The texture coordinates; the last component specifies the mipmap level. This method uses a 0-based coordinate system and not a 0.0-1.0 UV system.", m, intLocationType),
+                                        new ParameterSymbol("offset", "An offset applied to the texture coordinates before sampling.", m, offsetType)
+                                    });
                             break;
                     }
                     break;
@@ -1623,83 +1639,110 @@ namespace HlslTools.Symbols
         {
             var componentNameLower = componentName.ToLower();
 
-            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
-                        GetVectorType(scalarType, 4), m => new[]
-                        {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType)
-                        });
-            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
-                GetVectorType(scalarType, 4), m => new[]
-                {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType)
-                });
-            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component along with status about the operation.", parent,
-                GetVectorType(scalarType, 4), m => new[]
-                {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
-                });
-            yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component along with status about the operation.", parent,
-                GetVectorType(scalarType, 4), m => new[]
-                {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
-                });
+            if (offsetType != null)
+            {
+                yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType)
+                    });
+                yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType)
+                    });
+                yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component along with status about the operation.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    });
+                yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component along with status about the operation.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    });
+            }
+            else
+            {
+                yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    });
+            }
 
-            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
-                        GetVectorType(scalarType, 4), m => new[]
-                        {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
-                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType)
-                        });
-            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
-                GetVectorType(scalarType, 4), m => new[]
-                {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
-                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType)
-                });
-            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component along with status about the operation.", parent,
-                GetVectorType(scalarType, 4), m => new[]
-                {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
-                            new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
-                });
-            yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component along with status about the operation.", parent,
-                GetVectorType(scalarType, 4), m => new[]
-                {
-                            new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
-                            new ParameterSymbol("location", "The texture coordinates.", m, locationType),
-                            new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
-                            new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType),
-                            new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
-                });
+            if (offsetType != null)
+            {
+                yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                        new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType)
+                    });
+                yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                        new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType)
+                    });
+                yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component along with status about the operation.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                        new ParameterSymbol("offset", "An offset that is applied to the texture coordinate before sampling.", m, offsetType),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    });
+                yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component along with status about the operation.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                        new ParameterSymbol("offset1", "The first offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset2", "The second offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset3", "The third offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("offset4", "The fourth offset component applied to the texture coordinates before sampling.", m, offsetType),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    });
+            }
+            else
+            {
+                yield return new FunctionSymbol($"GatherCmp{componentName}", $"Samples a texture, tests the samples against a compare value, and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerComparisonState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType),
+                        new ParameterSymbol("compareValue", "A value to compare each against each sampled value.", m, Float),
+                        new ParameterSymbol("status", "The status of the operation.", m, Uint, ParameterDirection.Out)
+                    });
+            }
         }
 
         private static FunctionSymbol CreateTextureGetDimensionsWithMipLevelMethod(TypeSymbol parent, PredefinedObjectType textureType, TypeSymbol parameterType)
@@ -1802,20 +1845,9 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static readonly TypeSymbol ByteAddressBuffer = CreatePredefinedObjectType("ByteAddressBuffer",
-            "A read-only buffer that is indexed in bytes.",
-            PredefinedObjectType.ByteAddressBuffer,
-            CreateByteAddressBufferMethods);
-
-        public static readonly TypeSymbol RWByteAddressBuffer = CreatePredefinedObjectType("RWByteAddressBuffer",
-            "A read/write buffer that indexes in bytes.",
-            PredefinedObjectType.RWByteAddressBuffer,
-            CreateRWByteAddressBufferMethods);
-
-        public static readonly TypeSymbol RasterizerOrderedByteAddressBuffer = CreatePredefinedObjectType("RasterizerOrderedByteAddressBuffer",
-            "A rasterizer ordered read/write buffer that indexes in bytes.",
-            PredefinedObjectType.RasterizerOrderedByteAddressBuffer,
-            CreateRWByteAddressBufferMethods);
+        public static readonly TypeSymbol ByteAddressBuffer;
+        public static readonly TypeSymbol RWByteAddressBuffer;
+        public static readonly TypeSymbol RasterizerOrderedByteAddressBuffer;
 
         private static FunctionSymbol[] CreateRWByteAddressBufferMethods(TypeSymbol t)
         {
