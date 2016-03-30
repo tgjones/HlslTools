@@ -4,9 +4,12 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundName : BoundType
     {
-        public BoundName(TypeSymbol typeSymbol)
-            : base(BoundNodeKind.Name, typeSymbol)
+        public Symbol Symbol { get; }
+
+        public BoundName(Symbol symbol)
+            : base(BoundNodeKind.Name, symbol as TypeSymbol ?? TypeFacts.Missing)
         {
+            Symbol = symbol;
         }
     }
 }

@@ -68,6 +68,12 @@ namespace HlslTools.Compilation
             return result?.TechniqueSymbol;
         }
 
+        public Symbol GetSymbol(IdentifierDeclarationNameSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundName;
+            return result?.Symbol;
+        }
+
         public Symbol GetSymbol(SemanticSyntax syntax)
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundSemantic;
@@ -93,6 +99,7 @@ namespace HlslTools.Compilation
                 case BoundNodeKind.FieldExpression:
                     return GetSymbol((BoundFieldExpression) expression);
                 case BoundNodeKind.Name:
+                    return GetSymbol((BoundName) expression);
                 case BoundNodeKind.IntrinsicGenericMatrixType:
                 case BoundNodeKind.IntrinsicGenericVectorType:
                 case BoundNodeKind.IntrinsicMatrixType:
@@ -129,6 +136,11 @@ namespace HlslTools.Compilation
         private static Symbol GetSymbol(BoundType expression)
         {
             return expression.TypeSymbol;
+        }
+
+        private static Symbol GetSymbol(BoundName expression)
+        {
+            return expression.Symbol;
         }
 
         public TypeSymbol GetExpressionType(ExpressionSyntax expression)

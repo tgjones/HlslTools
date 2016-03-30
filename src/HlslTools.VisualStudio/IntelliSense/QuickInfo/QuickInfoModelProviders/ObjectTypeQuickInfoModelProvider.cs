@@ -9,7 +9,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders
     {
         protected override QuickInfoModel CreateModel(SemanticModel semanticModel, SourceLocation position, PredefinedObjectTypeSyntax node)
         {
-            if (!node.SourceRange.ContainsOrTouches(position))
+            if (!node.ObjectTypeToken.SourceRange.ContainsOrTouches(position))
                 return null;
 
             if (!node.ObjectTypeToken.Span.IsInRootFile)

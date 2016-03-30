@@ -255,6 +255,7 @@
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionInvocationQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\GenericMatrixTypeQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\GenericVectorTypeQuickInfoModelProvider.cs" />
+    <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierDeclarationQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\IQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\ClassDefinitionQuickInfoModelProvider.cs" />

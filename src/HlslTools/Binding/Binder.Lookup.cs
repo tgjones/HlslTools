@@ -137,11 +137,15 @@ namespace HlslTools.Binding
                     if (containers.Length > 1)
                         Diagnostics.ReportAmbiguousType(((IdentifierNameSyntax) name).Name, containers);
 
+                    Bind((IdentifierNameSyntax) name, x => new BoundName(containers.First()));
+
                     return containers.First();
                 case SyntaxKind.QualifiedName:
                     var qualifiedName = (QualifiedNameSyntax) name;
                     var leftContainer = LookupContainer(qualifiedName.Left);
-                    return LookupContainerMember(leftContainer, qualifiedName.Right.Name);
+                    var result = LookupContainerMember(leftContainer, qualifiedName.Right.Name);
+                    Bind(qualifiedName.Right, x => new BoundName(result));
+                    return result;
                 default:
                     throw new InvalidOperationException();
             }
@@ -185,12 +189,15 @@ namespace HlslTools.Binding
                     if (containers.Length > 1)
                         Diagnostics.ReportAmbiguousType(((IdentifierDeclarationNameSyntax) name).Name, containers);
 
+                    Bind((IdentifierDeclarationNameSyntax) name, x => new BoundName(containers.First()));
+
                     return containers.First();
                 case SyntaxKind.QualifiedDeclarationName:
                     var qualifiedName = (QualifiedDeclarationNameSyntax) name;
                     var leftContainer = LookupContainer(qualifiedName.Left);
-                    return LookupContainerMember(leftContainer, qualifiedName.Right.Name);
-
+                    var result = LookupContainerMember(leftContainer, qualifiedName.Right.Name);
+                    Bind(qualifiedName.Right, x => new BoundName(result));
+                    return result;
                 default:
                     throw new InvalidOperationException();
             }

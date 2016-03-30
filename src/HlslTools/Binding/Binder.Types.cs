@@ -56,7 +56,7 @@ namespace HlslTools.Binding
             }
         }
 
-        public BoundType BindQualifiedType(QualifiedNameSyntax qualifiedName)
+        private BoundType BindQualifiedType(QualifiedNameSyntax qualifiedName)
         {
             var container = LookupContainer(qualifiedName.Left);
 
@@ -75,6 +75,8 @@ namespace HlslTools.Binding
 
             if (symbols.Length > 1)
                 Diagnostics.ReportAmbiguousType(qualifiedName.Right.Name, symbols);
+
+            Bind(qualifiedName.Right, x => new BoundName(symbols.First()));
 
             return new BoundName(symbols.First());
         }
