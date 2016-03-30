@@ -9,7 +9,7 @@ namespace HlslTools.Binding.BoundNodes
         public ImmutableArray<BoundNode> Members { get; }
 
         public BoundClassType(ClassSymbol classSymbol, ImmutableArray<BoundNode> members)
-            : base(BoundNodeKind.ClassType)
+            : base(BoundNodeKind.ClassType, classSymbol)
         {
             ClassSymbol = classSymbol;
             Members = members;

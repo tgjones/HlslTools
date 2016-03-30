@@ -9,7 +9,7 @@ namespace HlslTools.Binding.BoundNodes
         public ImmutableArray<BoundMultipleVariableDeclarations> Variables { get; }
 
         public BoundStructType(StructSymbol structSymbol, ImmutableArray<BoundMultipleVariableDeclarations> variables)
-            : base(BoundNodeKind.StructType)
+            : base(BoundNodeKind.StructType, structSymbol)
         {
             StructSymbol = structSymbol;
             Variables = variables;

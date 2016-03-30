@@ -9,7 +9,7 @@ namespace HlslTools.Binding.BoundNodes
         public ImmutableArray<BoundFunction> Methods { get; }
 
         public BoundInterfaceType(InterfaceSymbol interfaceSymbol, ImmutableArray<BoundFunction> methods)
-            : base(BoundNodeKind.InterfaceType)
+            : base(BoundNodeKind.InterfaceType, interfaceSymbol)
         {
             InterfaceSymbol = interfaceSymbol;
             Methods = methods;

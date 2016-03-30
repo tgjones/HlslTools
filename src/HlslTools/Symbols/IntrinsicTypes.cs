@@ -178,22 +178,22 @@ namespace HlslTools.Symbols
         public static readonly IntrinsicNumericTypeSymbol[] AllNumericNonBoolTypes;
         public static readonly IntrinsicNumericTypeSymbol[] AllNumericTypes;
 
-        public static readonly TypeSymbol Sampler;
-        public static readonly TypeSymbol Sampler1D;
-        public static readonly TypeSymbol Sampler2D;
-        public static readonly TypeSymbol Sampler3D;
-        public static readonly TypeSymbol SamplerCube;
-        public static readonly TypeSymbol SamplerState;
-        public static readonly TypeSymbol SamplerComparisonState;
-        public static readonly TypeSymbol LegacyTexture;
+        public static readonly IntrinsicObjectTypeSymbol Sampler;
+        public static readonly IntrinsicObjectTypeSymbol Sampler1D;
+        public static readonly IntrinsicObjectTypeSymbol Sampler2D;
+        public static readonly IntrinsicObjectTypeSymbol Sampler3D;
+        public static readonly IntrinsicObjectTypeSymbol SamplerCube;
+        public static readonly IntrinsicObjectTypeSymbol SamplerState;
+        public static readonly IntrinsicObjectTypeSymbol SamplerComparisonState;
+        public static readonly IntrinsicObjectTypeSymbol LegacyTexture;
 
-        public static readonly TypeSymbol BlendState;
-        public static readonly TypeSymbol DepthStencilState;
-        public static readonly TypeSymbol RasterizerState;
+        public static readonly IntrinsicObjectTypeSymbol BlendState;
+        public static readonly IntrinsicObjectTypeSymbol DepthStencilState;
+        public static readonly IntrinsicObjectTypeSymbol RasterizerState;
 
-        public static readonly TypeSymbol GeometryShader;
-        public static readonly TypeSymbol PixelShader;
-        public static readonly TypeSymbol VertexShader;
+        public static readonly IntrinsicObjectTypeSymbol GeometryShader;
+        public static readonly IntrinsicObjectTypeSymbol PixelShader;
+        public static readonly IntrinsicObjectTypeSymbol VertexShader;
 
         public static readonly TypeSymbol[] AllIntrinsicTypes;
 
@@ -835,6 +835,7 @@ namespace HlslTools.Symbols
             VertexShader = new IntrinsicObjectTypeSymbol("VertexShader", "", PredefinedObjectType.VertexShader);
 
             AllIntrinsicTypes = AllNumericTypes
+                .Cast<TypeSymbol>()
                 .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
                 .Union(new[] { BlendState, DepthStencilState, RasterizerState })
                 .ToArray();
@@ -1034,7 +1035,7 @@ namespace HlslTools.Symbols
             return AllMatrixTypes[(((int)scalarType - 1) * 16) + ((numRows - 1) * 4) + (numCols - 1)];
         }
 
-        public static IntrinsicTypeSymbol CreateRWTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
+        public static IntrinsicObjectTypeSymbol CreateRWTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
         {
             string name, documentation;
 
@@ -1118,7 +1119,7 @@ namespace HlslTools.Symbols
             yield return new IndexerSymbol("[]", "Returns a resource variable.", parent, indexType, valueType, false);
         }
 
-        public static IntrinsicTypeSymbol CreateTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
+        public static IntrinsicObjectTypeSymbol CreateTextureType(PredefinedObjectType textureType, TypeSymbol valueType, ScalarType scalarType)
         {
             string name, documentation;
 
@@ -1817,14 +1818,14 @@ namespace HlslTools.Symbols
                 });
         }
 
-        private static IntrinsicTypeSymbol CreatePredefinedObjectType(string name, string documentation, PredefinedObjectType predefinedObjectType, Func<TypeSymbol, IEnumerable<Symbol>> membersCallback)
+        private static IntrinsicObjectTypeSymbol CreatePredefinedObjectType(string name, string documentation, PredefinedObjectType predefinedObjectType, Func<TypeSymbol, IEnumerable<Symbol>> membersCallback)
         {
             var result = new IntrinsicObjectTypeSymbol(name, documentation, predefinedObjectType);
             result.AddMembers(membersCallback(result));
             return result;
         }
 
-        public static TypeSymbol CreateAppendStructuredBufferType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateAppendStructuredBufferType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("AppendStructuredBuffer",
                 "Output buffer that appears as a stream the shader may append to. Only structured buffers can take T types that are structures.",
@@ -1845,9 +1846,9 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static readonly TypeSymbol ByteAddressBuffer;
-        public static readonly TypeSymbol RWByteAddressBuffer;
-        public static readonly TypeSymbol RasterizerOrderedByteAddressBuffer;
+        public static readonly IntrinsicObjectTypeSymbol ByteAddressBuffer;
+        public static readonly IntrinsicObjectTypeSymbol RWByteAddressBuffer;
+        public static readonly IntrinsicObjectTypeSymbol RasterizerOrderedByteAddressBuffer;
 
         private static FunctionSymbol[] CreateRWByteAddressBufferMethods(TypeSymbol t)
         {
@@ -2003,7 +2004,7 @@ namespace HlslTools.Symbols
             };
         }
 
-        public static TypeSymbol CreateConsumeStructuredBufferType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateConsumeStructuredBufferType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("ConsumeStructuredBuffer",
                 "An input buffer that appears as a stream the shader may pull values from. Only structured buffers can take T types that are structures.",
@@ -2021,7 +2022,7 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static TypeSymbol CreateStructuredBufferType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateStructuredBufferType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("StructuredBuffer",
                 "A read-only buffer, which can take a T type that is a structure.",
@@ -2033,7 +2034,7 @@ namespace HlslTools.Symbols
                     }));
         }
 
-        public static TypeSymbol CreateRWStructuredBufferType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateRWStructuredBufferType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("RWStructuredBuffer",
                 "A read/write buffer, which can take a T type that is a structure.",
@@ -2041,7 +2042,7 @@ namespace HlslTools.Symbols
                 t => CreateRWStructuredBufferMethods(t, valueType));
         }
 
-        public static TypeSymbol CreateRasterizerOrderedStructuredBufferType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateRasterizerOrderedStructuredBufferType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("RasterizerOrderedStructuredBuffer",
                 "A rasterizer ordered read/write buffer, which can take a T type that is a structure.",
@@ -2085,7 +2086,7 @@ namespace HlslTools.Symbols
             };
         }
 
-        public static TypeSymbol CreateInputPatchType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateInputPatchType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("InputPatch",
                 "Represents an array of control points that are available to the hull shader as inputs.",
@@ -2097,7 +2098,7 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static TypeSymbol CreateOutputPatchType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateOutputPatchType(TypeSymbol valueType)
         {
             return CreatePredefinedObjectType("OutputPatch",
                 "Represents an array of output control points that are available to the hull shader's patch-constant function as well as the domain shader.",
@@ -2108,7 +2109,7 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static TypeSymbol CreateStreamOutputType(PredefinedObjectType type, TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateStreamOutputType(PredefinedObjectType type, TypeSymbol valueType)
         {
             return CreatePredefinedObjectType(type.ToString(),
                 "A stream-output object is a templated object that streams data out of the geometry-shader stage.",
@@ -2124,7 +2125,7 @@ namespace HlslTools.Symbols
                 });
         }
 
-        public static TypeSymbol CreateConstantBufferType(TypeSymbol valueType)
+        public static IntrinsicObjectTypeSymbol CreateConstantBufferType(TypeSymbol valueType)
         {
             var fields = (valueType.Kind == SymbolKind.Struct)
                 ? ((StructSymbol) valueType).Members

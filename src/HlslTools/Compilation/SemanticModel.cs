@@ -88,6 +88,18 @@ namespace HlslTools.Compilation
                     return GetSymbol((BoundVariableExpression) expression);
                 case BoundNodeKind.FunctionInvocationExpression:
                     return GetSymbol((BoundFunctionInvocationExpression) expression);
+                case BoundNodeKind.MethodInvocationExpression:
+                    return GetSymbol((BoundMethodInvocationExpression) expression);
+                case BoundNodeKind.FieldExpression:
+                    return GetSymbol((BoundFieldExpression) expression);
+                case BoundNodeKind.Name:
+                case BoundNodeKind.IntrinsicGenericMatrixType:
+                case BoundNodeKind.IntrinsicGenericVectorType:
+                case BoundNodeKind.IntrinsicMatrixType:
+                case BoundNodeKind.IntrinsicObjectType:
+                case BoundNodeKind.IntrinsicScalarType:
+                case BoundNodeKind.IntrinsicVectorType:
+                    return GetSymbol((BoundType) expression);
                 default:
                     // TODO: More bound expression types.
                     return null;
@@ -102,6 +114,21 @@ namespace HlslTools.Compilation
         private static Symbol GetSymbol(BoundFunctionInvocationExpression expression)
         {
             return expression.Symbol;
+        }
+
+        private static Symbol GetSymbol(BoundMethodInvocationExpression expression)
+        {
+            return expression.Symbol;
+        }
+
+        private static Symbol GetSymbol(BoundFieldExpression expression)
+        {
+            return expression.Field;
+        }
+
+        private static Symbol GetSymbol(BoundType expression)
+        {
+            return expression.TypeSymbol;
         }
 
         public TypeSymbol GetExpressionType(ExpressionSyntax expression)

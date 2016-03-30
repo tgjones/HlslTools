@@ -215,8 +215,8 @@ namespace HlslTools.Binding
 
         private BoundExpression BindCastExpression(CastExpressionSyntax syntax)
         {
-            var targetType = LookupType(syntax.Type);
-            targetType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, targetType);
+            var boundTargetType = Bind(syntax.Type, x => BindType(x, null));
+            var targetType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, boundTargetType.TypeSymbol);
 
             return BindConversion(syntax.GetTextSpanSafe(), Bind(syntax.Expression, BindExpression), targetType);
         }
@@ -254,9 +254,14 @@ namespace HlslTools.Binding
         private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax node)
         {
             // TODO: Need to apply similar overload resolution as BindBinaryExpression.
-            var operatorKind = (node.Kind != SyntaxKind.SimpleAssignmentExpression) ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(node.Kind) : null;
+            var operatorKind = (node.Kind != SyntaxKind.SimpleAssignmentExpression) 
+                ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(node.Kind) 
+                : null;
 
-            return new BoundAssignmentExpression(BindExpression(node.Left), operatorKind, BindExpression(node.Right));
+            return new BoundAssignmentExpression(
+                Bind(node.Left, BindExpression), 
+                operatorKind, 
+                Bind(node.Right, BindExpression));
         }
 
         private static BoundExpression BindLiteralExpression(LiteralExpressionSyntax node)
@@ -359,9 +364,10 @@ namespace HlslTools.Binding
 
         private BoundExpression BindNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax syntax)
         {
+            // TODO: Replace BoundNumericConstructorInvocationExpression with BoundFunctionInvocationExpression.
             // TODO: Check that we have the correct number of arguments.
             return new BoundNumericConstructorInvocationExpression(
-                LookupType(syntax.Type),
+                Bind(syntax.Type, x => BindType(x, null)).TypeSymbol,
                 BindArgumentList(syntax.ArgumentList));
         }
 
@@ -484,7 +490,7 @@ namespace HlslTools.Binding
 
         private BoundExpression BindFieldAccessExpression(FieldAccessExpressionSyntax node)
         {
-            var target = BindExpression(node.Expression);
+            var target = Bind(node.Expression, BindExpression);
 
             var name = node.Name;
             if (target.Type.IsError())

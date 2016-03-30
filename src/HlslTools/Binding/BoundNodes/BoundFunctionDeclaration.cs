@@ -5,9 +5,12 @@ namespace HlslTools.Binding.BoundNodes
 {
     internal sealed class BoundFunctionDeclaration : BoundFunction
     {
-        public BoundFunctionDeclaration(FunctionSymbol functionSymbol, ImmutableArray<BoundVariableDeclaration> parameters)
+        public BoundType ReturnType { get; }
+
+        public BoundFunctionDeclaration(FunctionSymbol functionSymbol, BoundType returnType, ImmutableArray<BoundVariableDeclaration> parameters)
             : base(BoundNodeKind.FunctionDeclaration, functionSymbol, parameters)
         {
+            ReturnType = returnType;
         }
     }
 }

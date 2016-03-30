@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Binding\Binder.cs" />
+    <Compile Include="Binding\Binder.Types.cs" />
     <Compile Include="Binding\Binder.Lookup.cs" />
     <Compile Include="Binding\BoundNodes\BoundArrayInitializerExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundAssignmentExpression.cs" />
@@ -66,15 +67,21 @@
     <Compile Include="Binding\BoundNodes\BoundFunctionDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundFunctionDefinition.cs" />
     <Compile Include="Binding\BoundNodes\BoundFunctionName.cs" />
+    <Compile Include="Binding\BoundNodes\BoundGenericMatrixType.cs" />
+    <Compile Include="Binding\BoundNodes\BoundGenericVectorType.cs" />
     <Compile Include="Binding\BoundNodes\BoundInitializer.cs" />
     <Compile Include="Binding\BoundNodes\BoundInterfaceType.cs" />
+    <Compile Include="Binding\BoundNodes\BoundMatrixType.cs" />
     <Compile Include="Binding\BoundNodes\BoundMethodInvocationExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundName.cs" />
     <Compile Include="Binding\BoundNodes\BoundNamespace.cs" />
     <Compile Include="Binding\BoundNodes\BoundNumericConstructorInvocationExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundObjectType.cs" />
     <Compile Include="Binding\BoundNodes\BoundPackOffsetLocation.cs" />
     <Compile Include="Binding\BoundNodes\BoundPass.cs" />
     <Compile Include="Binding\BoundNodes\BoundRegisterLocation.cs" />
     <Compile Include="Binding\BoundNodes\BoundSamplerStateInitializer.cs" />
+    <Compile Include="Binding\BoundNodes\BoundScalarType.cs" />
     <Compile Include="Binding\BoundNodes\BoundSemantic.cs" />
     <Compile Include="Binding\BoundNodes\BoundStateArrayInitializer.cs" />
     <Compile Include="Binding\BoundNodes\BoundStateInitializer.cs" />
@@ -110,9 +117,11 @@
     <Compile Include="Binding\BoundNodes\BoundType.cs" />
     <Compile Include="Binding\BoundNodes\BoundTypeDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundUnaryExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundUnknownType.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableDeclaration.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableQualifier.cs" />
+    <Compile Include="Binding\BoundNodes\BoundVectorType.cs" />
     <Compile Include="Binding\BoundNodes\BoundWhileStatement.cs" />
     <Compile Include="Binding\Binder.Expressions.cs" />
     <Compile Include="Binding\BoundTreeWalker.Declarations.cs" />
@@ -173,7 +182,6 @@
     <Compile Include="Symbols\IndexerSymbol.cs" />
     <Compile Include="Symbols\InterfaceSymbol.cs" />
     <Compile Include="Symbols\IntrinsicSemantics.cs" />
-    <Compile Include="Symbols\IntrinsicTypeResolver.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkup.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkupBuilder.cs" />
     <Compile Include="Symbols\Markup\SymbolMarkupKind.cs" />

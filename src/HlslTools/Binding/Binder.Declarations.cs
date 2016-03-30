@@ -84,20 +84,12 @@ namespace HlslTools.Binding
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)
         {
+            var boundType = Bind(syntax.Type, x => BindType(x, parent));
+
             var boundDeclarations = new List<BoundVariableDeclaration>();
-
-            switch (syntax.Type.Kind)
-            {
-                case SyntaxKind.StructType:
-                    var structType = (StructTypeSyntax) syntax.Type;
-                    Bind(structType, x => BindStructDeclaration(x, parent));
-                    break;
-            }
-
             foreach (var declarator in syntax.Variables)
             {
-                var variableType = LookupType(syntax.Type);
-                boundDeclarations.Add(Bind(declarator, x => BindVariableDeclarator(x, variableType, createSymbol)));
+                boundDeclarations.Add(Bind(declarator, x => BindVariableDeclarator(x, boundType.TypeSymbol, createSymbol)));
             }
 
             return new BoundMultipleVariableDeclarations(boundDeclarations.ToImmutableArray());
@@ -157,7 +149,7 @@ namespace HlslTools.Binding
 
         private BoundFunctionDeclaration BindFunctionDeclaration(FunctionDeclarationSyntax declaration, Symbol parent)
         {
-            var returnType = LookupType(declaration.ReturnType);
+            var boundReturnType = Bind(declaration.ReturnType, x => BindType(x, parent));
 
             var functionSymbol = LocalSymbols.OfType<SourceFunctionSymbol>()
                 .FirstOrDefault(x => SyntaxFacts.HaveMatchingSignatures(
@@ -170,7 +162,7 @@ namespace HlslTools.Binding
             }
             else
             {
-                functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
+                functionSymbol = new SourceFunctionSymbol(declaration, parent, boundReturnType.TypeSymbol);
                 AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
             }
 
@@ -181,12 +173,12 @@ namespace HlslTools.Binding
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
 
-            return new BoundFunctionDeclaration(functionSymbol, boundParameters.ToImmutableArray());
+            return new BoundFunctionDeclaration(functionSymbol, boundReturnType, boundParameters.ToImmutableArray());
         }
 
         private BoundNode BindFunctionDefinition(FunctionDefinitionSyntax declaration, Symbol parent)
         {
-            var returnType = LookupType(declaration.ReturnType);
+            var boundReturnType = Bind(declaration.ReturnType, x => BindType(x, parent));
 
             var isQualifiedName = false;
 
@@ -229,7 +221,7 @@ namespace HlslTools.Binding
             {
                 if (isQualifiedName)
                     Diagnostics.ReportUndeclaredFunctionInNamespaceOrClass((QualifiedDeclarationNameSyntax) declaration.Name);
-                functionSymbol = new SourceFunctionSymbol(declaration, parent, returnType);
+                functionSymbol = new SourceFunctionSymbol(declaration, parent, boundReturnType.TypeSymbol);
                 containerBinder.AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
             }
 
@@ -246,7 +238,7 @@ namespace HlslTools.Binding
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
             var boundBody = functionBinder.Bind(declaration.Body, x => functionBinder.BindBlock(x, functionSymbol));
 
-            return new BoundFunctionDefinition(functionSymbol, boundParameters.ToImmutableArray(), boundBody);
+            return new BoundFunctionDefinition(functionSymbol, boundReturnType, boundParameters.ToImmutableArray(), boundBody);
         }
 
         private ImmutableArray<BoundVariableDeclaration> BindParameters(ParameterListSyntax parameterList, Binder invocableBinder, InvocableSymbol invocableSymbol)
@@ -254,10 +246,10 @@ namespace HlslTools.Binding
             var boundParameters = new List<BoundVariableDeclaration>();
             foreach (var parameterSyntax in parameterList.Parameters)
             {
-                var parameterValueType = LookupType(parameterSyntax.Type);
+                var parameterValueType = Bind(parameterSyntax.Type, x => BindType(x, null));
                 var parameterDirection = SyntaxFacts.GetParameterDirection(parameterSyntax.Modifiers);
 
-                boundParameters.Add(invocableBinder.Bind(parameterSyntax.Declarator, x => invocableBinder.BindVariableDeclarator(x, parameterValueType, (d, t) =>
+                boundParameters.Add(invocableBinder.Bind(parameterSyntax.Declarator, x => invocableBinder.BindVariableDeclarator(x, parameterValueType.TypeSymbol, (d, t) =>
                     new SourceParameterSymbol(
                         parameterSyntax,
                         invocableSymbol,
@@ -292,14 +284,14 @@ namespace HlslTools.Binding
 
             if (declaration.BaseList != null)
             {
-                var baseType = LookupType(declaration.BaseList.BaseType);
+                var baseType = Bind(declaration.BaseList.BaseType, x => BindType(x, parent));
                 switch (baseType.Kind)
                 {
-                    case SymbolKind.Class:
-                        baseClass = (ClassSymbol) baseType;
+                    case BoundNodeKind.ClassType:
+                        baseClass = (ClassSymbol) baseType.TypeSymbol;
                         break;
-                    case SymbolKind.Interface:
-                        baseInterfaces.Add((InterfaceSymbol) baseType);
+                    case BoundNodeKind.InterfaceType:
+                        baseInterfaces.Add((InterfaceSymbol) baseType.TypeSymbol);
                         break;
                 }
             }

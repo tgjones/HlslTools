@@ -6,10 +6,18 @@ namespace HlslTools.Binding.BoundNodes
         Namespace,
 
         // Types
+        Name,
         TypeDeclaration,
         StructType,
         ClassType,
         InterfaceType,
+        IntrinsicMatrixType,
+        IntrinsicGenericMatrixType,
+        IntrinsicVectorType,
+        IntrinsicGenericVectorType,
+        IntrinsicScalarType,
+        IntrinsicObjectType,
+        UnknownType,
 
         // Expressions
         FunctionInvocationExpression,

@@ -42,16 +42,6 @@ namespace HlslTools.Binding
             return null;
         }
 
-        public TypeSymbol LookupType(TypeSyntax syntax)
-        {
-            var type = syntax.GetTypeSymbol(this);
-            if (type != null)
-                return type;
-
-            Diagnostics.ReportUndeclaredType(syntax);
-            return TypeFacts.Unknown;
-        }
-
         private IEnumerable<T> LookupSymbols<T>(SyntaxToken name)
             where T : Symbol
         {
@@ -129,29 +119,6 @@ namespace HlslTools.Binding
             return LookupSymbols<NamespaceSymbol>(name)
                 .Cast<ContainerSymbol>()
                 .Union(LookupSymbols<ClassSymbol>(name));
-        }
-
-        public TypeSymbol LookupQualifiedType(QualifiedNameSyntax qualifiedName)
-        {
-            var container = LookupContainer(qualifiedName.Left);
-
-            if (container == null)
-                return TypeFacts.Unknown;
-
-            var symbols = container.Members.OfType<TypeSymbol>()
-                .Where(x => x.Name == qualifiedName.Right.Name.Text)
-                .ToImmutableArray();
-
-            if (symbols.Length == 0)
-            {
-                Diagnostics.ReportUndeclaredType(qualifiedName);
-                return TypeFacts.Unknown;
-            }
-
-            if (symbols.Length > 1)
-                Diagnostics.ReportAmbiguousType(qualifiedName.Right.Name, symbols);
-
-            return symbols.First();
         }
 
         private ContainerSymbol LookupContainer(NameSyntax name)

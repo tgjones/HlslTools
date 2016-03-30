@@ -23,6 +23,16 @@ namespace HlslTools.Text
         public readonly int End;
         public readonly int Length;
 
+        public static TextSpan Union(TextSpan value1, TextSpan value2)
+        {
+            if (value1.Start == 0 && value1.Length == 0)
+                return value2;
+
+            var startValue = (value1.Start < value2.Start) ? value1.Start : value2.Start;
+            var endValue = (value1.End > value2.End) ? value1.End : value2.End;
+            return FromBounds(value1.SourceText, startValue, endValue);
+        }
+
         public static TextSpan FromBounds(SourceText sourceText, int start, int end)
         {
             if (end < start)
