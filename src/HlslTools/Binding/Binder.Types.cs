@@ -29,8 +29,7 @@ namespace HlslTools.Binding
                 case SyntaxKind.StructType:
                     {
                         // Inline struct.
-                        var structType = (StructTypeSyntax) syntax;
-                        return Bind(structType, x => BindStructDeclaration(x, parent));
+                        return BindStructDeclaration((StructTypeSyntax) syntax, parent);
                     }
                 case SyntaxKind.IdentifierName:
                     {

@@ -280,17 +280,15 @@ namespace HlslTools.Binding
             ClassSymbol baseClass = null;
             var baseInterfaces = new List<InterfaceSymbol>();
 
-            // TODO: HLSL allows zero or one base class, and zero or more implemented interfaces.
-
             if (declaration.BaseList != null)
             {
                 var baseType = Bind(declaration.BaseList.BaseType, x => BindType(x, parent));
-                switch (baseType.Kind)
+                switch (baseType.TypeSymbol.Kind)
                 {
-                    case BoundNodeKind.ClassType:
+                    case SymbolKind.Class:
                         baseClass = (ClassSymbol) baseType.TypeSymbol;
                         break;
-                    case BoundNodeKind.InterfaceType:
+                    case SymbolKind.Interface:
                         baseInterfaces.Add((InterfaceSymbol) baseType.TypeSymbol);
                         break;
                 }

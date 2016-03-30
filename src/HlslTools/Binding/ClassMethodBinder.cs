@@ -5,13 +5,11 @@ namespace HlslTools.Binding
 {
     internal sealed class ClassMethodBinder : Binder
     {
-        private readonly SharedBinderState _sharedBinderState;
         private readonly ClassSymbol _classSymbol;
 
         public ClassMethodBinder(SharedBinderState sharedBinderState, Binder parent, ClassSymbol classSymbol)
             : base(sharedBinderState, parent)
         {
-            _sharedBinderState = sharedBinderState;
             _classSymbol = classSymbol;
         }
 
