@@ -21,7 +21,7 @@ namespace HlslTools.Binding
             _symbols.Add(symbol);
         }
 
-        protected virtual IEnumerable<Symbol> LocalSymbols => _symbols;
+        protected internal virtual IEnumerable<Symbol> LocalSymbols => _symbols;
 
         private IEnumerable<Symbol> LookupSymbol(string name)
         {

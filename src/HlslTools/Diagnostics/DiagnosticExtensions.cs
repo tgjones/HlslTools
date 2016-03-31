@@ -101,7 +101,7 @@ namespace HlslTools.Diagnostics
 
         public static void ReportUndeclaredFunction(this ICollection<Diagnostic> diagnostics, FunctionInvocationExpressionSyntax node, IEnumerable<TypeSymbol> argumentTypes)
         {
-            var name = node.ToStringIgnoringMacroReferences();
+            var name = node.Name.ToStringIgnoringMacroReferences();
             var argumentTypeList = string.Join(@", ", argumentTypes.Select(t => t.ToDisplayName()));
             diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredFunction, name, argumentTypeList);
         }

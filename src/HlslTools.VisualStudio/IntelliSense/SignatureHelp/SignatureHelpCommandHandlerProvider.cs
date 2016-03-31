@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
-    //[Export(typeof(IVsTextViewCreationListener))]
+    [Export(typeof(IVsTextViewCreationListener))]
     [ContentType(HlslConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class SignatureHelpCommandHandlerProvider : IVsTextViewCreationListener

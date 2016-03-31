@@ -290,6 +290,7 @@
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModel.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\FunctionSignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\ISignatureHelpModelProvider.cs" />
+    <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\MethodSignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProviderService.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpSource.cs" />

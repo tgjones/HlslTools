@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Immutable;
+using System.Linq;
 using HlslTools.Compilation;
+using HlslTools.Symbols;
 using HlslTools.Syntax;
 
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelProviders
@@ -22,5 +24,15 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelPr
         }
 
         protected abstract SignatureHelpModel GetModel(SemanticModel semanticModel, T node, SourceLocation position);
+
+        protected SignatureItem GetSelected(
+            Symbol currentSymbol, ImmutableArray<SignatureItem> signatures,
+            int parameterIndex)
+        {
+            if (currentSymbol != null)
+                return signatures.FirstOrDefault(x => x.Symbol.Equals(currentSymbol));
+
+            return signatures.FirstOrDefault(s => s.Parameters.Length > parameterIndex);
+        }
     }
 }

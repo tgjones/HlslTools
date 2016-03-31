@@ -57,5 +57,30 @@ namespace HlslTools.Symbols
             _members.AddRange(members);
             _membersArray = ImmutableArray<Symbol>.Empty;
         }
+
+        protected bool Equals(ContainerSymbol other)
+        {
+            return base.Equals(other) 
+                && _members.Count == other._members.Count
+                && _members.Zip(other._members, (x, y) => x.Equals(y)).All(x => x);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((ContainerSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ _members.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }

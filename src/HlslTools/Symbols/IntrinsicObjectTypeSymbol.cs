@@ -11,5 +11,25 @@ namespace HlslTools.Symbols
         {
             PredefinedType = predefinedType;
         }
+
+        private bool Equals(IntrinsicObjectTypeSymbol other)
+        {
+            return base.Equals(other) && PredefinedType == other.PredefinedType;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is IntrinsicObjectTypeSymbol && Equals((IntrinsicObjectTypeSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (base.GetHashCode() * 397) ^ (int) PredefinedType;
+            }
+        }
     }
 }

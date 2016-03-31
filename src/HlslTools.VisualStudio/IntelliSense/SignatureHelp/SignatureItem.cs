@@ -2,18 +2,21 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using HlslTools.Symbols;
 
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 {
     internal sealed class SignatureItem : IEquatable<SignatureItem>
     {
-        public SignatureItem(string content, string documentation, IEnumerable<ParameterItem> parameters)
+        public SignatureItem(Symbol symbol, string content, string documentation, IEnumerable<ParameterItem> parameters)
         {
+            Symbol = symbol;
             Content = content;
             Documentation = documentation;
             Parameters = parameters.ToImmutableArray();
         }
 
+        public Symbol Symbol { get; }
         public string Content { get; }
         public string Documentation { get; }
         public ImmutableArray<ParameterItem> Parameters { get; }

@@ -95,7 +95,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
                 .Zip(parameterNamesAndDocs, (s, n) => new ParameterItem(n.Item1, n.Item2, s))
                 .ToImmutableArray();
             
-            return new SignatureItem(sb.ToString(), symbol.Documentation, parameters);
+            return new SignatureItem(symbol, sb.ToString(), symbol.Documentation, parameters);
         }
 
         private static SignatureItem ToSignatureItem<TSymbol>(this TSymbol symbol)

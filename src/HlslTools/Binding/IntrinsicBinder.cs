@@ -11,6 +11,6 @@ namespace HlslTools.Binding
             
         }
 
-        protected override IEnumerable<Symbol> LocalSymbols => IntrinsicFunctions.AllFunctions;
+        protected internal override IEnumerable<Symbol> LocalSymbols => IntrinsicFunctions.AllFunctions;
     }
 }

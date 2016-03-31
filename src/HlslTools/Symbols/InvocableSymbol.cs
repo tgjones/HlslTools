@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 
 namespace HlslTools.Symbols
 {
@@ -46,6 +47,33 @@ namespace HlslTools.Symbols
         {
             _parameters.Add(parameter);
             _parametersArray = ImmutableArray<ParameterSymbol>.Empty;
+        }
+
+        protected bool Equals(InvocableSymbol other)
+        {
+            return base.Equals(other)
+                   && _parameters.Count == other._parameters.Count
+                   && _parameters.Zip(other._parameters, (x, y) => x.Equals(y)).All(x => x)
+                   && ReturnType.Equals(other.ReturnType);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((InvocableSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ _parameters.GetHashCode();
+                hashCode = (hashCode * 397) ^ ReturnType.GetHashCode();
+                return hashCode;
+            }
         }
     }
 }

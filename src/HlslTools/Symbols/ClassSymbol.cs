@@ -33,5 +33,31 @@ namespace HlslTools.Symbols
 
             return result;
         }
+
+        private bool Equals(ClassSymbol other)
+        {
+            return base.Equals(other) 
+                && Equals(BaseClass, other.BaseClass)
+                && BaseInterfaces.Length == other.BaseInterfaces.Length
+                && BaseInterfaces.Zip(other.BaseInterfaces, (x, y) => x.Equals(y)).All(x => x);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is ClassSymbol && Equals((ClassSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ (BaseClass?.GetHashCode() ?? 0);
+                hashCode = (hashCode * 397) ^ BaseInterfaces.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }

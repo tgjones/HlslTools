@@ -24,7 +24,7 @@ namespace HlslTools.Symbols
 
         protected bool Equals(Symbol other)
         {
-            return Kind == other.Kind && string.Equals(Name, other.Name) && Equals(Parent, other.Parent);
+            return Kind == other.Kind && string.Equals(Name, other.Name) && ReferenceEquals(Parent, other.Parent);
         }
 
         public override bool Equals(object obj)

@@ -152,8 +152,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
                 _session.Recalculate();
                 _session.Match();
             }, CancellationToken.None,
-            TaskContinuationOptions.OnlyOnRanToCompletion, 
-            TaskScheduler.FromCurrentSynchronizationContext());
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void OnModelChanged(EventArgs e)

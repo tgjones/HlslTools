@@ -13,5 +13,29 @@
         public TypeSymbol IndexType { get; }
         public TypeSymbol ValueType { get; }
         public bool ReadOnly { get; }
+
+        private bool Equals(IndexerSymbol other)
+        {
+            return base.Equals(other) && IndexType.Equals(other.IndexType) && ValueType.Equals(other.ValueType) && ReadOnly == other.ReadOnly;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj is IndexerSymbol && Equals((IndexerSymbol) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hashCode = base.GetHashCode();
+                hashCode = (hashCode * 397) ^ IndexType.GetHashCode();
+                hashCode = (hashCode * 397) ^ ValueType.GetHashCode();
+                hashCode = (hashCode * 397) ^ ReadOnly.GetHashCode();
+                return hashCode;
+            }
+        }
     }
 }
