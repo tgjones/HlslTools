@@ -72,6 +72,7 @@ namespace HlslTools.Binding.BoundNodes
         Semantic,
         PackOffsetLocation,
         RegisterLocation,
+        Attribute,
         ErrorExpression,
         Error
     }

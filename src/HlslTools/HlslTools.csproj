@@ -54,6 +54,7 @@
     <Compile Include="Binding\Binder.Lookup.cs" />
     <Compile Include="Binding\BoundNodes\BoundArrayInitializerExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundAssignmentExpression.cs" />
+    <Compile Include="Binding\BoundNodes\BoundAttribute.cs" />
     <Compile Include="Binding\BoundNodes\BoundCompileExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundCompoundExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundConversionExpression.cs" />
@@ -165,9 +166,11 @@
     <Compile Include="Parser\MacroArgumentsParser.cs" />
     <Compile Include="Parser\ParserOptions.cs" />
     <Compile Include="Symbols\ArraySymbol.cs" />
+    <Compile Include="Symbols\AttributeSymbol.cs" />
     <Compile Include="Symbols\ClassSymbol.cs" />
     <Compile Include="Symbols\ContainerSymbol.cs" />
     <Compile Include="Symbols\FunctionSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicAttributes.cs" />
     <Compile Include="Symbols\IntrinsicMatrixTypeSymbol.cs" />
     <Compile Include="Symbols\IntrinsicNumericTypeSymbol.cs" />
     <Compile Include="Symbols\IntrinsicObjectTypeSymbol.cs" />

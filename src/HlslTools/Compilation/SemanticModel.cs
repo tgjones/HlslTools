@@ -14,6 +14,8 @@ namespace HlslTools.Compilation
 
         public Compilation Compilation { get; }
 
+        public SyntaxTree SyntaxTree => Compilation.SyntaxTree;
+
         internal SemanticModel(Compilation compilation, BindingResult bindingResult)
         {
             Compilation = compilation;
@@ -36,6 +38,12 @@ namespace HlslTools.Compilation
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundClassType;
             return result?.ClassSymbol;
+        }
+
+        public InterfaceSymbol GetDeclaredSymbol(InterfaceTypeSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundInterfaceType;
+            return result?.InterfaceSymbol;
         }
 
         public StructSymbol GetDeclaredSymbol(StructTypeSyntax syntax)
@@ -78,6 +86,12 @@ namespace HlslTools.Compilation
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundSemantic;
             return result?.SemanticSymbol;
+        }
+
+        public Symbol GetSymbol(AttributeSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundAttribute;
+            return result?.AttributeSymbol;
         }
 
         public Symbol GetSymbol(ExpressionSyntax expression)

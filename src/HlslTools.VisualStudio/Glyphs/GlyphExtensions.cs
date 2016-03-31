@@ -73,9 +73,7 @@ namespace HlslTools.VisualStudio.Glyphs
                 case SymbolKind.Field:
                     return Glyph.Field;
                 case SymbolKind.Function:
-                    return Glyph.Function;
-                case SymbolKind.Method:
-                    return Glyph.Method;
+                    return symbol.Parent is TypeSymbol ? Glyph.Method : Glyph.Function;
                 case SymbolKind.Variable:
                     return Glyph.Variable;
                 case SymbolKind.Parameter:
@@ -94,6 +92,8 @@ namespace HlslTools.VisualStudio.Glyphs
                     return Glyph.Semantic;
                 case SymbolKind.Technique:
                     return Glyph.Technique;
+                case SymbolKind.Attribute:
+                    return Glyph.Function;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
+using HlslTools.Compilation;
+using HlslTools.Symbols;
 using HlslTools.Syntax;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
@@ -10,13 +11,15 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 {
     internal sealed class SemanticTaggerVisitor : SyntaxWalker
     {
+        private readonly SemanticModel _semanticModel;
         private readonly HlslClassificationService _classificationService;
         private readonly ITextSnapshot _snapshot;
         private readonly List<ITagSpan<IClassificationTag>> _results;
         private readonly CancellationToken _cancellationToken;
 
-        public SemanticTaggerVisitor(HlslClassificationService classificationService, ITextSnapshot snapshot, List<ITagSpan<IClassificationTag>> results, CancellationToken cancellationToken)
+        public SemanticTaggerVisitor(SemanticModel semanticModel, HlslClassificationService classificationService, ITextSnapshot snapshot, List<ITagSpan<IClassificationTag>> results, CancellationToken cancellationToken)
         {
+            _semanticModel = semanticModel;
             _classificationService = classificationService;
             _snapshot = snapshot;
             _results = results;
@@ -31,27 +34,36 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 
         public override void VisitAttribute(AttributeSyntax node)
         {
-            CreateTag(node.Name.Name, _classificationService.ClassIdentifier);
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name.Name, _classificationService.FunctionIdentifier);
+
             base.VisitAttribute(node);
         }
 
         public override void VisitClassType(ClassTypeSyntax node)
         {
-            CreateTag(node.Name, _classificationService.ClassIdentifier);
+            var symbol = _semanticModel.GetDeclaredSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, _classificationService.ClassIdentifier);
 
             base.VisitClassType(node);
         }
 
         public override void VisitInterfaceType(InterfaceTypeSyntax node)
         {
-            CreateTag(node.Name, _classificationService.ClassIdentifier);
+            var symbol = _semanticModel.GetDeclaredSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, _classificationService.ClassIdentifier);
 
             base.VisitInterfaceType(node);
         }
 
         public override void VisitStructType(StructTypeSyntax node)
         {
-            CreateTag(node.Name, _classificationService.ClassIdentifier);
+            var symbol = _semanticModel.GetDeclaredSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, _classificationService.ClassIdentifier);
 
             base.VisitStructType(node);
         }
@@ -65,26 +77,28 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 
         public override void VisitFunctionDefinition(FunctionDefinitionSyntax node)
         {
-            CreateTag(node.Name.GetUnqualifiedName().Name, _classificationService.FunctionIdentifier);
+            var symbol = _semanticModel.GetDeclaredSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name.GetUnqualifiedName().Name, _classificationService.FunctionIdentifier);
 
             base.VisitFunctionDefinition(node);
         }
 
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
-            if (node.Ancestors().Any(x => x is FunctionDefinitionSyntax))
-                CreateTag(node.Identifier, _classificationService.LocalVariableIdentifier);
-            else if (node.Ancestors().Any(x => x is TypeDefinitionSyntax))
-                CreateTag(node.Identifier, _classificationService.FieldIdentifier);
-            else
-                CreateTag(node.Identifier, _classificationService.GlobalVariableIdentifier);
+            var symbol = _semanticModel.GetDeclaredSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Identifier, GetClassificationType(symbol));
 
             base.VisitVariableDeclarator(node);
         }
 
         public override void VisitSemantic(SemanticSyntax node)
         {
-            CreateTag(node.Semantic, _classificationService.Semantic);
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Semantic, _classificationService.Semantic);
+
             base.VisitSemantic(node);
         }
 
@@ -113,13 +127,75 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
-            // TODO: Figure out what type of identifier this is.
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, GetClassificationType(symbol));
+
             base.VisitIdentifierName(node);
+        }
+
+        public override void VisitIdentifierDeclarationName(IdentifierDeclarationNameSyntax node)
+        {
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, GetClassificationType(symbol));
+
+            base.VisitIdentifierDeclarationName(node);
+        }
+
+        public override void VisitFieldAccess(FieldAccessExpressionSyntax node)
+        {
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, _classificationService.FieldIdentifier);
+
+            base.VisitFieldAccess(node);
+        }
+
+        public override void VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
+        {
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name, _classificationService.FunctionIdentifier);
+
+            base.VisitMethodInvocationExpression(node);
+        }
+
+        public override void VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
+        {
+            var symbol = _semanticModel.GetSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name.GetUnqualifiedName().Name, _classificationService.FunctionIdentifier);
+
+            base.VisitFunctionInvocationExpression(node);
+        }
+
+        private IClassificationType GetClassificationType(Symbol symbol)
+        {
+            switch (symbol.Kind)
+            {
+                case SymbolKind.Field:
+                    return _classificationService.FieldIdentifier;
+                case SymbolKind.Parameter:
+                    return _classificationService.ParameterIdentifier;
+                case SymbolKind.Variable:
+                    return symbol.Parent == null
+                        ? _classificationService.GlobalVariableIdentifier
+                        : _classificationService.LocalVariableIdentifier;
+                case SymbolKind.Class:
+                case SymbolKind.Struct:
+                case SymbolKind.Interface:
+                    return _classificationService.ClassIdentifier;
+                case SymbolKind.Function:
+                    return _classificationService.FunctionIdentifier;
+                default:
+                    return null;
+            }
         }
 
         private void CreateTag(SyntaxToken token, IClassificationType classificationType)
         {
-            if (token == null || !token.Span.IsInRootFile || token.MacroReference != null)
+            if (token == null || !token.Span.IsInRootFile || token.MacroReference != null || classificationType == null)
                 return;
 
             var snapshotSpan = new SnapshotSpan(_snapshot, token.Span.Start, token.Span.Length);

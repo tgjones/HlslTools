@@ -149,6 +149,8 @@ namespace HlslTools.Binding
 
         private BoundFunctionDeclaration BindFunctionDeclaration(FunctionDeclarationSyntax declaration, Symbol parent)
         {
+            BindAttributes(declaration.Attributes);
+
             var boundReturnType = Bind(declaration.ReturnType, x => BindType(x, parent));
 
             var functionSymbol = LocalSymbols.OfType<SourceFunctionSymbol>()
@@ -178,6 +180,8 @@ namespace HlslTools.Binding
 
         private BoundNode BindFunctionDefinition(FunctionDefinitionSyntax declaration, Symbol parent)
         {
+            BindAttributes(declaration.Attributes);
+
             var boundReturnType = Bind(declaration.ReturnType, x => BindType(x, parent));
 
             var isQualifiedName = false;

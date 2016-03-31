@@ -22,8 +22,8 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         protected override Tuple<ITextSnapshot, List<ITagSpan<IClassificationTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
         {
             var semanticTags = new List<ITagSpan<IClassificationTag>>();
-            var semanticTaggerVisitor = new SemanticTaggerVisitor(_classificationService, snapshotSyntaxTree.Snapshot, semanticTags, cancellationToken);
 
+            var semanticTaggerVisitor = new SemanticTaggerVisitor(snapshotSyntaxTree.SemanticModel, _classificationService, snapshotSyntaxTree.Snapshot, semanticTags, cancellationToken);
             semanticTaggerVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshotSyntaxTree.SyntaxTree.Root);
 
             return Tuple.Create(snapshotSyntaxTree.Snapshot, semanticTags);

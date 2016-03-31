@@ -233,5 +233,37 @@ namespace HlslTools.Syntax
         {
             return (TNode)node.SetDiagnostics(ImmutableArray<Diagnostic>.Empty);
         }
+
+        public static IEnumerable<SyntaxNode> FindNodes(this SyntaxNode root, SourceLocation position)
+        {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
+
+            // NOTE: We don't use Distinct() because we want to preserve the order of nodes.
+            var seenNodes = new HashSet<SyntaxNode>();
+            return root.FindStartTokens(position)
+                .SelectMany(t => t.Parent.AncestorsAndSelf())
+                .Where(seenNodes.Add);
+        }
+
+        public static IEnumerable<SyntaxNode> DescendantNodes(this SyntaxNode root)
+        {
+            return root.DescendantNodesAndSelf().Skip(1);
+        }
+
+        public static IEnumerable<SyntaxNode> DescendantNodesAndSelf(this SyntaxNode root)
+        {
+            var stack = new Stack<SyntaxNode>();
+            stack.Push(root);
+
+            while (stack.Count > 0)
+            {
+                var current = stack.Pop();
+                yield return current;
+
+                foreach (var child in current.ChildNodes.Reverse())
+                    stack.Push(child);
+            }
+        }
     }
 }

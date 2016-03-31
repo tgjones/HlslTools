@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
@@ -56,6 +57,8 @@ namespace HlslTools.Binding
 
         private BoundStatement BindDoStatement(DoStatementSyntax syntax, Symbol parent)
         {
+            BindAttributes(syntax.Attributes);
+
             return new BoundDoStatement(
                 Bind(syntax.Condition, BindExpression),
                 Bind(syntax.Statement, x => BindStatement(x, parent)));
@@ -70,6 +73,8 @@ namespace HlslTools.Binding
 
         private BoundStatement BindSwitchStatement(SwitchStatementSyntax syntax, Symbol parent)
         {
+            BindAttributes(syntax.Attributes);
+
             var switchBinder = new Binder(_sharedBinderState, this);
             var boundSections = syntax.Sections.Select(x => switchBinder.Bind(x, y => switchBinder.BindSwitchSection(y, parent))).ToImmutableArray();
 
@@ -120,6 +125,8 @@ namespace HlslTools.Binding
 
         private BoundForStatement BindForStatement(ForStatementSyntax syntax, Symbol parent)
         {
+            BindAttributes(syntax.Attributes);
+
             var forStatementBinder = new Binder(_sharedBinderState, this);
 
             // Note that we bind declarations in the current scope, not the for statement scope.
@@ -151,6 +158,8 @@ namespace HlslTools.Binding
 
         private BoundIfStatement BindIfStatement(IfStatementSyntax syntax, Symbol parent)
         {
+            BindAttributes(syntax.Attributes);
+
             return new BoundIfStatement(
                 Bind(syntax.Condition, BindExpression),
                 Bind(syntax.Statement, x => BindStatement(x, parent)),
@@ -159,12 +168,26 @@ namespace HlslTools.Binding
 
         private BoundReturnStatement BindReturnStatement(ReturnStatementSyntax syntax)
         {
+            BindAttributes(syntax.Attributes);
             return new BoundReturnStatement(syntax.Expression != null ? Bind(syntax.Expression, BindExpression) : null);
         }
 
         private BoundMultipleVariableDeclarations BindVariableDeclarationStatement(VariableDeclarationStatementSyntax syntax, Symbol parent)
         {
+            BindAttributes(syntax.Attributes);
             return BindVariableDeclaration(syntax.Declaration, parent);
+        }
+
+        private ImmutableArray<BoundAttribute> BindAttributes(List<AttributeSyntax> attributes)
+        {
+            return attributes.Select(x => Bind(x, BindAttribute)).ToImmutableArray();
+        }
+
+        private BoundAttribute BindAttribute(AttributeSyntax syntax)
+        {
+            var attributeSymbol = IntrinsicAttributes.AllAttributes.FirstOrDefault(x => x.Name == syntax.Name.Name.Text)
+                ?? new AttributeSymbol(syntax.Name.Name.Text, string.Empty);
+            return new BoundAttribute(attributeSymbol);
         }
     }
 }

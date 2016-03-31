@@ -18,9 +18,6 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Function:
                     markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol);
                     break;
-                case SymbolKind.Method:
-                    markup.AppendMethodSymbolInfo((FunctionSymbol) symbol);
-                    break;
                 case SymbolKind.Variable:
                     markup.AppendVariableSymbolInfo((VariableSymbol) symbol);
                     break;
@@ -46,6 +43,9 @@ namespace HlslTools.Symbols.Markup
                     break;
                 case SymbolKind.Technique:
                     markup.AppendTechnique((TechniqueSymbol) symbol);
+                    break;
+                case SymbolKind.Attribute:
+                    markup.AppendAttribute((AttributeSymbol) symbol);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -75,18 +75,17 @@ namespace HlslTools.Symbols.Markup
             markup.Append(SymbolMarkupKind.Whitespace, " ");
         }
 
-        private static void AppendMethodSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
-        {
-            markup.AppendType(symbol.ReturnType, false);
-            markup.AppendSpace();
-            markup.AppendName(SymbolMarkupKind.MethodName, symbol.Name);
-            markup.AppendParameters(symbol.Parameters);
-        }
-
         private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
         {
             markup.AppendType(symbol.ReturnType, false);
             markup.AppendSpace();
+
+            if (symbol.Parent is TypeSymbol)
+            {
+                markup.AppendTypeName((TypeSymbol) symbol.Parent);
+                markup.AppendPunctuation(".");
+            }
+
             markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
             markup.AppendParameters(symbol.Parameters);
         }
@@ -221,6 +220,12 @@ namespace HlslTools.Symbols.Markup
             markup.AppendSpace();
 
             markup.AppendName(SymbolMarkupKind.SemanticName, symbol.Name);
+        }
+
+        private static void AppendAttribute(this ICollection<SymbolMarkupToken> markup, AttributeSymbol symbol)
+        {
+            markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
+            markup.AppendParameters(symbol.Parameters);
         }
 
         private static void AppendTechnique(this ICollection<SymbolMarkupToken> markup, TechniqueSymbol symbol)

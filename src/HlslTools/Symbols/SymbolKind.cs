@@ -9,7 +9,6 @@
         Interface,
         Field,
         Function,
-        Method,
         Variable,
         Parameter,
         Indexer,
@@ -18,6 +17,7 @@
         IntrinsicMatrixType,
         IntrinsicScalarType,
         Semantic,
-        Technique
+        Technique,
+        Attribute
     }
 }
