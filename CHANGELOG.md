@@ -1,10 +1,9 @@
 # Roadmap
 
-- [x] Custom file extensions
-- [ ] Semantic highlighting
-- [ ] Live semantic errors
-- [ ] Go to definition (full support)
-- [ ] Quick info (full support)
+- [x] Semantic highlighting
+- [x] Live semantic errors
+- [x] Go to definition (full support)
+- [x] Quick info (full support)
 - [ ] If `#include`d file is open file in Visual Studio, use that instead of on-disk version
 - [ ] Statement completion
 - [ ] Signature help (aka "parameter info")
@@ -16,7 +15,13 @@ Features that have a checkmark are complete and available for download in the
 
 These are the changes to each version that has been released on the official Visual Studio extension gallery.
 
-## 0.9
+## 0.9.42
+
+**2016-03-10
+
+- [x] Custom file extensions
+
+## 0.9.8
 
 **2015-10-02**
 
