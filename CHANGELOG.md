@@ -17,7 +17,7 @@ These are the changes to each version that has been released on the official Vis
 
 ## 0.9.42
 
-**2016-03-10
+**2016-03-10**
 
 - [x] Custom file extensions
 
