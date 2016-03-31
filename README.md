@@ -2,7 +2,7 @@
 
 A Visual Studio extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
 
-[![Build status](https://ci.appveyor.com/api/projects/status/4ykbwleeg5c8o1l4?svg=true)](https://ci.appveyor.com/project/tgjones/hlsltools)
+[![Build status](https://ci.appveyor.com/api/projects/status/4ykbwleeg5c8o1l4?svg=true)](https://ci.appveyor.com/project/tgjones/hlsltools) [![Join the chat at https://gitter.im/tgjones/HlslTools](https://badges.gitter.im/tgjones/HlslTools.svg)](https://gitter.im/tgjones/HlslTools)
 
 Download the extension at the [VS Gallery](https://visualstudiogallery.msdn.microsoft.com/75ddd3be-6eda-4433-a850-458b51186658) 
 or get the [nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-953d-3fdea1891737/).
@@ -94,9 +94,10 @@ but may be of interest to language nerds, so it's included in the main extension
 
 ### Getting involved
 
-You can ask questions regarding the project on [GitHub issues](https://github.com/tgjones/HlslTools/issues)
-or on Twitter (tweeting to [@roastedamoeba](https://twitter.com/roastedamoeba) and
-[#hlsltools](https://twitter.com/hashtag/hlsltools) hashtag).
+You can ask questions in our [Gitter room](https://gitter.im/tgjones/HlslTools).
+If you find a bug or want to request a feature, [create an issue here ](https://github.com/tgjones/HlslTools/issues).
+You can find me on Twitter at [@_tim_jones_](https://twitter.com/_tim_jones_) and I tweet about HLSL Tools using the
+[#hlsltools](https://twitter.com/hashtag/hlsltools) hashtag.
 
 Contributions are always welcome. [Please read the contributing guide first.](CONTRIBUTING.md)
 
