@@ -22,17 +22,20 @@ namespace HlslTools.Symbols
             return SymbolMarkup.ForSymbol(this).ToString();
         }
 
-        protected bool Equals(Symbol other)
+        protected bool EqualsImpl(Symbol other)
         {
-            return Kind == other.Kind && string.Equals(Name, other.Name) && ReferenceEquals(Parent, other.Parent);
+            return Kind == other.Kind
+                && string.Equals(Name, other.Name)
+                && (Parent == null) == (other.Parent == null)
+                && (Parent == null || Parent.EqualsImpl(other.Parent));
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != this.GetType()) return false;
-            return Equals((Symbol) obj);
+            if (obj.GetType() != GetType()) return false;
+            return EqualsImpl((Symbol) obj);
         }
 
         public override int GetHashCode()
