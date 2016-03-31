@@ -49,6 +49,16 @@ namespace HlslTools.VisualStudio.SymbolSearch
             }
         }
 
+        public static bool operator ==(SymbolSpan left, SymbolSpan right)
+        {
+            return left.Equals(right);
+        }
+
+        public static bool operator !=(SymbolSpan left, SymbolSpan right)
+        {
+            return !left.Equals(right);
+        }
+
         public static SymbolSpan CreateReference(Symbol symbol, SourceRange sourceRange, TextSpan span)
         {
             return new SymbolSpan(SymbolSpanKind.Reference, symbol, sourceRange, span);

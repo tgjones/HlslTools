@@ -105,6 +105,36 @@ namespace HlslTools.VisualStudio.SymbolSearch
                         yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.Span);
                     break;
                 }
+                case SyntaxKind.FunctionInvocationExpression:
+                {
+                    var expression = (FunctionInvocationExpressionSyntax) node;
+                    var symbol = semanticModel.GetSymbol(expression);
+                    if (symbol != null)
+                        yield return SymbolSpan.CreateReference(symbol, 
+                            expression.Name.GetUnqualifiedName().Name.SourceRange, 
+                            expression.Name.GetUnqualifiedName().Name.Span);
+                    break;
+                }
+                case SyntaxKind.FunctionDefinition:
+                {
+                    var expression = (FunctionDefinitionSyntax) node;
+                    var symbol = semanticModel.GetDeclaredSymbol(expression);
+                    if (symbol != null)
+                        yield return SymbolSpan.CreateDefinition(symbol,
+                            expression.Name.GetUnqualifiedName().Name.SourceRange,
+                            expression.Name.GetUnqualifiedName().Name.Span);
+                    break;
+                }
+                case SyntaxKind.FunctionDeclaration:
+                {
+                    var expression = (FunctionDeclarationSyntax) node;
+                    var symbol = semanticModel.GetDeclaredSymbol(expression);
+                    if (symbol != null)
+                        yield return SymbolSpan.CreateDefinition(symbol,
+                            expression.Name.GetUnqualifiedName().Name.SourceRange,
+                            expression.Name.GetUnqualifiedName().Name.Span);
+                    break;
+                }
             }
         }
     }

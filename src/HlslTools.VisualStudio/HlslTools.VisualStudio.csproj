@@ -297,10 +297,15 @@
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpCommandHandlerTypeChar.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureItem.cs" />
     <Compile Include="Navigation\GoToDefinitionCommandTarget.cs" />
+    <Compile Include="Navigation\GoToDefinitionProviders\FieldAccessGoToDefinitionProvider.cs" />
+    <Compile Include="Navigation\GoToDefinitionProviders\FunctionInvocationGoToDefinitionProvider.cs" />
     <Compile Include="Navigation\GoToDefinitionProviders\GoToDefinitionProvider.cs" />
+    <Compile Include="Navigation\GoToDefinitionProviders\IdentifierGoToDefinitionProvider.cs" />
     <Compile Include="Navigation\GoToDefinitionProviders\IQuickInfoModelProvider.cs" />
     <Compile Include="Navigation\GoToDefinitionProviders\GoToDefinitionProviderService.cs" />
     <Compile Include="Navigation\GoToDefinitionProviders\MacroReferenceGoToDefinitionProvider.cs" />
+    <Compile Include="Navigation\GoToDefinitionProviders\MethodInvocationGoToDefinitionProvider.cs" />
+    <Compile Include="Navigation\GoToDefinitionProviders\SymbolReferenceGoToDefinitionProvider.cs" />
     <Compile Include="Navigation\GoToDefinitionTextViewCreationListener.cs" />
     <Compile Include="Navigation\NavigateTo\NavigateToItemDisplay.cs" />
     <Compile Include="Navigation\NavigateTo\NavigateToItemProvider.cs" />
