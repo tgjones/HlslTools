@@ -67,9 +67,12 @@ namespace HlslTools.Binding
                         if (!signature.ParameterHasDefaultValue(i))
                             return false;
             }
-            
+
             for (var i = 0; i < argumentCount; i++)
             {
+                if (signature.HasVariadicParameter && i >= signature.ParameterCount)
+                    break;
+
                 var parameterType = signature.GetParameterType(i);
                 var argumentType = argumentTypes[i];
 
