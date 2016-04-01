@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace HlslTools.Symbols
 {
-    public static class IntrinsicFunctions
+    internal static class IntrinsicFunctions
     {
         public static readonly IEnumerable<FunctionSymbol> AllFunctions;
 

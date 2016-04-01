@@ -6,7 +6,7 @@ namespace HlslTools.Symbols
     {
         public ParameterDirection Direction { get; }
 
-        public ParameterSymbol(string name, string documentation, Symbol parent, TypeSymbol valueType, ParameterDirection direction = ParameterDirection.In)
+        internal ParameterSymbol(string name, string documentation, Symbol parent, TypeSymbol valueType, ParameterDirection direction = ParameterDirection.In)
             : base(SymbolKind.Parameter, name, documentation, parent, valueType)
         {
             if (valueType == null)

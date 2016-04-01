@@ -2,9 +2,9 @@
 
 namespace HlslTools.Symbols
 {
-    public class SourceParameterSymbol : ParameterSymbol
+    public sealed class SourceParameterSymbol : ParameterSymbol
     {
-        public SourceParameterSymbol(ParameterSyntax syntax, Symbol parent, TypeSymbol valueType, ParameterDirection direction = ParameterDirection.In)
+        internal SourceParameterSymbol(ParameterSyntax syntax, Symbol parent, TypeSymbol valueType, ParameterDirection direction = ParameterDirection.In)
             : base(syntax.Declarator.Identifier.Text, string.Empty, parent, valueType, direction)
         {
             Syntax = syntax;

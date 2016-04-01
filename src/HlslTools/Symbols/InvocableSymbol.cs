@@ -22,7 +22,7 @@ namespace HlslTools.Symbols
 
         public TypeSymbol ReturnType { get; }
 
-        protected InvocableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol returnType, Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameters = null)
+        internal InvocableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol returnType, Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameters = null)
             : base(kind, name, documentation, parent)
         {
             if (returnType == null)

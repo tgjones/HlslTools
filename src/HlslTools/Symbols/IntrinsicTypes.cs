@@ -6,7 +6,7 @@ using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
-    public static class IntrinsicTypes
+    internal static class IntrinsicTypes
     {
         public static readonly IntrinsicScalarTypeSymbol Void;
         public static readonly IntrinsicScalarTypeSymbol String;

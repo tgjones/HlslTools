@@ -10,7 +10,7 @@ namespace HlslTools.Symbols
             ValueType = valueType;
         }
 
-        protected VariableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol valueType)
+        internal VariableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol valueType)
             : base(kind, name, documentation, parent)
         {
             ValueType = valueType;

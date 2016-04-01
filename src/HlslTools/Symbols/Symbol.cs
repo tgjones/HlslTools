@@ -9,7 +9,7 @@ namespace HlslTools.Symbols
         public string Documentation { get; }
         public Symbol Parent { get; }
 
-        protected Symbol(SymbolKind kind, string name, string documentation, Symbol parent)
+        internal Symbol(SymbolKind kind, string name, string documentation, Symbol parent)
         {
             Kind = kind;
             Name = name;
