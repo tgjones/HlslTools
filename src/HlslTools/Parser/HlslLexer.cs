@@ -856,11 +856,8 @@ namespace HlslTools.Parser
                         goto ExitLoop;
 
                     case '\\':
+                        sb.Append(_charReader.Current);
                         NextChar();
-
-                        if (_charReader.Current != '"')
-                            goto default;
-
                         sb.Append(_charReader.Current);
                         NextChar();
                         break;
