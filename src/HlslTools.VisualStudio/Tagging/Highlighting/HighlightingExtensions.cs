@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HlslTools.Compilation;
 using HlslTools.Syntax;
 using HlslTools.Text;
@@ -14,8 +15,9 @@ namespace HlslTools.VisualStudio.Tagging.Highlighting
 
             foreach (var highlighter in highlighters)
             {
-                var highlights = highlighter.GetHighlights(semanticModel, position);
-                result.AddRange(highlights);
+                result.AddRange(highlighter
+                    .GetHighlights(semanticModel, position)
+                    .Where(x => x.Span.IsInRootFile));
             }
 
             return result;
