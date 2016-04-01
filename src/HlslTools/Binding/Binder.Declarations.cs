@@ -39,6 +39,8 @@ namespace HlslTools.Binding
                     return BindNamespace((NamespaceSyntax) declaration);
                 case SyntaxKind.TechniqueDeclaration:
                     return BindTechniqueDeclaration((TechniqueSyntax) declaration);
+                case SyntaxKind.EmptyStatement:
+                    return BindEmptyStatement((EmptyStatementSyntax) declaration);
                 default:
                     throw new ArgumentOutOfRangeException(declaration.Kind.ToString());
             }

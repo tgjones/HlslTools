@@ -33,6 +33,9 @@ namespace HlslTools.Binding
                 case BoundNodeKind.Technique:
                     VisitTechnique((BoundTechnique) node);
                     break;
+                case BoundNodeKind.NoOpStatement:
+                    VisitNoOpStatement((BoundNoOpStatement) node);
+                    break;
                 case BoundNodeKind.Error:
                     VisitError((BoundErrorNode) node);
                     break;
