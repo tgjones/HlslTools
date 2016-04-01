@@ -11,5 +11,7 @@ namespace HlslTools.Symbols
         }
 
         public ParameterSyntax Syntax { get; }
+
+        public override bool HasDefaultValue => Syntax.Declarator.Initializer != null;
     }
 }

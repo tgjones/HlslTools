@@ -20,6 +20,11 @@ namespace HlslTools.Binding.Signatures
             return Symbol.Parameters[index].Direction;
         }
 
+        public override bool ParameterHasDefaultValue(int index)
+        {
+            return Symbol.Parameters[index].HasDefaultValue;
+        }
+
         public override TypeSymbol GetParameterType(int index)
         {
             return Symbol.Parameters[index].ValueType;

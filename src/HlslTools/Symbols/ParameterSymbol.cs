@@ -35,5 +35,7 @@ namespace HlslTools.Symbols
                 return (base.GetHashCode() * 397) ^ (int) Direction;
             }
         }
+
+        public virtual bool HasDefaultValue => false;
     }
 }

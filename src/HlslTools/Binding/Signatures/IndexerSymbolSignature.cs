@@ -1,4 +1,3 @@
-using System;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding.Signatures
@@ -13,6 +12,7 @@ namespace HlslTools.Binding.Signatures
         public override TypeSymbol ReturnType => Symbol.ValueType;
 
         public override ParameterDirection GetParameterDirection(int index) => ParameterDirection.In;
+        public override bool ParameterHasDefaultValue(int index) => false;
 
         public override TypeSymbol GetParameterType(int index) => Symbol.IndexType;
 

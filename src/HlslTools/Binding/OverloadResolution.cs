@@ -58,11 +58,17 @@ namespace HlslTools.Binding
             }
             else
             {
-                if (signature.ParameterCount != argumentCount)
+                if (argumentCount > signature.ParameterCount)
                     return false;
+
+                // If we have fewer arguments than parameters, then check that all unspecified parameters have default values.
+                if (argumentCount < signature.ParameterCount)
+                    for (var i = argumentCount; i < signature.ParameterCount; i++)
+                        if (!signature.ParameterHasDefaultValue(i))
+                            return false;
             }
             
-            for (var i = 0; i < signature.ParameterCount; i++)
+            for (var i = 0; i < argumentCount; i++)
             {
                 var parameterType = signature.GetParameterType(i);
                 var argumentType = argumentTypes[i];

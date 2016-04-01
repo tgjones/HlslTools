@@ -7,6 +7,7 @@ namespace HlslTools.Binding.Signatures
     {
         public abstract TypeSymbol ReturnType { get; }
         public abstract ParameterDirection GetParameterDirection(int index);
+        public abstract bool ParameterHasDefaultValue(int index);
         public abstract TypeSymbol GetParameterType(int index);
         public abstract int ParameterCount { get; }
         public abstract bool HasVariadicParameter { get; }
