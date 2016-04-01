@@ -62,7 +62,7 @@ namespace HlslTools.VisualStudio.Util.Extensions
 
         public static bool TryGetSemanticModel(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken, out SemanticModel semanticModel)
         {
-            if (!HlslToolsPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
+            if (HlslToolsPackage.Instance != null && !HlslToolsPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
             {
                 semanticModel = null;
                 return false;

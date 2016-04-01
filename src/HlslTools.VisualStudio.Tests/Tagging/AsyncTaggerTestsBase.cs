@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HlslTools.Compilation;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Tagging;
 using HlslTools.VisualStudio.Tests.Support;
@@ -27,7 +28,8 @@ namespace HlslTools.VisualStudio.Tests.Tagging
             var backgroundParser = new BackgroundParser(textBuffer, sourceTextFactory);
             var snapshot = textBuffer.CurrentSnapshot;
             var syntaxTree = snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None);
-            var semanticModel = snapshot.GetSemanticModel(sourceTextFactory, CancellationToken.None);
+            SemanticModel semanticModel;
+            snapshot.TryGetSemanticModel(sourceTextFactory, CancellationToken.None, out semanticModel);
             var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, syntaxTree, semanticModel);
             var tagger = CreateTagger(backgroundParser, snapshot);
 
