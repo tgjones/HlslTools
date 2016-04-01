@@ -17,6 +17,7 @@ namespace HlslTools.VisualStudio.Options
         public bool EnterOutliningModeWhenFilesOpen { get; set; } = true;
 
         // IntelliSense
+        public bool EnableIntelliSense { get; set; } = true;
         public bool EnableErrorReporting { get; set; } = true;
         public bool EnableSquiggles { get; set; } = true;
     }

@@ -8,6 +8,7 @@
 
             BindToOption(AddSemicolonForTypesCheckBox, page, nameof(page.AddSemicolonForTypes));
             BindToOption(EnterOutliningModeWhenFilesOpenCheckBox, page, nameof(page.EnterOutliningModeWhenFilesOpen));
+            BindToOption(EnableIntelliSenseCheckBox, page, nameof(page.EnableIntelliSense));
             BindToOption(EnableErrorReportingCheckBox, page, nameof(page.EnableErrorReporting));
             BindToOption(EnableSquigglesCheckBox, page, nameof(page.EnableSquiggles));
         }

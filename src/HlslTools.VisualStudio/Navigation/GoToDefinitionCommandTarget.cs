@@ -47,16 +47,9 @@ namespace HlslTools.VisualStudio.Navigation
         {
             var pos = _textView.Caret.Position.BufferPosition;
 
-            SemanticModel semanticModel;
-            try
-            {
-                semanticModel = await System.Threading.Tasks.Task.Run(() => pos.Snapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Failed to get semantic model: " + ex);
+            SemanticModel semanticModel = null;
+            if (!await System.Threading.Tasks.Task.Run(() => pos.Snapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
                 return;
-            }
 
             var textSpan = _goToDefinitionProviderService.Providers
                 .Select(x => x.GetTargetSpan(semanticModel, semanticModel.Compilation.SyntaxTree.MapRootFilePosition(pos.Position)))

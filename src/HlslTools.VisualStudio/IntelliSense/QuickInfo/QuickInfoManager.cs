@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.IntelliSense.QuickInfo.QuickInfoModelProviders;
 using HlslTools.VisualStudio.Text;
-using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -34,20 +33,9 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
 
         public async void TriggerQuickInfo(int offset)
         {
-            SemanticModel semanticModel;
-            try
-            {
-                semanticModel = await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
-            }
-            catch (OperationCanceledException)
-            {
+            SemanticModel semanticModel = null;
+            if (!await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
                 return;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Failed to get semantic model: " + ex);
-                return;
-            }
 
             Model = GetQuickInfoModel(semanticModel, offset, _quickInfoModelProviderService.Providers);
         }

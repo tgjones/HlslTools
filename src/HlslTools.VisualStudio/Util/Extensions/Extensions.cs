@@ -1,4 +1,5 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using HlslTools.Compilation;
 using HlslTools.Parser;
@@ -59,14 +60,33 @@ namespace HlslTools.VisualStudio.Util.Extensions
             });
         }
 
-        public static SemanticModel GetSemanticModel(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken)
+        public static bool TryGetSemanticModel(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken, out SemanticModel semanticModel)
         {
-            return CachedSemanticModels.GetValue(snapshot, key =>
+            if (!HlslToolsPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
             {
-                var syntaxTree = key.GetSyntaxTree(sourceTextFactory, cancellationToken);
-                var compilation = new Compilation.Compilation(syntaxTree);
-                return compilation.GetSemanticModel();
+                semanticModel = null;
+                return false;
+            }
+
+            semanticModel = CachedSemanticModels.GetValue(snapshot, key =>
+            {
+                try
+                {
+                    var syntaxTree = key.GetSyntaxTree(sourceTextFactory, cancellationToken);
+                    var compilation = new Compilation.Compilation(syntaxTree);
+                    return compilation.GetSemanticModel();
+                }
+                catch (OperationCanceledException)
+                {
+                    return null;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Log($"Failed to create semantic model: {ex}");
+                    return null;
+                }
             });
+            return semanticModel != null;
         }
 
         public static int GetPosition(this ITextView syntaxEditor, ITextSnapshot snapshot)

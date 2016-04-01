@@ -53,6 +53,8 @@ namespace HlslTools.VisualStudio
 
         public static HlslToolsPackage Instance { get; private set; }
 
+        internal IOptionsService Options { get; private set; }
+
         #region Language preferences
 
         private readonly Dictionary<IVsCodeWindow, CodeWindowManager> _codeWindowManagers = new Dictionary<IVsCodeWindow, CodeWindowManager>();
@@ -97,6 +99,8 @@ namespace HlslTools.VisualStudio
             textManagerEvents2ConnectionPoint.Advise(LanguagePreferences, out cookie);
 
             RegisterEditorFactory(new HlslEditorFactory(this));
+
+            Options = this.AsVsServiceProvider().GetComponentModel().GetService<IOptionsService>();
         }
 
         protected override void Dispose(bool disposing)

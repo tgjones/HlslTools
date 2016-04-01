@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using HlslTools.Diagnostics;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
@@ -21,7 +22,7 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
 
         protected override IEnumerable<Diagnostic> GetDiagnostics(SnapshotSyntaxTree snapshotSyntaxTree)
         {
-            return snapshotSyntaxTree.SemanticModel.GetDiagnostics();
+            return snapshotSyntaxTree.SemanticModel?.GetDiagnostics() ?? Enumerable.Empty<Diagnostic>();
         }
     }
 }

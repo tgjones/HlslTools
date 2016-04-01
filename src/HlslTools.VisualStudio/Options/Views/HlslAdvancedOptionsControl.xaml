@@ -24,10 +24,18 @@
                 </StackPanel>
             </GroupBox>
 
+            <GroupBox Header="Error Reporting">
+                <StackPanel>
+                    <CheckBox x:Name="EnableErrorReportingCheckBox" Content="Enable _error reporting" />
+                    <CheckBox x:Name="EnableSquigglesCheckBox" Content="Enable error _squiggles" IsEnabled="{Binding IsChecked, ElementName=EnableErrorReportingCheckBox}" />
+                </StackPanel>
+            </GroupBox>
+
             <GroupBox Header="IntelliSense">
                 <StackPanel>
-                    <CheckBox x:Name="EnableErrorReportingCheckBox" Content="Enable _error reporting"/>
-                    <CheckBox x:Name="EnableSquigglesCheckBox" Content="Enable error _squiggles" IsEnabled="{Binding IsChecked, ElementName=EnableErrorReportingCheckBox}" />
+                    <CheckBox x:Name="EnableIntelliSenseCheckBox" Content="Enable _IntelliSense" />
+                    <TextBlock Text="Disabling IntelliSense will disable all HLSL IntelliSense features, including Quick Info, Signature Help, Statement Completion, Go To Definition, Reference Highlighting, and Semantic Highlighting."
+                               TextWrapping="Wrap" Margin="0 0 0 2" />
                 </StackPanel>
             </GroupBox>
         </StackPanel>

@@ -23,8 +23,11 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         {
             var semanticTags = new List<ITagSpan<IClassificationTag>>();
 
-            var semanticTaggerVisitor = new SemanticTaggerVisitor(snapshotSyntaxTree.SemanticModel, _classificationService, snapshotSyntaxTree.Snapshot, semanticTags, cancellationToken);
-            semanticTaggerVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshotSyntaxTree.SyntaxTree.Root);
+            if (snapshotSyntaxTree.SemanticModel != null)
+            {
+                var semanticTaggerVisitor = new SemanticTaggerVisitor(snapshotSyntaxTree.SemanticModel, _classificationService, snapshotSyntaxTree.Snapshot, semanticTags, cancellationToken);
+                semanticTaggerVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshotSyntaxTree.SyntaxTree.Root);
+            }
 
             return Tuple.Create(snapshotSyntaxTree.Snapshot, semanticTags);
         }

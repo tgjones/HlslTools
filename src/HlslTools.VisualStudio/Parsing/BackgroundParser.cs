@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using HlslTools.Compilation;
 using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
@@ -81,7 +82,8 @@ namespace HlslTools.VisualStudio.Parsing
 
                         cancellationToken.ThrowIfCancellationRequested();
 
-                        var semanticModel = snapshot.GetSemanticModel(_sourceTextFactory, cancellationToken);
+                        SemanticModel semanticModel;
+                        snapshot.TryGetSemanticModel(_sourceTextFactory, cancellationToken, out semanticModel);
 
                         cancellationToken.ThrowIfCancellationRequested();
 

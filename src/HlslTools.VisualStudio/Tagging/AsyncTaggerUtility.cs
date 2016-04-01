@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using HlslTools.Compilation;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
@@ -23,9 +24,14 @@ namespace HlslTools.VisualStudio.Tagging
                     Task.Run(async () =>
                     {
                         var snapshot = textBuffer.CurrentSnapshot;
+
+                        SemanticModel semanticModel = null;
+                        snapshot.TryGetSemanticModel(sourceTextFactory, CancellationToken.None, out semanticModel);
+
                         var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot,
                             snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None),
-                            snapshot.GetSemanticModel(sourceTextFactory, CancellationToken.None));
+                            semanticModel);
+
                         await tagger.InvalidateTags(snapshotSyntaxTree, CancellationToken.None);
                     });
                     return tagger as ITagger<T>;

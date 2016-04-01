@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelProviders;
 using HlslTools.VisualStudio.Text;
-using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -103,20 +102,9 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             var snapshot = _textView.TextSnapshot;
             var triggerPosition = _textView.GetPosition(snapshot);
 
-            SemanticModel semanticModel;
-            try
-            {
-                semanticModel = await Task.Run(() => snapshot.GetSemanticModel(_sourceTextFactory, CancellationToken.None));
-            }
-            catch (OperationCanceledException)
-            {
+            SemanticModel semanticModel = null;
+            if (!await Task.Run(() => snapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
                 return;
-            }
-            catch (Exception ex)
-            {
-                Logger.Log("Failed to get semantic model: " + ex);
-                return;
-            }
 
             var model = GetSignatureHelpModel(semanticModel, triggerPosition, _signatureHelpModelProviderService.Providers);
 
