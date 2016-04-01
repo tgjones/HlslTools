@@ -855,6 +855,16 @@ namespace HlslTools.Parser
                         _diagnostics.ReportUnterminatedString(CurrentSpanStart);
                         goto ExitLoop;
 
+                    case '\\':
+                        NextChar();
+
+                        if (_charReader.Current != '"')
+                            goto default;
+
+                        sb.Append(_charReader.Current);
+                        NextChar();
+                        break;
+
                     case '"':
                         NextChar();
 
