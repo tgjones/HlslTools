@@ -264,4 +264,7 @@
   <data name="UndeclaredNamespaceOrType" xml:space="preserve">
     <value>A namespace or class '{0}' is not declared.</value>
   </data>
+  <data name="InvocationRequiresParenthesis" xml:space="preserve">
+    <value>Invocation of '{0}' requires parenthesis.</value>
+  </data>
 </root>

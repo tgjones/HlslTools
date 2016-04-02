@@ -304,6 +304,15 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invocation of &apos;{0}&apos; requires parenthesis..
+        /// </summary>
+        internal static string InvocationRequiresParenthesis {
+            get {
+                return ResourceManager.GetString("InvocationRequiresParenthesis", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Loop control variable &apos;{0}&apos; conflicts with a previous declaration in the outer scope. The most recent declaration will be used..
         /// </summary>
         internal static string LoopControlVariableConflict {
