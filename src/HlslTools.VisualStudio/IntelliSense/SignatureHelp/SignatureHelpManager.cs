@@ -137,6 +137,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 
             UpdateModel().ContinueWith(t =>
             {
+                if (_session == null)
+                    return;
                 _session.Recalculate();
                 _session.Match();
             }, CancellationToken.None,
@@ -146,9 +148,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
 
         private void OnModelChanged(EventArgs e)
         {
-            var handler = ModelChanged;
-            if (handler != null)
-                handler(this, e);
+            ModelChanged?.Invoke(this, e);
         }
 
         public SignatureHelpModel Model
