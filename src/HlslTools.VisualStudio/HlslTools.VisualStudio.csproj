@@ -238,6 +238,7 @@
     <Compile Include="IntelliSense\Completion\CompletionProviders\CompletionProviderService.cs" />
     <Compile Include="IntelliSense\Completion\CompletionProviders\KeywordCompletionProvider.cs" />
     <Compile Include="IntelliSense\Completion\CompletionProviders\SemanticCompletionProvider.cs" />
+    <Compile Include="IntelliSense\Completion\CompletionProviders\SymbolCompletionProvider.cs" />
     <Compile Include="IntelliSense\Completion\CompletionSource.cs" />
     <Compile Include="IntelliSense\Completion\CompletionSourceProvider.cs" />
     <Compile Include="IntelliSense\Completion\HlslCompletionSet.cs" />

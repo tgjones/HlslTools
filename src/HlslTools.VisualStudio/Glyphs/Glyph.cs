@@ -17,6 +17,7 @@
         Field,
         Method,
         Intrinsic,
-        Macro
+        Macro,
+        CompletionWarning
     }
 }

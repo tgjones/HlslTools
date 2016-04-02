@@ -265,5 +265,14 @@ namespace HlslTools.Syntax
                     stack.Push(child);
             }
         }
+
+        public static bool PossiblyInUserGivenName(this SyntaxNode root, SourceLocation position)
+        {
+            if (root == null)
+                throw new ArgumentNullException(nameof(root));
+
+            // TODO
+            return false;
+        }
     }
 }

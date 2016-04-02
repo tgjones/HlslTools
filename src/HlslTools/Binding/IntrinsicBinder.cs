@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using HlslTools.Symbols;
 
 namespace HlslTools.Binding
@@ -11,6 +12,14 @@ namespace HlslTools.Binding
             
         }
 
-        protected internal override IEnumerable<Symbol> LocalSymbols => IntrinsicFunctions.AllFunctions;
+        protected internal override IEnumerable<Symbol> LocalSymbols
+        {
+            get
+            {
+                return IntrinsicFunctions.AllFunctions
+                    .Cast<Symbol>()
+                    .Union(IntrinsicSemantics.AllSemantics);
+            }
+        }
     }
 }

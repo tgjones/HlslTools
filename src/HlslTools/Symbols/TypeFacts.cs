@@ -4,7 +4,7 @@ using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
-    internal static class TypeFacts
+    public static class TypeFacts
     {
         public static readonly TypeSymbol Missing = new IntrinsicObjectTypeSymbol("[Missing]", string.Empty, PredefinedObjectType.Texture);
         public static readonly TypeSymbol Unknown = new IntrinsicObjectTypeSymbol("[Unknown]", string.Empty, PredefinedObjectType.Texture);
@@ -25,7 +25,7 @@ namespace HlslTools.Symbols
             return type.IsMissing() || type.IsUnknown();
         }
 
-        public static string ToDisplayName(this TypeSymbol type)
+        internal static string ToDisplayName(this TypeSymbol type)
         {
             if (type.IsUnknown())
                 return "<?>";
@@ -36,7 +36,7 @@ namespace HlslTools.Symbols
             return type.Name;
         }
 
-        public static bool HasExplicitConversionTo(this TypeSymbol left, TypeSymbol right)
+        internal static bool HasExplicitConversionTo(this TypeSymbol left, TypeSymbol right)
         {
             if (left.Equals(right))
                 return true;
@@ -47,7 +47,7 @@ namespace HlslTools.Symbols
             return left.HasImplicitConversionTo(right);
         }
 
-        public static bool HasImplicitConversionTo(this TypeSymbol left, TypeSymbol right)
+        internal static bool HasImplicitConversionTo(this TypeSymbol left, TypeSymbol right)
         {
             if (left.Equals(right))
                 return true;
@@ -153,21 +153,21 @@ namespace HlslTools.Symbols
             return false;
         }
 
-        public static bool IsIntrinsicNumericType(this TypeSymbol type)
+        internal static bool IsIntrinsicNumericType(this TypeSymbol type)
         {
             return type.Kind == SymbolKind.IntrinsicMatrixType
                 || type.Kind == SymbolKind.IntrinsicScalarType
                 || type.Kind == SymbolKind.IntrinsicVectorType;
         }
 
-        public static bool IsUserDefined(this TypeSymbol type)
+        internal static bool IsUserDefined(this TypeSymbol type)
         {
             return type.Kind == SymbolKind.Struct
                 || type.Kind == SymbolKind.Class
                 || type.Kind == SymbolKind.Interface;
         }
 
-        public static int GetDimensionSize(this IntrinsicNumericTypeSymbol type, int dimension)
+        internal static int GetDimensionSize(this IntrinsicNumericTypeSymbol type, int dimension)
         {
             switch (type.Kind)
             {
@@ -184,7 +184,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        public static int GetNumElements(this TypeSymbol type)
+        internal static int GetNumElements(this TypeSymbol type)
         {
             switch (type.Kind)
             {
@@ -214,7 +214,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        public static bool IsPromotion(ScalarType left, ScalarType right)
+        internal static bool IsPromotion(ScalarType left, ScalarType right)
         {
             if (left == right)
                 return false;
@@ -241,7 +241,7 @@ namespace HlslTools.Symbols
             return false;
         }
 
-        public static bool IsCast(ScalarType left, ScalarType right)
+        internal static bool IsCast(ScalarType left, ScalarType right)
         {
             if (left == right)
                 return false;
@@ -267,7 +267,7 @@ namespace HlslTools.Symbols
             return true;
         }
 
-        public static bool IsIntCast(ScalarType left, ScalarType right)
+        internal static bool IsIntCast(ScalarType left, ScalarType right)
         {
             if (left == right)
                 return false;
@@ -277,7 +277,7 @@ namespace HlslTools.Symbols
             return true;
         }
 
-        public static ScalarType GetScalarType(ScalarTypeSyntax node)
+        internal static ScalarType GetScalarType(ScalarTypeSyntax node)
         {
             if (node.TypeTokens.Count == 2 && node.TypeTokens[0].Kind == SyntaxKind.UnsignedKeyword && node.TypeTokens[1].Kind == SyntaxKind.IntKeyword)
                 return ScalarType.Uint;
@@ -308,7 +308,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        public static Tuple<ScalarType, int> GetVectorType(SyntaxKind kind)
+        internal static Tuple<ScalarType, int> GetVectorType(SyntaxKind kind)
         {
             switch (kind)
             {
@@ -368,7 +368,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        public static Tuple<ScalarType, int, int> GetMatrixType(SyntaxKind kind)
+        internal static Tuple<ScalarType, int, int> GetMatrixType(SyntaxKind kind)
         {
             switch (kind)
             {
@@ -578,7 +578,7 @@ namespace HlslTools.Symbols
             }
         }
 
-        public static TypeSymbol GetMatchingBoolType(TypeSymbol numericType)
+        internal static TypeSymbol GetMatchingBoolType(TypeSymbol numericType)
         {
             switch (numericType.Kind)
             {
