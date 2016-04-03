@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Util;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -15,13 +14,13 @@ namespace HlslTools.VisualStudio.Tagging
     {
         private List<LineBasedTagSpan> _tags = new List<LineBasedTagSpan>();
 
-        public async virtual Task InvalidateTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        public async virtual Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {
                 try
                 {
-                    var tagsResult = GetTags(snapshotSyntaxTree, cancellationToken);
+                    var tagsResult = GetTags(snapshot, cancellationToken);
 
                     _tags = tagsResult.Item2
                         .Select(x => new LineBasedTagSpan
@@ -46,7 +45,7 @@ namespace HlslTools.VisualStudio.Tagging
             }, cancellationToken);
         }
 
-        protected abstract Tuple<ITextSnapshot, List<ITagSpan<TTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken);
+        protected abstract Tuple<ITextSnapshot, List<ITagSpan<TTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken);
 
         public IEnumerable<ITagSpan<TTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {

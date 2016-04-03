@@ -11,10 +11,10 @@ namespace HlslTools.VisualStudio.Tests.Tagging.BraceMatching
     [TestFixture]
     internal class BraceMatchingTaggerTests : AsyncTaggerTestsBase<BraceMatchingTagger, ITextMarkerTag>
     {
-        protected override BraceMatchingTagger CreateTagger(BackgroundParser backgroundParser, ITextSnapshot snapshot)
+        protected override BraceMatchingTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             var textView = Substitute.For<ITextView>();
-            var snapshotPoint = new SnapshotPoint(snapshot, 0);
+            var snapshotPoint = new SnapshotPoint(textBuffer.CurrentSnapshot, 0);
             var virtualSnapshotPoint = new VirtualSnapshotPoint(snapshotPoint);
             textView.Selection.Start.Returns(virtualSnapshotPoint);
             textView.Selection.End.Returns(virtualSnapshotPoint);

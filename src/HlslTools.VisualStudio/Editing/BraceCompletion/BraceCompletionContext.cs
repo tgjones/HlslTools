@@ -24,18 +24,15 @@ namespace HlslTools.VisualStudio.Editing.BraceCompletion
         private readonly ITextBufferUndoManagerProvider _undoManager;
         private readonly HlslClassificationService _classificationService;
         private readonly IOptionsService _optionsService;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         public BraceCompletionContext(
             ISmartIndentationService smartIndentationService, ITextBufferUndoManagerProvider undoManager, 
-            HlslClassificationService classificationService, IOptionsService optionsService,
-            VisualStudioSourceTextFactory sourceTextFactory)
+            HlslClassificationService classificationService, IOptionsService optionsService)
         {
             _smartIndentationService = smartIndentationService;
             _undoManager = undoManager;
             _classificationService = classificationService;
             _optionsService = optionsService;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         public void Start(IBraceCompletionSession session)
@@ -135,7 +132,7 @@ namespace HlslTools.VisualStudio.Editing.BraceCompletion
 
             session.SubjectBuffer.Format(
                 TextSpan.FromBounds(snapshot.ToSourceText(), Math.Max(startPosition, 0), endPosition),
-                _optionsService, _sourceTextFactory);
+                _optionsService);
         }
 
         private void PutCaretOnLine(IBraceCompletionSession session, int lineNumber)

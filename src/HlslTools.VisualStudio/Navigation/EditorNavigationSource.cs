@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Glyphs;
 using HlslTools.VisualStudio.Parsing;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 
@@ -15,40 +14,34 @@ namespace HlslTools.VisualStudio.Navigation
     {
         private readonly ITextBuffer _textBuffer;
         private readonly DispatcherGlyphService _glyphService;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private List<EditorTypeNavigationTarget> _navigationTargets;
 
-        public EditorNavigationSource(ITextBuffer textBuffer, BackgroundParser backgroundParser, DispatcherGlyphService glyphService, VisualStudioSourceTextFactory sourceTextFactory)
+        public EditorNavigationSource(ITextBuffer textBuffer, BackgroundParser backgroundParser, DispatcherGlyphService glyphService)
         {
             _textBuffer = textBuffer;
             _glyphService = glyphService;
-            _sourceTextFactory = sourceTextFactory;
 
             _navigationTargets = new List<EditorTypeNavigationTarget>();
 
             backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Medium, this);
         }
 
-        public async Task Initialize()
+        public async void Initialize()
         {
-            await Task.Run(async () =>
-            {
-                var snapshot = _textBuffer.CurrentSnapshot;
-
-                var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot,
-                    snapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None),
-                   null);
-                await InvalidateTargets(snapshotSyntaxTree, CancellationToken.None);
-            });
+            await Task.Run(async () => await InvalidateTargets(_textBuffer.CurrentSnapshot, CancellationToken.None));
         }
 
-        private async Task InvalidateTargets(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        private async Task InvalidateTargets(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             var navigationTargets = new List<EditorTypeNavigationTarget>();
 
-            var navigationTargetsVisitor = new NavigationTargetsVisitor(snapshotSyntaxTree.Snapshot, _glyphService, cancellationToken);
+            var navigationTargetsVisitor = new NavigationTargetsVisitor(snapshot, _glyphService, cancellationToken);
 
-            await Task.Run(() => navigationTargets.AddRange(navigationTargetsVisitor.GetTargets((CompilationUnitSyntax) snapshotSyntaxTree.SyntaxTree.Root)), cancellationToken);
+            await Task.Run(() =>
+            {
+                var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+                navigationTargets.AddRange(navigationTargetsVisitor.GetTargets((CompilationUnitSyntax) syntaxTree.Root));
+            }, cancellationToken);
 
             _navigationTargets = navigationTargets;
             OnNavigationTargetsChanged(EventArgs.Empty);
@@ -66,9 +59,9 @@ namespace HlslTools.VisualStudio.Navigation
             NavigationTargetsChanged?.Invoke(this, e);
         }
 
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            await InvalidateTargets(snapshotSyntaxTree, cancellationToken);
+            await InvalidateTargets(snapshot, cancellationToken);
         }
     }
 }

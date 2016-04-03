@@ -416,7 +416,6 @@
     <Compile Include="Util\LineSpan.cs" />
     <Compile Include="Util\Logger.cs" />
     <Compile Include="Util\Extensions\StringExtensions.cs" />
-    <Compile Include="Parsing\SnapshotSyntaxTree.cs" />
     <Compile Include="Util\SyntaxOutput\SyntaxExtensions.cs" />
     <Compile Include="Util\ThemeManager.cs" />
     <Compile Include="Util\VisualStudioTheme.cs" />

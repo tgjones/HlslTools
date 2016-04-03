@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Options;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -17,14 +16,10 @@ namespace HlslTools.VisualStudio.Tagging.Outlining
         [Import]
         public IOptionsService OptionsService { get; set; }
 
-        [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<OutliningTagger, T>(buffer,
-                () => new OutliningTagger(buffer.GetBackgroundParser(SourceTextFactory), OptionsService),
-                SourceTextFactory);
+                () => new OutliningTagger(buffer, buffer.GetBackgroundParser(), OptionsService));
         }
     }
 }

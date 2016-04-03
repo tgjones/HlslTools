@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Options;
-using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
@@ -19,13 +18,10 @@ namespace HlslTools.VisualStudio.Formatting
         [Import]
         public IOptionsService OptionsService { get; set; }
 
-        [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
-            textView.Properties.GetOrCreateSingletonProperty(() => new FormatCommandTarget(textViewAdapter, textView, OptionsService, SourceTextFactory));
+            textView.Properties.GetOrCreateSingletonProperty(() => new FormatCommandTarget(textViewAdapter, textView, OptionsService));
         }
     }
 }

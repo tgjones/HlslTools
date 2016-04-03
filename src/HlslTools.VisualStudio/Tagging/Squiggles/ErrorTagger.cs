@@ -5,60 +5,55 @@ using System.Threading;
 using HlslTools.Diagnostics;
 using HlslTools.VisualStudio.ErrorList;
 using HlslTools.VisualStudio.Options;
-using HlslTools.VisualStudio.Parsing;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using Task = System.Threading.Tasks.Task;
 
 namespace HlslTools.VisualStudio.Tagging.Squiggles
 {
-    internal abstract class ErrorTagger : AsyncTagger<IErrorTag>, IBackgroundParserSyntaxTreeHandler
+    internal abstract class ErrorTagger : AsyncTagger<IErrorTag>
     {
         private readonly string _errorType;
+        private readonly ITextView _textView;
         private readonly IOptionsService _optionsService;
-        private SnapshotSyntaxTree _latestSnapshotSyntaxTree;
         private bool _errorReportingEnabled;
         private bool _squigglesEnabled;
-        private readonly IErrorListHelper _errorListHelper;
 
-        protected ErrorTagger(string errorType, ITextView textView, BackgroundParser backgroundParser,
+        protected IErrorListHelper ErrorListHelper { get; }
+
+        protected ErrorTagger(string errorType, ITextView textView,
             IOptionsService optionsService, IServiceProvider serviceProvider, 
             ITextDocumentFactoryService textDocumentFactoryService)
         {
             _errorType = errorType;
+            _textView = textView;
             _optionsService = optionsService;
 
             optionsService.OptionsChanged += OnOptionsChanged;
 
             ITextDocument document;
             if (textDocumentFactoryService.TryGetTextDocument(textView.TextBuffer, out document))
-                _errorListHelper = new ErrorListHelper(serviceProvider, document);
+                ErrorListHelper = new ErrorListHelper(serviceProvider, document);
 
             textView.Closed += OnViewClosed;
-
-            backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Low, this);
 
             OnOptionsChanged(this, EventArgs.Empty);
         }
 
-        private void OnOptionsChanged(object sender, EventArgs e)
+        private async void OnOptionsChanged(object sender, EventArgs e)
         {
             var options = _optionsService.AdvancedOptions;
             _errorReportingEnabled = options.EnableErrorReporting;
             _squigglesEnabled = options.EnableSquiggles;
 
-            _errorListHelper?.Clear();
+            ErrorListHelper?.Clear();
 
-            if (_latestSnapshotSyntaxTree == null)
-                return;
-
-            InvalidateTags(_latestSnapshotSyntaxTree, CancellationToken.None);
+            await InvalidateTags(_textView.TextSnapshot, CancellationToken.None);
         }
 
         protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, Diagnostic diagnostic, bool squigglesEnabled)
         {
-            _errorListHelper?.AddError(diagnostic, diagnostic.Span);
+            ErrorListHelper?.AddError(diagnostic, diagnostic.Span);
 
             if (!diagnostic.Span.IsInRootFile || !squigglesEnabled)
                 return null;
@@ -78,35 +73,21 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
             var view = (IWpfTextView)sender;
             view.Closed -= OnViewClosed;
 
-            _errorListHelper?.Dispose();
+            ErrorListHelper?.Dispose();
         }
 
-        public override Task InvalidateTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
-        {
-            _latestSnapshotSyntaxTree = snapshotSyntaxTree;
-            return base.InvalidateTags(snapshotSyntaxTree, cancellationToken);
-        }
-
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
-        {
-            _errorListHelper.Clear();
-
-            await InvalidateTags(snapshotSyntaxTree, cancellationToken);
-        }
-
-        protected override Tuple<ITextSnapshot, List<ITagSpan<IErrorTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        protected override Tuple<ITextSnapshot, List<ITagSpan<IErrorTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             if (!_errorReportingEnabled)
-                return Tuple.Create(snapshotSyntaxTree.Snapshot, new List<ITagSpan<IErrorTag>>());
+                return Tuple.Create(snapshot, new List<ITagSpan<IErrorTag>>());
 
-            var snapshot = snapshotSyntaxTree.Snapshot;
-            var tagSpans = GetDiagnostics(snapshotSyntaxTree)
+            var tagSpans = GetDiagnostics(snapshot, cancellationToken)
                 .Select(d => CreateTagSpan(snapshot, d, _squigglesEnabled))
                 .Where(x => x != null)
                 .ToList();
             return Tuple.Create(snapshot, tagSpans);
         }
 
-        protected abstract IEnumerable<Diagnostic> GetDiagnostics(SnapshotSyntaxTree snapshotSyntaxTree);
+        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

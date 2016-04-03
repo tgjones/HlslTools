@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Tagging.Classification;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
@@ -33,15 +32,12 @@ namespace HlslTools.VisualStudio.Editing.BraceCompletion
         [Import]
         public IOptionsService OptionsService { get; set; }
 
-        [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
         public bool TryCreateContext(ITextView textView, SnapshotPoint openingPoint, char openingBrace, char closingBrace, out IBraceCompletionContext context)
         {
             // if we are in a comment or string literal we cannot begin a completion session.
             if (IsValidBraceCompletionContext(openingPoint))
             {
-                context = new BraceCompletionContext(SmartIndentationService, TextBufferUndoManagerProvider, ClassificationService, OptionsService, SourceTextFactory);
+                context = new BraceCompletionContext(SmartIndentationService, TextBufferUndoManagerProvider, ClassificationService, OptionsService);
                 return true;
             }
             else

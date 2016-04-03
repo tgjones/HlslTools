@@ -34,10 +34,10 @@ namespace HlslTools.VisualStudio.Util.Extensions
                 () => new VisualStudioFileSystem(textBuffer.GetTextContainer(), sourceTextFactory));
         }
 
-        public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory)
+        public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(BackgroundParserKey,
-                () => new BackgroundParser(textBuffer, sourceTextFactory));
+                () => new BackgroundParser(textBuffer));
         }
 
         public static SyntaxTagger GetSyntaxTagger(this ITextBuffer textBuffer)
@@ -45,7 +45,7 @@ namespace HlslTools.VisualStudio.Util.Extensions
             return (SyntaxTagger) textBuffer.Properties.GetProperty(typeof(SyntaxTagger));
         }
 
-        public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken)
+        public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             return CachedSyntaxTrees.GetValue(snapshot, key =>
             {
@@ -54,13 +54,14 @@ namespace HlslTools.VisualStudio.Util.Extensions
                 var options = new ParserOptions();
                 options.PreprocessorDefines.Add("__INTELLISENSE__");
 
+                var sourceTextFactory = HlslToolsPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
                 var fileSystem = key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
 
                 return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
             });
         }
 
-        public static bool TryGetSemanticModel(this ITextSnapshot snapshot, VisualStudioSourceTextFactory sourceTextFactory, CancellationToken cancellationToken, out SemanticModel semanticModel)
+        public static bool TryGetSemanticModel(this ITextSnapshot snapshot, CancellationToken cancellationToken, out SemanticModel semanticModel)
         {
             if (HlslToolsPackage.Instance != null && !HlslToolsPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
             {
@@ -72,7 +73,7 @@ namespace HlslTools.VisualStudio.Util.Extensions
             {
                 try
                 {
-                    var syntaxTree = key.GetSyntaxTree(sourceTextFactory, cancellationToken);
+                    var syntaxTree = key.GetSyntaxTree(cancellationToken);
                     var compilation = new Compilation.Compilation(syntaxTree);
                     return compilation.GetSemanticModel(cancellationToken);
                 }

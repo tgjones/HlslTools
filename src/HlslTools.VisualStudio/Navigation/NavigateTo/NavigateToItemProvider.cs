@@ -2,7 +2,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using HlslTools.VisualStudio.Glyphs;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -20,21 +19,18 @@ namespace HlslTools.VisualStudio.Navigation.NavigateTo
         private readonly NavigateToItemProviderFactory _navigateToItemProviderFactory;
         private readonly DispatcherGlyphService _glyphService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private CancellationTokenSource _searchCancellationTokenSource;
 
         public NavigateToItemProvider(
             IBufferGraphFactoryService bufferGraphFactoryService, 
             NavigateToItemProviderFactory navigateToItemProviderFactory, 
             DispatcherGlyphService glyphService,
-            IServiceProvider serviceProvider,
-            VisualStudioSourceTextFactory sourceTextFactory)
+            IServiceProvider serviceProvider)
         {
             _bufferGraphFactoryService = bufferGraphFactoryService;
             _navigateToItemProviderFactory = navigateToItemProviderFactory;
             _glyphService = glyphService;
             _serviceProvider = serviceProvider;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         public void StartSearch(INavigateToCallback callback, string searchValue)
@@ -57,7 +53,7 @@ namespace HlslTools.VisualStudio.Navigation.NavigateTo
             {
                 try
                 {
-                    var syntaxTree = snapshot.GetSyntaxTree(_sourceTextFactory, cancellationToken);
+                    var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
 
                     var visitor = new NavigateToVisitor(
                         searchValue, snapshot, textView, callback, _bufferGraphFactoryService,

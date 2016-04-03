@@ -18,23 +18,21 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
         private readonly ITextView _textView;
         private readonly IQuickInfoBroker _quickInfoBroker;
         private readonly QuickInfoModelProviderService _quickInfoModelProviderService;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         private QuickInfoModel _model;
         private IQuickInfoSession _session;
 
-        public QuickInfoManager(ITextView textView, IQuickInfoBroker quickInfoBroker, QuickInfoModelProviderService quickInfoModelProviderService, VisualStudioSourceTextFactory sourceTextFactory)
+        public QuickInfoManager(ITextView textView, IQuickInfoBroker quickInfoBroker, QuickInfoModelProviderService quickInfoModelProviderService)
         {
             _textView = textView;
             _quickInfoBroker = quickInfoBroker;
             _quickInfoModelProviderService = quickInfoModelProviderService;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         public async void TriggerQuickInfo(int offset)
         {
             SemanticModel semanticModel = null;
-            if (!await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
+            if (!await Task.Run(() => _textView.TextBuffer.CurrentSnapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
                 return;
 
             Model = GetQuickInfoModel(semanticModel, offset, _quickInfoModelProviderService.Providers);

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using HlslTools.Compilation;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 
@@ -12,7 +11,6 @@ namespace HlslTools.VisualStudio.Parsing
     internal sealed class BackgroundParser : IDisposable
     {
         private readonly ITextBuffer _textBuffer;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private readonly CancellationTokenSource _shutdownToken;
 
         private readonly object _lockObject = new object();
@@ -21,17 +19,18 @@ namespace HlslTools.VisualStudio.Parsing
         private CancellationTokenSource _currentParseCancellationTokenSource;
 
         private readonly SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSyntaxTreeHandler>> _syntaxTreeAvailableEventHandlers;
+        private readonly SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSemanticModelHandler>> _semanticModelAvailableEventHandlers;
 
-        public BackgroundParser(ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory)
+        public BackgroundParser(ITextBuffer textBuffer)
         {
             _textBuffer = textBuffer;
-            _sourceTextFactory = sourceTextFactory;
 
             _shutdownToken = new CancellationTokenSource();
 
             _hasWork = new ManualResetEventSlim(false);
 
             _syntaxTreeAvailableEventHandlers = new SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSyntaxTreeHandler>>();
+            _semanticModelAvailableEventHandlers = new SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSemanticModelHandler>>();
 
             _textBuffer.ChangedHighPriority += OnTextBufferChanged;
 
@@ -78,18 +77,21 @@ namespace HlslTools.VisualStudio.Parsing
                     {
                         var cancellationToken = cancellationTokenSource.Token;
 
-                        var syntaxTree = snapshot.GetSyntaxTree(_sourceTextFactory, cancellationToken);
+                        // Force creation of SyntaxTree.
+                        snapshot.GetSyntaxTree(cancellationToken);
 
                         cancellationToken.ThrowIfCancellationRequested();
 
+                        await RaiseSyntaxTreeAvailable(snapshot, cancellationToken);
+
+                        // Force creation of SemanticModel.
                         SemanticModel semanticModel;
-                        snapshot.TryGetSemanticModel(_sourceTextFactory, cancellationToken, out semanticModel);
+                        if (snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
 
-                        cancellationToken.ThrowIfCancellationRequested();
-
-                        await RaiseSyntaxTreeAvailable(
-                            new SnapshotSyntaxTree(snapshot, syntaxTree, semanticModel),
-                            cancellationToken);
+                            await RaiseSemanticModelAvailable(snapshot, cancellationToken);
+                        }
                     }
                 }
                 catch (OperationCanceledException)
@@ -101,11 +103,24 @@ namespace HlslTools.VisualStudio.Parsing
             }
         }
 
-        private async Task RaiseSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        private async Task RaiseSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             foreach (var handlerList in _syntaxTreeAvailableEventHandlers)
                 foreach (var handler in handlerList.Value)
-                    await handler.OnSyntaxTreeAvailable(snapshotSyntaxTree, cancellationToken);
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await handler.OnSyntaxTreeAvailable(snapshot, cancellationToken);
+                }
+        }
+
+        private async Task RaiseSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        {
+            foreach (var handlerList in _semanticModelAvailableEventHandlers)
+                foreach (var handler in handlerList.Value)
+                {
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await handler.OnSemanticModelAvailable(snapshot, cancellationToken);
+                }
         }
 
         public void RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority priority, IBackgroundParserSyntaxTreeHandler handler)
@@ -113,6 +128,14 @@ namespace HlslTools.VisualStudio.Parsing
             List<IBackgroundParserSyntaxTreeHandler> handlerList;
             if (!_syntaxTreeAvailableEventHandlers.TryGetValue(priority, out handlerList))
                 _syntaxTreeAvailableEventHandlers.Add(priority, handlerList = new List<IBackgroundParserSyntaxTreeHandler>());
+            handlerList.Add(handler);
+        }
+
+        public void RegisterSemanticModelHandler(BackgroundParserHandlerPriority priority, IBackgroundParserSemanticModelHandler handler)
+        {
+            List<IBackgroundParserSemanticModelHandler> handlerList;
+            if (!_semanticModelAvailableEventHandlers.TryGetValue(priority, out handlerList))
+                _semanticModelAvailableEventHandlers.Add(priority, handlerList = new List<IBackgroundParserSemanticModelHandler>());
             handlerList.Add(handler);
         }
 
@@ -141,6 +164,11 @@ namespace HlslTools.VisualStudio.Parsing
 
     internal interface IBackgroundParserSyntaxTreeHandler
     {
-        Task OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken);
+        Task OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken);
+    }
+
+    internal interface IBackgroundParserSemanticModelHandler
+    {
+        Task OnSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

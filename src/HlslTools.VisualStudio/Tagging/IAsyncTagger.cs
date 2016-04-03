@@ -1,11 +1,11 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using HlslTools.VisualStudio.Parsing;
+using Microsoft.VisualStudio.Text;
 
 namespace HlslTools.VisualStudio.Tagging
 {
     internal interface IAsyncTagger
     {
-        Task InvalidateTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken);
+        Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

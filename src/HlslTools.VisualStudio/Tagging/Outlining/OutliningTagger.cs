@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
+using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
@@ -12,49 +13,42 @@ namespace HlslTools.VisualStudio.Tagging.Outlining
 {
     internal sealed class OutliningTagger : AsyncTagger<IOutliningRegionTag>, IBackgroundParserSyntaxTreeHandler
     {
-        private SnapshotSyntaxTree _latestSnapshotSyntaxTree;
+        private readonly ITextBuffer _textBuffer;
         private bool _enabled;
 
-        public OutliningTagger(BackgroundParser backgroundParser, IOptionsService optionsService)
+        public OutliningTagger(ITextBuffer textBuffer, BackgroundParser backgroundParser, IOptionsService optionsService)
         {
+            _textBuffer = textBuffer;
+
             backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Medium, this);
 
             _enabled = optionsService.AdvancedOptions.EnterOutliningModeWhenFilesOpen;
         }
 
-        protected override Tuple<ITextSnapshot, List<ITagSpan<IOutliningRegionTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        protected override Tuple<ITextSnapshot, List<ITagSpan<IOutliningRegionTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             if (!_enabled)
-                return Tuple.Create(snapshotSyntaxTree.Snapshot, new List<ITagSpan<IOutliningRegionTag>>());
+                return Tuple.Create(snapshot, new List<ITagSpan<IOutliningRegionTag>>());
 
             var outliningRegions = new List<ITagSpan<IOutliningRegionTag>>();
-            var outliningVisitor = new OutliningVisitor(snapshotSyntaxTree.Snapshot, outliningRegions, cancellationToken);
+            var outliningVisitor = new OutliningVisitor(snapshot, outliningRegions, cancellationToken);
 
-            outliningVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshotSyntaxTree.SyntaxTree.Root);
+            outliningVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshot.GetSyntaxTree(cancellationToken).Root);
 
-            return Tuple.Create(snapshotSyntaxTree.Snapshot, outliningRegions);
+            return Tuple.Create(snapshot, outliningRegions);
         }
 
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            await InvalidateTags(snapshotSyntaxTree, cancellationToken);
-        }
-
-        public override Task InvalidateTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
-        {
-            _latestSnapshotSyntaxTree = snapshotSyntaxTree;
-            return base.InvalidateTags(snapshotSyntaxTree, cancellationToken);
+            await InvalidateTags(snapshot, cancellationToken);
         }
 
         public void UpdateEnabled(bool enabled)
         {
             _enabled = enabled;
 
-            if (_latestSnapshotSyntaxTree == null)
-                return;
-
 #pragma warning disable CS4014
-            InvalidateTags(_latestSnapshotSyntaxTree, CancellationToken.None);
+            InvalidateTags(_textBuffer.CurrentSnapshot, CancellationToken.None);
 #pragma warning restore CS4014
         }
     }

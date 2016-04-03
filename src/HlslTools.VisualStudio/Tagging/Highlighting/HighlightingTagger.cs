@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using EnvDTE;
+using HlslTools.Compilation;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Tagging.Highlighting.Highlighters;
 using HlslTools.VisualStudio.Util;
@@ -16,7 +17,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace HlslTools.VisualStudio.Tagging.Highlighting
 {
-    internal sealed class HighlightingTagger : AsyncTagger<HighlightTag>, IBackgroundParserSyntaxTreeHandler
+    internal sealed class HighlightingTagger : AsyncTagger<HighlightTag>, IBackgroundParserSemanticModelHandler
     {
         private readonly ITextView _textView;
         private readonly ImmutableArray<IHighlighter> _highlighters;
@@ -24,11 +25,9 @@ namespace HlslTools.VisualStudio.Tagging.Highlighting
 
         private readonly List<ITagSpan<HighlightTag>> _emptyList = new List<ITagSpan<HighlightTag>>();
 
-        private SnapshotSyntaxTree _latestSnapshotSyntaxTree;
-
         public HighlightingTagger(BackgroundParser backgroundParser, ITextView textView, ImmutableArray<IHighlighter> highlighters, IServiceProvider serviceProvider)
         {
-            backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Low, this);
+            backgroundParser.RegisterSemanticModelHandler(BackgroundParserHandlerPriority.Low, this);
 
             textView.Caret.PositionChanged += OnCaretPositionChanged;
 
@@ -39,37 +38,31 @@ namespace HlslTools.VisualStudio.Tagging.Highlighting
             _vsVersion = VisualStudioVersionUtility.FromDteVersion(dte.Version);
         }
 
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        async Task IBackgroundParserSemanticModelHandler.OnSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            await InvalidateTags(snapshotSyntaxTree, cancellationToken);
-        }
-
-        public override Task InvalidateTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
-        {
-            _latestSnapshotSyntaxTree = snapshotSyntaxTree;
-            return base.InvalidateTags(snapshotSyntaxTree, cancellationToken);
+            await InvalidateTags(snapshot, cancellationToken);
         }
 
         private async void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
-            var latest = _latestSnapshotSyntaxTree;
-            if (latest != null)
-                await InvalidateTags(latest, CancellationToken.None);
+            await InvalidateTags(_textView.TextSnapshot, CancellationToken.None);
         }
 
-        protected override Tuple<ITextSnapshot, List<ITagSpan<HighlightTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        protected override Tuple<ITextSnapshot, List<ITagSpan<HighlightTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            var snapshot = snapshotSyntaxTree.Snapshot;
-
             if (snapshot != _textView.TextSnapshot)
                 return Tuple.Create(snapshot, _emptyList);
 
-            var syntaxTree = snapshotSyntaxTree.SyntaxTree;
+            SemanticModel semanticModel;
+            if (!snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
+                return Tuple.Create(snapshot, _emptyList);
+
+            var syntaxTree = semanticModel.SyntaxTree;
 
             var unmappedPosition = _textView.GetPosition(snapshot);
             var position = syntaxTree.MapRootFilePosition(unmappedPosition);
 
-            var tagSpans = snapshotSyntaxTree.SemanticModel.GetHighlights(position, _highlighters)
+            var tagSpans = semanticModel.GetHighlights(position, _highlighters)
                 .Select(span => (ITagSpan<HighlightTag>) new TagSpan<HighlightTag>(
                     new SnapshotSpan(snapshot, span.Span.Start, span.Span.Length),
                     new HighlightTag(_vsVersion, span.IsDefinition)));

@@ -51,7 +51,7 @@ namespace HlslTools.VisualStudio.Navigation
         private IncludeDirectiveTriviaSyntax GetIncludeDirective()
         {
             var pos = _textView.Caret.Position.BufferPosition;
-            var syntaxTree = pos.Snapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None);
+            var syntaxTree = pos.Snapshot.GetSyntaxTree(CancellationToken.None);
             var sourceLocation = syntaxTree.MapRootFilePosition(pos.Position);
             var syntaxToken = syntaxTree.Root.FindToken(sourceLocation, true);
 

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -21,9 +20,6 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         [Import]
         public HlslClassificationService ClassificationService { get; set; }
 
-        [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {
             if (!_languagePackageLoaded)
@@ -33,8 +29,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             }
 
             var syntaxTagger = AsyncTaggerUtility.CreateTagger<SyntaxTagger, T>(buffer,
-                () => new SyntaxTagger(ClassificationService, buffer.GetBackgroundParser(SourceTextFactory)),
-                SourceTextFactory);
+                () => new SyntaxTagger(ClassificationService, buffer.GetBackgroundParser()));
 
             return syntaxTagger;
         }

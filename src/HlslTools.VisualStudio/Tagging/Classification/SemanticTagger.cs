@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using HlslTools.Compilation;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Parsing;
+using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
@@ -19,22 +21,23 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.High, this);
         }
 
-        protected override Tuple<ITextSnapshot, List<ITagSpan<IClassificationTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        protected override Tuple<ITextSnapshot, List<ITagSpan<IClassificationTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             var semanticTags = new List<ITagSpan<IClassificationTag>>();
 
-            if (snapshotSyntaxTree.SemanticModel != null)
+            SemanticModel semanticModel;
+            if (snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
             {
-                var semanticTaggerVisitor = new SemanticTaggerVisitor(snapshotSyntaxTree.SemanticModel, _classificationService, snapshotSyntaxTree.Snapshot, semanticTags, cancellationToken);
-                semanticTaggerVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshotSyntaxTree.SyntaxTree.Root);
+                var semanticTaggerVisitor = new SemanticTaggerVisitor(semanticModel, _classificationService, snapshot, semanticTags, cancellationToken);
+                semanticTaggerVisitor.VisitCompilationUnit((CompilationUnitSyntax) semanticModel.SyntaxTree.Root);
             }
 
-            return Tuple.Create(snapshotSyntaxTree.Snapshot, semanticTags);
+            return Tuple.Create(snapshot, semanticTags);
         }
 
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            await InvalidateTags(snapshotSyntaxTree, cancellationToken);
+            await InvalidateTags(snapshot, cancellationToken);
         }
     }
 }

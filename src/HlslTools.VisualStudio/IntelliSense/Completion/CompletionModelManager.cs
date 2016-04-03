@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -16,18 +15,16 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
         private readonly ITextView _textView;
         private readonly ICompletionBroker _completionBroker;
         private readonly CompletionProviderService _completionProviderService;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         private ICompletionSession _session;
         private CompletionModel _model;
 
-        public CompletionModelManager(ITextView textView, ICompletionBroker completionBroker, CompletionProviderService completionProviderService, VisualStudioSourceTextFactory sourceTextFactory)
+        public CompletionModelManager(ITextView textView, ICompletionBroker completionBroker, CompletionProviderService completionProviderService)
         {
             _textView = textView;
             _textView.TextBuffer.PostChanged += OnTextBufferOnPostChanged;
             _completionBroker = completionBroker;
             _completionProviderService = completionProviderService;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         public void HandleTextInput(bool isTrigger)
@@ -58,7 +55,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
             var triggerPosition = _textView.GetPosition(snapshot);
 
             SemanticModel semanticModel = null;
-            if (!await Task.Run(() => snapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
+            if (!await Task.Run(() => snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
                 return;
 
             var model = semanticModel.GetCompletionModel(triggerPosition, snapshot, _completionProviderService.Providers);

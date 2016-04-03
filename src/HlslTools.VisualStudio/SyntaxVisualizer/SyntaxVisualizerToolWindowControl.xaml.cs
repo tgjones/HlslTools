@@ -21,7 +21,6 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
     public sealed partial class SyntaxVisualizerToolWindowControl : UserControl, IVsRunningDocTableEvents, IDisposable
     {
         private readonly TimeSpan _typingTimerTimeout = TimeSpan.FromMilliseconds(300.0);
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
         private IVsRunningDocumentTable _runningDocumentTable;
         private uint _runningDocumentTableCookie;
@@ -48,9 +47,6 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
         {
             InitializeComponent();
             InitializeRunningDocTable();
-
-            var componentModel = HlslToolsPackage.Instance.AsVsServiceProvider().GetComponentModel();
-            _sourceTextFactory = componentModel.GetService<VisualStudioSourceTextFactory>();
         }
 
         private void InitializeRunningDocTable()
@@ -184,7 +180,7 @@ namespace HlslTools.VisualStudio.SyntaxVisualizer
 
             try
             {
-                _activeSyntaxTree = await Task.Run(() => currentSnapshot.GetSyntaxTree(_sourceTextFactory, CancellationToken.None));
+                _activeSyntaxTree = await Task.Run(() => currentSnapshot.GetSyntaxTree(CancellationToken.None));
             }
             catch (Exception ex)
             {

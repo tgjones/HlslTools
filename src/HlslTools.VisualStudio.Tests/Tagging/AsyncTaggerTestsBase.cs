@@ -25,16 +25,14 @@ namespace HlslTools.VisualStudio.Tests.Tagging
             var sourceTextFactory = Container.GetExportedValue<VisualStudioSourceTextFactory>();
             var sourceCode = File.ReadAllText(testFile);
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
-            var backgroundParser = new BackgroundParser(textBuffer, sourceTextFactory);
+            var backgroundParser = new BackgroundParser(textBuffer);
             var snapshot = textBuffer.CurrentSnapshot;
-            var syntaxTree = snapshot.GetSyntaxTree(sourceTextFactory, CancellationToken.None);
             SemanticModel semanticModel;
-            snapshot.TryGetSemanticModel(sourceTextFactory, CancellationToken.None, out semanticModel);
-            var snapshotSyntaxTree = new SnapshotSyntaxTree(snapshot, syntaxTree, semanticModel);
-            var tagger = CreateTagger(backgroundParser, snapshot);
+            snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel);
+            var tagger = CreateTagger(backgroundParser, textBuffer);
 
             // Act.
-            await tagger.InvalidateTags(snapshotSyntaxTree, CancellationToken.None);
+            await tagger.InvalidateTags(snapshot, CancellationToken.None);
             var tagSpans = tagger.GetTags(new NormalizedSnapshotSpanCollection(new[]
             {
                 new SnapshotSpan(snapshot, 0, snapshot.Length)
@@ -47,7 +45,7 @@ namespace HlslTools.VisualStudio.Tests.Tagging
             backgroundParser.Dispose();
         }
 
-        protected abstract TTagger CreateTagger(BackgroundParser backgroundParser, ITextSnapshot snapshot);
+        protected abstract TTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer);
 
         protected virtual bool MustCreateTagSpans => true;
     }

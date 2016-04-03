@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.Navigation.GoToDefinitionProviders;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio;
@@ -20,15 +19,13 @@ namespace HlslTools.VisualStudio.Navigation
         private readonly IWpfTextView _textView;
         private readonly GoToDefinitionProviderService _goToDefinitionProviderService;
         private readonly SVsServiceProvider _serviceProvider;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
-        public GoToDefinitionCommandTarget(IVsTextView adapter, IWpfTextView textView, GoToDefinitionProviderService goToDefinitionProviderService, SVsServiceProvider serviceProvider, VisualStudioSourceTextFactory sourceTextFactory)
+        public GoToDefinitionCommandTarget(IVsTextView adapter, IWpfTextView textView, GoToDefinitionProviderService goToDefinitionProviderService, SVsServiceProvider serviceProvider)
             : base(adapter, textView, VSConstants.VSStd97CmdID.GotoDefn)
         {
             _textView = textView;
             _goToDefinitionProviderService = goToDefinitionProviderService;
             _serviceProvider = serviceProvider;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         protected override bool IsEnabled(VSConstants.VSStd97CmdID commandId, ref string commandText)
@@ -48,7 +45,7 @@ namespace HlslTools.VisualStudio.Navigation
             var pos = _textView.Caret.Position.BufferPosition;
 
             SemanticModel semanticModel = null;
-            if (!await System.Threading.Tasks.Task.Run(() => pos.Snapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
+            if (!await System.Threading.Tasks.Task.Run(() => pos.Snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
                 return;
 
             var textSpan = _goToDefinitionProviderService.Providers

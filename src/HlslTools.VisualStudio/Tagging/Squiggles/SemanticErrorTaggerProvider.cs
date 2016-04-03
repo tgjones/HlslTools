@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Options;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -19,9 +18,6 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
         public IOptionsService OptionsService { get; set; }
 
         [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
-        [Import]
         public SVsServiceProvider ServiceProvider { get; set; }
 
         [Import]
@@ -31,8 +27,7 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
             where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<SemanticErrorTagger, T>(buffer,
-                () => new SemanticErrorTagger(textView, buffer.GetBackgroundParser(SourceTextFactory), OptionsService, ServiceProvider, TextDocumentFactoryService),
-                SourceTextFactory);
+                () => new SemanticErrorTagger(textView, buffer.GetBackgroundParser(), OptionsService, ServiceProvider, TextDocumentFactoryService));
         }
     }
 }

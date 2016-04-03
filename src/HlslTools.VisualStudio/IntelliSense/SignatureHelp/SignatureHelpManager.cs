@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelProviders;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
@@ -18,20 +17,18 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
         private readonly ITextView _textView;
         private readonly ISignatureHelpBroker _signatureHelpBroker;
         private readonly SignatureHelpModelProviderService _signatureHelpModelProviderService;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
         private readonly object _selectedItemIndexKey = new object();
 
         private ISignatureHelpSession _session;
         private SignatureHelpModel _model;
 
-        public SignatureHelpManager(ITextView textView, ISignatureHelpBroker signatureHelpBroker, SignatureHelpModelProviderService signatureHelpModelProviderService, VisualStudioSourceTextFactory sourceTextFactory)
+        public SignatureHelpManager(ITextView textView, ISignatureHelpBroker signatureHelpBroker, SignatureHelpModelProviderService signatureHelpModelProviderService)
         {
             _textView = textView;
             _textView.Caret.PositionChanged += CaretOnPositionChanged;
             _textView.TextBuffer.PostChanged += TextBufferOnPostChanged;
             _signatureHelpBroker = signatureHelpBroker;
             _signatureHelpModelProviderService = signatureHelpModelProviderService;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         private void SessionOnDismissed(object sender, EventArgs e)
@@ -71,7 +68,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
                 TriggerSignatureHelp();
         }
 
-        public void TriggerSignatureHelp()
+        public async void TriggerSignatureHelp()
         {
             if (_session != null)
             {
@@ -79,7 +76,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             }
             else
             {
-                UpdateModel();
+                await UpdateModel();
             }
         }
 
@@ -103,7 +100,7 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp
             var triggerPosition = _textView.GetPosition(snapshot);
 
             SemanticModel semanticModel = null;
-            if (!await Task.Run(() => snapshot.TryGetSemanticModel(_sourceTextFactory, CancellationToken.None, out semanticModel)))
+            if (!await Task.Run(() => snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
                 return;
 
             var model = GetSignatureHelpModel(semanticModel, triggerPosition, _signatureHelpModelProviderService.Providers);

@@ -16,7 +16,7 @@ namespace HlslTools.VisualStudio.Tests.Tagging.Classification
             _hlslClassificationService = Container.GetExportedValue<HlslClassificationService>();
         }
 
-        protected override SyntaxTagger CreateTagger(BackgroundParser backgroundParser, ITextSnapshot snapshot)
+        protected override SyntaxTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             return new SyntaxTagger(_hlslClassificationService, backgroundParser);
         }

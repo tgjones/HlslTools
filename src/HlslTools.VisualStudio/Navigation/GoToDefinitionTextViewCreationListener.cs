@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Navigation.GoToDefinitionProviders;
 using HlslTools.VisualStudio.Text;
 using Microsoft.VisualStudio.Editor;
@@ -31,7 +30,7 @@ namespace HlslTools.VisualStudio.Navigation
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
 
-            textView.Properties.GetOrCreateSingletonProperty(() => new GoToDefinitionCommandTarget(textViewAdapter, textView, GoToDefinitionProviderService, ServiceProvider, SourceTextFactory));
+            textView.Properties.GetOrCreateSingletonProperty(() => new GoToDefinitionCommandTarget(textViewAdapter, textView, GoToDefinitionProviderService, ServiceProvider));
             textView.Properties.GetOrCreateSingletonProperty(() => new OpenIncludeFileCommandTarget(textViewAdapter, textView, ServiceProvider, SourceTextFactory));
         }
     }

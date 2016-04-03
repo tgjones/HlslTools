@@ -1,7 +1,6 @@
 using System;
 using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Tagging.Highlighting.Highlighters;
-using HlslTools.VisualStudio.Text;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
@@ -19,17 +18,13 @@ namespace HlslTools.VisualStudio.Tagging.Highlighting
         [Import]
         public HighlighterService HighlighterService { get; set; }
 
-        [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
         [Import(typeof(SVsServiceProvider))]
         public IServiceProvider ServiceProvider { get; set; }
 
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<HighlightingTagger, T>(buffer,
-                () => new HighlightingTagger(buffer.GetBackgroundParser(SourceTextFactory), textView, HighlighterService.Highlighters, ServiceProvider),
-                SourceTextFactory);
+                () => new HighlightingTagger(buffer.GetBackgroundParser(), textView, HighlighterService.Highlighters, ServiceProvider));
         }
     }
 }

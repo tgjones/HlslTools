@@ -1,6 +1,4 @@
 ﻿using System;
-using HlslTools.VisualStudio.ErrorList;
-using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Tagging.Squiggles;
 using HlslTools.VisualStudio.Tests.Support;
@@ -15,7 +13,7 @@ namespace HlslTools.VisualStudio.Tests.Tagging.Squiggles
     [TestFixture]
     internal class SyntaxErrorTaggerTests : AsyncTaggerTestsBase<SyntaxErrorTagger, IErrorTag>
     {
-        protected override SyntaxErrorTagger CreateTagger(BackgroundParser backgroundParser, ITextSnapshot snapshot)
+        protected override SyntaxErrorTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             return new SyntaxErrorTagger(
                 Substitute.For<ITextView>(), backgroundParser, new FakeOptionsService(),

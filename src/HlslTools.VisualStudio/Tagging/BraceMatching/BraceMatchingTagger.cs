@@ -18,8 +18,6 @@ namespace HlslTools.VisualStudio.Tagging.BraceMatching
         private readonly List<ITagSpan<ITextMarkerTag>> _emptyList = new List<ITagSpan<ITextMarkerTag>>();
         private readonly ITextMarkerTag _tag = new TextMarkerTag("bracehighlight");
 
-        private SnapshotSyntaxTree _latestSnapshotSyntaxTree;
-
         public BraceMatchingTagger(BackgroundParser backgroundParser, ITextView textView, BraceMatcher braceMatcher)
         {
             backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Medium, this);
@@ -30,32 +28,22 @@ namespace HlslTools.VisualStudio.Tagging.BraceMatching
             _braceMatcher = braceMatcher;
         }
 
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            await InvalidateTags(snapshotSyntaxTree, cancellationToken);
-        }
-
-        public override Task InvalidateTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
-        {
-            _latestSnapshotSyntaxTree = snapshotSyntaxTree;
-            return base.InvalidateTags(snapshotSyntaxTree, cancellationToken);
+            await InvalidateTags(snapshot, cancellationToken);
         }
 
         private async void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
-            var latest = _latestSnapshotSyntaxTree;
-            if (latest != null)
-                await InvalidateTags(latest, CancellationToken.None);
+            await InvalidateTags(_textView.TextSnapshot, CancellationToken.None);
         }
 
-        protected override Tuple<ITextSnapshot, List<ITagSpan<ITextMarkerTag>>> GetTags(SnapshotSyntaxTree snapshotSyntaxTree, CancellationToken cancellationToken)
+        protected override Tuple<ITextSnapshot, List<ITagSpan<ITextMarkerTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            var snapshot = snapshotSyntaxTree.Snapshot;
-
             if (snapshot != _textView.TextSnapshot)
                 return Tuple.Create(snapshot, _emptyList);
 
-            var syntaxTree = snapshotSyntaxTree.SyntaxTree;
+            var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
 
             var unmappedPosition = _textView.GetPosition(snapshot);
             var position =  syntaxTree.MapRootFilePosition(unmappedPosition);

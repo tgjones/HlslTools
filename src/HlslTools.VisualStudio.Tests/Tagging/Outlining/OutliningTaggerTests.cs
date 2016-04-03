@@ -10,9 +10,9 @@ namespace HlslTools.VisualStudio.Tests.Tagging.Outlining
     [TestFixture]
     internal class OutliningTaggerTests : AsyncTaggerTestsBase<OutliningTagger, IOutliningRegionTag>
     {
-        protected override OutliningTagger CreateTagger(BackgroundParser backgroundParser, ITextSnapshot snapshot)
+        protected override OutliningTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
-            return new OutliningTagger(backgroundParser, new FakeOptionsService());
+            return new OutliningTagger(textBuffer, backgroundParser, new FakeOptionsService());
         }
     }
 }
