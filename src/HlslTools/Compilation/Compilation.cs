@@ -1,4 +1,5 @@
-﻿using HlslTools.Binding;
+﻿using System.Threading;
+using HlslTools.Binding;
 using HlslTools.Syntax;
 
 namespace HlslTools.Compilation
@@ -12,9 +13,9 @@ namespace HlslTools.Compilation
 
         public SyntaxTree SyntaxTree { get; }
 
-        public SemanticModel GetSemanticModel()
+        public SemanticModel GetSemanticModel(CancellationToken? cancellationToken = null)
         {
-            var bindingResult = Binder.Bind(SyntaxTree.Root);
+            var bindingResult = Binder.Bind(SyntaxTree.Root, cancellationToken ?? CancellationToken.None);
             return new SemanticModel(this, bindingResult);
         }
     }

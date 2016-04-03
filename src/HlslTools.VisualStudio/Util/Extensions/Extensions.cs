@@ -74,7 +74,7 @@ namespace HlslTools.VisualStudio.Util.Extensions
                 {
                     var syntaxTree = key.GetSyntaxTree(sourceTextFactory, cancellationToken);
                     var compilation = new Compilation.Compilation(syntaxTree);
-                    return compilation.GetSemanticModel();
+                    return compilation.GetSemanticModel(cancellationToken);
                 }
                 catch (OperationCanceledException)
                 {

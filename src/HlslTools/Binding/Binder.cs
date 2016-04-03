@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Diagnostics;
 using HlslTools.Symbols;
@@ -23,9 +24,9 @@ namespace HlslTools.Binding
 
         internal List<Diagnostic> Diagnostics => _sharedBinderState.Diagnostics;
 
-        public static BindingResult Bind(SyntaxNode syntaxRoot)
+        public static BindingResult Bind(SyntaxNode syntaxRoot, CancellationToken cancellationToken)
         {
-            var sharedBinderState = new SharedBinderState();
+            var sharedBinderState = new SharedBinderState(cancellationToken);
 
             var intrinsicBinder = new IntrinsicBinder(sharedBinderState);
             var binder = new Binder(sharedBinderState, intrinsicBinder);
@@ -65,6 +66,8 @@ namespace HlslTools.Binding
             where TInput : SyntaxNode
             where TResult : BoundNode
         {
+            _sharedBinderState.CancellationToken.ThrowIfCancellationRequested();
+
             var boundNode = bindMethod(node);
 
             Bind(node, boundNode);
