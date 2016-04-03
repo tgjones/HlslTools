@@ -54,7 +54,7 @@ namespace HlslTools.VisualStudio.Util.Extensions
                 var options = new ParserOptions();
                 options.PreprocessorDefines.Add("__INTELLISENSE__");
 
-                var sourceTextFactory = HlslToolsPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
+                var sourceTextFactory = VisualStudioSourceTextFactory.Instance ?? HlslToolsPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
                 var fileSystem = key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
 
                 return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);

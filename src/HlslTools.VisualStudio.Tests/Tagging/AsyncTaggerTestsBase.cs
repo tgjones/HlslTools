@@ -2,12 +2,10 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using HlslTools.Compilation;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Tagging;
 using HlslTools.VisualStudio.Tests.Support;
 using HlslTools.VisualStudio.Text;
-using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using NUnit.Framework;
@@ -22,13 +20,11 @@ namespace HlslTools.VisualStudio.Tests.Tagging
         public async Task CanDoTagging(string testFile)
         {
             // Arrange.
-            var sourceTextFactory = Container.GetExportedValue<VisualStudioSourceTextFactory>();
+            VisualStudioSourceTextFactory.Instance = Container.GetExportedValue<VisualStudioSourceTextFactory>();
             var sourceCode = File.ReadAllText(testFile);
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
             var backgroundParser = new BackgroundParser(textBuffer);
             var snapshot = textBuffer.CurrentSnapshot;
-            SemanticModel semanticModel;
-            snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel);
             var tagger = CreateTagger(backgroundParser, textBuffer);
 
             // Act.

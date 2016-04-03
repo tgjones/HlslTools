@@ -14,7 +14,7 @@ namespace HlslTools.VisualStudio.Tagging
     {
         private List<LineBasedTagSpan> _tags = new List<LineBasedTagSpan>();
 
-        public async virtual Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        public virtual async Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             await Task.Run(() =>
             {

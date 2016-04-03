@@ -8,6 +8,9 @@ namespace HlslTools.VisualStudio.Text
     [Export]
     internal sealed class VisualStudioSourceTextFactory
     {
+        // Used for tests. A bit icky.
+        public static VisualStudioSourceTextFactory Instance;
+
         private readonly ITextBufferFactoryService _textBufferFactoryService;
         private readonly IContentType _contentType;
 

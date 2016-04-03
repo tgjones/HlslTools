@@ -15,8 +15,11 @@ namespace HlslTools.VisualStudio.Tests.Tagging.Squiggles
     {
         protected override SyntaxErrorTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
+            var textView = Substitute.For<ITextView>();
+            textView.TextSnapshot.Returns(textBuffer.CurrentSnapshot);
+
             return new SyntaxErrorTagger(
-                Substitute.For<ITextView>(), backgroundParser, new FakeOptionsService(),
+                textView, backgroundParser, new FakeOptionsService(),
                 Substitute.For<IServiceProvider>(), Substitute.For<ITextDocumentFactoryService>());
         }
 
