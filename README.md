@@ -96,7 +96,7 @@ but may be of interest to language nerds, so it's included in the main extension
 
 You can ask questions in our [Gitter room](https://gitter.im/tgjones/HlslTools).
 If you find a bug or want to request a feature, [create an issue here ](https://github.com/tgjones/HlslTools/issues).
-You can find me on Twitter at [@_tim_jones_](https://twitter.com/_tim_jones_) and I tweet about HLSL Tools using the
+You can find me on Twitter at [@\_tim_jones\_](https://twitter.com/_tim_jones_) and I tweet about HLSL Tools using the
 [#hlsltools](https://twitter.com/hashtag/hlsltools) hashtag.
 
 Contributions are always welcome. [Please read the contributing guide first.](CONTRIBUTING.md)
