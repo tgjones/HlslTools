@@ -39,6 +39,7 @@ class MyClass
 }";
 
         private const string PreprocessorDirectivePreview = @"
+float4 ReadTexture() { return float4(1, 0, 0, 1); }
 //[
 void main()
 {

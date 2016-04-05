@@ -7,6 +7,7 @@ namespace HlslTools.VisualStudio.Options.ViewModels
     internal sealed class FormattingSpacingViewModel : OptionsPreviewViewModelBase
     {
         private const string FunctionSpacingPreview = @"
+void Bar(int x);
 //[
 void Foo()
 {
@@ -23,7 +24,7 @@ void Bar(int x)
 void main()
 {
 //[
-    for (int i = 0; i < x; i++)
+    for (int i = 0; i < 10; i++)
     {
     }
 //]

@@ -15,6 +15,8 @@ struct S {
 //]";
 
         private const string TechniquePreview = @"
+float4 VS() : SV_Position { return float4(1, 0, 0, 1); }
+float4 PS() : SV_Target { return float4(1, 0, 0, 1); }
 //[
 technique T {
     pass P {
