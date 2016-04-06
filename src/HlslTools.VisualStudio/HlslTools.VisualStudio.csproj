@@ -262,6 +262,7 @@
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\IQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\ClassDefinitionQuickInfoModelProvider.cs" />
+    <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\LiteralQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\MacroDefinitionQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\MacroReferenceQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\MatrixTypeQuickInfoModelProvider.cs" />
