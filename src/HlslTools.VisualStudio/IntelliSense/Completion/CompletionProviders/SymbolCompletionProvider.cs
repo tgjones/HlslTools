@@ -19,8 +19,12 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
         {
             var root = semanticModel.SyntaxTree.Root;
 
-            // We don't want to show a completion when typing an alias name.
-            if (root.PossiblyInUserGivenName(position))
+            // We don't want to show a completion when typing a declaration name.
+            if (semanticModel.SyntaxTree.PossiblyInUserGivenName(position))
+                return Enumerable.Empty<CompletionItem>();
+
+            // We don't want to show a symbol completion when typing a type name.
+            if (semanticModel.SyntaxTree.PossiblyInTypeName(position))
                 return Enumerable.Empty<CompletionItem>();
 
             // Comments and literals don't get completion information
@@ -35,7 +39,9 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
         private static IEnumerable<CompletionItem> GetGlobalCompletions(SemanticModel semanticModel, SourceLocation position)
         {
-            var symbols = semanticModel.LookupSymbols(position);
+            var symbols = semanticModel.LookupSymbols(position)
+                .Where(x => !(x is SemanticSymbol))
+                .Where(x => !(x is AttributeSymbol));
             return CreateSymbolCompletions(symbols);
         }
 

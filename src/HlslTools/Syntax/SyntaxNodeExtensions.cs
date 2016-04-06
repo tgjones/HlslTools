@@ -266,13 +266,71 @@ namespace HlslTools.Syntax
             }
         }
 
-        public static bool PossiblyInUserGivenName(this SyntaxNode root, SourceLocation position)
+        public static bool PossiblyInUserGivenName(this SyntaxTree tree, SourceLocation position)
         {
-            if (root == null)
-                throw new ArgumentNullException(nameof(root));
+            if (tree == null)
+                throw new ArgumentNullException(nameof(tree));
 
-            // TODO
-            return false;
+            var token = tree.Root.FindTokenOnLeft(position);
+
+            return PossiblyInTypeDefinitionName(token, position)
+                || PossiblyInConstantBufferDefinitionName(token, position)
+                || PossiblyInFunctionDeclarationName(token, position)
+                || PossiblyInVariableDeclarationName(token, position);
+        }
+
+        private static bool PossiblyInTypeDefinitionName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as TypeDefinitionSyntax;
+            return node != null && node.NameToken.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static bool PossiblyInConstantBufferDefinitionName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as ConstantBufferSyntax;
+            return node != null && node.Name.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static bool PossiblyInFunctionDeclarationName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as FunctionSyntax;
+            return node != null && node.Name.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static bool PossiblyInVariableDeclarationName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as VariableDeclaratorSyntax;
+            return node != null && node.Identifier.SourceRange.ContainsOrTouches(position);
+        }
+
+        public static bool PossiblyInTypeName(this SyntaxTree tree, SourceLocation position)
+        {
+            if (tree == null)
+                throw new ArgumentNullException(nameof(tree));
+
+            var token = tree.Root.FindTokenOnLeft(position);
+
+            return PossiblyInFunctionReturnTypeName(token, position)
+                || PossiblyInParameterTypeName(token, position)
+                || PossiblyInVariableTypeName(token, position);
+        }
+
+        private static bool PossiblyInFunctionReturnTypeName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as FunctionSyntax;
+            return node != null && node.ReturnType.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static bool PossiblyInParameterTypeName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as ParameterSyntax;
+            return node != null && node.Type.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static bool PossiblyInVariableTypeName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as VariableDeclarationSyntax;
+            return node != null && node.Type.SourceRange.ContainsOrTouches(position);
         }
     }
 }
