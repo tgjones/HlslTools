@@ -55,8 +55,6 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             if (content == null)
                 return;
 
-            
-
             applicableToSpan = currentSnapshot.CreateTrackingSpan(span, SpanTrackingMode.EdgeNegative);
             quickInfoContent.Add(content);
         }
@@ -74,6 +72,7 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             stackPanel.Children.Add(textBlock);
 
             var container = new QuickInfoDisplayPanel();
+            SetTextProperties(container, _tooltipClassificationFormatMap.DefaultTextProperties, true);
             container.Orientation = Orientation.Vertical;
             container.Children.Add(stackPanel);
 
@@ -117,7 +116,6 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
             {
                 TextWrapping = TextWrapping.Wrap
             };
-            SetTextProperties(textBlock, _tooltipClassificationFormatMap.DefaultTextProperties, true);
             textBlock.Inlines.AddRange(markup.Tokens.Select(GetInline));
             return textBlock;
         }
