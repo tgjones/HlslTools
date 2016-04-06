@@ -134,6 +134,8 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
                     return GetClassifiedText(markupToken.Text, _classificationService.WhiteSpace);
                 case SymbolMarkupKind.LocalVariableName:
                     return GetClassifiedText(markupToken.Text, _classificationService.LocalVariableIdentifier);
+                case SymbolMarkupKind.ConstantBufferVariableName:
+                    return GetClassifiedText(markupToken.Text, _classificationService.ConstantBufferVariableIdentifier);
                 case SymbolMarkupKind.GlobalVariableName:
                     return GetClassifiedText(markupToken.Text, _classificationService.GlobalVariableIdentifier);
                 case SymbolMarkupKind.ParameterName:
@@ -141,11 +143,19 @@ namespace HlslTools.VisualStudio.IntelliSense.QuickInfo
                 case SymbolMarkupKind.FunctionName:
                     return GetClassifiedText(markupToken.Text, _classificationService.FunctionIdentifier);
                 case SymbolMarkupKind.MethodName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.FunctionIdentifier);
+                    return GetClassifiedText(markupToken.Text, _classificationService.MethodIdentifier);
                 case SymbolMarkupKind.FieldName:
                     return GetClassifiedText(markupToken.Text, _classificationService.FieldIdentifier);
-                case SymbolMarkupKind.TypeName:
+                case SymbolMarkupKind.IntrinsicTypeName:
                     return GetClassifiedText(markupToken.Text, _classificationService.ClassIdentifier);
+                case SymbolMarkupKind.ClassName:
+                    return GetClassifiedText(markupToken.Text, _classificationService.ClassIdentifier);
+                case SymbolMarkupKind.StructName:
+                    return GetClassifiedText(markupToken.Text, _classificationService.StructIdentifier);
+                case SymbolMarkupKind.ConstantBufferName:
+                    return GetClassifiedText(markupToken.Text, _classificationService.ConstantBufferIdentifier);
+                case SymbolMarkupKind.InterfaceName:
+                    return GetClassifiedText(markupToken.Text, _classificationService.InterfaceIdentifier);
                 case SymbolMarkupKind.NamespaceName:
                     return GetClassifiedText(markupToken.Text, _classificationService.Identifier);
                 case SymbolMarkupKind.SemanticName:

@@ -54,7 +54,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name, _classificationService.ClassIdentifier);
+                CreateTag(node.Name, _classificationService.InterfaceIdentifier);
 
             base.VisitInterfaceType(node);
         }
@@ -63,14 +63,14 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name, _classificationService.ClassIdentifier);
+                CreateTag(node.Name, _classificationService.StructIdentifier);
 
             base.VisitStructType(node);
         }
 
         public override void VisitConstantBuffer(ConstantBufferSyntax node)
         {
-            CreateTag(node.Name, _classificationService.ClassIdentifier);
+            CreateTag(node.Name, _classificationService.ConstantBufferIdentifier);
 
             base.VisitConstantBuffer(node);
         }
@@ -79,7 +79,9 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name.GetUnqualifiedName().Name, _classificationService.FunctionIdentifier);
+                CreateTag(node.Name.GetUnqualifiedName().Name, symbol.Parent != null && symbol.Parent.Kind == SymbolKind.Class
+                    ? _classificationService.MethodIdentifier
+                    : _classificationService.FunctionIdentifier);
 
             base.VisitFunctionDefinition(node);
         }
@@ -156,7 +158,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         {
             var symbol = _semanticModel.GetSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name, _classificationService.FunctionIdentifier);
+                CreateTag(node.Name, _classificationService.MethodIdentifier);
 
             base.VisitMethodInvocationExpression(node);
         }
@@ -181,7 +183,9 @@ namespace HlslTools.VisualStudio.Tagging.Classification
                 case SymbolKind.Variable:
                     return symbol.Parent == null
                         ? _classificationService.GlobalVariableIdentifier
-                        : _classificationService.LocalVariableIdentifier;
+                        : (symbol.Parent.Kind == SymbolKind.ConstantBuffer)
+                            ? _classificationService.ConstantBufferVariableIdentifier
+                            : _classificationService.LocalVariableIdentifier;
                 case SymbolKind.Class:
                 case SymbolKind.Struct:
                 case SymbolKind.Interface:

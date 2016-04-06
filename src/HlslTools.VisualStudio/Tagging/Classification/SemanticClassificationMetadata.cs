@@ -13,12 +13,18 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         public const string SemanticClassificationTypeName = "Hlsl.Semantic";
         public const string PackOffsetClassificationTypeName = "Hlsl.PackOffset";
         public const string RegisterLocationClassificationTypeName = "Hlsl.RegisterLocation";
+        public const string NamespaceClassificationTypeName = "Hlsl.Namespace";
         public const string GlobalVariableClassificationTypeName = "Hlsl.GlobalVariable";
         public const string FieldIdentifierClassificationTypeName = "Hlsl.Field";
         public const string LocalVariableClassificationTypeName = "Hlsl.LocalVariable";
+        public const string ConstantBufferVariableClassificationTypeName = "Hlsl.ConstantBufferVariable";
         public const string ParameterClassificationTypeName = "Hlsl.Parameter";
         public const string FunctionClassificationTypeName = "Hlsl.Function";
+        public const string MethodClassificationTypeName = "Hlsl.Method";
         public const string ClassIdentifierClassificationTypeName = "Hlsl.Class";
+        public const string StructIdentifierClassificationTypeName = "Hlsl.Struct";
+        public const string InterfaceIdentifierClassificationTypeName = "Hlsl.Interface";
+        public const string ConstantBufferIdentifierClassificationTypeName = "Hlsl.ConstantBuffer";
 
 #pragma warning disable 649
 
@@ -43,6 +49,11 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         public ClassificationTypeDefinition RegisterLocationType;
 
         [Export]
+        [Name(NamespaceClassificationTypeName)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition NamespaceIdentifierType;
+
+        [Export]
         [Name(GlobalVariableClassificationTypeName)]
         [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
         public ClassificationTypeDefinition GlobalVariableIdentifierType;
@@ -58,6 +69,11 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         public ClassificationTypeDefinition LocalVariableIdentifierType;
 
         [Export]
+        [Name(ConstantBufferVariableClassificationTypeName)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition ConstantBufferVariableIdentifierType;
+
+        [Export]
         [Name(ParameterClassificationTypeName)]
         [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
         public ClassificationTypeDefinition ParameterIdentifierType;
@@ -68,9 +84,29 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         public ClassificationTypeDefinition FunctionIdentifierType;
 
         [Export]
+        [Name(MethodClassificationTypeName)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition MethodIdentifierType;
+
+        [Export]
         [Name(ClassIdentifierClassificationTypeName)]
         [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
         public ClassificationTypeDefinition ClassIdentifierType;
+
+        [Export]
+        [Name(StructIdentifierClassificationTypeName)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition StructIdentifierType;
+
+        [Export]
+        [Name(InterfaceIdentifierClassificationTypeName)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition InterfaceIdentifierType;
+
+        [Export]
+        [Name(ConstantBufferIdentifierClassificationTypeName)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition ConstantBufferIdentifierType;
 
 #pragma warning restore 649
 
@@ -135,6 +171,21 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         }
 
         [Export(typeof(EditorFormatDefinition))]
+        [Name(NamespaceClassificationTypeName)]
+        [ClassificationType(ClassificationTypeNames = NamespaceClassificationTypeName)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class NamespaceIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public NamespaceIdentifierFormat(ClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Namespace Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(NamespaceClassificationTypeName);
+            }
+        }
+
+        [Export(typeof(EditorFormatDefinition))]
         [Name(GlobalVariableClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = GlobalVariableClassificationTypeName)]
         [UserVisible(true)]
@@ -180,6 +231,21 @@ namespace HlslTools.VisualStudio.Tagging.Classification
         }
 
         [Export(typeof(EditorFormatDefinition))]
+        [Name(ConstantBufferVariableClassificationTypeName)]
+        [ClassificationType(ClassificationTypeNames = ConstantBufferVariableClassificationTypeName)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class ConstantBufferVariableIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public ConstantBufferVariableIdentifierFormat(ClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Constant Buffer Variable Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(ConstantBufferVariableClassificationTypeName);
+            }
+        }
+
+        [Export(typeof(EditorFormatDefinition))]
         [Name(ParameterClassificationTypeName)]
         [ClassificationType(ClassificationTypeNames = ParameterClassificationTypeName)]
         [UserVisible(true)]
@@ -204,8 +270,23 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             [ImportingConstructor]
             public FunctionIdentifierFormat(ClassificationColorManager colorManager)
             {
-                DisplayName = "HLSL Global Function Identifier";
+                DisplayName = "HLSL Function Identifier";
                 ForegroundColor = colorManager.GetDefaultColor(FunctionClassificationTypeName);
+            }
+        }
+
+        [Export(typeof(EditorFormatDefinition))]
+        [Name(MethodClassificationTypeName)]
+        [ClassificationType(ClassificationTypeNames = MethodClassificationTypeName)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class MethodIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public MethodIdentifierFormat(ClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Method Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(MethodClassificationTypeName);
             }
         }
 
@@ -221,6 +302,51 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             {
                 DisplayName = "HLSL Class Identifier";
                 ForegroundColor = colorManager.GetDefaultColor(ClassIdentifierClassificationTypeName);
+            }
+        }
+
+        [Export(typeof(EditorFormatDefinition))]
+        [Name(StructIdentifierClassificationTypeName)]
+        [ClassificationType(ClassificationTypeNames = StructIdentifierClassificationTypeName)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class StructIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public StructIdentifierFormat(ClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Struct Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(StructIdentifierClassificationTypeName);
+            }
+        }
+
+        [Export(typeof(EditorFormatDefinition))]
+        [Name(InterfaceIdentifierClassificationTypeName)]
+        [ClassificationType(ClassificationTypeNames = InterfaceIdentifierClassificationTypeName)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class InterfaceIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public InterfaceIdentifierFormat(ClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Interface Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(InterfaceIdentifierClassificationTypeName);
+            }
+        }
+
+        [Export(typeof(EditorFormatDefinition))]
+        [Name(ConstantBufferIdentifierClassificationTypeName)]
+        [ClassificationType(ClassificationTypeNames = ConstantBufferIdentifierClassificationTypeName)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class ConstantBufferIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public ConstantBufferIdentifierFormat(ClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Constant Buffer Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(ConstantBufferIdentifierClassificationTypeName);
             }
         }
     }

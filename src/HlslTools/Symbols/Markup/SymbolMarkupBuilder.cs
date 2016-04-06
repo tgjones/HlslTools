@@ -142,19 +142,56 @@ namespace HlslTools.Symbols.Markup
             markup.AppendName(SymbolMarkupKind.FieldName, symbol.Name);
         }
 
+        private enum VariableType
+        {
+            Local,
+            ConstantBuffer,
+            Global
+        }
+
         private static void AppendVariableSymbolInfo(this ICollection<SymbolMarkupToken> markup, VariableSymbol symbol)
         {
-            var isGlobalVariable = symbol.Parent == null || symbol.Parent.Kind == SymbolKind.ConstantBuffer;
+            VariableType variableType;
             if (symbol.Parent == null)
-                markup.AppendPlainText("(global variable)");
+                variableType = VariableType.Global;
             else if (symbol.Parent.Kind == SymbolKind.ConstantBuffer)
-                markup.AppendPlainText("(constant buffer variable)");
+                variableType = VariableType.ConstantBuffer;
             else
-                markup.AppendPlainText("(local variable)");
+                variableType = VariableType.Local;
+
+            switch (variableType)
+            {
+                case VariableType.Local:
+                    markup.AppendPlainText("(local variable)");
+                    break;
+                case VariableType.ConstantBuffer:
+                    markup.AppendPlainText("(constant buffer variable)");
+                    break;
+                case VariableType.Global:
+                    markup.AppendPlainText("(global variable)");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+
             markup.AppendSpace();
             markup.AppendType(symbol.ValueType, true);
             markup.AppendSpace();
-            markup.AppendName(isGlobalVariable ? SymbolMarkupKind.GlobalVariableName : SymbolMarkupKind.LocalVariableName, symbol.Name);
+
+            switch (variableType)
+            {
+                case VariableType.Local:
+                    markup.AppendName(SymbolMarkupKind.LocalVariableName, symbol.Name);
+                    break;
+                case VariableType.ConstantBuffer:
+                    markup.AppendName(SymbolMarkupKind.ConstantBufferVariableName, symbol.Name);
+                    break;
+                case VariableType.Global:
+                    markup.AppendName(SymbolMarkupKind.GlobalVariableName, symbol.Name);
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
         private static void AppendParameterName(this ICollection<SymbolMarkupToken> markup, string text)
@@ -204,9 +241,13 @@ namespace HlslTools.Symbols.Markup
             switch (symbol.Kind)
             {
                 case SymbolKind.Class:
+                    markup.AppendName(SymbolMarkupKind.ClassName, symbol.Name);
+                    break;
                 case SymbolKind.Interface:
+                    markup.AppendName(SymbolMarkupKind.InterfaceName, symbol.Name);
+                    break;
                 case SymbolKind.Struct:
-                    markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+                    markup.AppendName(SymbolMarkupKind.StructName, symbol.Name);
                     break;
                 case SymbolKind.IntrinsicMatrixType:
                 case SymbolKind.IntrinsicObjectType:
@@ -217,7 +258,7 @@ namespace HlslTools.Symbols.Markup
                     break;
                 case SymbolKind.Array:
                     // TODO: Could separate out square brackets as punctuation.
-                    markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+                    markup.AppendName(SymbolMarkupKind.IntrinsicTypeName, symbol.Name);
                     break;
             }
         }
@@ -235,7 +276,7 @@ namespace HlslTools.Symbols.Markup
             markup.AppendPlainText("(constant buffer)");
             markup.AppendSpace();
 
-            markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+            markup.AppendName(SymbolMarkupKind.ConstantBufferVariableName, symbol.Name);
         }
 
         private static void AppendAttribute(this ICollection<SymbolMarkupToken> markup, AttributeSymbol symbol)
@@ -275,7 +316,7 @@ namespace HlslTools.Symbols.Markup
                     markup.AppendPunctuation("::");
                     break;
                 case SymbolKind.Class:
-                    markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
+                    markup.AppendName(SymbolMarkupKind.ClassName, symbol.Name);
                     markup.AppendPunctuation("::");
                     break;
                 default:
