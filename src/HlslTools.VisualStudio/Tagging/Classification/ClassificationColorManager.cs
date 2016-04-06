@@ -104,15 +104,11 @@ namespace HlslTools.VisualStudio.Tagging.Classification
                     var color = pair.Value;
 
                     var classificationType = _classificationTypeRegistryService.GetClassificationType(type);
-                    var oldProp = formatMap.GetTextProperties(classificationType);
 
-                    var brush = new SolidColorBrush(color);
+                    var props = formatMap.GetTextProperties(classificationType);
+                    props = props.SetForeground(color);
 
-                    var newProp = TextFormattingRunProperties.CreateTextFormattingRunProperties(
-                        brush, null, oldProp.Typeface, null, null, oldProp.TextDecorations,
-                        oldProp.TextEffects, oldProp.CultureInfo);
-
-                    formatMap.SetTextProperties(classificationType, newProp);
+                    formatMap.SetTextProperties(classificationType, props);
                 }
             }
             finally
