@@ -11,14 +11,14 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace HlslTools.VisualStudio.Tagging.Classification
 {
-    internal sealed class SemanticTagger : AsyncTagger<IClassificationTag>, IBackgroundParserSyntaxTreeHandler
+    internal sealed class SemanticTagger : AsyncTagger<IClassificationTag>, IBackgroundParserSemanticModelHandler
     {
         private readonly HlslClassificationService _classificationService;
 
         public SemanticTagger(HlslClassificationService classificationService, BackgroundParser backgroundParser)
         {
             _classificationService = classificationService;
-            backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.High, this);
+            backgroundParser.RegisterSemanticModelHandler(BackgroundParserHandlerPriority.High, this);
         }
 
         protected override Tuple<ITextSnapshot, List<ITagSpan<IClassificationTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             return Tuple.Create(snapshot, semanticTags);
         }
 
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        async Task IBackgroundParserSemanticModelHandler.OnSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             await InvalidateTags(snapshot, cancellationToken);
         }

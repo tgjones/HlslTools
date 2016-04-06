@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Util.Extensions;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
@@ -14,21 +15,18 @@ namespace HlslTools.VisualStudio.Tagging.Classification
     {
         private readonly HlslClassificationService _classificationService;
         private readonly ClassificationColorManager _classificationColorManager;
-        private readonly ShellEventListener _shellEventListener;
 
         [ImportingConstructor]
         public SemanticTaggerProvider(HlslClassificationService classificationService, 
-            ClassificationColorManager classificationColorManager,
-            ShellEventListener shellEventListener)
+            ClassificationColorManager classificationColorManager)
         {
             _classificationService = classificationService;
             _classificationColorManager = classificationColorManager;
-            _shellEventListener = shellEventListener;
 
-            _shellEventListener.ThemeChanged += UpdateTheme;
+            VSColorTheme.ThemeChanged += UpdateTheme;
         }
 
-        private void UpdateTheme(object sender, EventArgs e)
+        private void UpdateTheme(ThemeChangedEventArgs e)
         {
             _classificationColorManager.UpdateColors();
         }
@@ -41,7 +39,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
 
         public void Dispose()
         {
-            _shellEventListener.ThemeChanged -= UpdateTheme;
+            VSColorTheme.ThemeChanged -= UpdateTheme;
         }
     }
 }

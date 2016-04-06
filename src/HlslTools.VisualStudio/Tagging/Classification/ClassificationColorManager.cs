@@ -93,7 +93,7 @@ namespace HlslTools.VisualStudio.Tagging.Classification
             _lastTheme = currentTheme;
 
             var colors = _themeColors[currentTheme];
-            var formatMap = _classificationFormatMapService.GetClassificationFormatMap(category: "text");
+            var formatMap = _classificationFormatMapService.GetClassificationFormatMap("text");
 
             try
             {

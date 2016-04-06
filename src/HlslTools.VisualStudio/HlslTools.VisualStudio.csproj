@@ -373,7 +373,6 @@
     <Compile Include="Tagging\Classification\ClassificationColorManager.cs" />
     <Compile Include="Tagging\Classification\HlslClassificationService.cs" />
     <Compile Include="Tagging\Classification\SemanticClassificationMetadata.cs" />
-    <Compile Include="Tagging\Classification\ShellEventListener.cs" />
     <Compile Include="Tagging\Classification\SyntaxTagger.cs" />
     <Compile Include="Tagging\Classification\SyntaxTaggerProvider.cs" />
     <Compile Include="Tagging\Classification\SemanticTaggerProvider.cs" />
