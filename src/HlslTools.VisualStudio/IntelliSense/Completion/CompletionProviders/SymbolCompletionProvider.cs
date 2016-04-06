@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -115,6 +116,8 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             var displayText = first.DisplayText;
             var insertionText = first.InsertionText;
             var description = string.Format(Resources.CompletionItemWithOverloads, first.Description, numberOfOverloads);
+            if (!string.IsNullOrEmpty(symbol.Documentation))
+                description += Environment.NewLine + symbol.Documentation;
             var glyph = first.Glyph;
             return new CompletionItem(displayText, insertionText, description, glyph, symbol);
         }
