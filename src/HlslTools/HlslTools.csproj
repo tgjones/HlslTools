@@ -165,6 +165,7 @@
     <Compile Include="Symbols\ArraySymbol.cs" />
     <Compile Include="Symbols\AttributeSymbol.cs" />
     <Compile Include="Symbols\ClassSymbol.cs" />
+    <Compile Include="Symbols\ConstantBufferSymbol.cs" />
     <Compile Include="Symbols\ContainerSymbol.cs" />
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\IntrinsicAttributes.cs" />

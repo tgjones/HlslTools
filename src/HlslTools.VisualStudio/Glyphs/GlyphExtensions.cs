@@ -96,6 +96,8 @@ namespace HlslTools.VisualStudio.Glyphs
                     return Glyph.Technique;
                 case SymbolKind.Attribute:
                     return Glyph.Function;
+                case SymbolKind.ConstantBuffer:
+                    return Glyph.ConstantBuffer;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

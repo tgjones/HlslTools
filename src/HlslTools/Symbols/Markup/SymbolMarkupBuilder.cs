@@ -47,6 +47,9 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Attribute:
                     markup.AppendAttribute((AttributeSymbol) symbol);
                     break;
+                case SymbolKind.ConstantBuffer:
+                    markup.AppendConstantBuffer((ConstantBufferSymbol) symbol);
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -141,8 +144,13 @@ namespace HlslTools.Symbols.Markup
 
         private static void AppendVariableSymbolInfo(this ICollection<SymbolMarkupToken> markup, VariableSymbol symbol)
         {
-            var isGlobalVariable = symbol.Parent == null;
-            markup.AppendPlainText(isGlobalVariable ? "(global variable)" : "(local variable)");
+            var isGlobalVariable = symbol.Parent == null || symbol.Parent.Kind == SymbolKind.ConstantBuffer;
+            if (symbol.Parent == null)
+                markup.AppendPlainText("(global variable)");
+            else if (symbol.Parent.Kind == SymbolKind.ConstantBuffer)
+                markup.AppendPlainText("(constant buffer variable)");
+            else
+                markup.AppendPlainText("(local variable)");
             markup.AppendSpace();
             markup.AppendType(symbol.ValueType, true);
             markup.AppendSpace();
@@ -220,6 +228,14 @@ namespace HlslTools.Symbols.Markup
             markup.AppendSpace();
 
             markup.AppendName(SymbolMarkupKind.SemanticName, symbol.Name);
+        }
+
+        private static void AppendConstantBuffer(this ICollection<SymbolMarkupToken> markup, ConstantBufferSymbol symbol)
+        {
+            markup.AppendPlainText("(constant buffer)");
+            markup.AppendSpace();
+
+            markup.AppendName(SymbolMarkupKind.TypeName, symbol.Name);
         }
 
         private static void AppendAttribute(this ICollection<SymbolMarkupToken> markup, AttributeSymbol symbol)

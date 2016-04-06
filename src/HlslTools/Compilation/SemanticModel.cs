@@ -58,6 +58,12 @@ namespace HlslTools.Compilation
             return result?.VariableSymbol;
         }
 
+        public ConstantBufferSymbol GetDeclaredSymbol(ConstantBufferSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundConstantBuffer;
+            return result?.ConstantBufferSymbol;
+        }
+
         public FunctionSymbol GetDeclaredSymbol(FunctionDeclarationSyntax syntax)
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundFunction;

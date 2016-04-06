@@ -272,13 +272,21 @@ namespace HlslTools.Binding
 
         private BoundConstantBuffer BindConstantBufferDeclaration(ConstantBufferSyntax declaration)
         {
+            var constantBufferSymbol = new ConstantBufferSymbol(declaration, null);
+
             var variables = new List<BoundMultipleVariableDeclarations>();
 
             // Add constant buffer fields to global scope.
             foreach (var field in declaration.Declarations)
-                variables.Add(BindVariableDeclarationStatement(field, null));
+            {
+                var boundStatement = Bind(field, x => BindVariableDeclarationStatement(x, constantBufferSymbol));
+                variables.Add(boundStatement);
 
-            return new BoundConstantBuffer(variables.ToImmutableArray());
+                foreach (var boundDeclaration in boundStatement.VariableDeclarations)
+                    constantBufferSymbol.AddMember(boundDeclaration.VariableSymbol);
+            }
+
+            return new BoundConstantBuffer(constantBufferSymbol, variables.ToImmutableArray());
         }
 
         private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration, Symbol parent)

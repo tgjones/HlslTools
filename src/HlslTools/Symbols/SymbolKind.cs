@@ -7,6 +7,7 @@
         Struct,
         Class,
         Interface,
+        ConstantBuffer,
         Field,
         Function,
         Variable,
