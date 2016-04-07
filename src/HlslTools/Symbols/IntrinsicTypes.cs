@@ -195,7 +195,7 @@ namespace HlslTools.Symbols
         public static readonly IntrinsicObjectTypeSymbol PixelShader;
         public static readonly IntrinsicObjectTypeSymbol VertexShader;
 
-        public static readonly TypeSymbol[] AllIntrinsicTypes;
+        public static readonly TypeSymbol[] AllTypes;
 
         static IntrinsicTypes()
         {
@@ -834,12 +834,6 @@ namespace HlslTools.Symbols
             PixelShader = new IntrinsicObjectTypeSymbol("PixelShader", "", PredefinedObjectType.PixelShader);
             VertexShader = new IntrinsicObjectTypeSymbol("VertexShader", "", PredefinedObjectType.VertexShader);
 
-            AllIntrinsicTypes = AllNumericTypes
-                .Cast<TypeSymbol>()
-                .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
-                .Union(new[] { BlendState, DepthStencilState, RasterizerState })
-                .ToArray();
-
             ByteAddressBuffer = CreatePredefinedObjectType("ByteAddressBuffer",
                 "A read-only buffer that is indexed in bytes.",
                 PredefinedObjectType.ByteAddressBuffer,
@@ -854,6 +848,14 @@ namespace HlslTools.Symbols
                 "A rasterizer ordered read/write buffer that indexes in bytes.",
                 PredefinedObjectType.RasterizerOrderedByteAddressBuffer,
                 CreateRWByteAddressBufferMethods);
+
+            AllTypes = AllNumericTypes
+                .Cast<TypeSymbol>()
+                .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
+                .Union(new[] { BlendState, DepthStencilState, RasterizerState })
+                .Union(new[] { GeometryShader, PixelShader, VertexShader })
+                .Union(new[] { ByteAddressBuffer, RWByteAddressBuffer, RasterizerOrderedByteAddressBuffer })
+                .ToArray();
         }
 
         private static IEnumerable<Symbol> CreateScalarTypeFields(int numComponents,

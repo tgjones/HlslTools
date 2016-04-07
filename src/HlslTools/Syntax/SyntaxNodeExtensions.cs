@@ -309,28 +309,40 @@ namespace HlslTools.Syntax
                 throw new ArgumentNullException(nameof(tree));
 
             var token = tree.Root.FindTokenOnLeft(position);
+            var parent = GetNonIdentifierParent(token);
 
-            return PossiblyInFunctionReturnTypeName(token, position)
-                || PossiblyInParameterTypeName(token, position)
-                || PossiblyInVariableTypeName(token, position);
+            if (parent.Kind == SyntaxKind.SkippedTokensTrivia)
+                return true;
+
+            return PossiblyInFunctionReturnTypeName(parent, position)
+                || PossiblyInParameterTypeName(parent, position)
+                || PossiblyInVariableTypeName(parent, position);
         }
 
-        private static bool PossiblyInFunctionReturnTypeName(SyntaxToken token, SourceLocation position)
+        private static bool PossiblyInFunctionReturnTypeName(SyntaxNode tokenParent, SourceLocation position)
         {
-            var node = token.Parent as FunctionSyntax;
+            var node = tokenParent as FunctionSyntax;
             return node != null && node.ReturnType.SourceRange.ContainsOrTouches(position);
         }
 
-        private static bool PossiblyInParameterTypeName(SyntaxToken token, SourceLocation position)
+        private static bool PossiblyInParameterTypeName(SyntaxNode tokenParent, SourceLocation position)
         {
-            var node = token.Parent as ParameterSyntax;
+            var node = tokenParent as ParameterSyntax;
             return node != null && node.Type.SourceRange.ContainsOrTouches(position);
         }
 
-        private static bool PossiblyInVariableTypeName(SyntaxToken token, SourceLocation position)
+        private static bool PossiblyInVariableTypeName(SyntaxNode tokenParent, SourceLocation position)
         {
-            var node = token.Parent as VariableDeclarationSyntax;
+            var node = tokenParent as VariableDeclarationSyntax;
             return node != null && node.Type.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static SyntaxNode GetNonIdentifierParent(SyntaxToken token)
+        {
+            var node = token.Parent as IdentifierNameSyntax;
+            if (node != null)
+                return node.Parent;
+            return token.Parent;
         }
     }
 }

@@ -23,13 +23,12 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             if (semanticModel.SyntaxTree.PossiblyInUserGivenName(position))
                 return Enumerable.Empty<CompletionItem>();
 
-            // We don't want to show a symbol completion when typing a type name.
-            if (semanticModel.SyntaxTree.PossiblyInTypeName(position))
-                return Enumerable.Empty<CompletionItem>();
-
             // Comments and literals don't get completion information
             if (root.InComment(position) || root.InLiteral(position))
                 return Enumerable.Empty<CompletionItem>();
+
+            if (semanticModel.SyntaxTree.PossiblyInTypeName(position))
+                return GetTypeCompletions(semanticModel, position);
 
             var propertyAccessExpression = GetPropertyAccessExpression(root, position);
             return propertyAccessExpression == null
@@ -37,11 +36,18 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
                 : GetMemberCompletions(semanticModel, propertyAccessExpression);
         }
 
+        private static IEnumerable<CompletionItem> GetTypeCompletions(SemanticModel semanticModel, SourceLocation position)
+        {
+            var symbols = semanticModel.LookupSymbols(position).OfType<TypeSymbol>();
+            return CreateSymbolCompletions(symbols);
+        }
+
         private static IEnumerable<CompletionItem> GetGlobalCompletions(SemanticModel semanticModel, SourceLocation position)
         {
             var symbols = semanticModel.LookupSymbols(position)
                 .Where(x => !(x is SemanticSymbol))
-                .Where(x => !(x is AttributeSymbol));
+                .Where(x => !(x is AttributeSymbol))
+                .Where(x => !(x is TypeSymbol));
             return CreateSymbolCompletions(symbols);
         }
 
