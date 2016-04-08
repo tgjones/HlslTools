@@ -23,6 +23,10 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             if (semanticModel.SyntaxTree.PossiblyInUserGivenName(position))
                 return Enumerable.Empty<CompletionItem>();
 
+            // We don't want to show a symbol completion in a macro.
+            if (semanticModel.SyntaxTree.PossiblyInMacro(position))
+                return Enumerable.Empty<CompletionItem>();
+
             // Comments and literals don't get completion information
             if (root.InComment(position) || root.InLiteral(position))
                 return Enumerable.Empty<CompletionItem>();

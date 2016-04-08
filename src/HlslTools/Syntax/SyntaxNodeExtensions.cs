@@ -266,6 +266,16 @@ namespace HlslTools.Syntax
             }
         }
 
+        public static bool PossiblyInMacro(this SyntaxTree tree, SourceLocation position)
+        {
+            if (tree == null)
+                throw new ArgumentNullException(nameof(tree));
+
+            var token = tree.Root.FindTokenOnLeft(position);
+
+            return token.Ancestors().OfType<DirectiveTriviaSyntax>().Any();
+        }
+
         public static bool PossiblyInUserGivenName(this SyntaxTree tree, SourceLocation position)
         {
             if (tree == null)
