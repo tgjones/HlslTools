@@ -38,12 +38,15 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
                     typedChar = (char) (ushort) Marshal.GetObjectForNativeVariant(pvaIn);
 
                 var isCommit = nCmdID == (uint) VSConstants.VSStd2KCmdID.RETURN
-                    || nCmdID == (uint)VSConstants.VSStd2KCmdID.TAB
+                    || nCmdID == (uint) VSConstants.VSStd2KCmdID.TAB;
+
+                var isCompletion = isCommit
                     || char.IsWhiteSpace(typedChar) 
                     || (char.IsPunctuation(typedChar) && typedChar != '_');
 
-                if (isCommit && _completionModelManager.Commit())
-                    return VSConstants.S_OK; // Don't add commit char to buffer.
+                if (isCompletion && _completionModelManager.Commit())
+                    if (isCommit)
+                        return VSConstants.S_OK; // Don't add commit char to buffer.
             }
 
             // Pass command to next command target.
