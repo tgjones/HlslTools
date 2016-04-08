@@ -7,7 +7,7 @@ using HlslTools.VisualStudio.Glyphs;
 
 namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 {
-    [Export(typeof(ICompletionProvider))]
+    //[Export(typeof(ICompletionProvider))]
     internal sealed class KeywordCompletionProvider : ICompletionProvider
     {
         public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
@@ -15,9 +15,11 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
             var root = syntaxTree.Root;
 
-            if (root.InComment(position)
-                || root.InLiteral(position)
-                || IsInPropertyAccess(root, position))
+            if (root.InComment(position) || root.InLiteral(position) || IsInPropertyAccess(root, position))
+                return Enumerable.Empty<CompletionItem>();
+
+            // We don't want to show a keyword completion in a macro.
+            if (semanticModel.SyntaxTree.PossiblyInMacro(position))
                 return Enumerable.Empty<CompletionItem>();
 
             return GetAvailableKeywords(syntaxTree, position)
