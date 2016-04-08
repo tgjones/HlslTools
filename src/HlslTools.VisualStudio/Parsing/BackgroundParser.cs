@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HlslTools.Compilation;
@@ -10,6 +10,9 @@ namespace HlslTools.VisualStudio.Parsing
 {
     internal sealed class BackgroundParser : IDisposable
     {
+        public event EventHandler<BackgroundParserEventArgs> SyntaxTreeAvailable;
+        public event EventHandler<BackgroundParserEventArgs> SemanticModelAvailable;
+
         private readonly ITextBuffer _textBuffer;
         private readonly CancellationTokenSource _shutdownToken;
 
@@ -18,9 +21,6 @@ namespace HlslTools.VisualStudio.Parsing
 
         private CancellationTokenSource _currentParseCancellationTokenSource;
 
-        private readonly SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSyntaxTreeHandler>> _syntaxTreeAvailableEventHandlers;
-        private readonly SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSemanticModelHandler>> _semanticModelAvailableEventHandlers;
-
         public BackgroundParser(ITextBuffer textBuffer)
         {
             _textBuffer = textBuffer;
@@ -28,9 +28,6 @@ namespace HlslTools.VisualStudio.Parsing
             _shutdownToken = new CancellationTokenSource();
 
             _hasWork = new ManualResetEventSlim(false);
-
-            _syntaxTreeAvailableEventHandlers = new SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSyntaxTreeHandler>>();
-            _semanticModelAvailableEventHandlers = new SortedList<BackgroundParserHandlerPriority, List<IBackgroundParserSemanticModelHandler>>();
 
             _textBuffer.ChangedHighPriority += OnTextBufferChanged;
 
@@ -46,7 +43,7 @@ namespace HlslTools.VisualStudio.Parsing
             }
         }
 
-        private async void DoWork()
+        private void DoWork()
         {
             while (!_shutdownToken.IsCancellationRequested)
             {
@@ -82,15 +79,15 @@ namespace HlslTools.VisualStudio.Parsing
 
                         cancellationToken.ThrowIfCancellationRequested();
 
-                        await RaiseSyntaxTreeAvailable(snapshot, cancellationToken);
+                        var args = new BackgroundParserEventArgs(snapshot, cancellationToken);
+                        RaiseEvent(SyntaxTreeAvailable, args);
 
                         // Force creation of SemanticModel.
                         SemanticModel semanticModel;
                         if (snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
                         {
                             cancellationToken.ThrowIfCancellationRequested();
-
-                            await RaiseSemanticModelAvailable(snapshot, cancellationToken);
+                            RaiseEvent(SemanticModelAvailable, args);
                         }
                     }
                 }
@@ -103,40 +100,51 @@ namespace HlslTools.VisualStudio.Parsing
             }
         }
 
-        private async Task RaiseSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        private void RaiseEvent(EventHandler<BackgroundParserEventArgs> handler, BackgroundParserEventArgs args)
         {
-            foreach (var handlerList in _syntaxTreeAvailableEventHandlers)
-                foreach (var handler in handlerList.Value)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    await handler.OnSyntaxTreeAvailable(snapshot, cancellationToken);
-                }
+            if (handler == null)
+                return;
+
+            foreach (EventHandler<BackgroundParserEventArgs> h in handler.GetInvocationList())
+            {
+                args.CancellationToken.ThrowIfCancellationRequested();
+                h(this, args);
+            }
         }
 
-        private async Task RaiseSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        public IDisposable SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay delay, Action<BackgroundParserEventArgs> callback)
         {
-            foreach (var handlerList in _semanticModelAvailableEventHandlers)
-                foreach (var handler in handlerList.Value)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    await handler.OnSemanticModelAvailable(snapshot, cancellationToken);
-                }
+            return Observable.FromEventPattern<BackgroundParserEventArgs>(x => SyntaxTreeAvailable += x, x => SyntaxTreeAvailable -= x)
+                .Throttle(GetDelay(delay))
+                .Subscribe(x => callback(x.EventArgs));
         }
 
-        public void RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority priority, IBackgroundParserSyntaxTreeHandler handler)
+        public IDisposable SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay delay, Action<BackgroundParserEventArgs> callback)
         {
-            List<IBackgroundParserSyntaxTreeHandler> handlerList;
-            if (!_syntaxTreeAvailableEventHandlers.TryGetValue(priority, out handlerList))
-                _syntaxTreeAvailableEventHandlers.Add(priority, handlerList = new List<IBackgroundParserSyntaxTreeHandler>());
-            handlerList.Add(handler);
+            return Observable.FromEventPattern<BackgroundParserEventArgs>(x => SemanticModelAvailable += x, x => SemanticModelAvailable -= x)
+                .Throttle(GetDelay(delay))
+                .Subscribe(x => callback(x.EventArgs));
         }
 
-        public void RegisterSemanticModelHandler(BackgroundParserHandlerPriority priority, IBackgroundParserSemanticModelHandler handler)
+        private static TimeSpan GetDelay(BackgroundParserSubscriptionDelay delay)
         {
-            List<IBackgroundParserSemanticModelHandler> handlerList;
-            if (!_semanticModelAvailableEventHandlers.TryGetValue(priority, out handlerList))
-                _semanticModelAvailableEventHandlers.Add(priority, handlerList = new List<IBackgroundParserSemanticModelHandler>());
-            handlerList.Add(handler);
+            const int nearImmediateDelay = 50;
+            const int shortDelay = 250;
+            const int mediumDelay = 500;
+            const int idleDelay = 1500;
+
+            switch (delay)
+            {
+                case BackgroundParserSubscriptionDelay.NearImmediate:
+                    return TimeSpan.FromMilliseconds(nearImmediateDelay);
+                case BackgroundParserSubscriptionDelay.Short:
+                    return TimeSpan.FromMilliseconds(shortDelay);
+                case BackgroundParserSubscriptionDelay.Medium:
+                    return TimeSpan.FromMilliseconds(mediumDelay);
+                case BackgroundParserSubscriptionDelay.OnIdle:
+                default:
+                    return TimeSpan.FromMilliseconds(idleDelay);
+            }
         }
 
         public void Dispose()
@@ -153,22 +161,23 @@ namespace HlslTools.VisualStudio.Parsing
         }
     }
 
-    internal enum BackgroundParserHandlerPriority
+    internal enum BackgroundParserSubscriptionDelay
     {
-        Lowest,
-        Low,
+        NearImmediate,
+        Short,
         Medium,
-        High,
-        Highest
+        OnIdle
     }
 
-    internal interface IBackgroundParserSyntaxTreeHandler
+    internal sealed class BackgroundParserEventArgs : EventArgs
     {
-        Task OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken);
-    }
+        public ITextSnapshot Snapshot { get; }
+        public CancellationToken CancellationToken { get; }
 
-    internal interface IBackgroundParserSemanticModelHandler
-    {
-        Task OnSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        public BackgroundParserEventArgs(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        {
+            Snapshot = snapshot;
+            CancellationToken = cancellationToken;
+        }
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
@@ -10,7 +9,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace HlslTools.VisualStudio.Tagging.BraceMatching
 {
-    internal sealed class BraceMatchingTagger : AsyncTagger<ITextMarkerTag>, IBackgroundParserSyntaxTreeHandler
+    internal sealed class BraceMatchingTagger : AsyncTagger<ITextMarkerTag>
     {
         private readonly ITextView _textView;
         private readonly BraceMatcher _braceMatcher;
@@ -20,17 +19,13 @@ namespace HlslTools.VisualStudio.Tagging.BraceMatching
 
         public BraceMatchingTagger(BackgroundParser backgroundParser, ITextView textView, BraceMatcher braceMatcher)
         {
-            backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Medium, this);
+            backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.NearImmediate,
+                async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
 
             textView.Caret.PositionChanged += OnCaretPositionChanged;
 
             _textView = textView;
             _braceMatcher = braceMatcher;
-        }
-
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            await InvalidateTags(snapshot, cancellationToken);
         }
 
         private async void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)

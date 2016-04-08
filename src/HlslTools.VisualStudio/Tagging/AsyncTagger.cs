@@ -16,33 +16,40 @@ namespace HlslTools.VisualStudio.Tagging
 
         public virtual async Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            await Task.Run(() =>
+            try
             {
-                try
+                await Task.Run(() =>
                 {
-                    var tagsResult = GetTags(snapshot, cancellationToken);
+                    try
+                    {
+                        var tagsResult = GetTags(snapshot, cancellationToken);
 
-                    _tags = tagsResult.Item2
-                        .Select(x => new LineBasedTagSpan
-                        {
-                            EndLine = x.Span.End.GetContainingLine().LineNumber,
-                            Span = x.Span,
-                            Tag = x.Tag
-                        })
-                        .ToList();
+                        _tags = tagsResult.Item2
+                            .Select(x => new LineBasedTagSpan
+                            {
+                                EndLine = x.Span.End.GetContainingLine().LineNumber,
+                                Span = x.Span,
+                                Tag = x.Tag
+                            })
+                            .ToList();
 
-                    var snapshotSpan = new SnapshotSpan(tagsResult.Item1, 0, tagsResult.Item1.Length);
-                    OnTagsChanged(new SnapshotSpanEventArgs(snapshotSpan));
-                }
-                catch (OperationCanceledException)
-                {
+                        var snapshotSpan = new SnapshotSpan(tagsResult.Item1, 0, tagsResult.Item1.Length);
+                        OnTagsChanged(new SnapshotSpanEventArgs(snapshotSpan));
+                    }
+                    catch (OperationCanceledException)
+                    {
 
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log("Tagging failed: " + ex);
-                }
-            }, cancellationToken);
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log("Tagging failed: " + ex);
+                    }
+                }, cancellationToken);
+            }
+            catch (OperationCanceledException)
+            {
+
+            }
         }
 
         protected abstract Tuple<ITextSnapshot, List<ITagSpan<TTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken);

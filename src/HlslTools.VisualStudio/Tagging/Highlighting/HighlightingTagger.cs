@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using EnvDTE;
 using HlslTools.Compilation;
 using HlslTools.VisualStudio.Parsing;
@@ -17,7 +16,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace HlslTools.VisualStudio.Tagging.Highlighting
 {
-    internal sealed class HighlightingTagger : AsyncTagger<HighlightTag>, IBackgroundParserSemanticModelHandler
+    internal sealed class HighlightingTagger : AsyncTagger<HighlightTag>
     {
         private readonly ITextView _textView;
         private readonly ImmutableArray<IHighlighter> _highlighters;
@@ -27,7 +26,8 @@ namespace HlslTools.VisualStudio.Tagging.Highlighting
 
         public HighlightingTagger(BackgroundParser backgroundParser, ITextView textView, ImmutableArray<IHighlighter> highlighters, IServiceProvider serviceProvider)
         {
-            backgroundParser.RegisterSemanticModelHandler(BackgroundParserHandlerPriority.Low, this);
+            backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.OnIdle,
+                async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
 
             textView.Caret.PositionChanged += OnCaretPositionChanged;
 
@@ -36,11 +36,6 @@ namespace HlslTools.VisualStudio.Tagging.Highlighting
 
             var dte = serviceProvider.GetService<SDTE, DTE>();
             _vsVersion = VisualStudioVersionUtility.FromDteVersion(dte.Version);
-        }
-
-        async Task IBackgroundParserSemanticModelHandler.OnSemanticModelAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            await InvalidateTags(snapshot, cancellationToken);
         }
 
         private async void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)

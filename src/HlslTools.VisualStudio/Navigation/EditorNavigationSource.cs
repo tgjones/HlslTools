@@ -10,7 +10,7 @@ using Microsoft.VisualStudio.Text;
 
 namespace HlslTools.VisualStudio.Navigation
 {
-    internal sealed class EditorNavigationSource : IBackgroundParserSyntaxTreeHandler
+    internal sealed class EditorNavigationSource
     {
         private readonly ITextBuffer _textBuffer;
         private readonly DispatcherGlyphService _glyphService;
@@ -23,7 +23,18 @@ namespace HlslTools.VisualStudio.Navigation
 
             _navigationTargets = new List<EditorTypeNavigationTarget>();
 
-            backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Medium, this);
+            backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.Medium,
+                async x =>
+                {
+                    try
+                    {
+                        await InvalidateTargets(x.Snapshot, x.CancellationToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        
+                    }
+                });
         }
 
         public async void Initialize()
@@ -57,11 +68,6 @@ namespace HlslTools.VisualStudio.Navigation
         private void OnNavigationTargetsChanged(EventArgs e)
         {
             NavigationTargetsChanged?.Invoke(this, e);
-        }
-
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            await InvalidateTargets(snapshot, cancellationToken);
         }
     }
 }

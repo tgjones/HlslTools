@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
@@ -11,7 +10,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 
 namespace HlslTools.VisualStudio.Tagging.Outlining
 {
-    internal sealed class OutliningTagger : AsyncTagger<IOutliningRegionTag>, IBackgroundParserSyntaxTreeHandler
+    internal sealed class OutliningTagger : AsyncTagger<IOutliningRegionTag>
     {
         private readonly ITextBuffer _textBuffer;
         private bool _enabled;
@@ -20,7 +19,8 @@ namespace HlslTools.VisualStudio.Tagging.Outlining
         {
             _textBuffer = textBuffer;
 
-            backgroundParser.RegisterSyntaxTreeHandler(BackgroundParserHandlerPriority.Medium, this);
+            backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.OnIdle,
+                async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
 
             _enabled = optionsService.AdvancedOptions.EnterOutliningModeWhenFilesOpen;
         }
@@ -36,11 +36,6 @@ namespace HlslTools.VisualStudio.Tagging.Outlining
             outliningVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshot.GetSyntaxTree(cancellationToken).Root);
 
             return Tuple.Create(snapshot, outliningRegions);
-        }
-
-        async Task IBackgroundParserSyntaxTreeHandler.OnSyntaxTreeAvailable(ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            await InvalidateTags(snapshot, cancellationToken);
         }
 
         public void UpdateEnabled(bool enabled)
