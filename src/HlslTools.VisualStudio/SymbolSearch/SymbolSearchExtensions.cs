@@ -61,7 +61,7 @@ namespace HlslTools.VisualStudio.SymbolSearch
                 {
                     var expression = (StructTypeSyntax) node;
                     var symbol = semanticModel.GetDeclaredSymbol(expression);
-                    if (symbol != null)
+                    if (symbol != null && expression.Name != null)
                         yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.Span);
                     break;
                 }
