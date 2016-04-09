@@ -286,13 +286,20 @@ namespace HlslTools.Syntax
             return PossiblyInTypeDefinitionName(token, position)
                 || PossiblyInConstantBufferDefinitionName(token, position)
                 || PossiblyInFunctionDeclarationName(token, position)
-                || PossiblyInVariableDeclarationName(token, position);
+                || PossiblyInVariableDeclarationName(token, position)
+                || PossiblyInNamespaceName(token, position);
         }
 
         private static bool PossiblyInTypeDefinitionName(SyntaxToken token, SourceLocation position)
         {
             var node = token.Parent as TypeDefinitionSyntax;
-            return node != null && node.NameToken.SourceRange.ContainsOrTouches(position);
+            return node?.NameToken != null && node.NameToken.SourceRange.ContainsOrTouches(position);
+        }
+
+        private static bool PossiblyInNamespaceName(SyntaxToken token, SourceLocation position)
+        {
+            var node = token.Parent as NamespaceSyntax;
+            return node != null && node.Name.SourceRange.ContainsOrTouches(position);
         }
 
         private static bool PossiblyInConstantBufferDefinitionName(SyntaxToken token, SourceLocation position)
