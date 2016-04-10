@@ -126,6 +126,18 @@ namespace HlslTools.Symbols.Markup
                 markup.AppendPlainText("(parameter)");
                 markup.AppendSpace();
             }
+
+            if (symbol.Direction == ParameterDirection.Inout)
+            {
+                markup.AppendKeyword("inout");
+                markup.AppendSpace();
+            }
+            else if (symbol.Direction == ParameterDirection.Out)
+            {
+                markup.AppendKeyword("out");
+                markup.AppendSpace();
+            }
+
             markup.AppendType(symbol.ValueType, false);
             markup.AppendSpace();
             markup.AppendParameterName(symbol.Name);
