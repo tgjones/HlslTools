@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace HlslTools.Symbols
 {
@@ -16,6 +17,17 @@ namespace HlslTools.Symbols
                 var vector2Type = IntrinsicTypes.GetVectorType(scalarType.ScalarType, 2);
                 var vector3Type = IntrinsicTypes.GetVectorType(scalarType.ScalarType, 3);
                 var vector4Type = IntrinsicTypes.GetVectorType(scalarType.ScalarType, 4);
+
+                allFunctions.Add(new FunctionSymbol(
+                    scalarType.Name,
+                    $"Constructor function for {scalarType.Name}.",
+                    null,
+                    scalarType,
+                    f => new[]
+                    {
+                        new ParameterSymbol("x", "Value for the x component.", f, scalarType)
+                    },
+                    isNumericConstructor: true));
 
                 allFunctions.Add(new FunctionSymbol(
                     vector1Type.Name,
@@ -198,6 +210,24 @@ namespace HlslTools.Symbols
                         new ParameterSymbol("xyzw", "Value for the x, y, z, and w components.", f, vector4Type),
                     },
                     isNumericConstructor: true));
+
+                foreach (var matrixType in IntrinsicTypes.AllMatrixTypes.Where(x => x.ScalarType == scalarType.ScalarType))
+                {
+                    allFunctions.Add(new FunctionSymbol(
+                        matrixType.Name,
+                        $"Constructor function for {matrixType.Name}.",
+                        null,
+                        matrixType,
+                        f =>
+                        {
+                            var result = new List<ParameterSymbol>();
+                            for (var rows = 1; rows <= matrixType.Rows; rows++)
+                                for (var cols = 1; cols <= matrixType.Cols; cols++)
+                                    result.Add(new ParameterSymbol($"m{rows}{cols}", $"Value for the component in row {rows} and column {cols}.", f, scalarType));
+                            return result.ToArray();
+                        },
+                        isNumericConstructor: true));
+                }
             }
 
             AllFunctions = allFunctions;
