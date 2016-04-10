@@ -1,3 +1,4 @@
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,19 +8,17 @@ using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 
-namespace HlslTools.VisualStudio.Tagging.Squiggles
+namespace HlslTools.VisualStudio.ErrorList
 {
-    internal sealed class SemanticErrorTagger : ErrorTagger
+    internal sealed class SemanticErrorManager : ErrorManager
     {
-        public SemanticErrorTagger(ITextView textView, BackgroundParser backgroundParser,
-            IOptionsService optionsService)
-            : base(PredefinedErrorTypeNames.CompilerError, textView, optionsService)
+        public SemanticErrorManager(BackgroundParser backgroundParser, ITextView textView, IOptionsService optionsService, IServiceProvider serviceProvider, ITextDocumentFactoryService textDocumentFactoryService) 
+            : base(textView, optionsService, serviceProvider, textDocumentFactoryService)
         {
-            backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.Medium,
-                async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
+            backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.OnIdle,
+                x => RefreshErrors(x.Snapshot, x.CancellationToken));
         }
 
         protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)

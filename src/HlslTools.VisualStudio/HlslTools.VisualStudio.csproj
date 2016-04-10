@@ -238,7 +238,11 @@
     <Compile Include="Editing\Commenting\CommentingTextViewCreationListener.cs" />
     <Compile Include="Editing\Commenting\UncommentCommandTarget.cs" />
     <Compile Include="ErrorList\ErrorListHelper.cs" />
+    <Compile Include="ErrorList\ErrorManager.cs" />
+    <Compile Include="ErrorList\ErrorManagerProvider.cs" />
     <Compile Include="ErrorList\IErrorListHelper.cs" />
+    <Compile Include="ErrorList\SemanticErrorManager.cs" />
+    <Compile Include="ErrorList\SyntaxErrorManager.cs" />
     <Compile Include="Formatting\FormattingExtensions.cs" />
     <Compile Include="Formatting\FormatCommandTarget.cs" />
     <Compile Include="Formatting\FormattingTextViewCreationListener.cs" />

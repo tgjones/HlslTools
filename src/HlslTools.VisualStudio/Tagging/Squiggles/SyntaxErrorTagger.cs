@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using HlslTools.Diagnostics;
 using HlslTools.VisualStudio.Options;
@@ -14,16 +13,11 @@ namespace HlslTools.VisualStudio.Tagging.Squiggles
     internal sealed class SyntaxErrorTagger : ErrorTagger
     {
         public SyntaxErrorTagger(ITextView textView, BackgroundParser backgroundParser,
-            IOptionsService optionsService, IServiceProvider serviceProvider,
-            ITextDocumentFactoryService textDocumentFactoryService)
-            : base(PredefinedErrorTypeNames.SyntaxError, textView, optionsService, serviceProvider, textDocumentFactoryService)
+            IOptionsService optionsService)
+            : base(PredefinedErrorTypeNames.SyntaxError, textView, optionsService)
         {
-            backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.OnIdle,
-                async x =>
-                {
-                    ErrorListHelper.Clear();
-                    await InvalidateTags(x.Snapshot, x.CancellationToken);
-                });
+            backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.Medium,
+                async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
         }
 
         protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
