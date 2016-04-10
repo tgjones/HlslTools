@@ -1,6 +1,6 @@
 using System.ComponentModel.Composition;
 using HlslTools.VisualStudio.Options;
-using HlslTools.VisualStudio.Parsing;
+using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -15,9 +15,6 @@ namespace HlslTools.VisualStudio.ErrorList
     internal sealed class ErrorManagerProvider : IWpfTextViewCreationListener
     {
         [Import]
-        public BackgroundParser BackgroundParser { get; set; }
-
-        [Import]
         public IOptionsService OptionsService { get; set; }
 
         [Import]
@@ -28,8 +25,8 @@ namespace HlslTools.VisualStudio.ErrorList
 
         public void TextViewCreated(IWpfTextView textView)
         {
-            textView.Properties.GetOrCreateSingletonProperty(() => new SyntaxErrorManager(BackgroundParser, textView, OptionsService, ServiceProvider, TextDocumentFactoryService));
-            textView.Properties.GetOrCreateSingletonProperty(() => new SemanticErrorManager(BackgroundParser, textView, OptionsService, ServiceProvider, TextDocumentFactoryService));
+            textView.Properties.GetOrCreateSingletonProperty(() => new SyntaxErrorManager(textView.TextBuffer.GetBackgroundParser(), textView, OptionsService, ServiceProvider, TextDocumentFactoryService));
+            textView.Properties.GetOrCreateSingletonProperty(() => new SemanticErrorManager(textView.TextBuffer.GetBackgroundParser(), textView, OptionsService, ServiceProvider, TextDocumentFactoryService));
         }
     }
 }
