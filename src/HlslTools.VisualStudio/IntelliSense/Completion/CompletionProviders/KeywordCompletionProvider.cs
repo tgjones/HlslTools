@@ -19,7 +19,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
                 return Enumerable.Empty<CompletionItem>();
 
             // We don't want to show a keyword completion in a macro.
-            if (semanticModel.SyntaxTree.PossiblyInMacro(position))
+            if (semanticModel.SyntaxTree.DefinitelyInMacro(position))
                 return Enumerable.Empty<CompletionItem>();
 
             return GetAvailableKeywords(syntaxTree, position)

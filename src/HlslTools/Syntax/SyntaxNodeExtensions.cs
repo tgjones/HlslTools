@@ -266,7 +266,7 @@ namespace HlslTools.Syntax
             }
         }
 
-        public static bool PossiblyInMacro(this SyntaxTree tree, SourceLocation position)
+        public static bool DefinitelyInMacro(this SyntaxTree tree, SourceLocation position)
         {
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
@@ -274,6 +274,16 @@ namespace HlslTools.Syntax
             var token = tree.Root.FindTokenOnLeft(position);
 
             return token.Ancestors().OfType<DirectiveTriviaSyntax>().Any();
+        }
+
+        public static bool DefinitelyInVariableDeclaratorQualifier(this SyntaxTree tree, SourceLocation position)
+        {
+            if (tree == null)
+                throw new ArgumentNullException(nameof(tree));
+
+            var token = tree.Root.FindTokenOnLeft(position);
+
+            return token.Ancestors().OfType<VariableDeclaratorQualifierSyntax>().Any();
         }
 
         public static bool PossiblyInUserGivenName(this SyntaxTree tree, SourceLocation position)
@@ -325,10 +335,34 @@ namespace HlslTools.Syntax
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
+            if (tree.DefinitelyInTypeName(position))
+                return true;
+
             var token = tree.Root.FindTokenOnLeft(position);
             var parent = GetNonIdentifierParent(token);
 
             if (parent.Kind == SyntaxKind.SkippedTokensTrivia)
+                return true;
+
+            if (parent.Kind == SyntaxKind.ExpressionStatement && ((ExpressionStatementSyntax) parent).Expression.Kind == SyntaxKind.IdentifierName)
+                return true;
+
+            // User might be typing a cast expression.
+            if (parent.Kind == SyntaxKind.ParenthesizedExpression && ((ParenthesizedExpressionSyntax) parent).Expression.Kind == SyntaxKind.IdentifierName)
+                return true;
+
+            return false;
+        }
+
+        public static bool DefinitelyInTypeName(this SyntaxTree tree, SourceLocation position)
+        {
+            if (tree == null)
+                throw new ArgumentNullException(nameof(tree));
+
+            var token = tree.Root.FindTokenOnLeft(position);
+            var parent = GetNonIdentifierParent(token);
+
+            if (parent is TypeSyntax)
                 return true;
 
             return PossiblyInFunctionReturnTypeName(parent, position)
