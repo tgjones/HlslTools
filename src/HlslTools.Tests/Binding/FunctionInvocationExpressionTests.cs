@@ -62,7 +62,7 @@ void main()
                 Debug.WriteLine(d);
 
             var invokedFunctionSymbol = (FunctionSymbol) semanticModel.GetSymbol(expression);
-            var diagnostic = combinedDiagnostics.SingleOrDefault();
+            var diagnostic = combinedDiagnostics.SingleOrDefault(x => x.Severity == Diagnostics.DiagnosticSeverity.Error);
             var result = diagnostic == null
                 ? ExpressionTestUtility.GetExpressionTypeString(invokedFunctionSymbol.Parameters[0].ValueType)
                 : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
@@ -135,7 +135,7 @@ void main()
 
             var invokedFunctionSymbol = (FunctionSymbol) semanticModel.GetSymbol(expression);
 
-            var diagnostic = combinedDiagnostics.SingleOrDefault();
+            var diagnostic = combinedDiagnostics.SingleOrDefault(x => x.Severity == Diagnostics.DiagnosticSeverity.Error);
             var result = diagnostic == null
                 ? $"{SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[0].ValueType)}, {SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[1].ValueType)}"
                 : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
@@ -163,7 +163,7 @@ void main()
             foreach (var d in combinedDiagnostics)
                 Debug.WriteLine(d);
 
-            Assert.IsEmpty(combinedDiagnostics);
+            Assert.IsEmpty(combinedDiagnostics.Where(x => x.Severity == Diagnostics.DiagnosticSeverity.Error));
         }
     }
 }
