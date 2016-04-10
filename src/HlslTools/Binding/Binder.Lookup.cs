@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Binding.Signatures;
@@ -16,17 +15,24 @@ namespace HlslTools.Binding
     {
         private void AddSymbol(Symbol symbol, TextSpan diagnosticSpan, bool allowDuplicates = false)
         {
-            if (_symbols.Any(x => x.Name == symbol.Name && (!allowDuplicates || x.Kind != symbol.Kind)))
+            if (_symbols.Any(x => x.Key == symbol.Name && (!allowDuplicates || x.Value.Any(y => y.Kind != symbol.Kind))))
                 Diagnostics.ReportSymbolRedefined(diagnosticSpan, symbol);
 
-            _symbols.Add(symbol);
+            List<Symbol> symbolList;
+            if (!_symbols.TryGetValue(symbol.Name, out symbolList))
+                _symbols.Add(symbol.Name, symbolList = new List<Symbol>());
+
+            symbolList.Add(symbol);
         }
 
-        protected internal virtual IEnumerable<Symbol> LocalSymbols => _symbols;
+        protected internal virtual Dictionary<string, List<Symbol>> LocalSymbols => _symbols;
 
         private IEnumerable<Symbol> LookupSymbol(string name)
         {
-            return LocalSymbols.Where(x => x.Name == name);
+            List<Symbol> result;
+            if (LocalSymbols.TryGetValue(name, out result))
+                return result;
+            return Enumerable.Empty<Symbol>();
         }
 
         private NamespaceSymbol LookupEnclosingNamespace()
@@ -101,13 +107,13 @@ namespace HlslTools.Binding
 
         private static IEnumerable<Symbol> LookupSymbolRecursive(Binder binder, string text, Func<Symbol, bool> filter)
         {
-            var result = binder.LookupSymbol(text).Where(filter);
+            var result = binder.LookupSymbol(text).Where(filter).ToList();
             if (result.Any())
                 return result;
 
             foreach (var additionalBinder in binder.GetAdditionalParentBinders())
             {
-                result = LookupSymbolRecursive(additionalBinder, text, filter);
+                result = LookupSymbolRecursive(additionalBinder, text, filter).ToList();
                 if (result.Any())
                     return result;
             }

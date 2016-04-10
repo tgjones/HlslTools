@@ -146,10 +146,12 @@ namespace HlslTools.Binding
 
             return BindVariableDeclaration(syntax, parent, (d, t) =>
             {
-                var existingSymbol = _symbols.FirstOrDefault(x => x.Name == d.Identifier.Text);
-                if (existingSymbol != null)
+                List<Symbol> existingSymbols;
+                if (_symbols.TryGetValue(d.Identifier.Text, out existingSymbols))
                 {
-                    _symbols.Remove(existingSymbol);
+                    existingSymbols.Remove(existingSymbols.Last());
+                    if (!existingSymbols.Any())
+                        _symbols.Remove(d.Identifier.Text);
                     Diagnostics.ReportLoopControlVariableConflict(d);
                 }
                 return new VariableSymbol(d, parent, t);

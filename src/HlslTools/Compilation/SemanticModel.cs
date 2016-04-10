@@ -211,6 +211,7 @@ namespace HlslTools.Compilation
             {
                 var localNames = new HashSet<string>();
                 var localSymbols = binder.LocalSymbols
+                    .SelectMany(x => x.Value)
                     .Where(s => !string.IsNullOrEmpty(s.Name));
 
                 foreach (var symbol in localSymbols)

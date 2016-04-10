@@ -11,12 +11,12 @@ namespace HlslTools.Binding
     internal partial class Binder
     {
         private readonly SharedBinderState _sharedBinderState;
-        private readonly List<Symbol> _symbols;
+        private readonly Dictionary<string, List<Symbol>> _symbols;
 
         protected Binder(SharedBinderState sharedBinderState, Binder parent)
         {
             _sharedBinderState = sharedBinderState;
-            _symbols = new List<Symbol>();
+            _symbols = new Dictionary<string, List<Symbol>>();
             Parent = parent;
         }
 

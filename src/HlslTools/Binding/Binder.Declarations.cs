@@ -73,7 +73,7 @@ namespace HlslTools.Binding
 
             var boundDeclarations = namespaceBinder.BindTopLevelDeclarations(declaration.Declarations, namespaceSymbol);
 
-            foreach (var member in namespaceBinder.LocalSymbols)
+            foreach (var member in namespaceBinder.LocalSymbols.Values.SelectMany(x => x))
                 namespaceSymbol.AddMember(member);
 
             return new BoundNamespace(namespaceSymbol, boundDeclarations);
@@ -264,7 +264,7 @@ namespace HlslTools.Binding
             }
 
             invocableSymbol.ClearParameters();
-            foreach (var parameter in invocableBinder.LocalSymbols)
+            foreach (var parameter in invocableBinder.LocalSymbols.Values.SelectMany(x => x))
                 invocableSymbol.AddParameter((ParameterSymbol) parameter);
 
             return boundParameters.ToImmutableArray();
@@ -331,7 +331,7 @@ namespace HlslTools.Binding
                 }
             }
 
-            foreach (var member in classBinder.LocalSymbols)
+            foreach (var member in classBinder.LocalSymbols.Values.SelectMany(x => x))
                 classSymbol.AddMember(member);
 
             return new BoundClassType(classSymbol, members.ToImmutableArray());
@@ -347,7 +347,7 @@ namespace HlslTools.Binding
             foreach (var variableDeclarationStatement in declaration.Fields)
                 variables.Add(structBinder.Bind(variableDeclarationStatement, x => structBinder.BindField(x, structSymbol)));
 
-            foreach (var member in structBinder.LocalSymbols)
+            foreach (var member in structBinder.LocalSymbols.Values.SelectMany(x => x))
                 structSymbol.AddMember(member);
 
             return new BoundStructType(structSymbol, variables.ToImmutableArray());
@@ -369,7 +369,7 @@ namespace HlslTools.Binding
             foreach (var memberSyntax in declaration.Methods)
                 methods.Add(interfaceBinder.Bind(memberSyntax, x => interfaceBinder.BindFunctionDeclaration(x, interfaceSymbol)));
 
-            foreach (var member in interfaceBinder.LocalSymbols)
+            foreach (var member in interfaceBinder.LocalSymbols.Values.SelectMany(x => x))
                 interfaceSymbol.AddMember(member);
 
             return new BoundInterfaceType(interfaceSymbol, methods.ToImmutableArray());
