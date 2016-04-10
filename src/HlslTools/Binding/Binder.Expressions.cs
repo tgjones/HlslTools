@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Binding.Signatures;
@@ -364,11 +365,34 @@ namespace HlslTools.Binding
 
         private BoundExpression BindNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax syntax)
         {
-            // TODO: Replace BoundNumericConstructorInvocationExpression with BoundFunctionInvocationExpression.
-            // TODO: Check that we have the correct number of arguments.
-            return new BoundNumericConstructorInvocationExpression(
-                Bind(syntax.Type, x => BindType(x, null)).TypeSymbol,
-                BindArgumentList(syntax.ArgumentList));
+            var boundArguments = BindArgumentList(syntax.ArgumentList);
+            var argumentTypes = boundArguments.Select(a => a.Type).ToImmutableArray();
+
+            var typeSymbol = BindType(syntax.Type, null).TypeSymbol;
+            Debug.Assert(typeSymbol.IsError() == false);
+
+            var anyErrorsInArguments = argumentTypes.Any(a => a.IsError());
+            if (anyErrorsInArguments)
+                return new BoundNumericConstructorInvocationExpression(syntax, typeSymbol, boundArguments, OverloadResolutionResult<FunctionSymbolSignature>.None);
+
+            var result = LookupNumericConstructor(typeSymbol, argumentTypes);
+
+            if (result.Best == null)
+            {
+                if (result.Selected == null)
+                {
+                    Diagnostics.ReportUndeclaredNumericConstructor(syntax, argumentTypes);
+                    return new BoundErrorExpression();
+                }
+
+                var symbol1 = result.Selected.Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
+                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
+            }
+
+            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].GetTextSpanSafe())).ToImmutableArray();
+
+            return new BoundNumericConstructorInvocationExpression(syntax, typeSymbol, convertedArguments, result);
         }
 
         private ImmutableArray<BoundExpression> BindArgumentList(ArgumentListSyntax syntax)

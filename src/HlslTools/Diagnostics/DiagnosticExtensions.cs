@@ -106,6 +106,13 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredFunction, name, argumentTypeList);
         }
 
+        public static void ReportUndeclaredNumericConstructor(this ICollection<Diagnostic> diagnostics, NumericConstructorInvocationExpressionSyntax node, IEnumerable<TypeSymbol> argumentTypes)
+        {
+            var name = node.Type.ToStringIgnoringMacroReferences();
+            var argumentTypeList = string.Join(@", ", argumentTypes.Select(t => t.ToDisplayName()));
+            diagnostics.Report(node.GetTextSpanSafe(), DiagnosticId.UndeclaredFunction, name, argumentTypeList);
+        }
+
         public static void ReportUndeclaredMethod(this ICollection<Diagnostic> diagnostics, MethodInvocationExpressionSyntax node, TypeSymbol declaringType, IEnumerable<TypeSymbol> argumentTypes)
         {
             var name = node.Name.ValueText;

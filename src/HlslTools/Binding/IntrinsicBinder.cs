@@ -19,7 +19,8 @@ namespace HlslTools.Binding
                 return IntrinsicFunctions.AllFunctions
                     .Cast<Symbol>()
                     .Union(IntrinsicSemantics.AllSemantics)
-                    .Union(IntrinsicTypes.AllTypes);
+                    .Union(IntrinsicTypes.AllTypes)
+                    .Union(IntrinsicNumericConstructors.AllFunctions);
             }
         }
     }

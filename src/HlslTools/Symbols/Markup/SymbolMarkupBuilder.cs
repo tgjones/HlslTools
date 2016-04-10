@@ -89,7 +89,11 @@ namespace HlslTools.Symbols.Markup
                 markup.AppendPunctuation(".");
             }
 
-            markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
+            if (symbol.IsNumericConstructor)
+                markup.AppendKeyword(symbol.Name);
+            else
+                markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
+
             markup.AppendParameters(symbol.Parameters);
         }
 

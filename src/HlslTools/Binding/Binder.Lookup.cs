@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using HlslTools.Binding.BoundNodes;
 using HlslTools.Binding.Signatures;
@@ -232,6 +233,14 @@ namespace HlslTools.Binding
         {
             var signatures = from f in LookupSymbols<FunctionSymbol>(name)
                              where name.Text == f.Name
+                             select new FunctionSymbolSignature(f);
+            return OverloadResolution.Perform(signatures, argumentTypes);
+        }
+
+        private OverloadResolutionResult<FunctionSymbolSignature> LookupNumericConstructor(TypeSymbol type, ImmutableArray<TypeSymbol> argumentTypes)
+        {
+            var signatures = from f in IntrinsicNumericConstructors.AllFunctions
+                             where f.ReturnType.Equals(type)
                              select new FunctionSymbolSignature(f);
             return OverloadResolution.Perform(signatures, argumentTypes);
         }

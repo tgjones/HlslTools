@@ -284,6 +284,7 @@
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\MatrixTypeQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\MethodInvocationQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\NamespaceQuickInfoModelProvider.cs" />
+    <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\NumericConstructorInvocationQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\ObjectTypeQuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\QuickInfoModelProvider.cs" />
     <Compile Include="IntelliSense\QuickInfo\QuickInfoModelProviders\QuickInfoModelProviderService.cs" />
@@ -310,6 +311,7 @@
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\FunctionSignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\ISignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\MethodSignatureHelpModelProvider.cs" />
+    <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\NumericConstructorSignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProvider.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProviderService.cs" />
     <Compile Include="IntelliSense\SignatureHelp\SignatureHelpSource.cs" />

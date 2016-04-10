@@ -112,6 +112,8 @@ namespace HlslTools.Compilation
             {
                 case BoundNodeKind.VariableExpression:
                     return GetSymbol((BoundVariableExpression) expression);
+                case BoundNodeKind.NumericConstructorInvocationExpression:
+                    return GetSymbol((BoundNumericConstructorInvocationExpression) expression);
                 case BoundNodeKind.FunctionInvocationExpression:
                     return GetSymbol((BoundFunctionInvocationExpression) expression);
                 case BoundNodeKind.MethodInvocationExpression:
@@ -134,6 +136,11 @@ namespace HlslTools.Compilation
         }
 
         private static Symbol GetSymbol(BoundVariableExpression expression)
+        {
+            return expression.Symbol;
+        }
+
+        private static Symbol GetSymbol(BoundNumericConstructorInvocationExpression expression)
         {
             return expression.Symbol;
         }

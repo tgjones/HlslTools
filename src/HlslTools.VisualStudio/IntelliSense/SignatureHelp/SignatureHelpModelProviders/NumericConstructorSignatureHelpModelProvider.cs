@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
 using HlslTools.Compilation;
@@ -8,15 +8,18 @@ using HlslTools.Syntax;
 namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelProviders
 {
     [Export(typeof(ISignatureHelpModelProvider))]
-    internal sealed class FunctionSignatureHelpModelProvider : SignatureHelpModelProvider<FunctionInvocationExpressionSyntax>
+    internal sealed class NumericConstructorSignatureHelpModelProvider : SignatureHelpModelProvider<NumericConstructorInvocationExpressionSyntax>
     {
-        protected override SignatureHelpModel GetModel(SemanticModel semanticModel, FunctionInvocationExpressionSyntax node, SourceLocation position)
+        protected override SignatureHelpModel GetModel(SemanticModel semanticModel, NumericConstructorInvocationExpressionSyntax node, SourceLocation position)
         {
-            var name = node.Name;
+            var typeSymbol = semanticModel.GetExpressionType(node);
+            if (typeSymbol.IsError())
+                return null;
+
             var functionSignatures = semanticModel
-                .LookupSymbols(name.SourceRange.Start)
+                .LookupSymbols(node.Type.SourceRange.Start)
                 .OfType<FunctionSymbol>()
-                .Where(f => !f.IsNumericConstructor && name.GetUnqualifiedName().Name.Text == f.Name)
+                .Where(f => f.IsNumericConstructor && f.ReturnType.Equals(typeSymbol))
                 .ToSignatureItems();
 
             var signatures = functionSignatures
@@ -29,8 +32,8 @@ namespace HlslTools.VisualStudio.IntelliSense.SignatureHelp.SignatureHelpModelPr
             var span = node.GetTextSpanRoot();
             var parameterIndex = node.ArgumentList.GetParameterIndex(position);
 
-            return new SignatureHelpModel(span, signatures, 
-                GetSelected(semanticModel.GetSymbol(node), signatures, parameterIndex), 
+            return new SignatureHelpModel(span, signatures,
+                GetSelected(semanticModel.GetSymbol(node), signatures, parameterIndex),
                 parameterIndex);
         }
     }

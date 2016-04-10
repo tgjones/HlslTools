@@ -170,6 +170,7 @@
     <Compile Include="Symbols\FunctionSymbol.cs" />
     <Compile Include="Symbols\IntrinsicAttributes.cs" />
     <Compile Include="Symbols\IntrinsicMatrixTypeSymbol.cs" />
+    <Compile Include="Symbols\IntrinsicNumericConstructors.cs" />
     <Compile Include="Symbols\IntrinsicNumericTypeSymbol.cs" />
     <Compile Include="Symbols\IntrinsicObjectTypeSymbol.cs" />
     <Compile Include="Symbols\IntrinsicScalarTypeSymbol.cs" />
