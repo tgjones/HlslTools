@@ -245,10 +245,45 @@ namespace HlslTools.Binding
 
         private OverloadResolutionResult<FunctionSymbolSignature> LookupNumericConstructor(TypeSymbol type, ImmutableArray<TypeSymbol> argumentTypes)
         {
-            var signatures = from f in IntrinsicNumericConstructors.AllFunctions
-                             where f.ReturnType.Equals(type)
-                             select new FunctionSymbolSignature(f);
-            return OverloadResolution.Perform(signatures, argumentTypes);
+            var signatures = IntrinsicNumericConstructors.AllFunctions
+                .Where(x => x.ReturnType.Equals(type))
+                .Select(x => new FunctionSymbolSignature(x));
+
+            var resolutionResult = OverloadResolution.Perform(signatures, argumentTypes);
+
+            if (type.Kind == SymbolKind.IntrinsicMatrixType && !resolutionResult.Candidates.Any())
+            {
+                // If no existing signatures for matrix constructor, then as long as we have the correct arguments, create a new function symbol on-the-fly.
+                // This is to handle the MANY overloads of matrix constructor functions, which are too many to create and store statically.
+
+                if (argumentTypes.All(x => x is IntrinsicNumericTypeSymbol))
+                {
+                    var matrixType = (IntrinsicMatrixTypeSymbol) type;
+
+                    var totalScalars = matrixType.Rows * matrixType.Cols;
+
+                    var numericArgumentTypes = argumentTypes
+                        .Cast<IntrinsicNumericTypeSymbol>()
+                        .ToImmutableArray();
+
+                    var totalScalarsInArgs = numericArgumentTypes
+                        .Sum(x => x.GetNumElements());
+
+                    if (totalScalars == totalScalarsInArgs)
+                    {
+                        signatures = new[]
+                        {
+                            new FunctionSymbol(matrixType.Name, string.Empty, null, matrixType,
+                                f => numericArgumentTypes.Select((t, i) => new ParameterSymbol($"arg{i}", string.Empty, f, t.GetNumericTypeWithScalarType(matrixType.ScalarType))).ToArray(),
+                                isNumericConstructor: true)
+                        }.Select(x => new FunctionSymbolSignature(x));
+
+                        resolutionResult = OverloadResolution.Perform(signatures, argumentTypes);
+                    }
+                }
+            }
+
+            return resolutionResult;
         }
 
         private static OverloadResolutionResult<BinaryOperatorSignature> LookupBinaryOperator(BinaryOperatorKind operatorKind, BoundExpression left, BoundExpression right)

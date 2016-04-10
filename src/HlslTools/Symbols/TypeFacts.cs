@@ -184,6 +184,22 @@ namespace HlslTools.Symbols
             }
         }
 
+        internal static IntrinsicNumericTypeSymbol GetNumericTypeWithScalarType(this IntrinsicNumericTypeSymbol type, ScalarType scalarType)
+        {
+            switch (type.Kind)
+            {
+                case SymbolKind.IntrinsicMatrixType:
+                    var matrixType = (IntrinsicMatrixTypeSymbol) type;
+                    return IntrinsicTypes.GetMatrixType(scalarType, matrixType.Rows, matrixType.Cols);
+                case SymbolKind.IntrinsicScalarType:
+                    return IntrinsicTypes.GetScalarType(scalarType);
+                case SymbolKind.IntrinsicVectorType:
+                    return IntrinsicTypes.GetVectorType(scalarType, ((IntrinsicVectorTypeSymbol) type).NumComponents);
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         internal static int GetNumElements(this TypeSymbol type)
         {
             switch (type.Kind)

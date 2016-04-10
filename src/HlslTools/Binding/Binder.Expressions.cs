@@ -386,7 +386,7 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
             }
 
@@ -425,7 +425,7 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
             }
 
@@ -479,7 +479,7 @@ namespace HlslTools.Binding
                 }
 
                 var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => c.Signature.Symbol != symbol1).Signature.Symbol;
+                var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
                 Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
             }
 
