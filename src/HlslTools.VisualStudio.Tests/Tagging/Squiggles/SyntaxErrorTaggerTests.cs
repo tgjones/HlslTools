@@ -19,8 +19,7 @@ namespace HlslTools.VisualStudio.Tests.Tagging.Squiggles
             textView.TextSnapshot.Returns(textBuffer.CurrentSnapshot);
 
             return new SyntaxErrorTagger(
-                textView, backgroundParser, new FakeOptionsService(),
-                Substitute.For<IServiceProvider>(), Substitute.For<ITextDocumentFactoryService>());
+                textView, backgroundParser, new FakeOptionsService());
         }
 
         protected override bool MustCreateTagSpans => false;
