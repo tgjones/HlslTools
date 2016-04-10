@@ -227,6 +227,20 @@ namespace HlslTools.Symbols
                             return result.ToArray();
                         },
                         isNumericConstructor: true));
+
+                    allFunctions.Add(new FunctionSymbol(
+                        matrixType.Name,
+                        $"Constructor function for {matrixType.Name}.",
+                        null,
+                        matrixType,
+                        f =>
+                        {
+                            var result = new List<ParameterSymbol>();
+                            for (var rows = 0; rows < matrixType.Rows; rows++)
+                                result.Add(new ParameterSymbol($"row{rows}", $"Value for the components in row {rows}.", f, IntrinsicTypes.GetVectorType(scalarType.ScalarType, matrixType.Cols)));
+                            return result.ToArray();
+                        },
+                        isNumericConstructor: true));
                 }
             }
 
