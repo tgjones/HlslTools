@@ -232,7 +232,7 @@ namespace HlslTools.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Implicit truncation of vector type..
+        ///   Looks up a localized string similar to Implicit truncation from &apos;{0}&apos; to &apos;{1}&apos;..
         /// </summary>
         internal static string ImplicitTruncation {
             get {

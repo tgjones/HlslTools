@@ -503,9 +503,8 @@ namespace HlslTools.Binding
 
             // TODO: We need check for ambiguous conversions here as well.
 
-            // TODO: Include the source and target types in the warning.
-            //if (conversion.IsImplicitNarrowing)
-            //    Diagnostics.ReportImplicitTruncation(diagnosticSpan);
+            if (conversion.ImplicitConversionType.IsImplicitNarrowing())
+                Diagnostics.ReportImplicitTruncation(diagnosticSpan, expression.Type, targetType);
 
             return conversion.IsIdentity
                 ? expression

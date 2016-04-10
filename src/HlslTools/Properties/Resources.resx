@@ -250,7 +250,7 @@
     <value>Cannot apply unary operator '{0}' on type '{1}'.</value>
   </data>
   <data name="ImplicitTruncation" xml:space="preserve">
-    <value>Implicit truncation of vector type.</value>
+    <value>Implicit truncation from '{0}' to '{1}'.</value>
   </data>
   <data name="LoopControlVariableConflict" xml:space="preserve">
     <value>Loop control variable '{0}' conflicts with a previous declaration in the outer scope. The most recent declaration will be used.</value>

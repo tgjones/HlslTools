@@ -22,4 +22,14 @@ namespace HlslTools.Compilation
         RankTruncation       = (ulong) 1 << (Conversion.NumConversionBits * 9),
         DimensionTruncation  = (ulong) 1 << (Conversion.NumConversionBits * 10)
     }
+
+    internal static class ConversionTypesExtensions
+    {
+        public static bool IsImplicitNarrowing(this ConversionTypes conversionTypes)
+        {
+            return conversionTypes.HasFlag(ConversionTypes.DimensionTruncation)
+                || conversionTypes.HasFlag(ConversionTypes.RankTruncation)
+                || conversionTypes.HasFlag(ConversionTypes.RankTruncation2);
+        }
+    }
 }

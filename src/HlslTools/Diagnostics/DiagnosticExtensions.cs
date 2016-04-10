@@ -255,9 +255,9 @@ namespace HlslTools.Diagnostics
             diagnostics.Report(syntax.Identifier.Span, DiagnosticId.LoopControlVariableConflict, syntax.Identifier.Text);
         }
 
-        public static void ReportImplicitTruncation(this ICollection<Diagnostic> diagnostics, TextSpan span)
+        public static void ReportImplicitTruncation(this ICollection<Diagnostic> diagnostics, TextSpan span, TypeSymbol sourceType, TypeSymbol destinationType)
         {
-            diagnostics.Report(span, DiagnosticId.ImplicitTruncation);
+            diagnostics.Report(span, DiagnosticId.ImplicitTruncation, sourceType.Name, destinationType.Name);
         }
 
         #endregion
