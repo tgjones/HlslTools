@@ -211,7 +211,9 @@ namespace HlslTools.Binding
 
             var symbolTable = containerBinder.LocalSymbols;
 
-            var functionSymbol = symbolTable.OfType<SourceFunctionSymbol>()
+            var functionSymbol = symbolTable
+                .SelectMany(x => x.Value)
+                .OfType<SourceFunctionSymbol>()
                 .FirstOrDefault(x => SyntaxFacts.HaveMatchingSignatures(
                     x.DefinitionSyntax as FunctionSyntax ?? x.DeclarationSyntaxes[0],
                     declaration));
