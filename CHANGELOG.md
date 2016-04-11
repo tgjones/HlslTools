@@ -4,9 +4,13 @@
 - [x] Live semantic errors
 - [x] Go to definition (full support)
 - [x] Quick info (full support)
-- [ ] If `#include`d file is open file in Visual Studio, use that instead of on-disk version
-- [ ] Statement completion
+- [x] Symbol completion
 - [x] Signature help (aka "parameter info")
+- [x] Reference highlighting
+- [ ] If `#include`d file is open file in Visual Studio, use that instead of on-disk version
+- [ ] Keyword completion
+- [ ] Find all references
+- [ ] Peek definition
 
 Features that have a checkmark are complete and available for download in the
 [nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-953d-3fdea1891737/).
