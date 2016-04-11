@@ -270,11 +270,19 @@ namespace HlslTools.Parser
             return new ScalarTypeSyntax(tokens);
         }
 
+        private ScalarTypeSyntax ParseExpectedScalarType()
+        {
+            if (SyntaxFacts.IsPredefinedScalarType(Current.Kind))
+                return ParseScalarType(NextToken());
+
+            return ParseScalarType(InsertMissingToken(SyntaxKind.FloatKeyword));
+        }
+
         private GenericVectorTypeSyntax ParseGenericVectorType(SyntaxToken vectorKeyword)
         {
             return new GenericVectorTypeSyntax(vectorKeyword,
                 Match(SyntaxKind.LessThanToken),
-                ParseScalarType(NextToken()),
+                ParseExpectedScalarType(),
                 Match(SyntaxKind.CommaToken),
                 Match(SyntaxKind.IntegerLiteralToken),
                 Match(SyntaxKind.GreaterThanToken));
@@ -289,7 +297,7 @@ namespace HlslTools.Parser
         {
             return new GenericMatrixTypeSyntax(matrixKeyword,
                 Match(SyntaxKind.LessThanToken),
-                ParseScalarType(NextToken()),
+                ParseExpectedScalarType(),
                 Match(SyntaxKind.CommaToken),
                 Match(SyntaxKind.IntegerLiteralToken),
                 Match(SyntaxKind.CommaToken),
