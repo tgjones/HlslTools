@@ -26,17 +26,42 @@ In addition to that basic feature set, HLSL Tools includes many more navigationa
 | Brace matching       | Brace matching                  |
 | Brace completion     | Brace completion                |
 | Outlining            | Outlining                       |
+|                      | [Statement completion](#statement-completion) |
+|                      | [Signature help](#signature-help) |
+|                      | [Reference highlighting](#reference-highlighting) |
 |                      | [Navigation bar](#navigation-bar) |
 |                      | [Navigate to (Ctrl+,)](#navigate-to) |
-|                      | [Live syntax errors](#live-syntax-errors) |
-|                      | [Go to definition](#go-to-definition) (currently only preprocessor macros) |
-|                      | [Quick info](#quick-info) (currently only preprocessor macros) |
+|                      | [Live errors](#live-errors) |
+|                      | [Go to definition](#go-to-definition) |
+|                      | [Quick info](#quick-info) |
 |                      | [Gray out code excluded by preprocessor](#preprocessor-support) |
 |                      | [HLSL-specific preferences](#options) |
 
-There are more features - most notably, IntelliSense-related features - [on the roadmap](CHANGELOG.md).
+There are more features [on the roadmap](CHANGELOG.md).
 
 ### Features
+
+#### Statement completion
+
+Start typing the name of a variable, and HLSL Tools will show you a list of the available symbols (variables, functions, etc.)
+at that location. You can manually trigger this with the usual shortcuts: Ctrl+J, Ctrl+Space, etc.
+
+![Statement completion demo](art/statement-completion.gif)
+
+#### Signature help
+
+Signature help (a.k.a. parameter info) shows you all the overloads for a function call, along with information (from MSDN)
+about the function, its parameters, and return types. Typing an open parenthesis will trigger statement
+completion, as will the standard Ctrl+Shift+Space shortcut.
+
+![Signature help demo](art/signature-help.gif)
+
+#### Reference highlighting
+
+Placing the cursor within a symbol (local variable, function name, etc.) will cause all references to
+that symbol to be highlighted. Navigate between references using Ctrl+Shift+Up and Ctrl+Shift+Down.
+
+![Reference highlighting demo](art/reference-highlighting.gif)
 
 #### Navigation bar
 
@@ -49,18 +74,23 @@ of the variable, function, or other symbol that you want to find.
 
 ![Navigate To demo](art/navigate-to.gif)
 
-#### Live syntax errors
+#### Live errors
 
-HLSL Tools shows you syntax errors immediately. No need to wait till compilation!
+HLSL Tools shows you syntax and semantic errors immediately. No need to wait till compilation!
 Errors are shown as squigglies and in the error list.
 
-![Live syntax errors demo](art/live-syntax-errors.gif)
+![Live errors demo](art/live-errors.gif)
 
 #### Go to definition
+
+Press F12 to go to a symbol definition. Go to definition works for variables, fields, functions, classes,
+macros, and more.
 
 ![Go to definition demo](art/go-to-definition.gif)
 
 #### Quick info
+
+Hover over any symbol (variable, field, function call, etc.) to see a Quick Info tooltip.
 
 ![Quick info demo](art/quick-info.gif)
 
@@ -72,6 +102,10 @@ If you want to make a code block visible to, or hidden from, HLSL Tools, use the
 ![__INTELLISENSE__ macro demo](art/intellisense-macro.gif)
 
 #### Options
+
+Configure HLSL-specific IntelliSense and formatting options. If you really want to, you can disable IntelliSense altogether
+and just use HLSL Tools' other features. You can also set HLSL-specific highlighting colours in 
+Tools > Options > Environment > Fonts and Colors.
 
 ![Options demo](art/options.gif)
 
