@@ -11,9 +11,6 @@ or get the [nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-9
 
 See the [changelog](CHANGELOG.md) for changes and roadmap.
 
-**HLSL Tools is currently pre-release software. I strongly recommend having a backup of your shaders before using HLSL Tools.
-And if you do find a bug, please [log it](https://github.com/tgjones/HlslTools/issues).**
-
 ### Why use HLSL Tools?
 
 Since Visual Studio 2012, Visual Studio has shipped with basic support for editing HLSL files.
@@ -43,8 +40,8 @@ There are more features [on the roadmap](CHANGELOG.md).
 
 #### Statement completion
 
-Start typing the name of a variable, and HLSL Tools will show you a list of the available symbols (variables, functions, etc.)
-at that location. You can manually trigger this with the usual shortcuts: Ctrl+J, Ctrl+Space, etc.
+Just start typing, and HLSL Tools will show you a list of the available symbols (variables, functions, etc.)
+at that location. You can manually trigger this with the usual shortcuts: `Ctrl+J`, `Ctrl+Space`, etc.
 
 ![Statement completion demo](art/statement-completion.gif)
 
@@ -52,14 +49,15 @@ at that location. You can manually trigger this with the usual shortcuts: Ctrl+J
 
 Signature help (a.k.a. parameter info) shows you all the overloads for a function call, along with information (from MSDN)
 about the function, its parameters, and return types. Typing an open parenthesis will trigger statement
-completion, as will the standard Ctrl+Shift+Space shortcut.
+completion, as will the standard `Ctrl+Shift+Space` shortcut. Signature help is available for all HLSL functions and methods,
+including the older `tex2D`-style texture sampling functions, and the newer `Texture2D.Sample`-style methods.
 
 ![Signature help demo](art/signature-help.gif)
 
 #### Reference highlighting
 
 Placing the cursor within a symbol (local variable, function name, etc.) will cause all references to
-that symbol to be highlighted. Navigate between references using Ctrl+Shift+Up and Ctrl+Shift+Down.
+that symbol to be highlighted. Navigate between references using `Ctrl+Shift+Up` and `Ctrl+Shift+Down`.
 
 ![Reference highlighting demo](art/reference-highlighting.gif)
 
@@ -90,7 +88,7 @@ macros, and more.
 
 #### Quick info
 
-Hover over any symbol (variable, field, function call, etc.) to see a Quick Info tooltip.
+Hover over almost anything (variable, field, function call, macro, semantic, type, etc.) to see a Quick Info tooltip.
 
 ![Quick info demo](art/quick-info.gif)
 

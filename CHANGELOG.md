@@ -11,6 +11,7 @@
 - [ ] Keyword completion
 - [ ] Find all references
 - [ ] Peek definition
+- [ ] Light bulb suggestions
 
 Features that have a checkmark are complete and available for download in the
 [nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-953d-3fdea1891737/).
