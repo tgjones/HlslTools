@@ -70,25 +70,22 @@ namespace HlslTools.VisualStudio.Parsing
 
                 try
                 {
-                    using (var cancellationTokenSource = CancellationTokenSource.CreateLinkedTokenSource(_shutdownToken.Token, _currentParseCancellationTokenSource.Token))
+                    var cancellationToken = _currentParseCancellationTokenSource.Token;
+
+                    // Force creation of SyntaxTree.
+                    snapshot.GetSyntaxTree(cancellationToken);
+
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    var args = new BackgroundParserEventArgs(snapshot, cancellationToken);
+                    RaiseEvent(SyntaxTreeAvailable, args);
+
+                    // Force creation of SemanticModel.
+                    SemanticModel semanticModel;
+                    if (snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
                     {
-                        var cancellationToken = cancellationTokenSource.Token;
-
-                        // Force creation of SyntaxTree.
-                        snapshot.GetSyntaxTree(cancellationToken);
-
                         cancellationToken.ThrowIfCancellationRequested();
-
-                        var args = new BackgroundParserEventArgs(snapshot, cancellationToken);
-                        RaiseEvent(SyntaxTreeAvailable, args);
-
-                        // Force creation of SemanticModel.
-                        SemanticModel semanticModel;
-                        if (snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
-                        {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            RaiseEvent(SemanticModelAvailable, args);
-                        }
+                        RaiseEvent(SemanticModelAvailable, args);
                     }
                 }
                 catch (OperationCanceledException)
