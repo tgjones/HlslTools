@@ -10,9 +10,11 @@ namespace HlslTools.VisualStudio.ErrorList
 {
     internal sealed class ErrorListHelper : IErrorListHelper, IDisposable
     {
+        private readonly object _lockObject = new object();
         private readonly ErrorListProvider _errorListProvider;
         private readonly IServiceProvider _serviceProvider;
         private readonly ITextDocument _textDocument;
+        private bool _disposed;
 
         public ErrorListHelper(IServiceProvider serviceProvider, ITextDocument textDocument)
         {
@@ -23,28 +25,34 @@ namespace HlslTools.VisualStudio.ErrorList
 
         public void AddError(Diagnostic diagnostic, TextSpan span)
         {
-            var sourceText = span.SourceText as VisualStudioSourceText;
-            if (sourceText == null)
-                return;
-
-            var line = sourceText.Snapshot.GetLineFromPosition(span.Start);
-
-            var task = new ErrorTask
+            lock (_lockObject)
             {
-                Text = diagnostic.Message,
-                Line = line.LineNumber,
-                Column = span.Start - line.Start.Position,
-                Category = TaskCategory.CodeSense,
-                ErrorCategory = (diagnostic.Severity == DiagnosticSeverity.Error)
-                    ? TaskErrorCategory.Error 
-                    : TaskErrorCategory.Warning,
-                Priority = TaskPriority.Normal,
-                Document = span.Filename ?? _textDocument.FilePath
-            };
+                if (_disposed)
+                    return;
 
-            task.Navigate += OnTaskNavigate;
+                var sourceText = span.SourceText as VisualStudioSourceText;
+                if (sourceText == null)
+                    return;
 
-            _errorListProvider.Tasks.Add(task);
+                var line = sourceText.Snapshot.GetLineFromPosition(span.Start);
+
+                var task = new ErrorTask
+                {
+                    Text = diagnostic.Message,
+                    Line = line.LineNumber,
+                    Column = span.Start - line.Start.Position,
+                    Category = TaskCategory.CodeSense,
+                    ErrorCategory = (diagnostic.Severity == DiagnosticSeverity.Error)
+                        ? TaskErrorCategory.Error
+                        : TaskErrorCategory.Warning,
+                    Priority = TaskPriority.Normal,
+                    Document = span.Filename ?? _textDocument.FilePath
+                };
+
+                task.Navigate += OnTaskNavigate;
+
+                _errorListProvider.Tasks.Add(task);
+            }
         }
 
         private void OnTaskNavigate(object sender, EventArgs e)
@@ -55,15 +63,24 @@ namespace HlslTools.VisualStudio.ErrorList
 
         public void Clear()
         {
-            _errorListProvider.Tasks.Clear();
+            lock (_lockObject)
+            {
+                if (_disposed)
+                    return;
+                _errorListProvider.Tasks.Clear();
+            }
         }
 
         public void Dispose()
         {
-            if (_errorListProvider != null)
+            lock (_lockObject)
             {
-                _errorListProvider.Tasks.Clear();
-                _errorListProvider.Dispose();
+                if (_errorListProvider != null)
+                {
+                    _errorListProvider.Tasks.Clear();
+                    _errorListProvider.Dispose();
+                }
+                _disposed = true;
             }
         }
     }
