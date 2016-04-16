@@ -61,6 +61,60 @@ namespace HlslTools.VisualStudio {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Advanced.
+        /// </summary>
+        internal static string _120 {
+            get {
+                return ResourceManager.GetString("120", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to General.
+        /// </summary>
+        internal static string _123 {
+            get {
+                return ResourceManager.GetString("123", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Indentation.
+        /// </summary>
+        internal static string _124 {
+            get {
+                return ResourceManager.GetString("124", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Lines.
+        /// </summary>
+        internal static string _125 {
+            get {
+                return ResourceManager.GetString("125", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Spacing.
+        /// </summary>
+        internal static string _126 {
+            get {
+                return ResourceManager.GetString("126", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HLSL Editor.
+        /// </summary>
+        internal static string _140 {
+            get {
+                return ResourceManager.GetString("140", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ambiguous Name:.
         /// </summary>
         internal static string AmbiguousName {

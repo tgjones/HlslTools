@@ -382,6 +382,9 @@
     <Compile Include="Editing\SmartIndenting\SmartIndentProvider.cs" />
     <Compile Include="Parsing\BackgroundParserManager.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
+    <Compile Include="source.extension.cs">
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Compile>
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindow.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindowCommand.cs" />
     <Compile Include="SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml.cs">
@@ -482,10 +485,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="VSPackage.resx">
+    <EmbeddedResource Include="source.extension.resx">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>
-      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -493,6 +498,9 @@
       <Link>Resources\LICENSE</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="source.extension.ico">
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Resource>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
@@ -501,6 +509,8 @@
     </None>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
+      <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.resx</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -508,15 +518,13 @@
       <Link>System.Collections.Immutable.dll</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\preview.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="Resources\icon.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <IncludeInVSIX>true</IncludeInVSIX>
-    </Content>
-    <Content Include="Resources\Package.ico" />
     <Resource Include="SyntaxVisualizer\Resources\TreeView_713.png" />
     <VSCTCompile Include="SyntaxVisualizer\HlslToolsPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
