@@ -172,14 +172,14 @@ namespace HlslTools.Compilation
                     case SymbolKind.IntrinsicMatrixType:
                         switch (targetType.Kind)
                         {
-                            case SymbolKind.IntrinsicVectorType: // float1x3 => float1
+                            case SymbolKind.IntrinsicVectorType: // float3x1 => float1
                                 return ConversionTypes.DimensionTruncation;
                         }
                         break;
                     case SymbolKind.IntrinsicVectorType:
                         switch (targetType.Kind)
                         {
-                            case SymbolKind.IntrinsicMatrixType: // float1 => float1x3
+                            case SymbolKind.IntrinsicMatrixType: // float3 => float3x1
                                 return ConversionTypes.ScalarPromotion;
                         }
                         break;
@@ -194,18 +194,38 @@ namespace HlslTools.Compilation
             }
             else if ((sourceDim0 >= targetDim0 && sourceDim1 >= targetDim1) || (sourceDim1 >= targetDim0 && sourceDim0 >= targetDim1))
             {
-                if (sourceType.Kind == SymbolKind.IntrinsicMatrixType && targetType.Kind == SymbolKind.IntrinsicMatrixType)
+                switch (sourceType.Kind)
                 {
-                    if (sourceDim0 > targetDim0 && sourceDim1 > targetDim1) // float4x4 => float3x3
-                        return ConversionTypes.RankTruncation2;
-                    if (sourceDim0 > targetDim0 || sourceDim1 > targetDim1) // float4x4 => float4x3
-                        return ConversionTypes.RankTruncation;
-                }
-                else
-                {
-                    // float4   => float3
-                    // float1   => float
-                    return ConversionTypes.RankTruncation2;
+                    case SymbolKind.IntrinsicMatrixType:
+                        switch (targetType.Kind)
+                        {
+                            case SymbolKind.IntrinsicMatrixType:
+                                if (sourceDim0 > targetDim0 && sourceDim1 > targetDim1) // float4x4 => float3x3
+                                    return ConversionTypes.RankTruncation2;
+                                if (sourceDim0 > targetDim0 || sourceDim1 > targetDim1) // float4x4 => float4x3
+                                    return ConversionTypes.RankTruncation;
+                                return ConversionTypes.None;
+                            case SymbolKind.IntrinsicVectorType: // float4x4 => float3
+                                return ConversionTypes.RankTruncation2;
+                            case SymbolKind.IntrinsicScalarType: // float3x4 => float
+                                return ConversionTypes.RankTruncation2;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    case SymbolKind.IntrinsicVectorType:
+                        switch (targetType.Kind)
+                        {
+                            case SymbolKind.IntrinsicMatrixType: // float4 => float4x3
+                                return ConversionTypes.RankTruncation;
+                            case SymbolKind.IntrinsicVectorType: // float4 => float3
+                                return ConversionTypes.RankTruncation2;
+                            case SymbolKind.IntrinsicScalarType: // float4 => float
+                                return ConversionTypes.RankTruncation2;
+                            default:
+                                throw new ArgumentOutOfRangeException();
+                        }
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
             }
 

@@ -143,18 +143,22 @@ void main()
             Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
         }
 
-        [TestCase("min", "float", "float")]
-        [TestCase("mul", "float4", "float4x4")]
-        [TestCase("mul", "float3", "float4x4")]
-        [TestCase("lerp", "float", "float", "float")]
-        [TestCase("dot", "int", "uint")]
-        public void TestIntrinsicFunctionOverloading(string function, params string[] types)
+        [TestCase("min", "float", "float", "float, float")]
+        [TestCase("mul", "float4", "float4x4", "float4, float4x4")]
+        [TestCase("mul", "float3", "float4x4", "float3, float3x4")]
+        [TestCase("mul", "float4", "float3x4", "float1x3, float3x4")]
+        [TestCase("mul", "float1", "float3x4", "float, float3x4")]
+        [TestCase("mul", "float4", "float4x3", "float4, float4x3")]
+        [TestCase("mul", "float4x3", "float3x4", "float4x3, float3x4")]
+        [TestCase("dot", "int", "uint", "int1, int1")]
+        public void TestIntrinsicFunctionOverloading(string function, string type1, string type2, string expectedMatchTypes)
         {
-            var arguments = string.Join(",", types.Select(x => $"({x}) 0"));
-            var expressionCode = $"{function}({arguments})";
+            var expressionCode = $"{function}(({type1}) 0, ({type2}) 0)";
             var syntaxTree = SyntaxFactory.ParseExpression(expressionCode);
             var syntaxTreeSource = syntaxTree.Root.ToFullString();
             Assert.AreEqual(expressionCode, syntaxTreeSource, $"Source should have been {expressionCode} but is {syntaxTreeSource}.");
+
+            var expression = (ExpressionSyntax) syntaxTree.Root;
 
             var compilation = new HlslTools.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
@@ -163,7 +167,14 @@ void main()
             foreach (var d in combinedDiagnostics)
                 Debug.WriteLine(d);
 
-            Assert.IsEmpty(combinedDiagnostics.Where(x => x.Severity == Diagnostics.DiagnosticSeverity.Error));
+            var invokedFunctionSymbol = (FunctionSymbol) semanticModel.GetSymbol(expression);
+
+            var diagnostic = combinedDiagnostics.SingleOrDefault(x => x.Severity == Diagnostics.DiagnosticSeverity.Error);
+            var result = diagnostic == null
+                ? $"{SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[0].ValueType)}, {SymbolMarkup.ForSymbol(invokedFunctionSymbol.Parameters[1].ValueType)}"
+                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+
+            Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
         }
     }
 }
