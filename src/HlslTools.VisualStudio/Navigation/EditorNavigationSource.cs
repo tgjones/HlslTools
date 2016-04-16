@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Glyphs;
 using HlslTools.VisualStudio.Parsing;
+using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 
@@ -24,17 +25,7 @@ namespace HlslTools.VisualStudio.Navigation
             _navigationTargets = new List<EditorTypeNavigationTarget>();
 
             backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.Medium,
-                async x =>
-                {
-                    try
-                    {
-                        await InvalidateTargets(x.Snapshot, x.CancellationToken);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        
-                    }
-                });
+                async x => await ExceptionHelper.TryCatchCancellation(async () => await InvalidateTargets(x.Snapshot, x.CancellationToken)));
         }
 
         public async void Initialize()

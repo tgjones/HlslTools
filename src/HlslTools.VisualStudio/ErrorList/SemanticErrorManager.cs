@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using HlslTools.Compilation;
 using HlslTools.Diagnostics;
 using HlslTools.VisualStudio.Options;
 using HlslTools.VisualStudio.Parsing;
+using HlslTools.VisualStudio.Util;
 using HlslTools.VisualStudio.Util.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
@@ -18,7 +20,11 @@ namespace HlslTools.VisualStudio.ErrorList
             : base(textView, optionsService, serviceProvider, textDocumentFactoryService)
         {
             backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.OnIdle,
-                x => RefreshErrors(x.Snapshot, x.CancellationToken));
+                async x => await ExceptionHelper.TryCatchCancellation(() =>
+                {
+                    RefreshErrors(x.Snapshot, x.CancellationToken);
+                    return Task.FromResult(0);
+                }));
         }
 
         protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)

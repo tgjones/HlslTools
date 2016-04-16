@@ -16,7 +16,7 @@ namespace HlslTools.VisualStudio.Tagging
 
         public virtual async Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            try
+            await ExceptionHelper.TryCatchCancellation(async () =>
             {
                 await Task.Run(() =>
                 {
@@ -45,11 +45,7 @@ namespace HlslTools.VisualStudio.Tagging
                         Logger.Log("Tagging failed: " + ex);
                     }
                 }, cancellationToken);
-            }
-            catch (OperationCanceledException)
-            {
-
-            }
+            });
         }
 
         protected abstract Tuple<ITextSnapshot, List<ITagSpan<TTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken);
