@@ -1,19 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using EnvDTE;
-using HlslTools.VisualStudio.Util.Extensions;
+using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.Win32;
 
 namespace HlslTools.VisualStudio.Util
 {
+    [Guid("0d915b59-2ed7-472a-9de8-9161737ea1c5")]
+    internal interface SVsColorThemeService
+    {
+    }
+
     // Based on https://github.com/fsprojects/VisualFSharpPowerTools/blob/master/src/FSharpVSPowerTools.Logic/ThemeManager.fs
     [Export]
     internal sealed class ThemeManager
     {
-        private readonly static IDictionary<Guid, VisualStudioTheme> Themes = new Dictionary<Guid, VisualStudioTheme>
+        private static readonly IDictionary<Guid, VisualStudioTheme> Themes = new Dictionary<Guid, VisualStudioTheme>
         {
             { new Guid("de3dbbcd-f642-433c-8353-8f1df4370aba"), VisualStudioTheme.Light },
             { new Guid("a4d6a176-b948-4b29-8c66-53c97a1ed7d0"), VisualStudioTheme.Blue },
@@ -30,66 +33,36 @@ namespace HlslTools.VisualStudio.Util
 
         public VisualStudioTheme GetCurrentTheme()
         {
-            var themeId = GetThemeId();
-
-            if (themeId == null)
-                return VisualStudioTheme.Unknown;
-
-            Guid themeGuid;
-            if (!Guid.TryParse(themeId, out themeGuid))
-                return VisualStudioTheme.Unknown;
+            var themeGuid = GetThemeId();
 
             VisualStudioTheme theme;
-            if (!Themes.TryGetValue(themeGuid, out theme))
-                return VisualStudioTheme.Unknown;
+            if (Themes.TryGetValue(themeGuid, out theme))
+                return theme;
 
-            return theme;
+            try
+            {
+                var color = VSColorTheme.GetThemedColor(EnvironmentColors.ToolWindowTextColorKey);
+                return color.GetBrightness() > 0.5f
+                    ? VisualStudioTheme.Dark
+                    : VisualStudioTheme.Light;
+            }
+            catch
+            {
+                Logger.Log("Can't read Visual Studio themes from environment colors.");
+                return VisualStudioTheme.Unknown;
+            }
         }
 
-        private string GetThemeId()
+        private Guid GetThemeId()
         {
-            var dte = _serviceProvider.GetService<SDTE, DTE>();
-            var version = VisualStudioVersionUtility.FromDteVersion(dte.Version);
-
-            string registryKeyName, themePropertyName;
-            switch (version)
+            try
             {
-                case VisualStudioVersion.Vs2012:
-                    registryKeyName = @"Software\Microsoft\VisualStudio\11.0\General";
-                    themePropertyName = "CurrentTheme";
-                    break;
-                case VisualStudioVersion.Vs2013:
-                    registryKeyName = @"Software\Microsoft\VisualStudio\12.0\General";
-                    themePropertyName = "CurrentTheme";
-                    break;
-                case VisualStudioVersion.Vs2015:
-                    registryKeyName = @"Software\Microsoft\VisualStudio\14.0\ApplicationPrivateSettings\Microsoft\VisualStudio";
-                    themePropertyName = "ColorTheme";
-                    break;
-                default:
-                    return null;
+                dynamic themeService = _serviceProvider.GetService(typeof(SVsColorThemeService));
+                return (Guid) themeService.CurrentTheme.ThemeId;
             }
-
-            using (var key = Registry.CurrentUser.OpenSubKey(registryKeyName))
+            catch
             {
-                var keyValue = key?.GetValue(themePropertyName, null) as string;
-                if (keyValue == null)
-                    return null;
-
-                switch (version)
-                {
-                    case VisualStudioVersion.Vs2012:
-                    case VisualStudioVersion.Vs2013:
-                        return keyValue;
-                    case VisualStudioVersion.Vs2015:
-                        // 0*System.String*1ded0138-47ce-435e-84ef-9ec1f439b749
-                        var splitValue = keyValue.Split('*');
-                        return (splitValue.Length == 3)
-                            ? splitValue[2]
-                            : null;
-                    default:
-                        throw new ArgumentOutOfRangeException();
-                }
+                return Guid.Empty;
             }
         }
     }
