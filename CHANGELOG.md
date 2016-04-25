@@ -1,12 +1,5 @@
 # Roadmap
 
-- [x] Semantic highlighting
-- [x] Live semantic errors
-- [x] Go to definition (full support)
-- [x] Quick info (full support)
-- [x] Symbol completion
-- [x] Signature help (aka "parameter info")
-- [x] Reference highlighting
 - [ ] If `#include`d file is open file in Visual Studio, use that instead of on-disk version
 - [ ] Keyword completion
 - [ ] Find all references
@@ -19,6 +12,18 @@ Features that have a checkmark are complete and available for download in the
 # Changelog
 
 These are the changes to each version that has been released on the official Visual Studio extension gallery.
+
+## 1.0.94
+
+**2016-04-25**
+
+- [x] Semantic highlighting
+- [x] Live semantic errors
+- [x] Go to definition (full support)
+- [x] Quick info (full support)
+- [x] Symbol completion
+- [x] Signature help (aka "parameter info")
+- [x] Reference highlighting
 
 ## 0.9.42
 
