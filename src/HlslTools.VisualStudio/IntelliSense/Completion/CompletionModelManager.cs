@@ -19,6 +19,8 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
         private ICompletionSession _session;
         private CompletionModel _model;
 
+        private CancellationTokenSource _cancellationTokenSource;
+
         public CompletionModelManager(ITextView textView, ICompletionBroker completionBroker, CompletionProviderService completionProviderService)
         {
             _textView = textView;
@@ -51,17 +53,31 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
 
         private async void UpdateModel()
         {
+            // UpdateModel is always called on the UI thread.
+            _cancellationTokenSource?.Cancel();
+
+            _cancellationTokenSource = new CancellationTokenSource();
+
+            var token = _cancellationTokenSource.Token;
+
             var snapshot = _textView.TextSnapshot;
             var triggerPosition = _textView.GetPosition(snapshot);
 
-            SemanticModel semanticModel = null;
-            if (!await Task.Run(() => snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
-                return;
+            CompletionModel model = null;
+            try
+            {
+                SemanticModel semanticModel = null;
+                if (!await Task.Run(() => snapshot.TryGetSemanticModel(token, out semanticModel), token))
+                    return;
 
-            var model = semanticModel.GetCompletionModel(triggerPosition, snapshot, _completionProviderService.Providers);
+                await Task.Run(() => model = semanticModel.GetCompletionModel(triggerPosition, snapshot, _completionProviderService.Providers, token), token);
+            }
+            catch (OperationCanceledException)
+            {
+                return;
+            }
 
             // Let observers know that we've a new model.
-
             Model = model;
         }
 
