@@ -187,14 +187,14 @@ namespace HlslTools.Parser
 
         private ExpressionSyntax ParseIdentifierOrFunctionInvocationExpression()
         {
-            return Lookahead.Kind == SyntaxKind.OpenParenToken || Lookahead.Kind == SyntaxKind.ColonColonToken
-                ? (ExpressionSyntax) ParseFunctionInvocationExpression()
-                : ParseIdentifier();
+            var name = ParseName();
+            if (Current.Kind == SyntaxKind.OpenParenToken)
+                return ParseFunctionInvocationExpression(name);
+            return name;
         }
 
-        private FunctionInvocationExpressionSyntax ParseFunctionInvocationExpression()
+        private FunctionInvocationExpressionSyntax ParseFunctionInvocationExpression(NameSyntax name)
         {
-            var name = ParseName();
             var arguments = ParseParenthesizedArgumentList(false);
             return new FunctionInvocationExpressionSyntax(name, arguments);
         }

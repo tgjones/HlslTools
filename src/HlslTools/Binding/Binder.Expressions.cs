@@ -29,6 +29,8 @@ namespace HlslTools.Binding
                     return BindStringLiteralExpression((StringLiteralExpressionSyntax) node);
                 case SyntaxKind.IdentifierName:
                     return BindIdentifierName((IdentifierNameSyntax) node);
+                case SyntaxKind.QualifiedName:
+                    return BindQualifiedName((QualifiedNameSyntax) node);
                 case SyntaxKind.PreDecrementExpression:
                 case SyntaxKind.PreIncrementExpression:
                 case SyntaxKind.UnaryMinusExpression:
@@ -317,6 +319,29 @@ namespace HlslTools.Binding
             var symbol = symbols.First();
 
             return new BoundVariableExpression(symbol);
+        }
+
+        private BoundExpression BindQualifiedName(QualifiedNameSyntax node)
+        {
+            var container = LookupContainer(node.Left);
+
+            if (container == null)
+                return new BoundErrorExpression();
+
+            var symbols = container.Members.OfType<VariableSymbol>()
+                .Where(x => x.Name == node.Right.Name.Text)
+                .ToImmutableArray();
+
+            if (symbols.Length == 0)
+            {
+                Diagnostics.ReportVariableNotDeclared(node.Right.Name);
+                return new BoundErrorExpression();
+            }
+
+            if (symbols.Length > 1)
+                Diagnostics.ReportAmbiguousName(node.Right.Name, symbols);
+
+            return Bind(node.Right, x => new BoundVariableExpression(symbols.First()));
         }
 
         private BoundExpression BindPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)

@@ -21,13 +21,15 @@ namespace Outer
 			int TestFunc();
 		};
 	}
+
+	static const int bar = 4;
 }
 
 void Outer::foo() { }
 
 int Outer::Nested::MyClass::TestFunc()
 {
-	return 0;
+	return Outer::bar;
 }
 
 struct PixelShaderInput
