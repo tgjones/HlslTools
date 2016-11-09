@@ -889,6 +889,7 @@ namespace HlslTools.Parser
             // verify it afterwards by proper number parsing.
 
             var sb = new StringBuilder();
+            var hasOctalPrefix = false;
             var hasExponentialModifier = false;
             var hasDotModifier = false;
             var hasFloatSuffix = false;
@@ -902,7 +903,7 @@ namespace HlslTools.Parser
                 {
                     // dot
                     case '.':
-                        if (hasHexModifier)
+                        if (hasHexModifier || hasOctalPrefix)
                             goto ExitLoop;
                         sb.Append(_charReader.Current);
                         NextChar();
@@ -973,8 +974,52 @@ namespace HlslTools.Parser
                     case '7':
                     case '8':
                     case '9':
-                        sb.Append(_charReader.Current);
-                        NextChar();
+                        if (_charReader.Current == '0' && sb.Length == 0)
+                        {
+                            switch (_charReader.Peek())
+                            {
+                                case '0':
+                                case '1':
+                                case '2':
+                                case '3':
+                                case '4':
+                                case '5':
+                                case '6':
+                                case '7':
+                                    hasOctalPrefix = true;
+                                    break;
+                            }
+
+                            sb.Append(_charReader.Current);
+                            NextChar();
+                            break;
+                        }
+
+                        if (hasOctalPrefix)
+                        {
+                            switch (_charReader.Current)
+                            {
+                                case '0':
+                                case '1':
+                                case '2':
+                                case '3':
+                                case '4':
+                                case '5':
+                                case '6':
+                                case '7':
+                                    sb.Append(_charReader.Current);
+                                    NextChar();
+                                    break;
+
+                                default:
+                                    goto ExitLoop;
+                            }
+                        }
+                        else
+                        {
+                            sb.Append(_charReader.Current);
+                            NextChar();
+                        }
                         break;
 
                     case 'A':
@@ -1008,7 +1053,7 @@ namespace HlslTools.Parser
             else if ((hasDotModifier || hasExponentialModifier || hasFloatSuffix) && !hasHexModifier)
                 _value = ReadDouble(text);
             else
-                _value = ReadInt32OrInt64(text, hasHexModifier);
+                _value = ReadInt32OrInt64(text, hasHexModifier, hasOctalPrefix);
         }
 
         private string ReadPreprocessingNumber(string text)
@@ -1036,11 +1081,11 @@ namespace HlslTools.Parser
             return 0.0;
         }
 
-        private object ReadInt32OrInt64(string text, bool hasHexModifier)
+        private object ReadInt32OrInt64(string text, bool hasHexModifier, bool hasOctalPrefix)
         {
             _kind = SyntaxKind.IntegerLiteralToken;
 
-            var int64 = ReadInt64(text, hasHexModifier);
+            var int64 = ReadInt64(text, hasHexModifier, hasOctalPrefix);
 
             // If the integer can be represented as Int32 we return
             // an Int32 literal. Otherwise we return an Int64.
@@ -1051,13 +1096,31 @@ namespace HlslTools.Parser
             return int64;
         }
 
-        private long ReadInt64(string text, bool hasHexModifier)
+        private long ReadInt64(string text, bool hasHexModifier, bool hasOctalPrefix)
         {
             if (hasHexModifier)
             {
                 try
                 {
                     return Convert.ToInt64(text, 16);
+                }
+                catch (OverflowException)
+                {
+                    _diagnostics.ReportNumberTooLarge(CurrentSpan, text);
+                }
+                catch (FormatException)
+                {
+                    _diagnostics.ReportInvalidHex(CurrentSpan, text);
+                }
+
+                return 0;
+            }
+
+            if (hasOctalPrefix)
+            {
+                try
+                {
+                    return Convert.ToInt64(text, 8);
                 }
                 catch (OverflowException)
                 {

@@ -56,7 +56,7 @@ namespace HlslTools.Tests.Parser
         }
 
         [TestCase("42", 42)]     // Decimal literal
-        //[TestCase("052", 42)]    // Octal literal
+        [TestCase("052", 42)]    // Octal literal
         [TestCase("0x2a", 0x2a)] // Hex literal
         [TestCase("0X2A", 0x2A)] // Hex literal
         [TestCase("42u", 42)]
