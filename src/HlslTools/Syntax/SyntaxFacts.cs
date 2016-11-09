@@ -2047,6 +2047,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.PointKeyword:
                 case SyntaxKind.TriangleKeyword:
                 case SyntaxKind.TriangleAdjKeyword:
+                case SyntaxKind.LineAdjKeyword:
                     return true;
 
                 default:
