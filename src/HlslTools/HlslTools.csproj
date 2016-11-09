@@ -113,7 +113,9 @@
     <Compile Include="Binding\BoundNodes\BoundSwitchStatement.cs" />
     <Compile Include="Binding\BoundNodes\BoundTechnique.cs" />
     <Compile Include="Binding\BoundNodes\BoundType.cs" />
+    <Compile Include="Binding\BoundNodes\BoundTypeAlias.cs" />
     <Compile Include="Binding\BoundNodes\BoundTypeDeclaration.cs" />
+    <Compile Include="Binding\BoundNodes\BoundTypedefStatement.cs" />
     <Compile Include="Binding\BoundNodes\BoundUnaryExpression.cs" />
     <Compile Include="Binding\BoundNodes\BoundUnknownType.cs" />
     <Compile Include="Binding\BoundNodes\BoundVariableDeclaration.cs" />
@@ -178,6 +180,7 @@
     <Compile Include="Symbols\NamespaceSymbol.cs" />
     <Compile Include="Symbols\ParameterDirection.cs" />
     <Compile Include="Symbols\TechniqueSymbol.cs" />
+    <Compile Include="Symbols\TypeAliasSymbol.cs" />
     <Compile Include="Symbols\TypeFacts.cs" />
     <Compile Include="Symbols\VariableSymbol.cs" />
     <Compile Include="Symbols\InvocableSymbol.cs" />
@@ -315,6 +318,7 @@
     <Compile Include="Syntax\SyntaxTrivia.cs" />
     <Compile Include="Syntax\TechniqueSyntax.cs" />
     <Compile Include="Syntax\TemplateArgumentListSyntax.cs" />
+    <Compile Include="Syntax\TypeAliasSyntax.cs" />
     <Compile Include="Syntax\TypeDeclarationStatementSyntax.cs" />
     <Compile Include="Syntax\StructTypeSyntax.cs" />
     <Compile Include="Syntax\SwitchLabelSyntax.cs" />
@@ -326,6 +330,7 @@
     <Compile Include="Syntax\SyntaxToken.cs" />
     <Compile Include="Syntax\SyntaxNode.cs" />
     <Compile Include="Syntax\TypeDefinitionSyntax.cs" />
+    <Compile Include="Syntax\TypedefStatementSyntax.cs" />
     <Compile Include="Syntax\TypeSyntax.cs" />
     <Compile Include="Syntax\PrefixUnaryExpressionSyntax.cs" />
     <Compile Include="Binding\BoundNodes\UnaryOperatorKind.cs" />

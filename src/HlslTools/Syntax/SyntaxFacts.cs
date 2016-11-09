@@ -1828,6 +1828,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.TriangleAdjKeyword;
                 case "TriangleStream":
                     return SyntaxKind.TriangleStreamKeyword;
+                case "typedef":
+                    return SyntaxKind.TypedefKeyword;
                 case "uniform":
                     return SyntaxKind.UniformKeyword;
                 case "unsigned":

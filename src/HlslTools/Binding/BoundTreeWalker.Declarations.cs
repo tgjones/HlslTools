@@ -33,6 +33,9 @@ namespace HlslTools.Binding
                 case BoundNodeKind.Technique:
                     VisitTechnique((BoundTechnique) node);
                     break;
+                case BoundNodeKind.Typedef:
+                    VisitTypedefStatement((BoundTypedefStatement) node);
+                    break;
                 case BoundNodeKind.NoOpStatement:
                     VisitNoOpStatement((BoundNoOpStatement) node);
                     break;
@@ -195,6 +198,18 @@ namespace HlslTools.Binding
         {
             foreach (var pass in node.Passes)
                 VisitPass(pass);
+        }
+
+        protected virtual void VisitTypedefStatement(BoundTypedefStatement node)
+        {
+            foreach (var declaration in node.Declarations)
+                VisitTypeAlias(declaration);
+        }
+
+        protected virtual void VisitTypeAlias(BoundTypeAlias node)
+        {
+            foreach (var qualifier in node.Qualifiers)
+                VisitVariableQualifier(qualifier);
         }
 
         protected virtual void VisitPass(BoundPass node)

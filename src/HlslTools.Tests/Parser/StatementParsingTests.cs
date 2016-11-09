@@ -1138,6 +1138,28 @@ namespace HlslTools.Tests.Parser
             Assert.NotNull(typeDeclarationStatement.SemicolonToken);
         }
 
+        [Test]
+        public void TestTypedefStatement()
+        {
+            var text = "typedef float2 Point, Vector;";
+            var statement = ParseStatement(text);
+
+            Assert.NotNull(statement);
+            Assert.AreEqual(SyntaxKind.TypedefStatement, statement.Kind);
+            Assert.AreEqual(text, statement.ToString());
+            Assert.AreEqual(0, statement.GetDiagnostics().Count());
+
+            var typedefStatement = (TypedefStatementSyntax) statement;
+            Assert.That(typedefStatement.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedVectorType));
+
+            Assert.AreEqual(2, typedefStatement.Declarators.Count);
+
+            Assert.AreEqual("Point", typedefStatement.Declarators[0].Identifier.Text);
+            Assert.AreEqual("Vector", typedefStatement.Declarators[1].Identifier.Text);
+
+            Assert.NotNull(typedefStatement.SemicolonToken);
+        }
+
         private static StatementSyntax ParseStatement(string text)
         {
             return SyntaxFactory.ParseStatement(text);

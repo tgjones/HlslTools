@@ -55,11 +55,19 @@ namespace HlslTools.Parser
 
         private StatementSyntax ParseDeclarationStatement()
         {
-            TypeSyntax type;
+            var typedefKeyword = NextTokenIf(SyntaxKind.TypedefKeyword);
+
             var mods = new List<SyntaxToken>();
             var variables = new List<SyntaxNode>();
             ParseDeclarationModifiers(mods);
-            type = ParseType(false);
+            var type = ParseType(false);
+
+            if (typedefKeyword != null)
+            {
+                ParseTypeAliases(variables);
+                var semi = Match(SyntaxKind.SemiToken);
+                return new TypedefStatementSyntax(typedefKeyword, mods, type, new SeparatedSyntaxList<TypeAliasSyntax>(variables), semi);
+            }
 
             if (type is TypeDefinitionSyntax && (Current.Kind == SyntaxKind.SemiToken || Current.Kind == SyntaxKind.EndOfFileToken))
             {
@@ -73,6 +81,59 @@ namespace HlslTools.Parser
                 var variableDeclaration = new VariableDeclarationSyntax(mods, type, new SeparatedSyntaxList<VariableDeclaratorSyntax>(variables));
                 return new VariableDeclarationStatementSyntax(variableDeclaration, semi);
             }
+        }
+
+        private void ParseTypeAliases(List<SyntaxNode> variables)
+        {
+            variables.Add(ParseTypeAlias());
+
+            while (true)
+            {
+                if (Current.Kind == SyntaxKind.SemiToken)
+                    break;
+
+                if (Current.Kind == SyntaxKind.CommaToken)
+                {
+                    variables.Add(Match(SyntaxKind.CommaToken));
+                    variables.Add(ParseTypeAlias());
+                    continue;
+                }
+
+                break;
+            }
+        }
+
+        private TypeAliasSyntax ParseTypeAlias()
+        {
+            var name = Match(SyntaxKind.IdentifierToken);
+
+            var arrayRankSpecifiers = new List<ArrayRankSpecifierSyntax>();
+            if (Current.Kind == SyntaxKind.OpenBracketToken)
+                ParseArrayRankSpecifiers(arrayRankSpecifiers, false);
+
+            var qualifiers = new List<VariableDeclaratorQualifierSyntax>();
+            while (Current.Kind == SyntaxKind.ColonToken)
+            {
+                if (IsPossibleVariableDeclaratorQualifier(Lookahead))
+                {
+                    qualifiers.Add(ParseVariableDeclaratorQualifier());
+                }
+                else
+                {
+                    var action = SkipBadTokens(
+                        p => !p.IsPossibleVariableDeclaratorQualifier(Current),
+                        p => p.Current.Kind == SyntaxKind.EqualsToken || p.Current.Kind == SyntaxKind.OpenBraceToken || p.IsTerminator(),
+                        SyntaxKind.RegisterKeyword);
+                    if (action == PostSkipAction.Abort)
+                        break;
+                }
+            }
+
+            AnnotationsSyntax annotations = null;
+            if (Current.Kind == SyntaxKind.LessThanToken)
+                annotations = ParseAnnotations();
+
+            return new TypeAliasSyntax(name, arrayRankSpecifiers, qualifiers, annotations);
         }
 
         private void ParseVariableDeclarators(TypeSyntax type, List<SyntaxNode> variables, bool variableDeclarationsExpected)
@@ -514,6 +575,7 @@ namespace HlslTools.Parser
                 case SyntaxKind.ClassKeyword:
                 case SyntaxKind.StructKeyword:
                 case SyntaxKind.InterfaceKeyword:
+                case SyntaxKind.TypedefKeyword:
                     return true;
             }
 

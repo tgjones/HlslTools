@@ -243,6 +243,7 @@ namespace HlslTools.Parser
                 case SyntaxKind.ReturnKeyword:
                 case SyntaxKind.SwitchKeyword:
                 case SyntaxKind.WhileKeyword:
+                case SyntaxKind.TypedefKeyword:
                 case SyntaxKind.OpenBraceToken:
                 case SyntaxKind.OpenBracketToken:
                 case SyntaxKind.SemiToken:

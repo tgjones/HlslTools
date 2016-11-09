@@ -63,6 +63,8 @@ namespace HlslTools.Binding.BoundNodes
         ConstantBuffer,
         Technique,
         Pass,
+        Typedef,
+        TypeAlias,
 
         // Other
         EqualsValue,

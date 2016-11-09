@@ -97,6 +97,16 @@ namespace HlslTools.Syntax
             DefaultVisit(node);
         }
 
+        public virtual void VisitTypedefStatement(TypedefStatementSyntax node)
+        {
+            DefaultVisit(node);
+        }
+
+        public virtual void VisitTypeAlias(TypeAliasSyntax node)
+        {
+            DefaultVisit(node);
+        }
+
         public virtual void VisitIdentifierName(IdentifierNameSyntax node)
         {
             DefaultVisit(node);
@@ -598,6 +608,16 @@ namespace HlslTools.Syntax
         }
 
         public virtual T VisitTypeDeclarationStatement(TypeDeclarationStatementSyntax node)
+        {
+            return DefaultVisit(node);
+        }
+
+        public virtual T VisitTypedefStatement(TypedefStatementSyntax node)
+        {
+            return DefaultVisit(node);
+        }
+
+        public virtual T VisitTypeAlias(TypeAliasSyntax node)
         {
             return DefaultVisit(node);
         }

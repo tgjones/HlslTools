@@ -218,6 +218,7 @@ namespace HlslTools.Syntax
         TriangleKeyword,
         TriangleAdjKeyword,
         TriangleStreamKeyword,
+        TypedefKeyword,
         UniformKeyword,
         UintKeyword,
         Uint1Keyword,
@@ -457,6 +458,8 @@ namespace HlslTools.Syntax
         VariableDeclarator,
         EqualsValueClause,
         ExpressionStatement,
+        TypedefStatement,
+        TypeAlias,
         EmptyStatement,
 
         // Jump statements

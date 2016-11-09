@@ -39,6 +39,8 @@ namespace HlslTools.Binding
                     return BindNamespace((NamespaceSyntax) declaration);
                 case SyntaxKind.TechniqueDeclaration:
                     return BindTechniqueDeclaration((TechniqueSyntax) declaration);
+                case SyntaxKind.TypedefStatement:
+                    return BindTypedefStatement((TypedefStatementSyntax) declaration);
                 case SyntaxKind.EmptyStatement:
                     return BindEmptyStatement((EmptyStatementSyntax) declaration);
                 default:
@@ -59,6 +61,33 @@ namespace HlslTools.Binding
         private BoundPass BindPass(PassSyntax syntax)
         {
             return new BoundPass();
+        }
+
+        private BoundNode BindTypedefStatement(TypedefStatementSyntax declaration)
+        {
+            var boundType = Bind(declaration.Type, x => BindType(x, null));
+
+            var boundDeclarations = new List<BoundTypeAlias>();
+            foreach (var declarator in declaration.Declarators)
+            {
+                boundDeclarations.Add(Bind(declarator, x => BindTypeAlias(x, boundType.TypeSymbol)));
+            }
+
+            return new BoundTypedefStatement(boundDeclarations.ToImmutableArray());
+        }
+
+        private BoundTypeAlias BindTypeAlias(TypeAliasSyntax syntax, TypeSymbol variableType)
+        {
+            variableType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, variableType);
+
+            var symbol = new TypeAliasSymbol(syntax, variableType);
+            AddSymbol(symbol, syntax.Identifier.Span);
+
+            var boundQualifiers = new List<BoundVariableQualifier>();
+            foreach (var qualifier in syntax.Qualifiers)
+                boundQualifiers.Add(Bind(qualifier, BindVariableQualifier));
+
+            return new BoundTypeAlias(symbol, variableType, boundQualifiers.ToImmutableArray());
         }
 
         private BoundNode BindNamespace(NamespaceSyntax declaration)

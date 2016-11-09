@@ -58,6 +58,12 @@ namespace HlslTools.Compilation
             return result?.VariableSymbol;
         }
 
+        public TypeAliasSymbol GetDeclaredSymbol(TypeAliasSyntax syntax)
+        {
+            var result = _bindingResult.GetBoundNode(syntax) as BoundTypeAlias;
+            return result?.TypeAliasSymbol;
+        }
+
         public ConstantBufferSymbol GetDeclaredSymbol(ConstantBufferSyntax syntax)
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundConstantBuffer;

@@ -44,6 +44,9 @@ namespace HlslTools.Symbols.Markup
                 case SymbolKind.Technique:
                     markup.AppendTechnique((TechniqueSymbol) symbol);
                     break;
+                case SymbolKind.TypeAlias:
+                    markup.AppendTypeAlias((TypeAliasSymbol) symbol);
+                    break;
                 case SymbolKind.Attribute:
                     markup.AppendAttribute((AttributeSymbol) symbol);
                     break;
@@ -51,7 +54,7 @@ namespace HlslTools.Symbols.Markup
                     markup.AppendConstantBuffer((ConstantBufferSymbol) symbol);
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(symbol), symbol.Kind.ToString());
             }
         }
 
@@ -307,6 +310,17 @@ namespace HlslTools.Symbols.Markup
             markup.AppendSpace();
 
             markup.AppendName(SymbolMarkupKind.TechniqueName, symbol.Name);
+        }
+
+        private static void AppendTypeAlias(this ICollection<SymbolMarkupToken> markup, TypeAliasSymbol symbol)
+        {
+            markup.AppendKeyword("typedef");
+            markup.AppendSpace();
+
+            markup.AppendType(symbol.ValueType, true);
+            markup.AppendSpace();
+
+            markup.AppendName(SymbolMarkupKind.GlobalVariableName, symbol.Name);
         }
 
         private static void AppendNamespace(this ICollection<SymbolMarkupToken> markup, NamespaceSymbol symbol)

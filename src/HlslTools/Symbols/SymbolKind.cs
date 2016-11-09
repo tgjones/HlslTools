@@ -19,6 +19,7 @@
         IntrinsicScalarType,
         Semantic,
         Technique,
-        Attribute
+        Attribute,
+        TypeAlias
     }
 }
