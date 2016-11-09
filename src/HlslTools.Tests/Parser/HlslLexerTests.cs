@@ -55,7 +55,17 @@ namespace HlslTools.Tests.Parser
             Assert.That(allTokens[3].SourceRange, Is.EqualTo(new SourceRange(new SourceLocation(9), 0)));
         }
 
-        [TestCase("0x123", 0x123)]
+        [TestCase("42", 42)]     // Decimal literal
+        //[TestCase("052", 42)]    // Octal literal
+        [TestCase("0x2a", 0x2a)] // Hex literal
+        [TestCase("0X2A", 0x2A)] // Hex literal
+        [TestCase("42u", 42)]
+        [TestCase("42U", 42)]
+        [TestCase("42l", 42)]
+        [TestCase("42L", 42)]
+        [TestCase("42ul", 42)]
+        [TestCase("42UL", 42)]
+        [TestCase("42lu", 42)]
         public void TestIntegerLiterals(string text, int value)
         {
             var token = LexToken(text);

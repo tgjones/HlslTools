@@ -892,6 +892,7 @@ namespace HlslTools.Parser
             var hasExponentialModifier = false;
             var hasDotModifier = false;
             var hasFloatSuffix = false;
+            var hasIntegerSuffix = false;
             var hasHexModifier = false;
             var isPreprocessingNumber = false;
 
@@ -934,6 +935,25 @@ namespace HlslTools.Parser
                             goto case '0';
                         hasFloatSuffix = true;
                         NextChar();
+                        goto ExitLoop;
+
+                    case 'L':
+                    case 'l':
+                    case 'U':
+                    case 'u':
+                        hasIntegerSuffix = true;
+                        var currentSuffix = _charReader.Current;
+                        NextChar();
+                        if ((currentSuffix == 'U' || currentSuffix == 'u')
+                            && (_charReader.Current == 'L' || _charReader.Current == 'l'))
+                        {
+                            NextChar();
+                        }
+                        else if ((currentSuffix == 'L' || currentSuffix == 'l')
+                            && (_charReader.Current == 'U' || _charReader.Current == 'u'))
+                        {
+                            NextChar();
+                        }
                         goto ExitLoop;
 
                     case 'X':
