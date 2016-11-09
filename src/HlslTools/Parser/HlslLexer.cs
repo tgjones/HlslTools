@@ -957,6 +957,25 @@ namespace HlslTools.Parser
                         }
                         goto ExitLoop;
 
+                    case '#':
+                        if (sb.ToString() != "1.")
+                            goto ExitLoop;
+                        if (_charReader.Peek(1) == 'I' && _charReader.Peek(2) == 'N'
+                            && (_charReader.Peek(3) == 'D' || _charReader.Peek(3) == 'F'))
+                        {
+                            var isInfinity = _charReader.Peek(3) == 'F';
+
+                            NextChar();
+                            NextChar();
+                            NextChar();
+                            NextChar();
+
+                            _kind = SyntaxKind.FloatLiteralToken;
+                            _value = isInfinity ? float.PositiveInfinity : float.NaN;
+                            return;
+                        }
+                        goto ExitLoop;
+
                     case 'X':
                     case 'x':
                         hasHexModifier = true;

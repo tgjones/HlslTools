@@ -81,6 +81,8 @@ namespace HlslTools.Tests.Parser
         [TestCase("1.0", 1.0f)]
         [TestCase("1.0f", 1.0f)]
         [TestCase("1.0h", 1.0f)]
+        [TestCase("1.#IND", float.NaN)]
+        [TestCase("1.#INF", float.PositiveInfinity)]
         public void TestFloatLiterals(string text, float value)
         {
             var token = LexToken(text);
