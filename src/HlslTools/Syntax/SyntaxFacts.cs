@@ -212,6 +212,8 @@ namespace HlslTools.Syntax
                     return "register";
                 case SyntaxKind.ReturnKeyword:
                     return "return";
+                case SyntaxKind.SNormKeyword:
+                    return "snorm";
                 case SyntaxKind.StaticKeyword:
                     return "static";
                 case SyntaxKind.StringKeyword:
@@ -226,6 +228,8 @@ namespace HlslTools.Syntax
                     return "uint";
                 case SyntaxKind.UndefKeyword:
                     return "undef";
+                case SyntaxKind.UNormKeyword:
+                    return "unorm";
                 case SyntaxKind.VoidKeyword:
                     return "void";
                 case SyntaxKind.VolatileKeyword:
@@ -726,6 +730,8 @@ namespace HlslTools.Syntax
                 case SyntaxKind.InlineKeyword:
                 case SyntaxKind.InterfaceKeyword:
                 case SyntaxKind.StaticKeyword:
+                case SyntaxKind.SNormKeyword:
+                case SyntaxKind.UNormKeyword:
                 case SyntaxKind.StructKeyword:
                 case SyntaxKind.VolatileKeyword:
                 case SyntaxKind.IdentifierToken:
@@ -1215,6 +1221,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.SamplerStateKeyword:
                 case SyntaxKind.SamplerStateLegacyKeyword:
                 case SyntaxKind.SharedKeyword:
+                case SyntaxKind.SNormKeyword:
                 case SyntaxKind.StaticKeyword:
                 case SyntaxKind.StringKeyword:
                 case SyntaxKind.StructKeyword:
@@ -1241,6 +1248,7 @@ namespace HlslTools.Syntax
                 case SyntaxKind.TriangleStreamKeyword:
                 case SyntaxKind.TrueKeyword:
                 case SyntaxKind.UniformKeyword:
+                case SyntaxKind.UNormKeyword:
                 case SyntaxKind.UintKeyword:
                 case SyntaxKind.Uint1Keyword:
                 case SyntaxKind.Uint2Keyword:
@@ -1781,6 +1789,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.SamplerStateLegacyKeyword;
                 case "shared":
                     return SyntaxKind.SharedKeyword;
+                case "snorm":
+                    return SyntaxKind.SNormKeyword;
                 case "static":
                     return SyntaxKind.StaticKeyword;
                 case "string":
@@ -1832,6 +1842,8 @@ namespace HlslTools.Syntax
                     return SyntaxKind.TypedefKeyword;
                 case "uniform":
                     return SyntaxKind.UniformKeyword;
+                case "unorm":
+                    return SyntaxKind.UNormKeyword;
                 case "unsigned":
                     return SyntaxKind.UnsignedKeyword;
                 case "uint":
@@ -2019,6 +2031,10 @@ namespace HlslTools.Syntax
                 case SyntaxKind.StaticKeyword:
                 case SyntaxKind.UniformKeyword:
                 case SyntaxKind.VolatileKeyword:
+                    return true;
+
+                case SyntaxKind.SNormKeyword:
+                case SyntaxKind.UNormKeyword:
                     return true;
 
                 case SyntaxKind.LinearKeyword:

@@ -60,6 +60,9 @@ Texture2D<bool> PictureTyped;
 SamplerState PictureSampler;
 SamplerComparisonState PictureSamplerComparison;
 
+snorm float4 fourComponentSNormFloat;
+unorm float4 fourComponentUNormFloat;
+
 /* This is a asdfsssdfsd  sdfsd  sss
 
 sdfds
