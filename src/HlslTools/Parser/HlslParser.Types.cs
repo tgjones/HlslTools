@@ -341,7 +341,7 @@ namespace HlslTools.Parser
                     return ScanTypeFlags.NotType;
                 }
                 lastTokenOfType = NextToken();
-                result = ScanTypeFlags.MustBeType;
+                result = ScanTypeFlags.TypeOrExpression;
             }
 
             return result;
