@@ -15,11 +15,11 @@ namespace HlslTools.Binding
 
         protected override IEnumerable<Binder> GetAdditionalParentBinders()
         {
-            var baseClass = _classSymbol;
+            var baseClass = (ClassOrStructSymbol) _classSymbol;
             while (baseClass != null)
             {
                 yield return baseClass.Binder;
-                baseClass = baseClass.BaseClass;
+                baseClass = baseClass.BaseType;
             }
         }
     }

@@ -1,13 +1,14 @@
-﻿using HlslTools.Syntax;
+﻿using System.Collections.Immutable;
+using HlslTools.Syntax;
 
 namespace HlslTools.Symbols
 {
-    public sealed class StructSymbol : TypeSymbol
+    public sealed class StructSymbol : ClassOrStructSymbol
     {
         public StructTypeSyntax Syntax { get; }
 
-        internal StructSymbol(StructTypeSyntax syntax, Symbol parent)
-            : base(SymbolKind.Struct, (syntax.Name != null) ? syntax.Name.Text : "<anonymous struct>", string.Empty, parent)
+        internal StructSymbol(StructTypeSyntax syntax, Symbol parent, ClassOrStructSymbol baseType, ImmutableArray<InterfaceSymbol> baseInterfaces)
+            : base(SymbolKind.Struct, (syntax.Name != null) ? syntax.Name.Text : "<anonymous struct>", parent, baseType, baseInterfaces)
         {
             Syntax = syntax;
         }

@@ -320,28 +320,36 @@ namespace HlslTools.Binding
             return new BoundConstantBuffer(constantBufferSymbol, variables.ToImmutableArray());
         }
 
-        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration, Symbol parent)
+        private void BindBaseList(BaseListSyntax baseList, Symbol parent, out ClassOrStructSymbol baseType, out List<InterfaceSymbol> baseInterfaces)
         {
-            ClassSymbol baseClass = null;
-            var baseInterfaces = new List<InterfaceSymbol>();
+            baseType = null;
+            baseInterfaces = new List<InterfaceSymbol>();
 
-            if (declaration.BaseList != null)
+            if (baseList != null)
             {
-                var baseType = Bind(declaration.BaseList.BaseType, x => BindType(x, parent));
-                switch (baseType.TypeSymbol.Kind)
+                var baseTypeTemp = Bind(baseList.BaseType, x => BindType(x, parent));
+                switch (baseTypeTemp.TypeSymbol.Kind)
                 {
                     case SymbolKind.Class:
-                        baseClass = (ClassSymbol) baseType.TypeSymbol;
+                    case SymbolKind.Struct:
+                        baseType = (ClassOrStructSymbol) baseTypeTemp.TypeSymbol;
                         break;
                     case SymbolKind.Interface:
-                        baseInterfaces.Add((InterfaceSymbol) baseType.TypeSymbol);
+                        baseInterfaces.Add((InterfaceSymbol) baseTypeTemp.TypeSymbol);
                         break;
                 }
             }
+        }
+
+        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration, Symbol parent)
+        {
+            ClassOrStructSymbol baseType;
+            List<InterfaceSymbol> baseInterfaces;
+            BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
 
             var classBinder = new Binder(_sharedBinderState, this);
 
-            var classSymbol = new ClassSymbol(declaration, parent, baseClass, baseInterfaces.ToImmutableArray(), classBinder);
+            var classSymbol = new ClassSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), classBinder);
             AddSymbol(classSymbol, declaration.Name.Span);
 
             var members = new List<BoundNode>();
@@ -370,7 +378,11 @@ namespace HlslTools.Binding
 
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration, Symbol parent)
         {
-            var structSymbol = new StructSymbol(declaration, parent);
+            ClassOrStructSymbol baseType;
+            List<InterfaceSymbol> baseInterfaces;
+            BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
+
+            var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray());
             AddSymbol(structSymbol, declaration.Name?.Span ?? declaration.GetTextSpanSafe());
 
             var variables = new List<BoundMultipleVariableDeclarations>();

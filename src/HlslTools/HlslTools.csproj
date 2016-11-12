@@ -166,6 +166,7 @@
     <Compile Include="Parser\ParserOptions.cs" />
     <Compile Include="Symbols\ArraySymbol.cs" />
     <Compile Include="Symbols\AttributeSymbol.cs" />
+    <Compile Include="Symbols\ClassOrStructSymbol.cs" />
     <Compile Include="Symbols\ClassSymbol.cs" />
     <Compile Include="Symbols\ConstantBufferSymbol.cs" />
     <Compile Include="Symbols\ContainerSymbol.cs" />

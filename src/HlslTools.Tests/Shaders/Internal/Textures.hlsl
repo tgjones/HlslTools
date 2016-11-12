@@ -32,6 +32,23 @@ int Outer::Nested::MyClass::TestFunc()
 	return Outer::bar;
 }
 
+struct Animal
+{
+	float3 size;
+};
+
+struct Cat : Animal
+{
+	float purriness;
+};
+
+void UseStructInheritance()
+{
+	Cat cat = (Cat) 0;
+	cat.size = float3(1, 2, 1);
+	cat.purriness = 0.8;
+}
+
 struct PixelShaderInput
 {
 	float4 pos : SV_POSITION;

@@ -61,6 +61,10 @@ namespace HlslTools.Parser
             // Name is optional -  but if omitted, this *must* be part of a variable declaration.
             var name = NextTokenIf(SyntaxKind.IdentifierToken);
 
+            BaseListSyntax baseList = null;
+            if (Current.Kind == SyntaxKind.ColonToken)
+                baseList = ParseBaseList();
+
             var openBrace = Match(SyntaxKind.OpenBraceToken);
 
             var fields = new List<VariableDeclarationStatementSyntax>();
@@ -83,7 +87,7 @@ namespace HlslTools.Parser
 
             var closeBrace = Match(SyntaxKind.CloseBraceToken);
 
-            return new StructTypeSyntax(@struct, name, openBrace, fields, closeBrace);
+            return new StructTypeSyntax(@struct, name, baseList, openBrace, fields, closeBrace);
         }
 
         private InterfaceTypeSyntax ParseInterfaceType()
