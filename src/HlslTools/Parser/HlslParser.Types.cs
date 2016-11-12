@@ -329,7 +329,7 @@ namespace HlslTools.Parser
             while (Current.Kind == SyntaxKind.OpenBracketToken)
             {
                 NextToken();
-                if (Current.Kind != SyntaxKind.IntegerLiteralToken)
+                if (Current.Kind != SyntaxKind.IntegerLiteralToken && Current.Kind != SyntaxKind.IdentifierToken)
                 {
                     lastTokenOfType = null;
                     return ScanTypeFlags.NotType;

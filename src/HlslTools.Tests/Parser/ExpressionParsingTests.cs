@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Diagnostics;
+using System.Linq;
 using HlslTools.Syntax;
 using NUnit.Framework;
 
@@ -248,6 +249,52 @@ namespace HlslTools.Tests.Parser
         }
 
         [Test]
+        public void TestCastArrayConstVariableSize()
+        {
+            var text = "(uint[a]) b";
+            var expr = ParseExpression(text);
+
+            Assert.NotNull(expr);
+            Assert.AreEqual(SyntaxKind.CastExpression, expr.Kind);
+            Assert.AreEqual(text, expr.ToString());
+            Assert.AreEqual(0, expr.GetDiagnostics().Count());
+            var cs = (CastExpressionSyntax) expr;
+            Assert.NotNull(cs.OpenParenToken);
+            Assert.NotNull(cs.CloseParenToken);
+            Assert.False(cs.OpenParenToken.IsMissing);
+            Assert.False(cs.CloseParenToken.IsMissing);
+            Assert.NotNull(cs.Type);
+            Assert.NotNull(cs.Expression);
+            Assert.AreEqual("uint", cs.Type.ToString());
+            Assert.AreEqual(1, cs.ArrayRankSpecifiers.Count);
+            Assert.AreEqual("[a]", cs.ArrayRankSpecifiers[0].ToString());
+            Assert.AreEqual("b", cs.Expression.ToString());
+        }
+
+        [Test]
+        public void TestCastArrayLiteralSize()
+        {
+            var text = "(uint[4]) b";
+            var expr = ParseExpression(text);
+
+            Assert.NotNull(expr);
+            Assert.AreEqual(SyntaxKind.CastExpression, expr.Kind);
+            Assert.AreEqual(text, expr.ToString());
+            Assert.AreEqual(0, expr.GetDiagnostics().Count());
+            var cs = (CastExpressionSyntax) expr;
+            Assert.NotNull(cs.OpenParenToken);
+            Assert.NotNull(cs.CloseParenToken);
+            Assert.False(cs.OpenParenToken.IsMissing);
+            Assert.False(cs.CloseParenToken.IsMissing);
+            Assert.NotNull(cs.Type);
+            Assert.NotNull(cs.Expression);
+            Assert.AreEqual("uint", cs.Type.ToString());
+            Assert.AreEqual(1, cs.ArrayRankSpecifiers.Count);
+            Assert.AreEqual("[4]", cs.ArrayRankSpecifiers[0].ToString());
+            Assert.AreEqual("b", cs.Expression.ToString());
+        }
+
+        [Test]
         public void TestNumericConstructorInvocation()
         {
             var text = "int(b)";
@@ -420,6 +467,8 @@ namespace HlslTools.Tests.Parser
         {
             var expression = SyntaxFactory.ParseExpression(text).Root;
 
+            foreach (var diagnostic in expression.GetDiagnostics())
+                Debug.WriteLine(diagnostic.ToString());
             Assert.AreEqual(0, expression.GetDiagnostics().Count());
             Assert.AreEqual(text, expression.ToString());
 
