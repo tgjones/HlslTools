@@ -86,6 +86,12 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
             if (_session == null)
                 return false;
 
+            if (!(_session.SelectedCompletionSet?.SelectionStatus?.IsSelected ?? false))
+            {
+                _session.Dismiss();
+                return false;
+            }
+
             var isBuilder = _session.SelectedCompletionSet?.SelectionStatus?.Completion != null 
                 && _session.SelectedCompletionSet.CompletionBuilders != null
                 && _session.SelectedCompletionSet.CompletionBuilders.Contains(_session.SelectedCompletionSet.SelectionStatus.Completion);
