@@ -53,7 +53,10 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
 
             if (builderResult == null || itemResult == null)
             {
-                base.SelectBestMatch();
+                // If no matches with case-insensitive search, fallback to case-insensitive.
+                base.SelectBestMatch(CompletionMatchType.MatchDisplayText, true);
+                if (!SelectionStatus.IsSelected)
+                    base.SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
             }
             else
             {
