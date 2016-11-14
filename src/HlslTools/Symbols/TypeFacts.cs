@@ -237,6 +237,17 @@ namespace HlslTools.Symbols
 
             switch (right)
             {
+                case ScalarType.Min10Float:
+                    switch(left)
+                    {
+                        case ScalarType.Min16Float:
+                        case ScalarType.Half:
+                        case ScalarType.Float:
+                        case ScalarType.Double:
+                            return true;
+                    }
+                    break;
+                case ScalarType.Min16Float:
                 case ScalarType.Half:
                     switch (left)
                     {
@@ -264,16 +275,22 @@ namespace HlslTools.Symbols
 
             switch (left)
             {
+                case ScalarType.Min12Int:
+                case ScalarType.Min16Int:
                 case ScalarType.Int:
                     switch (right)
                     {
+                        case ScalarType.Min16Uint:
                         case ScalarType.Uint:
                             return false;
                     }
                     break;
+                case ScalarType.Min16Uint:
                 case ScalarType.Uint:
                     switch (right)
                     {
+                        case ScalarType.Min12Int:
+                        case ScalarType.Min16Int:
                         case ScalarType.Int:
                             return false;
                     }
@@ -317,6 +334,16 @@ namespace HlslTools.Symbols
                     return ScalarType.Float;
                 case SyntaxKind.DoubleKeyword:
                     return ScalarType.Double;
+                case SyntaxKind.Min16FloatKeyword:
+                    return ScalarType.Min16Float;
+                case SyntaxKind.Min10FloatKeyword:
+                    return ScalarType.Min10Float;
+                case SyntaxKind.Min16IntKeyword:
+                    return ScalarType.Min16Int;
+                case SyntaxKind.Min12IntKeyword:
+                    return ScalarType.Min12Int;
+                case SyntaxKind.Min16UintKeyword:
+                    return ScalarType.Min16Uint;
                 case SyntaxKind.StringKeyword:
                     return ScalarType.String;
                 default:
@@ -379,6 +406,46 @@ namespace HlslTools.Symbols
                     return Tuple.Create(ScalarType.Double, 3);
                 case SyntaxKind.Double4Keyword:
                     return Tuple.Create(ScalarType.Double, 4);
+                case SyntaxKind.Min16Float1Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 1);
+                case SyntaxKind.Min16Float2Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 2);
+                case SyntaxKind.Min16Float3Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 3);
+                case SyntaxKind.Min16Float4Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 4);
+                case SyntaxKind.Min10Float1Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 1);
+                case SyntaxKind.Min10Float2Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 2);
+                case SyntaxKind.Min10Float3Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 3);
+                case SyntaxKind.Min10Float4Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 4);
+                case SyntaxKind.Min16Int1Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 1);
+                case SyntaxKind.Min16Int2Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 2);
+                case SyntaxKind.Min16Int3Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 3);
+                case SyntaxKind.Min16Int4Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 4);
+                case SyntaxKind.Min12Int1Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 1);
+                case SyntaxKind.Min12Int2Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 2);
+                case SyntaxKind.Min12Int3Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 3);
+                case SyntaxKind.Min12Int4Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 4);
+                case SyntaxKind.Min16Uint1Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 1);
+                case SyntaxKind.Min16Uint2Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 2);
+                case SyntaxKind.Min16Uint3Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 3);
+                case SyntaxKind.Min16Uint4Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 4);
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -588,6 +655,171 @@ namespace HlslTools.Symbols
                     return Tuple.Create(ScalarType.Double, 4, 3);
                 case SyntaxKind.Double4x4Keyword:
                     return Tuple.Create(ScalarType.Double, 4, 4);
+
+                case SyntaxKind.Min16Float1x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 1, 1);
+                case SyntaxKind.Min16Float1x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 1, 2);
+                case SyntaxKind.Min16Float1x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 1, 3);
+                case SyntaxKind.Min16Float1x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 1, 4);
+                case SyntaxKind.Min16Float2x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 2, 1);
+                case SyntaxKind.Min16Float2x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 2, 2);
+                case SyntaxKind.Min16Float2x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 2, 3);
+                case SyntaxKind.Min16Float2x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 2, 4);
+                case SyntaxKind.Min16Float3x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 3, 1);
+                case SyntaxKind.Min16Float3x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 3, 2);
+                case SyntaxKind.Min16Float3x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 3, 3);
+                case SyntaxKind.Min16Float3x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 3, 4);
+                case SyntaxKind.Min16Float4x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 4, 1);
+                case SyntaxKind.Min16Float4x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 4, 2);
+                case SyntaxKind.Min16Float4x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 4, 3);
+                case SyntaxKind.Min16Float4x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Float, 4, 4);
+
+                case SyntaxKind.Min10Float1x1Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 1, 1);
+                case SyntaxKind.Min10Float1x2Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 1, 2);
+                case SyntaxKind.Min10Float1x3Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 1, 3);
+                case SyntaxKind.Min10Float1x4Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 1, 4);
+                case SyntaxKind.Min10Float2x1Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 2, 1);
+                case SyntaxKind.Min10Float2x2Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 2, 2);
+                case SyntaxKind.Min10Float2x3Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 2, 3);
+                case SyntaxKind.Min10Float2x4Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 2, 4);
+                case SyntaxKind.Min10Float3x1Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 3, 1);
+                case SyntaxKind.Min10Float3x2Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 3, 2);
+                case SyntaxKind.Min10Float3x3Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 3, 3);
+                case SyntaxKind.Min10Float3x4Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 3, 4);
+                case SyntaxKind.Min10Float4x1Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 4, 1);
+                case SyntaxKind.Min10Float4x2Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 4, 2);
+                case SyntaxKind.Min10Float4x3Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 4, 3);
+                case SyntaxKind.Min10Float4x4Keyword:
+                    return Tuple.Create(ScalarType.Min10Float, 4, 4);
+
+                case SyntaxKind.Min16Int1x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 1, 1);
+                case SyntaxKind.Min16Int1x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 1, 2);
+                case SyntaxKind.Min16Int1x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 1, 3);
+                case SyntaxKind.Min16Int1x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 1, 4);
+                case SyntaxKind.Min16Int2x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 2, 1);
+                case SyntaxKind.Min16Int2x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 2, 2);
+                case SyntaxKind.Min16Int2x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 2, 3);
+                case SyntaxKind.Min16Int2x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 2, 4);
+                case SyntaxKind.Min16Int3x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 3, 1);
+                case SyntaxKind.Min16Int3x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 3, 2);
+                case SyntaxKind.Min16Int3x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 3, 3);
+                case SyntaxKind.Min16Int3x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 3, 4);
+                case SyntaxKind.Min16Int4x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 4, 1);
+                case SyntaxKind.Min16Int4x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 4, 2);
+                case SyntaxKind.Min16Int4x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 4, 3);
+                case SyntaxKind.Min16Int4x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Int, 4, 4);
+
+                case SyntaxKind.Min12Int1x1Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 1, 1);
+                case SyntaxKind.Min12Int1x2Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 1, 2);
+                case SyntaxKind.Min12Int1x3Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 1, 3);
+                case SyntaxKind.Min12Int1x4Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 1, 4);
+                case SyntaxKind.Min12Int2x1Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 2, 1);
+                case SyntaxKind.Min12Int2x2Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 2, 2);
+                case SyntaxKind.Min12Int2x3Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 2, 3);
+                case SyntaxKind.Min12Int2x4Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 2, 4);
+                case SyntaxKind.Min12Int3x1Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 3, 1);
+                case SyntaxKind.Min12Int3x2Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 3, 2);
+                case SyntaxKind.Min12Int3x3Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 3, 3);
+                case SyntaxKind.Min12Int3x4Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 3, 4);
+                case SyntaxKind.Min12Int4x1Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 4, 1);
+                case SyntaxKind.Min12Int4x2Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 4, 2);
+                case SyntaxKind.Min12Int4x3Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 4, 3);
+                case SyntaxKind.Min12Int4x4Keyword:
+                    return Tuple.Create(ScalarType.Min12Int, 4, 4);
+
+                case SyntaxKind.Min16Uint1x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 1, 1);
+                case SyntaxKind.Min16Uint1x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 1, 2);
+                case SyntaxKind.Min16Uint1x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 1, 3);
+                case SyntaxKind.Min16Uint1x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 1, 4);
+                case SyntaxKind.Min16Uint2x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 2, 1);
+                case SyntaxKind.Min16Uint2x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 2, 2);
+                case SyntaxKind.Min16Uint2x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 2, 3);
+                case SyntaxKind.Min16Uint2x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 2, 4);
+                case SyntaxKind.Min16Uint3x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 3, 1);
+                case SyntaxKind.Min16Uint3x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 3, 2);
+                case SyntaxKind.Min16Uint3x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 3, 3);
+                case SyntaxKind.Min16Uint3x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 3, 4);
+                case SyntaxKind.Min16Uint4x1Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 4, 1);
+                case SyntaxKind.Min16Uint4x2Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 4, 2);
+                case SyntaxKind.Min16Uint4x3Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 4, 3);
+                case SyntaxKind.Min16Uint4x4Keyword:
+                    return Tuple.Create(ScalarType.Min16Uint, 4, 4);
 
                 default:
                     throw new ArgumentOutOfRangeException();
