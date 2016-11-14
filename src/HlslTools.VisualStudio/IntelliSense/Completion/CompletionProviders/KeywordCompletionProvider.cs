@@ -4,10 +4,11 @@ using System.Linq;
 using HlslTools.Compilation;
 using HlslTools.Syntax;
 using HlslTools.VisualStudio.Glyphs;
+using HlslTools.VisualStudio.Util.ContextQuery;
 
 namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 {
-    //[Export(typeof(ICompletionProvider))]
+    [Export(typeof(ICompletionProvider))]
     internal sealed class KeywordCompletionProvider : ICompletionProvider
     {
         public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
@@ -39,23 +40,34 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
         private static IEnumerable<SyntaxKind> GetAvailableKeywords(SyntaxTree syntaxTree, SourceLocation position)
         {
-            if (IsInSemantic(syntaxTree, position))
+            var tokenOnLeftOfPosition = syntaxTree.Root.FindTokenOnLeft(position);
+
+            if (IsInSemantic(syntaxTree, tokenOnLeftOfPosition))
             {
                 yield return SyntaxKind.PackoffsetKeyword;
                 yield return SyntaxKind.RegisterKeyword;
+            }
+
+            if (IsStatementContext(syntaxTree, position, tokenOnLeftOfPosition))
+            {
+                yield return SyntaxKind.ReturnKeyword;
             }
 
             yield return SyntaxKind.TrueKeyword;
             yield return SyntaxKind.FalseKeyword;
         }
 
-        private static bool IsInSemantic(SyntaxTree syntaxTree, SourceLocation position)
+        private static bool IsInSemantic(SyntaxTree syntaxTree, SyntaxToken tokenOnLeftOfPosition)
         {
-            var token = syntaxTree.Root.FindTokenOnLeft(position);
-            return token.Parent
-                .AncestorsAndSelf()
-                .OfType<SemanticSyntax>()
-                .Any();
+            return tokenOnLeftOfPosition.GetAncestor<SemanticSyntax>() != null;
+        }
+
+        private static bool IsStatementContext(SyntaxTree syntaxTree, SourceLocation position, SyntaxToken tokenOnLeftOfPosition)
+        {
+            var token = tokenOnLeftOfPosition;
+            token = token.GetPreviousTokenIfTouchingWord(position);
+
+            return token.IsBeginningOfStatementContext();
         }
     }
 }

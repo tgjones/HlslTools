@@ -433,6 +433,7 @@
     <Compile Include="Text\VisualStudioSourceText.cs" />
     <Compile Include="Parsing\BackgroundParser.cs" />
     <Compile Include="Util\CommandTargetBase.cs" />
+    <Compile Include="Util\ContextQuery\SyntaxTokenExtensions.cs" />
     <Compile Include="Util\ExceptionHelper.cs" />
     <Compile Include="Util\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Util\Extensions\SnapshotSpanExtensions.cs" />

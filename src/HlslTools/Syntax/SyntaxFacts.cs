@@ -1282,6 +1282,13 @@ namespace HlslTools.Syntax
             }
         }
 
+        public static bool IsWord(this SyntaxToken token)
+        {
+            return token.Kind == SyntaxKind.IdentifierToken
+                || token.Kind.IsKeyword()
+                || token.Kind.IsPreprocessorKeyword();
+        }
+
         public static bool IsComment(this SyntaxKind kind)
         {
             switch (kind)

@@ -23,6 +23,12 @@ namespace HlslTools.Syntax
             }
         }
 
+        public static T GetAncestor<T>(this SyntaxNode node)
+            where T : SyntaxNode
+        {
+            return node.Parent?.AncestorsAndSelf().OfType<T>().FirstOrDefault();
+        }
+
         public static IEnumerable<SyntaxToken> DescendantTokens(this SyntaxNode node)
         {
             foreach (var childNode in node.ChildNodes)
@@ -155,6 +161,13 @@ namespace HlslTools.Syntax
             }
 
             return token;
+        }
+
+        public static SyntaxToken GetPreviousTokenIfTouchingWord(this SyntaxToken token, SourceLocation position)
+        {
+            return token.SourceRange.ContainsOrTouches(position) && token.IsWord()
+                ? token.GetPreviousToken(includeSkippedTokens: true)
+                : token;
         }
 
         public static SyntaxToken GetPreviousToken(this SyntaxToken token, bool includeZeroLength = false, bool includeSkippedTokens = false)
@@ -394,6 +407,21 @@ namespace HlslTools.Syntax
             if (node != null)
                 return node.Parent;
             return token.Parent;
+        }
+
+        public static bool IsParentKind(this SyntaxNode node, SyntaxKind kind)
+        {
+            return node != null && node.Parent.IsKind(kind);
+        }
+
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind)
+        {
+            return node != null && node.Kind == kind;
+        }
+
+        public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
+        {
+            return node != null && (node.Kind == kind1 || node.Kind == kind2);
         }
     }
 }
