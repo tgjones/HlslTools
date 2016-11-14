@@ -100,6 +100,16 @@ namespace HlslTools.Binding
                     return new BoundScalarType(IntrinsicTypes.Float);
                 case ScalarType.Double:
                     return new BoundScalarType(IntrinsicTypes.Double);
+                case ScalarType.Min16Float:
+                    return new BoundScalarType(IntrinsicTypes.Min16Float);
+                case ScalarType.Min10Float:
+                    return new BoundScalarType(IntrinsicTypes.Min10Float);
+                case ScalarType.Min16Int:
+                    return new BoundScalarType(IntrinsicTypes.Min16Int);
+                case ScalarType.Min12Int:
+                    return new BoundScalarType(IntrinsicTypes.Min12Int);
+                case ScalarType.Min16Uint:
+                    return new BoundScalarType(IntrinsicTypes.Min16Uint);
                 case ScalarType.String:
                     return new BoundScalarType(IntrinsicTypes.String);
                 default:
