@@ -29,6 +29,21 @@ namespace HlslTools.Syntax
             return node.Parent?.AncestorsAndSelf().OfType<T>().FirstOrDefault();
         }
 
+        public static T GetAncestorOrThis<T>(this SyntaxNode node)
+            where T : SyntaxNode
+        {
+            if (node == null)
+                return null;
+
+            return node.AncestorsAndSelf().OfType<T>().FirstOrDefault();
+        }
+
+        public static bool HasAncestor<T>(this SyntaxNode node)
+            where T : SyntaxNode
+        {
+            return node.GetAncestor<T>() != null;
+        }
+
         public static IEnumerable<SyntaxToken> DescendantTokens(this SyntaxNode node)
         {
             foreach (var childNode in node.ChildNodes)
@@ -217,6 +232,11 @@ namespace HlslTools.Syntax
         {
             var token = root.FindTokenOnLeft(position);
             return token.SourceRange.ContainsOrTouches(position) && token.Kind.IsLiteral();
+        }
+
+        public static bool InNonUserCode(this SyntaxNode root, SourceLocation position)
+        {
+            return root.InComment(position) || root.InLiteral(position);
         }
 
         public static IEnumerable<SyntaxToken> FindStartTokens(this SyntaxNode root, SourceLocation position, bool descendIntoTriva = false)

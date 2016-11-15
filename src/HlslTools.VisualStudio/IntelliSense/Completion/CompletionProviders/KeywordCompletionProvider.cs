@@ -14,14 +14,6 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
         public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
-            var root = syntaxTree.Root;
-
-            if (root.InComment(position) || root.InLiteral(position) || IsInPropertyAccess(root, position))
-                return Enumerable.Empty<CompletionItem>();
-
-            // We don't want to show a keyword completion in a macro.
-            if (semanticModel.SyntaxTree.DefinitelyInMacro(position))
-                return Enumerable.Empty<CompletionItem>();
 
             return GetAvailableKeywords(syntaxTree, position)
                 .Select(k => k.GetText())
@@ -40,34 +32,72 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
         private static IEnumerable<SyntaxKind> GetAvailableKeywords(SyntaxTree syntaxTree, SourceLocation position)
         {
-            var tokenOnLeftOfPosition = syntaxTree.Root.FindTokenOnLeft(position);
+            var isInNonUserCode = syntaxTree.Root.InNonUserCode(position);
+            if (isInNonUserCode)
+                yield break;
 
-            if (IsInSemantic(syntaxTree, tokenOnLeftOfPosition))
-            {
-                yield return SyntaxKind.PackoffsetKeyword;
-                yield return SyntaxKind.RegisterKeyword;
-            }
+            var isPreprocessorDirectiveContext = syntaxTree.DefinitelyInMacro(position);
 
-            if (IsStatementContext(syntaxTree, position, tokenOnLeftOfPosition))
+            var leftToken = syntaxTree.Root.FindTokenOnLeft(position);
+
+            var targetToken = leftToken.GetPreviousTokenIfTouchingWord(position);
+
+            var isPreprocessorKeywordContext = isPreprocessorDirectiveContext && syntaxTree.IsPreprocessorKeywordContext(position, leftToken);
+
+            var isStatementContext = !isPreprocessorDirectiveContext && targetToken.IsBeginningOfStatementContext();
+
+            var isSemanticContext = !isPreprocessorDirectiveContext && leftToken.HasAncestor<SemanticSyntax>();
+
+            if (isStatementContext)
             {
                 yield return SyntaxKind.ReturnKeyword;
             }
 
-            yield return SyntaxKind.TrueKeyword;
-            yield return SyntaxKind.FalseKeyword;
+            if (isPreprocessorKeywordContext || isStatementContext)
+            {
+                yield return SyntaxKind.IfKeyword;
+            }
+
+            if (isPreprocessorDirectiveContext || IsValidElseKeywordContext(targetToken))
+            {
+                yield return SyntaxKind.ElseKeyword;
+            }
+
+            if (isSemanticContext)
+            {
+                yield return SyntaxKind.PackoffsetKeyword;
+                yield return SyntaxKind.RegisterKeyword;
+            }
         }
 
-        private static bool IsInSemantic(SyntaxTree syntaxTree, SyntaxToken tokenOnLeftOfPosition)
+        private static bool IsValidElseKeywordContext(SyntaxToken token)
         {
-            return tokenOnLeftOfPosition.GetAncestor<SemanticSyntax>() != null;
-        }
+            var statement = token.GetAncestor<StatementSyntax>();
+            var ifStatement = statement.GetAncestorOrThis<IfStatementSyntax>();
 
-        private static bool IsStatementContext(SyntaxTree syntaxTree, SourceLocation position, SyntaxToken tokenOnLeftOfPosition)
-        {
-            var token = tokenOnLeftOfPosition;
-            token = token.GetPreviousTokenIfTouchingWord(position);
+            if (statement == null || ifStatement == null)
+                return false;
 
-            return token.IsBeginningOfStatementContext();
+            // cases:
+            //   if (foo)
+            //     Console.WriteLine();
+            //   |
+            //   if (foo)
+            //     Console.WriteLine();
+            //   e|
+            if (token.IsKind(SyntaxKind.SemiToken) && ifStatement.Statement.GetLastToken() == token)
+                return true;
+
+            // if (foo) {
+            //     Console.WriteLine();
+            //   } |
+            //   if (foo) {
+            //     Console.WriteLine();
+            //   } e|
+            if (token.IsKind(SyntaxKind.CloseBraceToken) && ifStatement.Statement is BlockSyntax && token == ((BlockSyntax) ifStatement.Statement).CloseBraceToken)
+                return true;
+
+            return false;
         }
     }
 }
