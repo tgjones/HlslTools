@@ -69,24 +69,32 @@ namespace HlslTools.VisualStudio.Util.Extensions
                 return false;
             }
 
-            semanticModel = CachedSemanticModels.GetValue(snapshot, key =>
+            try
             {
-                try
+                semanticModel = CachedSemanticModels.GetValue(snapshot, key =>
                 {
-                    var syntaxTree = key.GetSyntaxTree(cancellationToken);
-                    var compilation = new Compilation.Compilation(syntaxTree);
-                    return compilation.GetSemanticModel(cancellationToken);
-                }
-                catch (OperationCanceledException)
-                {
-                    return null;
-                }
-                catch (Exception ex)
-                {
-                    Logger.Log($"Failed to create semantic model: {ex}");
-                    return null;
-                }
-            });
+                    try
+                    {
+                        var syntaxTree = key.GetSyntaxTree(cancellationToken);
+                        var compilation = new Compilation.Compilation(syntaxTree);
+                        return compilation.GetSemanticModel(cancellationToken);
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        throw;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.Log($"Failed to create semantic model: {ex}");
+                        return null;
+                    }
+                });
+            }
+            catch (OperationCanceledException)
+            {
+                semanticModel = null;
+            }
+
             return semanticModel != null;
         }
 
