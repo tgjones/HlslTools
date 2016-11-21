@@ -196,7 +196,7 @@ namespace HlslTools.Parser
                     var currentTokenKind = Current.Kind;
                     if (currentTokenKind == SyntaxKind.IdentifierToken && !parentType.IsMissing)
                     {
-                        var isAfterNewLine = parentType.GetLastToken().TrailingTrivia.Any(t => t.Kind == SyntaxKind.EndOfLineTrivia);
+                        var isAfterNewLine = parentType.GetLastChildToken().TrailingTrivia.Any(t => t.Kind == SyntaxKind.EndOfLineTrivia);
                         if (isAfterNewLine)
                         {
                             NextToken();

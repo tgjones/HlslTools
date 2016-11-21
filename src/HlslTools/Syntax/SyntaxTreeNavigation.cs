@@ -200,6 +200,13 @@ namespace HlslTools.Syntax
             return GetFirstToken(node, tokenPredicate, triviaPredicate);
         }
 
+        public static SyntaxToken GetLastToken(SyntaxNode node, bool includeZeroLength, bool includeSkippedTokens)
+        {
+            var tokenPredicate = GetTokenPredicate(includeZeroLength);
+            var triviaPredicate = GetTriviaPredicate(includeSkippedTokens);
+            return GetLastToken(node, tokenPredicate, triviaPredicate);
+        }
+
         private static SyntaxToken GetFirstToken(SyntaxNode node, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
         {
             foreach (var nodeOrToken in node.ChildNodes)

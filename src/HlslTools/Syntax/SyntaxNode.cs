@@ -208,5 +208,10 @@ namespace HlslTools.Syntax
                 }
             }
         }
+
+        public SyntaxToken GetLastChildToken()
+        {
+            return ChildNodes.LastOrDefault(n => n.IsToken) as SyntaxToken;
+        }
     }
 }

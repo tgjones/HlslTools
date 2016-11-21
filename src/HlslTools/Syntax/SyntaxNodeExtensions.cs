@@ -44,15 +44,28 @@ namespace HlslTools.Syntax
             return node.GetAncestor<T>() != null;
         }
 
-        public static IEnumerable<SyntaxToken> DescendantTokens(this SyntaxNode node)
+        public static IEnumerable<SyntaxToken> DescendantTokens(this SyntaxNode node, bool descendIntoTrivia = false)
         {
             foreach (var childNode in node.ChildNodes)
             {
                 if (childNode.IsToken)
+                {
+                    var token = (SyntaxToken) childNode;
+                    if (descendIntoTrivia)
+                        foreach (var trivia in token.LeadingTrivia)
+                            foreach (var descendantToken in trivia.DescendantTokens(true))
+                                yield return descendantToken;
                     yield return (SyntaxToken) childNode;
+                    if (descendIntoTrivia)
+                        foreach (var trivia in token.TrailingTrivia)
+                            foreach (var descendantToken in trivia.DescendantTokens(true))
+                                yield return descendantToken;
+                }
                 else
-                    foreach (var descendantToken in childNode.DescendantTokens())
+                {
+                    foreach (var descendantToken in childNode.DescendantTokens(descendIntoTrivia))
                         yield return descendantToken;
+                }
             }
         }
 
@@ -66,6 +79,11 @@ namespace HlslTools.Syntax
                     foreach (var descendantToken in childNode.DescendantTokensReverse())
                         yield return descendantToken;
             }
+        }
+
+        public static SyntaxNode GetParent(this SyntaxNode node)
+        {
+            return node?.Parent;
         }
 
         public static TextSpan GetTextSpan(this SyntaxNode node)
@@ -132,11 +150,6 @@ namespace HlslTools.Syntax
                 lastToken.Span.End);
         }
 
-        public static SyntaxToken GetLastToken(this SyntaxNode node)
-        {
-            return node.ChildNodes.LastOrDefault(n => n.IsToken) as SyntaxToken;
-        }
-
         public static SyntaxToken GetLastTokenInDescendants(this SyntaxNode node, Func<SyntaxToken, bool> filter = null)
         {
             return node.DescendantTokensReverse().FirstOrDefault(filter ?? (t => true));
@@ -153,11 +166,6 @@ namespace HlslTools.Syntax
             if (lastTrailingLocatedNode != null)
                 return lastTrailingLocatedNode.Span;
             return node.Span;
-        }
-
-        public static SyntaxToken GetFirstToken(this SyntaxNode node)
-        {
-            return node.ChildNodes.FirstOrDefault(n => n.IsToken) as SyntaxToken;
         }
 
         public static SyntaxToken FindTokenOnLeft(this SyntaxNode root, SourceLocation position)
@@ -193,6 +201,16 @@ namespace HlslTools.Syntax
         public static SyntaxToken GetNextToken(this SyntaxToken token, bool includeZeroLength = false, bool includeSkippedTokens = false)
         {
             return SyntaxTreeNavigation.GetNextToken(token, includeZeroLength, includeSkippedTokens);
+        }
+
+        public static SyntaxToken GetFirstToken(this SyntaxNode token, bool includeZeroLength = false, bool includeSkippedTokens = false)
+        {
+            return SyntaxTreeNavigation.GetFirstToken(token, includeZeroLength, includeSkippedTokens);
+        }
+
+        public static SyntaxToken GetLastToken(this SyntaxNode token, bool includeZeroLength = false, bool includeSkippedTokens = false)
+        {
+            return SyntaxTreeNavigation.GetLastToken(token, includeZeroLength, includeSkippedTokens);
         }
 
         public static SyntaxToken FindTokenContext(this SyntaxNode root, SourceLocation position)
@@ -442,6 +460,33 @@ namespace HlslTools.Syntax
         public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)
         {
             return node != null && (node.Kind == kind1 || node.Kind == kind2);
+        }
+
+        public static bool IsBreakableConstruct(this SyntaxNode node)
+        {
+            switch (node.Kind)
+            {
+                case SyntaxKind.DoStatement:
+                case SyntaxKind.WhileStatement:
+                case SyntaxKind.SwitchStatement:
+                case SyntaxKind.ForStatement:
+                    return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsContinuableConstruct(this SyntaxNode node)
+        {
+            switch (node.Kind)
+            {
+                case SyntaxKind.DoStatement:
+                case SyntaxKind.WhileStatement:
+                case SyntaxKind.ForStatement:
+                    return true;
+            }
+
+            return false;
         }
     }
 }

@@ -433,7 +433,7 @@ namespace HlslTools.Parser
             _mode = saveMode;
 
             // Directive parser sometimes leaves charReader at start of token *after* the one we want.
-            _charReader.Reset(directive.GetLastToken().GetLastSpanIncludingTrivia().End);
+            _charReader.Reset(directive.GetLastChildToken().GetLastSpanIncludingTrivia().End);
             _start = _charReader.Position;
 
             return directive;

@@ -74,6 +74,7 @@
     <Compile Include="Support\ShaderTestUtility.cs" />
     <Compile Include="Support\TestFileSystem.cs" />
     <Compile Include="Symbols\IntrinsicTypesTests.cs" />
+    <Compile Include="Syntax\SyntaxTreeNavigationTests.cs" />
     <Compile Include="Text\TextSpanTests.cs" />
   </ItemGroup>
   <ItemGroup>
