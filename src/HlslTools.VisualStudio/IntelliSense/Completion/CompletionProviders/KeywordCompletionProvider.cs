@@ -48,26 +48,64 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
             var isSemanticContext = !isPreprocessorDirectiveContext && leftToken.HasAncestor<SemanticSyntax>();
 
-            if (isStatementContext)
-            {
-                yield return SyntaxKind.ReturnKeyword;
-            }
+            var isTypeDeclarationContext = syntaxTree.IsTypeDeclarationContext(targetToken);
 
-            if (isPreprocessorKeywordContext || isStatementContext)
-            {
-                yield return SyntaxKind.IfKeyword;
-            }
+            if (IsValidBreakKeywordContext(isStatementContext, leftToken))
+                yield return SyntaxKind.BreakKeyword;
+
+            if (targetToken.IsSwitchLabelContext())
+                yield return SyntaxKind.CaseKeyword;
+
+            if (IsValidContinueKeywordContext(isStatementContext, leftToken))
+                yield return SyntaxKind.ContinueKeyword;
 
             if (isPreprocessorDirectiveContext || IsValidElseKeywordContext(targetToken))
-            {
                 yield return SyntaxKind.ElseKeyword;
-            }
+
+            if (isPreprocessorKeywordContext || isStatementContext)
+                yield return SyntaxKind.IfKeyword;
 
             if (isSemanticContext)
-            {
                 yield return SyntaxKind.PackoffsetKeyword;
+
+            if (isStatementContext)
+                yield return SyntaxKind.ReturnKeyword;
+
+            if (isSemanticContext)
                 yield return SyntaxKind.RegisterKeyword;
-            }
+
+            if (isTypeDeclarationContext)
+                yield return SyntaxKind.StructKeyword;
+
+            if (isStatementContext)
+                yield return SyntaxKind.SwitchKeyword;
+
+            if (isStatementContext || IsValidWhileKeywordContext(targetToken))
+                yield return SyntaxKind.WhileKeyword;
+        }
+
+        private static bool IsValidBreakKeywordContext(bool isStatementContext, SyntaxToken token)
+        {
+            if (!isStatementContext)
+                return false;
+
+            foreach (var v in token.Ancestors())
+                if (v.IsBreakableConstruct())
+                    return true;
+
+            return false;
+        }
+
+        private static bool IsValidContinueKeywordContext(bool isStatementContext, SyntaxToken token)
+        {
+            if (!isStatementContext)
+                return false;
+
+            foreach (var v in token.Ancestors())
+                if (v.IsContinuableConstruct())
+                    return true;
+
+            return false;
         }
 
         private static bool IsValidElseKeywordContext(SyntaxToken token)
@@ -85,7 +123,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             //   if (foo)
             //     Console.WriteLine();
             //   e|
-            if (token.IsKind(SyntaxKind.SemiToken) && ifStatement.Statement.GetLastToken() == token)
+            if (token.IsKind(SyntaxKind.SemiToken) && ifStatement.Statement.GetLastToken(includeSkippedTokens: true) == token)
                 return true;
 
             // if (foo) {
@@ -96,6 +134,30 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             //   } e|
             if (token.IsKind(SyntaxKind.CloseBraceToken) && ifStatement.Statement is BlockSyntax && token == ((BlockSyntax) ifStatement.Statement).CloseBraceToken)
                 return true;
+
+            return false;
+        }
+
+        private static bool IsValidWhileKeywordContext(SyntaxToken token)
+        {
+            // do {
+            // } |
+
+            // do {
+            // } w|
+
+            // Note: the case of
+            //   do 
+            //     Foo();
+            //   |
+            // is taken care of in the IsStatementContext case.
+
+            if (token.Kind == SyntaxKind.CloseBraceToken &&
+                token.Parent.IsKind(SyntaxKind.Block) &&
+                token.Parent.IsParentKind(SyntaxKind.DoStatement))
+            {
+                return true;
+            }
 
             return false;
         }

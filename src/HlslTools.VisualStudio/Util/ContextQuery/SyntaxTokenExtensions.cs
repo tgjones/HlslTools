@@ -54,7 +54,7 @@ namespace HlslTools.VisualStudio.Util.ContextQuery
             {
                 var statement = token.GetAncestor<StatementSyntax>();
                 if (statement != null && !statement.IsParentKind(SyntaxKind.GlobalStatement) &&
-                    statement.GetLastToken() == token)
+                    statement.GetLastToken(includeSkippedTokens: true) == token)
                 {
                     return true;
                 }
@@ -118,6 +118,48 @@ namespace HlslTools.VisualStudio.Util.ContextQuery
             if (token.Kind == SyntaxKind.ElseKeyword)
             {
                 return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsSwitchLabelContext(this SyntaxToken targetToken)
+        {
+            // cases:
+            //   case X: |
+            //   default: |
+            //   switch (e) { |
+            //
+            //   case X: Statement(); |
+
+            if (targetToken.Kind == SyntaxKind.OpenBraceToken &&
+                targetToken.Parent.IsKind(SyntaxKind.SwitchStatement))
+            {
+                return true;
+            }
+
+            if (targetToken.Kind == SyntaxKind.ColonToken)
+            {
+                if (targetToken.Parent.IsKind(SyntaxKind.CaseSwitchLabel, SyntaxKind.DefaultSwitchLabel))
+                {
+                    return true;
+                }
+            }
+
+            if (targetToken.Kind == SyntaxKind.SemiToken ||
+                targetToken.Kind == SyntaxKind.CloseBraceToken)
+            {
+                var section = targetToken.GetAncestor<SwitchSectionSyntax>();
+                if (section != null)
+                {
+                    foreach (var statement in section.Statements)
+                    {
+                        if (targetToken == statement.GetLastToken(includeSkippedTokens: true))
+                        {
+                            return true;
+                        }
+                    }
+                }
             }
 
             return false;
