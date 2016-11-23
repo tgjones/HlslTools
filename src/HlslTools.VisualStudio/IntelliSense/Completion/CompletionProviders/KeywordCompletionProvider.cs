@@ -8,7 +8,7 @@ using HlslTools.VisualStudio.Util.ContextQuery;
 
 namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 {
-    [Export(typeof(ICompletionProvider))]
+    //[Export(typeof(ICompletionProvider))]
     internal sealed class KeywordCompletionProvider : ICompletionProvider
     {
         public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
