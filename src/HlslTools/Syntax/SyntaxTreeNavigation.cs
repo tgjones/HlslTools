@@ -72,7 +72,7 @@ namespace HlslTools.Syntax
 
         private static SyntaxToken GetPreviousToken(SyntaxNode node, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
         {
-            if (node.Parent != null)
+            if (node.Parent != null && !(node is StructuredTriviaSyntax))
             {
                 var returnNext = false;
 
@@ -105,10 +105,59 @@ namespace HlslTools.Syntax
             if (structuredTrivia == null)
                 return null;
 
-            var trivia = structuredTrivia.Parent;
+            var trivia = structuredTrivia.Parent as SyntaxToken;
             return trivia == null
                 ? null
-                : GetPreviousToken(trivia, tokenPredicate, triviaPredicate);
+                : GetPreviousTokenFromTrivia(trivia, tokenPredicate, triviaPredicate);
+        }
+
+        private static SyntaxToken GetPreviousTokenFromTrivia(SyntaxToken token, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        {
+            if (token == null)
+                return null;
+
+            var tt = GetPreviousToken(token.TrailingTrivia, token, tokenPredicate, triviaPredicate);
+            if (tt != null)
+                return tt;
+
+            var t = GetPreviousToken(token, false, tokenPredicate, triviaPredicate);
+            if (t != null)
+                return t;
+
+            var lt = GetPreviousToken(token.LeadingTrivia, token, tokenPredicate, triviaPredicate);
+            if (lt != null)
+                return lt;
+
+            return null;
+        }
+
+        private static SyntaxToken GetPreviousToken(IEnumerable<SyntaxNode> triviaList, SyntaxToken parentToken, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        {
+            var returnNext = false;
+
+            foreach (var otherTrivia in triviaList.Reverse())
+            {
+                if (returnNext)
+                {
+                    var structure = otherTrivia as StructuredTriviaSyntax;
+                    if (triviaPredicate(otherTrivia) && structure != null)
+                    {
+                        var token = GetLastToken(structure, tokenPredicate, triviaPredicate);
+                        if (token != null)
+                            return token;
+                    }
+                }
+                else if (otherTrivia == parentToken)
+                {
+                    returnNext = true;
+                }
+            }
+
+            var isTrailing = ReferenceEquals(triviaList, parentToken.TrailingTrivia);
+            if (returnNext && isTrailing && tokenPredicate(parentToken))
+                return parentToken;
+
+            return null;
         }
 
         public static SyntaxToken GetNextToken(SyntaxToken token, bool includeZeroLength, bool includeSkippedTokens)
