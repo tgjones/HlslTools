@@ -41,6 +41,8 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             var leftToken = syntaxTree.Root.FindTokenOnLeft(position);
 
             var targetToken = leftToken.GetPreviousTokenIfTouchingWord(position);
+            if (targetToken == null)
+                yield break;
 
             var isPreprocessorKeywordContext = isPreprocessorDirectiveContext && syntaxTree.IsPreprocessorKeywordContext(position, leftToken);
 
