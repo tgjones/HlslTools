@@ -48,31 +48,49 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
 
         public override void SelectBestMatch()
         {
-            var builderResult = MatchCompletionList(CompletionBuilders, CompletionMatchType.MatchDisplayText, false);
-            var itemResult = MatchCompletionList(Completions, CompletionMatchType.MatchDisplayText, false);
+            var text = ApplicableTo.GetText(ApplicableTo.TextBuffer.CurrentSnapshot);
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                SelectionStatus = new CompletionSelectionStatus(null, false, false);
+                return;
+            }
 
-            if (builderResult == null || itemResult == null)
+            Microsoft.VisualStudio.Language.Intellisense.Completion bestMatch = null;
+            var bestValue = 0;
+            var isUnique = true;
+            foreach (var completion in Completions)
             {
-                // If no matches with case-insensitive search, fallback to case-insensitive.
-                base.SelectBestMatch(CompletionMatchType.MatchDisplayText, true);
-                if (!SelectionStatus.IsSelected)
-                    base.SelectBestMatch(CompletionMatchType.MatchDisplayText, false);
+                int value = CompareCompletionText(completion.DisplayText, text);
+                if (bestMatch == null || value > bestValue)
+                {
+                    bestMatch = completion;
+                    bestValue = value;
+                    isUnique = true;
+                }
+                else if (value == bestValue)
+                {
+                    isUnique = false;
+                }
             }
-            else
-            {
-                var builderWeight = GetMatchWeight(builderResult);
-                var itemWeight = GetMatchWeight(itemResult);
-                SelectionStatus = builderWeight >= itemWeight
-                    ? builderResult.SelectionStatus
-                    : itemResult.SelectionStatus;
-            }
+
+            SelectionStatus = new CompletionSelectionStatus(bestMatch, bestValue > 0, isUnique);
         }
 
-        private static int GetMatchWeight(CompletionMatchResult builderResult)
+        private static int CompareCompletionText(string text, string pattern)
         {
-            return (builderResult.CharsMatchedCount) +
-                   (builderResult.SelectionStatus.IsSelected ? 1 : 0) +
-                   (builderResult.SelectionStatus.IsUnique ? 1 : 0);
+            var position = text.IndexOf(pattern, StringComparison.InvariantCulture);
+            if (position >= 0)
+                return pattern.Length*2 + (position == 0 ? 1 : 0);
+            position = text.IndexOf(pattern, StringComparison.CurrentCulture);
+            if (position >= 0)
+                return pattern.Length*2 + (position == 0 ? 1 : 0);
+            position = text.IndexOf(pattern, StringComparison.InvariantCultureIgnoreCase);
+            if (position >= 0)
+                return pattern.Length + (position == 0 ? 1 : 0);
+            position = text.IndexOf(pattern, StringComparison.CurrentCultureIgnoreCase);
+            if (position >= 0)
+                return pattern.Length + (position == 0 ? 1 : 0);
+            return 0;
         }
 
         public override void Recalculate()

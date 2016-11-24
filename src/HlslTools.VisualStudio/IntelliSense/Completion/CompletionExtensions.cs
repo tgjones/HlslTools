@@ -53,7 +53,7 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion
 
             public int Compare(CompletionItem x, CompletionItem y)
             {
-                return string.Compare(x.DisplayText, y.DisplayText, StringComparison.Ordinal);
+                return string.Compare(x.DisplayText, y.DisplayText, StringComparison.OrdinalIgnoreCase);
             }
         }
     }
