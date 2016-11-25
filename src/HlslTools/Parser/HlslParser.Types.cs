@@ -240,7 +240,9 @@ namespace HlslTools.Parser
         {
             if (SyntaxFacts.IsPredefinedScalarType(Current.Kind))
                 return ParseScalarType(NextToken());
-            return ParseVectorType(NextToken());
+            if (SyntaxFacts.IsPredefinedVectorType(Current.Kind))
+                return ParseVectorType(NextToken());
+            return ParseScalarType(InsertMissingToken(SyntaxKind.FloatKeyword));
         }
 
         private TypeSyntax ParseScalarOrVectorOrUserDefinedType()
