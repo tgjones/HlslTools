@@ -168,7 +168,7 @@ namespace HlslTools.Parser
         private PredefinedObjectTypeSyntax ParseStructuredBufferType(SyntaxToken token)
         {
             var lessThan = Match(SyntaxKind.LessThanToken);
-            var type = ParseScalarOrVectorOrUserDefinedType();
+            var type = ParseScalarOrVectorOrMatrixOrUserDefinedType();
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
             var typeArgumentList = new TemplateArgumentListSyntax(lessThan,
                 new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { type }),
@@ -251,6 +251,17 @@ namespace HlslTools.Parser
                 return ParseScalarType(NextToken());
             if (SyntaxFacts.IsPredefinedVectorType(Current.Kind))
                 return ParseVectorType(NextToken());
+            return ParseIdentifier();
+        }
+
+        private TypeSyntax ParseScalarOrVectorOrMatrixOrUserDefinedType()
+        {
+            if (SyntaxFacts.IsPredefinedScalarType(Current.Kind))
+                return ParseScalarType(NextToken());
+            if (SyntaxFacts.IsPredefinedVectorType(Current.Kind))
+                return ParseVectorType(NextToken());
+            if (SyntaxFacts.IsPredefinedMatrixType(Current.Kind))
+                return ParseMatrixType(NextToken());
             return ParseIdentifier();
         }
 
