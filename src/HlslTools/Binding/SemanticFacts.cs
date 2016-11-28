@@ -79,6 +79,9 @@ namespace HlslTools.Binding
                 case ScalarType.Bool:
                 case ScalarType.Int:
                 case ScalarType.Uint:
+                case ScalarType.Min16Int:
+                case ScalarType.Min12Int:
+                case ScalarType.Min16Uint:
                     return true;
                 default:
                     return false;
@@ -92,6 +95,8 @@ namespace HlslTools.Binding
                 case ScalarType.Half:
                 case ScalarType.Float:
                 case ScalarType.Double:
+                case ScalarType.Min16Float:
+                case ScalarType.Min10Float:
                     return true;
                 default:
                     return false;
