@@ -94,10 +94,9 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
 
         private static IEnumerable<CompletionItem> CreateSymbolCompletions(IEnumerable<Symbol> symbols)
         {
-            return from s in symbols
-                group s by s.Name
-                into g
-                select CreateSymbolCompletionGroup(g.Key, g.ToImmutableArray());
+            return symbols
+                .GroupBy(s => s.Name)
+                .Select(g => CreateSymbolCompletionGroup(g.Key, g.ToImmutableArray()));
         }
 
         private static CompletionItem CreateSymbolCompletionGroup(string name, ImmutableArray<Symbol> symbols)
@@ -109,6 +108,10 @@ namespace HlslTools.VisualStudio.IntelliSense.Completion.CompletionProviders
             var hasNonInvocables = symbols.Any(s => !(s is InvocableSymbol));
             if (!hasNonInvocables)
                 return CreateInvocableCompletionGroup(symbols);
+
+            if (symbols.All(s => (s is TypeSymbol && ((TypeSymbol) s).IsIntrinsicNumericType())
+                || (s is FunctionSymbol && ((FunctionSymbol) s).IsNumericConstructor)))
+                return CreateSymbolCompletion(symbols.First(s => s is TypeSymbol));
 
             var displayText = name;
             var insertionText = name;

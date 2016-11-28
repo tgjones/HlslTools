@@ -153,7 +153,7 @@ namespace HlslTools.Symbols
             return false;
         }
 
-        internal static bool IsIntrinsicNumericType(this TypeSymbol type)
+        public static bool IsIntrinsicNumericType(this TypeSymbol type)
         {
             return type.Kind == SymbolKind.IntrinsicMatrixType
                 || type.Kind == SymbolKind.IntrinsicScalarType
