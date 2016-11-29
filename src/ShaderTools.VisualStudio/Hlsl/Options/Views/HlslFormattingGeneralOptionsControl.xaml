@@ -1,0 +1,24 @@
+﻿<views:OptionsControlBase x:Class="ShaderTools.VisualStudio.Hlsl.Options.Views.HlslFormattingGeneralOptionsControl"
+                            x:ClassModifier="internal"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:views="clr-namespace:ShaderTools.VisualStudio.Hlsl.Options.Views"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <views:OptionsControlBase.Resources>
+        <ResourceDictionary Source="Styles.xaml" />
+    </views:OptionsControlBase.Resources>
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel>
+            <GroupBox Header="General">
+                <StackPanel>
+                    <CheckBox x:Name="FormatOnSemicolonCheckBox" Content="Automatically format _statement on ;"/>
+                    <CheckBox x:Name="FormatOnCloseBraceCheckBox" Content="Automatically format _block on }" />
+                    <CheckBox x:Name="FormatOnPasteCheckBox" Content="Automatically format on _paste" />
+                </StackPanel>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
+</views:OptionsControlBase>

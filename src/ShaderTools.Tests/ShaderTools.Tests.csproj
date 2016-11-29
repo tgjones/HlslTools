@@ -1,0 +1,1502 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{FB35BDC4-AB42-416A-B4EE-9BD62E3E1777}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShaderTools.Tests</RootNamespace>
+    <AssemblyName>ShaderTools.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Core" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Hlsl\Binding\BinaryExpressionTests.cs" />
+    <Compile Include="Hlsl\Binding\ExpressionTestUtility.cs" />
+    <Compile Include="Hlsl\Binding\FunctionDeclarationTests.cs" />
+    <Compile Include="Hlsl\Binding\FunctionInvocationExpressionTests.cs" />
+    <Compile Include="Hlsl\Binding\GlobalDeclarationTests.cs" />
+    <Compile Include="Hlsl\Binding\UnaryExpressionTests.cs" />
+    <Compile Include="Hlsl\Compilation\SemanticModelTests.cs" />
+    <Compile Include="Hlsl\Formatting\FormatterTests.cs" />
+    <Compile Include="Hlsl\Formatting\IdempotentTests.cs" />
+    <Compile Include="Hlsl\Formatting\SyntaxNodeExtensionsTests.cs" />
+    <Compile Include="Hlsl\Parser\DeclarationParsingTests.cs" />
+    <Compile Include="Hlsl\Parser\ExpressionParsingTests.cs" />
+    <Compile Include="Hlsl\Parser\PreprocessorTests.cs" />
+    <Compile Include="Hlsl\Parser\HlslLexerTests.cs" />
+    <Compile Include="Hlsl\Parser\StatementParsingTests.cs" />
+    <Compile Include="Hlsl\Parser\ErrorRecoveryTests.cs" />
+    <Compile Include="Hlsl\Parser\RoundtrippingTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Hlsl\Support\InMemoryFileSystem.cs" />
+    <Compile Include="Hlsl\Support\ShaderTestUtility.cs" />
+    <Compile Include="Hlsl\Support\TestFileSystem.cs" />
+    <Compile Include="Hlsl\Symbols\IntrinsicTypesTests.cs" />
+    <Compile Include="Hlsl\Syntax\SyntaxTreeNavigationTests.cs" />
+    <Compile Include="Hlsl\Text\TextSpanTests.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Hlsl\Shaders\FxDis\readme.txt" />
+    <Content Include="Hlsl\Shaders\FxDis\test.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ds5\basic.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\hs5\basic.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps4\fxaa.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps4\primID.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps5\conservative_depth.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps5\interfaces.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps5\interface_arrays.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps5\sample.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\readme.txt" />
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs4\mov.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs4\multiple_const_buffers.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs4\switch.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs5\any.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs5\const_temp.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs5\mad_imm.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs5\mov.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs5\sincos.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Internal\D3D12Features.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Internal\Textures.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\AnisotropicHilight.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\balloon.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\blinn.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\blinn_bump_reflect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\BrdfFromTextures.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\brix.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\BumpReflect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\BumpyGlossy.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\BumpyGlossyMetal.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\cage.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\carpaint_texColor.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\checker3d.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\checker3d_math.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\clock.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\ddGodRays.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\DebugSpaces.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\DebugTexCoords.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\DepthColor.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\DrawSharedShadow.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\durer.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\EdgeFuzz.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\EnvironmentPassThru.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\FlatTexture.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\glossyWetHilight.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\gooch.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\goochy.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\gooch_bump_reflect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\gooch_slicer.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\Graph1DTexture.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\Grisaille.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\Quad.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\lambert.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\lambSkin.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\metal.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\metalD.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\metalP.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\MrWiggle.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\NebulaLight.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\Nightfall.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\NVIDIA Shader Library License.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\Ocean.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\paint_brush.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\phong.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\phong_bump_reflect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\plastic.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\plasticD.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\plasticP.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_badPrinting.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_bleach_bypass.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_blendOverlay.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_bloom.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_cameraShake.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_clipping.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_curve.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_desaturate.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_gradient.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_keying.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_matrix_effects.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_mixer.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_mixer_monochrome.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_color_spin.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_complements.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_corona.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_deepMask.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_distort.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_dropShadow.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_edgeDetect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_edgeDetect_3color.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_edgeDetect_tuned.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_frost.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_frost_fast.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_glow.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_glowBalloon.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_glowtrail.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_glow_fixedSize.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_glow_inset.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_glow_screenSize.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_godrays.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_halftone_dots.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_halftone_grainy.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_halo.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_kuwahara.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_negative.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_negOffset.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_objsAsDisplacements.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_posterize.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_pulsing.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_radialBlur.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_from_CMY.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_from_CMYK.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_from_HSV.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_from_YUV.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_to_CMY.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_to_CMYK.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_to_HSV.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_RGB_to_YUV.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_scratched_film.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_sepia.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_shadow_overlay.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_spotlight.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_starFilter.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_tiles.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_titleOverlay.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_toonShadow.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\post_unsharpMask.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\pre_color.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\pre_cubeBg.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\pre_gradient.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\pre_gradient_hsv.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\pre_texture.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\pulse23.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\readme.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\reflections.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\relief_mapping.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\ribbonDistort.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_deferred.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_deferred_no_mrt.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_displaceMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_lineDraw.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_Mandelbrot.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_objectsAsDisplacements.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_seeTextureBias.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_tonemap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_toonEdges.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_uvds_skin.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\scene_uv_diffusion.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\shadowSpot.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\shadow_PCSS.fx" />
+    <Content Include="Hlsl\Shaders\Nvidia\subcutaneous.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\TexturePositioning.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\ThinFilm.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\Toksvig_NormalMaps.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\uvDetective.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\vbomb.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\velvety.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\wood.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\10BitScanout10\10BitScanout10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\AdvancedParticles\AdvancedParticles.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\AdvancedParticles\Meshes.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\AdvancedParticles\Paint.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\AdvancedParticles\RenderToVolume.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\BasicHLSL10\BasicHLSL.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\BasicHLSL10\BasicHLSL10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\ContentStreaming\ContentStreaming.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\CubeMapGS\CubeMapGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\DDSWithoutD3DX\DDSWithoutD3DX.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\DeferredParticles\DeferredParticles.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\DepthOfField10.1\DepthOfField10.1.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\DrawPredicated\DrawPredicated.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\EffectPools\EffectPools1.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\EffectPools\EffectPools2.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\EffectPools\EffectPools3.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\FixedFuncEMU\FixedFuncEMU.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\GPUBoids\GPUBoids.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\GPUSpectrogram\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HDAO10.1\HDAO10.1.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HDAO10.1\Sprite.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HDRFormats10\HDRFormats.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HDRFormats10\HDRFormats10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HDRFormats10\skybox.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HDRFormats10\skybox10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HLSLWithoutFX10\HLSLwithoutFX.psh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HLSLWithoutFX10\HLSLwithoutFX.vsh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\HLSLWithoutFX10\HLSLwithoutFX10.vsh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Instancing10\Instancing.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\MeshFromOBJ10\MeshFromOBJ10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Motionblur10\MotionBlur10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\MultiMon10\MultiMon10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\MultiStreamRendering\MultiStreamRendering.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\NBodyGravity\NBodyGravity.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\ParticlesGS\particlesgs.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Pick10\Pick10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\PipesGS\PipesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\ProceduralMaterials\Noise.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="Hlsl\Shaders\Sdk\Direct3D10\ProceduralMaterials\ProceduralHelpers.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\ProceduralMaterials\ProceduralMaterials.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\RaycastTerrain\RaycastTerrain.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\ShadowVolume10\ShadowVolume.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\ShadowVolume10\ShadowVolume10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SimpleSample10\SimpleSample.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SimpleSample10\SimpleSample10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Skinning10\Skinning10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SoftParticles\SoftParticles.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SparseMorphTargets\LightProbe.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SparseMorphTargets\SparseMorphTargets.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SubD10\SubD10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SubD10\SubDtoBezier.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\TransparencyAA10.1\Sprite.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\TransparencyAA10.1\TransparencyAA10.1.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise01\Exercise01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise01\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise01\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise01_Solved\Exercise01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise01_Solved\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise01_Solved\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise02\Exercise02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise02\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise02\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise02_Solved\Exercise02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise02_Solved\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise02_Solved\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise03\Exercise03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise03\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise03\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise03_Solved\Exercise03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise03_Solved\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise03_Solved\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise04\Exercise04.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise04\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise04\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise05\Exercise05.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise05\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise05\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise05_Solved\Exercise05.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise05_Solved\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise05_Solved\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise06\Exercise06.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise06\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise06\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise06_Solved\Exercise06.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise06_Solved\GPUSpectrogram.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10WorkshopGDC2007\Exercise06_Solved\ParticlesGS.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise00\Exercise00.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise00_Solved\Exercise00.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise01\Exercise01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise01_Solved\Exercise01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise02\Exercise02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise02_Solved\Exercise02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise03\Exercise03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise03_Solved\Exercise03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise04\Exercise04.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise04_Solved\Exercise04.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise05\Exercise05.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise05_Solved\Exercise05.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise06\Exercise06.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Direct3D10Workshop\Exercise06_Solved\Exercise06.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\PIXWorkshopGDC2007\Exercise01\Exercise01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\PIXWorkshopGDC2007\Exercise01_Solved\Exercise01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\PIXWorkshopGDC2007\Exercise02\Exercise02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\PIXWorkshopGDC2007\Exercise02_Solved\Exercise02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\PIXWorkshopGDC2007\Exercise03\Exercise03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\PIXWorkshopGDC2007\Exercise03_Solved\Exercise03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial02\Tutorial02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial03\Tutorial03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial04\Tutorial04.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial05\Tutorial05.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial06\Tutorial06.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial07\Tutorial07.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial08\Tutorial08.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial09\Tutorial09.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial10\Tutorial10.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial11\Tutorial11.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial12\Tutorial12.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial13\Tutorial13.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\Tutorials\Tutorial14\Tutorial14.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_common.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_defines.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_EdgeFactorCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_NumVerticesIndicesCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_ScatterIDCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_TessellateIndicesCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\AdaptiveTessellationCS40\TessellatorCS40_TessellateVerticesCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BasicCompute11\BasicCompute11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BasicHLSL11\BasicHLSL.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BasicHLSL11\BasicHLSL11_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BasicHLSL11\BasicHLSL11_VS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BC6HBC7EncoderDecoder11\BC6HDecode.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BC6HBC7EncoderDecoder11\BC6HEncode.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BC6HBC7EncoderDecoder11\BC7Decode.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\BC6HBC7EncoderDecoder11\BC7Encode.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\CascadedShadowMaps11\RenderCascadeScene.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\CascadedShadowMaps11\RenderCascadeShadow.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\ComputeShaderSort11\ComputeShaderSort11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\ContactHardeningShadows11\ContactHardeningShadows11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DDSWithoutD3DX11\DDSWithoutD3DX.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DecalTessellation11\AdaptiveTessellation.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DecalTessellation11\DecalTessellation11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DetailTessellation11\AdaptiveTessellation.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DetailTessellation11\DetailTessellation11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DetailTessellation11\Particle.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DetailTessellation11\POM.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DetailTessellation11\shader_include.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkage11\DynamicShaderLinkage11_LightPSH.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkage11\DynamicShaderLinkage11_MaterialPSH.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkage11\DynamicShaderLinkage11_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkage11\DynamicShaderLinkage11_PSBuffers.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkage11\DynamicShaderLinkage11_VS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_LightPSH.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_MaterialPSH.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_PSBuffers.h">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\DynamicShaderLinkageFX11\DynamicShaderLinkageFX11_VS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\FluidCS11\FluidCS11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\FluidCS11\FluidRender.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\BrightPassAndHorizFilterCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\DumpToTexture.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\FilterCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\FinalPass.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\PSApproach.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\ReduceTo1DCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\ReduceToSingleCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\HDRToneMappingCS11\skybox11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\MultithreadedRendering11\MultithreadedRendering11_VS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\NBodyGravityCS11\NBodyGravityCS11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\NBodyGravityCS11\ParticleDraw.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\OIT11\OIT_CS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\OIT11\OIT_PS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\OIT11\SceneVS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\PNTriangles11\AdaptiveTessellation.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\PNTriangles11\PNTriangles11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\SimpleBezier11\SimpleBezier11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\SimpleSample11\SimpleSample.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\SimpleSample11\SimpleSample.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\SubD11\SubD11.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\Tutorials\Tutorial02\Tutorial02.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\Tutorials\Tutorial03\Tutorial03.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\Tutorials\Tutorial04\Tutorial04.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\Tutorials\Tutorial05\Tutorial05.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\Tutorials\Tutorial06\Tutorial06.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\Tutorials\Tutorial07\Tutorial07.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\VarianceShadows11\2DQuadShaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\VarianceShadows11\RenderVarianceScene.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\VarianceShadows11\RenderVarianceShadow.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\WindowsTouch\quad.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D11\WindowsTouch\Soldier.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D1211On12\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12Bundles\shader_mesh_alt_pixel.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12Bundles\shader_mesh_simple_pixel.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12Bundles\shader_mesh_simple_vert.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12DynamicIndexing\shader_mesh_dynamic_indexing_pixel.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12DynamicIndexing\shader_mesh_simple_vert.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12ExecuteIndirect\compute.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12ExecuteIndirect\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12HelloWorld\HelloBundles\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12HelloWorld\HelloConstBuffers\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12HelloWorld\HelloTriangle\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12Multithreading\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12nBodyGravity\nBodyGravityCS.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12nBodyGravity\ParticleDraw.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\BlitPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\BlurPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\DistortPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\EdgeDetectPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\GrayScalePixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\InvertPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\PixelatePixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\QuadVertexShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\SimplePixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\SimpleVertexShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\UberPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\WarpPixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PipelineStateCache\WavePixelShader.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D12\D3D12PredicationQueries\shaders.hlsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\AntiAlias\AntiAlias.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\BasicHLSL\BasicHLSL.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\CompiledEffect\CompiledEffect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\ConfigSystem\main.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\CustomUI\CustomUI.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\DepthOfField\DepthOfField.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\EffectParam\EffectParam.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\EffectParam\reflect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\EffectParam\specular.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRCubeMap\HDRCubeMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRFormats\HDRFormats.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRFormats\skybox.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRLighting\HDRLighting.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRPipeline\Shader Code\FinalPass.psh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRPipeline\Shader Code\HDRSource.psh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRPipeline\Shader Code\HDRSource.vsh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRPipeline\Shader Code\Luminance.psh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRPipeline\Shader Code\OcclusionMesh.vsh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HDRPipeline\Shader Code\PostProcessing.psh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\HLSLwithoutEffects\HLSLwithoutEffects.vsh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\Instancing\Instancing.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\LDPRT.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\NdotL.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\PRT.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\Scene.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\SHFuncView.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\SHIrradianceEnvMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\IrradianceVolume\Wireframe.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\LocalDeformablePRT\LocalDeformablePRT.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\LocalDeformablePRT\skybox.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\MeshFromOBJ\MeshFromObj.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\MultiAnimation\MultiAnimation.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\MultiAnimation\skin.vsh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\OptimizedMesh\OptimizedMesh.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\ParallaxOcclusionMapping\ParallaxOcclusionMapping.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\Pick\Pick.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PixelMotionBlur\PixelMotionBlur.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PixelMotionBlur\PixelMotionBlurNoMRT.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorBloomH.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorBloomV.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorBrightPass.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\pp_colorcombine.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorCombine4.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorDownFilter4.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorEdgeDetect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorGBlurH.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorGBlurV.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorInverse.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorMonochrome.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorToneMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_ColorUpFilter4.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_DofCombine.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_NormalEdgeDetect.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_NormalMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\PP_PositionMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PostProcess\Scene.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PRTDemo\LDPRT.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PRTDemo\LightProbe.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PRTDemo\NdotL.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PRTDemo\prt.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PRTDemo\SHFuncView.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\PRTDemo\SHIrradianceEnvMap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\ShadowMap\shadowmap.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\ShadowVolume\ShadowVolume.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\SimpleSample\SimpleSample.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\SkinnedMesh\skinnedmesh.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\StateManager\AlphaTest.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\StateManager\reflective01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\StateManager\skybox01.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\StateManager\snow.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\StateManager\textbump.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D\Tutorials\PIXGameDebugging\PIXGameDebugging.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\DirectX SDK EULA.txt" />
+    <Content Include="Hlsl\Shaders\Sdk\readme.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Hlsl\Shaders\HlslCrossCompiler\ds5\basic.knowngood" />
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\ps5\sample.frag">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\HlslCrossCompiler\vs4\mov.vert">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\AdvancedParticles\Common.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\EffectPools\EffectPools.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SubD10\CreateTangentPatch.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Sdk\Direct3D10\SubD10\GenPatch.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\blur59.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\color_spaces.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\debug_tools.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\noise_2D.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\noise_3d.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\nvInverse.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\nvMatrix.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\shadowMap.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\spot_tex.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\stripe_tex.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\ThinFilmTex.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\vertex_noise.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Hlsl\Shaders\Nvidia\include\vnoise-table.fxh">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
+      <Project>{2361a2c2-d048-4694-9000-25b4ea846cba}</Project>
+      <Name>ShaderTools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
