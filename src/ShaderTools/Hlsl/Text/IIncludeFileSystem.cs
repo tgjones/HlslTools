@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.Hlsl.Text
+﻿using ShaderTools.Core.Text;
+
+namespace ShaderTools.Hlsl.Text
 {
     public interface IIncludeFileSystem
     {

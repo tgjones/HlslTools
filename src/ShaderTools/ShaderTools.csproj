@@ -344,10 +344,10 @@
     <Compile Include="Hlsl\Syntax\WhileStatementSyntax.cs" />
     <Compile Include="Hlsl\Text\DummyFileSystem.cs" />
     <Compile Include="Hlsl\Text\IIncludeFileSystem.cs" />
-    <Compile Include="Hlsl\Text\SourceText.cs" />
-    <Compile Include="Hlsl\Text\StringText.cs" />
-    <Compile Include="Hlsl\Text\StringTextLineCollection.cs" />
-    <Compile Include="Hlsl\Text\TextSpan.cs" />
+    <Compile Include="Core\Text\SourceText.cs" />
+    <Compile Include="Core\Text\StringText.cs" />
+    <Compile Include="Core\Text\StringTextLineCollection.cs" />
+    <Compile Include="Core\Text\TextSpan.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hlsl\Symbols\IntrinsicFunctions.cs" />
     <Compile Include="Hlsl\Symbols\IntrinsicTypes.cs" />

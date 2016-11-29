@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ShaderTools.Hlsl.Text
+namespace ShaderTools.Core.Text
 {
     internal sealed class StringText : SourceText
     {

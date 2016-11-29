@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Tests.Hlsl.Text

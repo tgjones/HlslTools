@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Parser;
 using ShaderTools.Hlsl.Text;
 

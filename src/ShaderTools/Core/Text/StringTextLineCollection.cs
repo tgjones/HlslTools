@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-namespace ShaderTools.Hlsl.Text
+namespace ShaderTools.Core.Text
 {
     internal sealed class StringTextLineCollection : IReadOnlyList<TextLine>
     {

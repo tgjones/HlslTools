@@ -1,4 +1,5 @@
 ﻿using System;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;

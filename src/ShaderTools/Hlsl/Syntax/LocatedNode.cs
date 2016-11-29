@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Text;
 

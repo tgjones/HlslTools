@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
 using ShaderTools.VisualStudio.Hlsl.Editing.SmartIndenting;

@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.Text;
-using TextSpan = ShaderTools.Hlsl.Text.TextSpan;
+using TextSpan = ShaderTools.Core.Text.TextSpan;
 
 namespace ShaderTools.VisualStudio.Hlsl.Formatting
 {

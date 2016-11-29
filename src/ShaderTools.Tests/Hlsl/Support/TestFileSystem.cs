@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Tests.Hlsl.Support

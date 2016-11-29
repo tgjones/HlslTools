@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Text;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Syntax

@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Diagnostics

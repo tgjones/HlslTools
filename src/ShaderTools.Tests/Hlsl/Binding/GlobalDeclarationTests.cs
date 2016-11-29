@@ -1,6 +1,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using NUnit.Framework;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;

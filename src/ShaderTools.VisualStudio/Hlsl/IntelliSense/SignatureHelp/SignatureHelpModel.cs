@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.SignatureHelp

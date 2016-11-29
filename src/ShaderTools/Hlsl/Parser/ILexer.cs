@@ -1,5 +1,5 @@
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Parser
 {

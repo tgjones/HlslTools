@@ -4,6 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Text;
 using ShaderTools.VisualStudio.Hlsl.Glyphs;
 

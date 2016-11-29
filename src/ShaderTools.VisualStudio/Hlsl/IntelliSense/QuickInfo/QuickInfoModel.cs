@@ -1,4 +1,5 @@
-﻿using ShaderTools.Hlsl.Compilation;
+﻿using ShaderTools.Core.Text;
+using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Symbols.Markup;
 using ShaderTools.Hlsl.Syntax;

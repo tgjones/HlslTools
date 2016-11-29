@@ -1,4 +1,5 @@
 using System;
+using ShaderTools.Core.Text;
 
 namespace ShaderTools.Hlsl.Text
 {

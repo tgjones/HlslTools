@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Parser;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Syntax
 {

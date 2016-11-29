@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Linq;
 using NUnit.Framework;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Symbols.Markup;

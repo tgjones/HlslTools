@@ -11,7 +11,7 @@ using ShaderTools.Hlsl.Compilation;
 using ShaderTools.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders;
 using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
-using TextSpan = ShaderTools.Hlsl.Text.TextSpan;
+using TextSpan = ShaderTools.Core.Text.TextSpan;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation
 {

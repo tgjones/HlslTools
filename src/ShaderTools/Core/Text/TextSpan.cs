@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShaderTools.Hlsl.Text
+namespace ShaderTools.Core.Text
 {
     public struct TextSpan : IEquatable<TextSpan>
     {

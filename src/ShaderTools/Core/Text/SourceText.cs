@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.Hlsl.Text
+﻿namespace ShaderTools.Core.Text
 {
     public abstract class SourceText
     {
