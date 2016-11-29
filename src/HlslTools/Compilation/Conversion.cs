@@ -86,6 +86,8 @@ namespace HlslTools.Compilation
                     switch (parameterScalarType)
                     {
                         case ScalarType.Half:
+                        case ScalarType.Min10Float:
+                        case ScalarType.Min16Float:
                             return ConversionTypes.FloatTruncation;
                         case ScalarType.Double:
                             return ConversionTypes.FloatPromotion;
@@ -96,7 +98,10 @@ namespace HlslTools.Compilation
                     {
                         case ScalarType.Float:
                         case ScalarType.Double:
+                        case ScalarType.Min16Float:
                             return ConversionTypes.FloatPromotion;
+                        case ScalarType.Min10Float:
+                            return ConversionTypes.FloatTruncation;
                     }
                     break;
                 case ScalarType.Double:
@@ -104,20 +109,56 @@ namespace HlslTools.Compilation
                     {
                         case ScalarType.Half:
                         case ScalarType.Float:
+                        case ScalarType.Min16Float:
+                        case ScalarType.Min10Float:
                             return ConversionTypes.FloatTruncation;
                     }
                     break;
+                case ScalarType.Min16Float:
+                    switch (parameterScalarType)
+                    {
+                        case ScalarType.Float:
+                        case ScalarType.Double:
+                            return ConversionTypes.FloatPromotion;
+                        case ScalarType.Half:
+                        case ScalarType.Min10Float:
+                            return ConversionTypes.FloatTruncation;
+                    }
+                    break;
+                case ScalarType.Min10Float:
+                    switch (parameterScalarType)
+                    {
+                        case ScalarType.Half:
+                        case ScalarType.Float:
+                        case ScalarType.Double:
+                        case ScalarType.Min16Float:
+                            return ConversionTypes.FloatPromotion;
+                    }
+                    break;
+
                 case ScalarType.Bool:
                     if (parameterScalarType != ScalarType.Bool)
                         return ConversionTypes.IntToFloatConversion;
                     break;
                 case ScalarType.Int:
-                    if (parameterScalarType == ScalarType.Uint)
-                        return ConversionTypes.SignedToUnsigned;
+                case ScalarType.Min16Int:
+                case ScalarType.Min12Int:
+                    switch (parameterScalarType)
+                    {
+                        case ScalarType.Uint:
+                        case ScalarType.Min16Uint:
+                            return ConversionTypes.SignedToUnsigned;
+                    }
                     break;
                 case ScalarType.Uint:
-                    if (parameterScalarType == ScalarType.Int)
-                        return ConversionTypes.UnsignedToSigned;
+                case ScalarType.Min16Uint:
+                    switch (parameterScalarType)
+                    {
+                        case ScalarType.Int:
+                        case ScalarType.Min16Int:
+                        case ScalarType.Min12Int:
+                            return ConversionTypes.UnsignedToSigned;
+                    }
                     break;
             }
 
