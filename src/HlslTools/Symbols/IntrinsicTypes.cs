@@ -338,11 +338,11 @@ namespace HlslTools.Symbols
             Half = new IntrinsicScalarTypeSymbol("half", "Represents a 16-bit floating point value.", ScalarType.Half);
             Float = new IntrinsicScalarTypeSymbol("float", "Represents a 32-bit floating point value.", ScalarType.Float);
             Double = new IntrinsicScalarTypeSymbol("double", "Represents a 64-bit floating point value.", ScalarType.Double);
-            Min16Float = new IntrinsicScalarTypeSymbol("min16float", "Represents minimum a 16-bit floating point value.", ScalarType.Min16Float);
-            Min10Float = new IntrinsicScalarTypeSymbol("min10float", "Represents minimum a 10-bit floating point value.", ScalarType.Min10Float);
-            Min16Int = new IntrinsicScalarTypeSymbol("min16int", "Represents minimum a 16-bit signed integer value.", ScalarType.Min16Int);
-            Min12Int = new IntrinsicScalarTypeSymbol("min12int", "Represents minimum a 12-bit signed integer value.", ScalarType.Min12Int);
-            Min16Uint = new IntrinsicScalarTypeSymbol("min16uint", "Represents minimum a 16-bit unsigned integer value.", ScalarType.Min16Uint);
+            Min16Float = new IntrinsicScalarTypeSymbol("min16float", "Represents a minimum 16-bit floating point value.", ScalarType.Min16Float);
+            Min10Float = new IntrinsicScalarTypeSymbol("min10float", "Represents a minimum 10-bit floating point value.", ScalarType.Min10Float);
+            Min16Int = new IntrinsicScalarTypeSymbol("min16int", "Represents a minimum 16-bit signed integer value.", ScalarType.Min16Int);
+            Min12Int = new IntrinsicScalarTypeSymbol("min12int", "Represents a minimum 12-bit signed integer value.", ScalarType.Min12Int);
+            Min16Uint = new IntrinsicScalarTypeSymbol("min16uint", "Represents a minimum 16-bit unsigned integer value.", ScalarType.Min16Uint);
 
             // Vector types.
             Bool1 = new IntrinsicVectorTypeSymbol("bool1", "Represents a vector containing 1 boolean component.", ScalarType.Bool, 1);

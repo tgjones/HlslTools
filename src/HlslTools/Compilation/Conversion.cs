@@ -98,11 +98,10 @@ namespace HlslTools.Compilation
                     {
                         case ScalarType.Float:
                         case ScalarType.Double:
+                        case ScalarType.Min16Float:
                             return ConversionTypes.FloatPromotion;
                         case ScalarType.Min10Float:
                             return ConversionTypes.FloatTruncation;
-                        case ScalarType.Min16Float:
-                            return ConversionTypes.None;
                     }
                     break;
                 case ScalarType.Double:
@@ -118,11 +117,10 @@ namespace HlslTools.Compilation
                 case ScalarType.Min16Float:
                     switch (parameterScalarType)
                     {
-                        case ScalarType.Half:
-                            return ConversionTypes.None;
                         case ScalarType.Float:
                         case ScalarType.Double:
                             return ConversionTypes.FloatPromotion;
+                        case ScalarType.Half:
                         case ScalarType.Min10Float:
                             return ConversionTypes.FloatTruncation;
                     }
