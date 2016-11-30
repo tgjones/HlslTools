@@ -267,4 +267,7 @@
   <data name="InvocationRequiresParenthesis" xml:space="preserve">
     <value>Invocation of '{0}' requires parenthesis.</value>
   </data>
+  <data name="TokenExpectedMultipleChoices" xml:space="preserve">
+    <value>Found '{0}' but expected one of the following: {1}.</value>
+  </data>
 </root>

@@ -22,7 +22,7 @@ namespace ShaderTools.Tests.Hlsl.Support
 
         internal static IEnumerable<TestCaseData> GetTestShaders()
         {
-            return FindTestShaders("Shaders");
+            return FindTestShaders(@"Hlsl\Shaders");
         }
 
         public static void CheckForParseErrors(SyntaxTree syntaxTree)

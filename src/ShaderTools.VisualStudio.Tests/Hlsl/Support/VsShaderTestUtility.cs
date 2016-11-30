@@ -8,7 +8,7 @@ namespace ShaderTools.VisualStudio.Tests.Hlsl.Support
     {
         public static IEnumerable<TestCaseData> GetTestShaders()
         {
-            return ShaderTestUtility.FindTestShaders("../../../ShaderTools.Tests/Shaders");
+            return ShaderTestUtility.FindTestShaders("../../../ShaderTools.Tests/Hlsl/Shaders");
         }
     }
 }

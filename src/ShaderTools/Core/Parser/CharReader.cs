@@ -1,7 +1,6 @@
 ﻿using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Text;
 
-namespace ShaderTools.Hlsl.Parser
+namespace ShaderTools.Core.Parser
 {
     internal sealed class CharReader
     {

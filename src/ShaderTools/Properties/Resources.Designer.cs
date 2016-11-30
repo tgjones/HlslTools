@@ -9,6 +9,9 @@
 //------------------------------------------------------------------------------
 
 namespace ShaderTools.Properties {
+    using System;
+    
+    
     /// <summary>
     ///   A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -378,6 +381,15 @@ namespace ShaderTools.Properties {
         internal static string TokenExpected {
             get {
                 return ResourceManager.GetString("TokenExpected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Found &apos;{0}&apos; but expected one of the following: {1}..
+        /// </summary>
+        internal static string TokenExpectedMultipleChoices {
+            get {
+                return ResourceManager.GetString("TokenExpectedMultipleChoices", resourceCulture);
             }
         }
         
