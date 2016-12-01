@@ -1,20 +1,20 @@
 ﻿using System.Threading;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.VisualStudio.Core;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Editing.SmartIndenting
 {
     internal sealed class SmartIndent : ISmartIndent
     {
-        private readonly HlslLanguagePreferences _languagePreferences;
+        private readonly LanguagePreferences _languagePreferences;
 
-        public SmartIndent(SVsServiceProvider serviceProvider)
+        public SmartIndent(LanguagePackageBase languagePackage)
         {
-            _languagePreferences = serviceProvider.GetHlslToolsService().LanguagePreferences;
+            _languagePreferences = languagePackage.LanguagePreferences;
         }
 
         public int? GetDesiredIndentation(ITextSnapshotLine line)

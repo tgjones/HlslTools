@@ -3,6 +3,8 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.VisualStudio.Core.Tagging;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Tagging.Classification

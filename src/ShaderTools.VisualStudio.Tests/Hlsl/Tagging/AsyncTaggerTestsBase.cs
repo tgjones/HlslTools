@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using NUnit.Framework;
+using ShaderTools.VisualStudio.Core.Tagging;
 using ShaderTools.VisualStudio.Hlsl.Parsing;
-using ShaderTools.VisualStudio.Hlsl.Tagging;
 using ShaderTools.VisualStudio.Hlsl.Text;
 using ShaderTools.VisualStudio.Tests.Hlsl.Support;
 

@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Diagnostics\DiagnosticBase.cs" />
     <Compile Include="Hlsl\Binding\Binder.cs" />
     <Compile Include="Hlsl\Binding\Binder.Types.cs" />
     <Compile Include="Hlsl\Binding\Binder.Lookup.cs" />
@@ -152,7 +153,7 @@
     <Compile Include="Hlsl\Compilation\ConversionTypes.cs" />
     <Compile Include="Hlsl\Compilation\SemanticModel.cs" />
     <Compile Include="Hlsl\Diagnostics\DiagnosticFacts.cs" />
-    <Compile Include="Hlsl\Diagnostics\DiagnosticSeverity.cs" />
+    <Compile Include="Core\Diagnostics\DiagnosticSeverity.cs" />
     <Compile Include="Hlsl\Formatting\Edit.cs" />
     <Compile Include="Hlsl\Formatting\Formatter.cs" />
     <Compile Include="Hlsl\Formatting\FormattingOptions.cs" />
@@ -357,7 +358,6 @@
     <Compile Include="Unity\Diagnostics\DiagnosticExtensions.cs" />
     <Compile Include="Unity\Diagnostics\DiagnosticFacts.cs" />
     <Compile Include="Unity\Diagnostics\DiagnosticId.cs" />
-    <Compile Include="Unity\Diagnostics\DiagnosticSeverity.cs" />
     <Compile Include="Unity\Parser\UnityLexer.cs" />
     <Compile Include="Unity\Parser\UnityParser.cs" />
     <Compile Include="Unity\Parser\UnityParser.Unity.cs" />

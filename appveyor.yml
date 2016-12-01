@@ -6,16 +6,16 @@ install:
 
 before_build:
   - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
-  - ps: Vsix-TokenReplacement src\HlslTools.VisualStudio\HlslToolsPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
-  - ps: Vsix-TokenReplacement src\HlslTools\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: Vsix-TokenReplacement src\ShaderTools.VisualStudio\Hlsl\HlslToolsPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: Vsix-TokenReplacement src\ShaderTools\Hlsl\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
 
 build_script:
-  - nuget restore src/HlslTools.sln -Verbosity quiet
-  - msbuild src/HlslTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - nuget restore src/ShaderTools.sln -Verbosity quiet
+  - msbuild src/ShaderTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
-  - nunit-console src/HlslTools.Tests/bin/Release/HlslTools.Tests.dll
-  - nunit-console-x86 src/HlslTools.VisualStudio.Tests/bin/Release/HlslTools.VisualStudio.Tests.dll
+  - nunit-console src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll
+  - nunit-console-x86 src/ShaderTools.VisualStudio.Tests/bin/Release/ShaderTools.VisualStudio.Tests.dll
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery

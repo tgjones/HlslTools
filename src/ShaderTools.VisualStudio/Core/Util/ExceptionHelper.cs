@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util
+namespace ShaderTools.VisualStudio.Core.Util
 {
     internal static class ExceptionHelper
     {

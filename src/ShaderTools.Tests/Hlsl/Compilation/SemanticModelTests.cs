@@ -2,11 +2,10 @@
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Tests.Hlsl.Support;
 
 namespace ShaderTools.Tests.Hlsl.Compilation

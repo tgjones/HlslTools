@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.VisualStudio.Core.Tagging;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Tagging.BraceMatching

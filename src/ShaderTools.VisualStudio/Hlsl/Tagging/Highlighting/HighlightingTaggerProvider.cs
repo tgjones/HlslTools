@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.VisualStudio.Core.Tagging;
 using ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting.Highlighters;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 

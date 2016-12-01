@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Text.Projection;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
+using ShaderTools.VisualStudio.Core.Navigation;
 using ShaderTools.VisualStudio.Hlsl.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Util.SyntaxOutput;
 

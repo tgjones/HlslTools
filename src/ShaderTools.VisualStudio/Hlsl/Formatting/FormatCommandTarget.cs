@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.VisualStudio.Core.Text;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.Text;
 using TextSpan = ShaderTools.Core.Text.TextSpan;

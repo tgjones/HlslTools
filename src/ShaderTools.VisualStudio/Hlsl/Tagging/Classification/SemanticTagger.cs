@@ -5,6 +5,8 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.VisualStudio.Core.Parsing;
+using ShaderTools.VisualStudio.Core.Tagging;
 using ShaderTools.VisualStudio.Hlsl.Parsing;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 

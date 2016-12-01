@@ -4,8 +4,9 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.VisualStudio.Core.Navigation;
+using ShaderTools.VisualStudio.Core.Util;
 using ShaderTools.VisualStudio.Hlsl.Text;
-using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation

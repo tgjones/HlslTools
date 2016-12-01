@@ -2,6 +2,7 @@
 using System.IO;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.VisualStudio.Core.Text;
 
 namespace ShaderTools.VisualStudio.Hlsl.Text
 {

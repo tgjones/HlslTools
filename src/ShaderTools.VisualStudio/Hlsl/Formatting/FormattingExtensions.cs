@@ -7,9 +7,8 @@ using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
+using ShaderTools.VisualStudio.Core.Util;
 using ShaderTools.VisualStudio.Hlsl.Options;
-using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Formatting

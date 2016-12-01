@@ -5,9 +5,8 @@ using Microsoft.VisualStudio.Text;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
+using ShaderTools.VisualStudio.Core.Text;
 using ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders;
-using ShaderTools.VisualStudio.Hlsl.Text;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion
 {

@@ -6,7 +6,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
+namespace ShaderTools.VisualStudio.Core.Util.Extensions
 {
     internal static class VsExtensions
     {

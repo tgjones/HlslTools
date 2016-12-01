@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.VisualStudio.Hlsl.Util;
+using ShaderTools.VisualStudio.Core.Util;
 
 namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting
 {

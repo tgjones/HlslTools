@@ -12,9 +12,9 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
-using ShaderTools.VisualStudio.Hlsl.Text;
-using ShaderTools.VisualStudio.Hlsl.Util;
+using ShaderTools.VisualStudio.Core.Text;
+using ShaderTools.VisualStudio.Core.Util;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.SyntaxVisualizer
@@ -39,7 +39,7 @@ namespace ShaderTools.VisualStudio.Hlsl.SyntaxVisualizer
             get
             {
                 if (_runningDocumentTable == null)
-                    _runningDocumentTable = ServiceProviderExtensions.GetGlobalService<SVsRunningDocumentTable, IVsRunningDocumentTable>();
+                    _runningDocumentTable = Core.Util.Extensions.ServiceProviderExtensions.GetGlobalService<SVsRunningDocumentTable, IVsRunningDocumentTable>();
                 return _runningDocumentTable;
             }
         }

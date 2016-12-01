@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.Design;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.VisualStudio.Core;
+using ShaderTools.VisualStudio.Core.Navigation;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Editing.BraceCompletion;
 using ShaderTools.VisualStudio.Hlsl.Navigation;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.SyntaxVisualizer;
-using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl
 {
@@ -47,7 +45,7 @@ namespace ShaderTools.VisualStudio.Hlsl
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(SyntaxVisualizerToolWindow))]
-    public sealed class HlslToolsPackage : Package
+    internal sealed class HlslToolsPackage : LanguagePackageBase
     {
         // Updated by build process.
         public const string Version = "1.0.0";
@@ -56,72 +54,30 @@ namespace ShaderTools.VisualStudio.Hlsl
 
         internal IOptionsService Options { get; private set; }
 
-        #region Language preferences
-
-        private readonly Dictionary<IVsCodeWindow, CodeWindowManager> _codeWindowManagers = new Dictionary<IVsCodeWindow, CodeWindowManager>();
-
-        internal IEnumerable<CodeWindowManager> CodeWindowManagers => _codeWindowManagers.Values;
-
-        internal HlslLanguagePreferences LanguagePreferences { get; private set; }
-
-        internal CodeWindowManager GetOrCreateCodeWindowManager(IVsCodeWindow window)
+        protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
         {
-            CodeWindowManager value;
-            if (!_codeWindowManagers.TryGetValue(window, out value))
-                _codeWindowManagers[window] = value = new CodeWindowManager(window, this.AsVsServiceProvider());
-            return value;
+            return new CodeWindowManager(this, window, this.AsVsServiceProvider());
         }
 
-        #endregion
+        protected override LanguageInfoBase CreateLanguageInfo()
+        {
+            return new HlslLanguageInfo(this);
+        }
+
+        protected override EditorFactoryBase CreateEditorFactory()
+        {
+            return new HlslEditorFactory(this);
+        }
 
         protected override void Initialize()
         {
             SyntaxVisualizerToolWindowCommand.Initialize(this);
+
             base.Initialize();
 
             Instance = this;
 
-            // Proffer the service.
-            var languageInfo = new HlslLanguageInfo(this.AsVsServiceProvider());
-            ((IServiceContainer) this).AddService(typeof(HlslLanguageInfo), languageInfo, true);
-
-            // Hook up language preferences.
-            var textMgr = (IVsTextManager) GetService(typeof(SVsTextManager));
-
-            var langPrefs = new LANGPREFERENCES[1];
-            langPrefs[0].guidLang = typeof(HlslLanguageInfo).GUID;
-            ErrorHandler.ThrowOnFailure(textMgr.GetUserPreferences(null, null, langPrefs, null));
-            LanguagePreferences = new HlslLanguagePreferences(this, langPrefs[0]);
-
-            var textManagerEvents2Guid = typeof(IVsTextManagerEvents2).GUID;
-            IConnectionPoint textManagerEvents2ConnectionPoint;
-            ((IConnectionPointContainer)textMgr).FindConnectionPoint(ref textManagerEvents2Guid, out textManagerEvents2ConnectionPoint);
-            uint cookie;
-            textManagerEvents2ConnectionPoint.Advise(LanguagePreferences, out cookie);
-
-            RegisterEditorFactory(new HlslEditorFactory(this));
-
             Options = this.AsVsServiceProvider().GetComponentModel().GetService<IOptionsService>();
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            foreach (var window in _codeWindowManagers.Values)
-                window.RemoveAdornments();
-            _codeWindowManagers.Clear();
-
-            base.Dispose(disposing);
-        }
-
-        internal TOptionsPage GetDialogPage<TOptionsPage>()
-            where TOptionsPage : DialogPage
-        {
-            return (TOptionsPage) GetDialogPage(typeof(TOptionsPage));
-        }
-
-        internal new object GetService(Type serviceType)
-        {
-            return base.GetService(serviceType);
         }
     }
 }

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.VisualStudio.Core.Parsing;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.Parsing;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;

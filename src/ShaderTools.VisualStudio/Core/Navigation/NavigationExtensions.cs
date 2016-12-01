@@ -7,9 +7,9 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 
-namespace ShaderTools.VisualStudio.Hlsl.Navigation
+namespace ShaderTools.VisualStudio.Core.Navigation
 {
     internal static class NavigationExtensions
     {

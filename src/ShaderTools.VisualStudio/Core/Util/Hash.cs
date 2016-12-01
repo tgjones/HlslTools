@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.VisualStudio.Hlsl.Util
+﻿namespace ShaderTools.VisualStudio.Core.Util
 {
     // From https://github.com/dotnet/roslyn/blob/master/src/Compilers/Core/Portable/InternalUtilities/Hash.cs
     internal static class Hash

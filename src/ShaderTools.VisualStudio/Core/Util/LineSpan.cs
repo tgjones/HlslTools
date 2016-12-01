@@ -1,6 +1,6 @@
 using System;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util
+namespace ShaderTools.VisualStudio.Core.Util
 {
     // From https://github.com/dotnet/roslyn/blob/master/src/Workspaces/Core/Portable/Shared/Extensions/LineSpan.cs
     // Like Span, except it has a start/end line instead of a start/end position.

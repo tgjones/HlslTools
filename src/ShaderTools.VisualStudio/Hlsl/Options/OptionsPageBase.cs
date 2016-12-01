@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Windows;
 using Microsoft.VisualStudio.Shell;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Options.Views;
-using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Options
 {

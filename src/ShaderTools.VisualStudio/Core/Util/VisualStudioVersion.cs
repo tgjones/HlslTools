@@ -1,4 +1,4 @@
-namespace ShaderTools.VisualStudio.Hlsl.Util
+namespace ShaderTools.VisualStudio.Core.Util
 {
     internal enum VisualStudioVersion
     {

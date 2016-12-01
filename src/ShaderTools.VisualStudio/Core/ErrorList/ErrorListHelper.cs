@@ -1,15 +1,14 @@
 ﻿using System;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Diagnostics;
-using ShaderTools.Hlsl.Text;
-using ShaderTools.VisualStudio.Hlsl.Navigation;
-using ShaderTools.VisualStudio.Hlsl.Text;
+using ShaderTools.VisualStudio.Core.Navigation;
+using ShaderTools.VisualStudio.Core.Text;
 
-namespace ShaderTools.VisualStudio.Hlsl.ErrorList
+namespace ShaderTools.VisualStudio.Core.ErrorList
 {
-    internal sealed class ErrorListHelper : IErrorListHelper, IDisposable
+    internal sealed class ErrorListHelper : IErrorListHelper
     {
         private readonly object _lockObject = new object();
         private readonly ErrorListProvider _errorListProvider;
@@ -24,7 +23,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
             _textDocument = textDocument;
         }
 
-        public void AddError(Diagnostic diagnostic, TextSpan span)
+        public void AddError(DiagnosticBase diagnostic, TextSpan span)
         {
             lock (_lockObject)
             {
@@ -72,7 +71,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
             }
         }
 
-        public void Dispose()
+        void IDisposable.Dispose()
         {
             lock (_lockObject)
             {

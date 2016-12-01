@@ -2,9 +2,8 @@
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Text;
 
-namespace ShaderTools.VisualStudio.Hlsl.Text
+namespace ShaderTools.VisualStudio.Core.Text
 {
     internal static class VisualStudioTextExtensions
     {

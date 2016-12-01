@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.Unity.Diagnostics
+﻿using ShaderTools.Core.Diagnostics;
+
+namespace ShaderTools.Unity.Diagnostics
 {
     internal static class DiagnosticFacts
     {

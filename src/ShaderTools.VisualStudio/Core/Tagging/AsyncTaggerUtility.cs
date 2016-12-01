@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 
-namespace ShaderTools.VisualStudio.Hlsl.Tagging
+namespace ShaderTools.VisualStudio.Core.Tagging
 {
     internal static class AsyncTaggerUtility
     {

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util
+namespace ShaderTools.VisualStudio.Core.Util
 {
     [Guid("0d915b59-2ed7-472a-9de8-9161737ea1c5")]
     internal interface SVsColorThemeService

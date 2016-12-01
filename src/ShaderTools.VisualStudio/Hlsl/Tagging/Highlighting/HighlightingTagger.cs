@@ -9,9 +9,12 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.Hlsl.Compilation;
+using ShaderTools.VisualStudio.Core.Parsing;
+using ShaderTools.VisualStudio.Core.Tagging;
+using ShaderTools.VisualStudio.Core.Util;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Parsing;
 using ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting.Highlighters;
-using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting

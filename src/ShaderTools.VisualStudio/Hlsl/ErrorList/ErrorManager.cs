@@ -4,6 +4,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.VisualStudio.Core.ErrorList;
 using ShaderTools.VisualStudio.Hlsl.Options;
 
 namespace ShaderTools.VisualStudio.Hlsl.ErrorList

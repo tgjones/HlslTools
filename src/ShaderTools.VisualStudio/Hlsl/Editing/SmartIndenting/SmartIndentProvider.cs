@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Editing.SmartIndenting
 {
@@ -11,7 +10,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Editing.SmartIndenting
     {
         public ISmartIndent CreateSmartIndent(ITextView textView)
         {
-            return textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndent(HlslToolsPackage.Instance.AsVsServiceProvider()));
+            return textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndent(HlslToolsPackage.Instance));
         }
     }
 }

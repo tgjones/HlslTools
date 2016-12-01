@@ -4,9 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.VisualStudio.Core.Parsing;
+using ShaderTools.VisualStudio.Core.Util;
 using ShaderTools.VisualStudio.Hlsl.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Parsing;
-using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation

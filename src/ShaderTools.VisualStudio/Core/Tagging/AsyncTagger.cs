@@ -5,9 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.VisualStudio.Hlsl.Util;
+using ShaderTools.VisualStudio.Core.Util;
 
-namespace ShaderTools.VisualStudio.Hlsl.Tagging
+namespace ShaderTools.VisualStudio.Core.Tagging
 {
     internal abstract class AsyncTagger<TTag> : ITagger<TTag>, IAsyncTagger
         where TTag : ITag

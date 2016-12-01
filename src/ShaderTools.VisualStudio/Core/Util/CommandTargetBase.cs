@@ -8,7 +8,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util
+namespace ShaderTools.VisualStudio.Core.Util
 {
     internal abstract class CommandTargetBase<TCommandEnum> : IOleCommandTarget
         where TCommandEnum : struct, IComparable

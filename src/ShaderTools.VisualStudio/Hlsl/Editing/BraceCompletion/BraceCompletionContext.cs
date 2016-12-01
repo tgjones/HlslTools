@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text.BraceCompletion;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.VisualStudio.Core.Text;
 using ShaderTools.VisualStudio.Hlsl.Formatting;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.Tagging.Classification;

@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 
-namespace ShaderTools.VisualStudio.Hlsl.Tagging
+namespace ShaderTools.VisualStudio.Core.Tagging
 {
     internal interface IAsyncTagger
     {

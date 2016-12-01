@@ -1,14 +1,14 @@
 ﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.TextManager.Interop;
 
-namespace ShaderTools.VisualStudio.Hlsl
+namespace ShaderTools.VisualStudio.Core
 {
-    internal sealed class HlslLanguagePreferences : IVsTextManagerEvents2
+    internal sealed class LanguagePreferences : IVsTextManagerEvents2
     {
-        private readonly HlslToolsPackage _package;
+        private readonly LanguagePackageBase _package;
         private LANGPREFERENCES _preferences;
 
-        public HlslLanguagePreferences(HlslToolsPackage package, LANGPREFERENCES preferences)
+        public LanguagePreferences(LanguagePackageBase package, LANGPREFERENCES preferences)
         {
             _package = package;
             _preferences = preferences;

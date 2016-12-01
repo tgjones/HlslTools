@@ -14,6 +14,8 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.VisualStudio.Core.Navigation;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 using PixelFormat = System.Drawing.Imaging.PixelFormat;
 

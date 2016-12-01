@@ -7,9 +7,10 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.VisualStudio.Core.Parsing;
+using ShaderTools.VisualStudio.Core.Util;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.Parsing;
-using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.ErrorList

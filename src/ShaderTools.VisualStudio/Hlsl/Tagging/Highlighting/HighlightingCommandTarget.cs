@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.VisualStudio.Hlsl.Util;
+using ShaderTools.VisualStudio.Core.Util;
 
 namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting
 {

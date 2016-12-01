@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.Unity.Diagnostics
+﻿namespace ShaderTools.Core.Diagnostics
 {
     public enum DiagnosticSeverity
     {

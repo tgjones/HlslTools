@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Hlsl.Compilation;
+using ShaderTools.VisualStudio.Core.Text;
 using ShaderTools.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoModelProviders;
 using ShaderTools.VisualStudio.Hlsl.Text;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;

@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.VisualStudio.Core.Util;
 
 namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
 {

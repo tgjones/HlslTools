@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.Hlsl.Diagnostics
+﻿using ShaderTools.Core.Diagnostics;
+
+namespace ShaderTools.Hlsl.Diagnostics
 {
     internal static class DiagnosticFacts
     {

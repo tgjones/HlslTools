@@ -8,8 +8,9 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Hlsl.Compilation;
+using ShaderTools.VisualStudio.Core.Util;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders;
-using ShaderTools.VisualStudio.Hlsl.Util;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 using TextSpan = ShaderTools.Core.Text.TextSpan;
 
