@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using ShaderTools.VisualStudio.Core;
-using ShaderTools.VisualStudio.Core.Navigation;
 
-namespace ShaderTools.VisualStudio.Hlsl.Navigation
+namespace ShaderTools.VisualStudio.Hlsl
 {
     [Guid("80329450-4B0D-4EC7-A4E4-A57C024888D5")]
     internal sealed class HlslLanguageInfo : LanguageInfoBase

@@ -15,7 +15,15 @@ namespace ShaderTools.VisualStudio.Hlsl.Navigation
         {
         }
 
-        protected override IVsDropdownBarClient CreateDropdownBarClient()
+        protected override bool TryCreateDropdownBarClient(out int comboBoxCount, out IVsDropdownBarClient client)
+        {
+            comboBoxCount = 2;
+            client = CreateDropdownBarClient();
+
+            return true;
+        }
+
+        private IVsDropdownBarClient CreateDropdownBarClient()
         {
             var componentModel = ServiceProvider.GetComponentModel();
             var editorAdaptersFactory = componentModel.DefaultExportProvider.GetExportedValueOrDefault<IVsEditorAdaptersFactoryService>();

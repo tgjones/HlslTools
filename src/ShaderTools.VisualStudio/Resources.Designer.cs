@@ -115,6 +115,15 @@ namespace ShaderTools.VisualStudio {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to ShaderLab Editor.
+        /// </summary>
+        internal static string _150 {
+            get {
+                return ResourceManager.GetString("150", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ambiguous Name:.
         /// </summary>
         internal static string AmbiguousName {

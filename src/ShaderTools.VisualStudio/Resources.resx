@@ -135,6 +135,9 @@
   <data name="140" xml:space="preserve">
     <value>HLSL Editor</value>
   </data>
+  <data name="150" xml:space="preserve">
+    <value>ShaderLab Editor</value>
+  </data>
   <data name="AmbiguousName" xml:space="preserve">
     <value>Ambiguous Name:</value>
   </data>

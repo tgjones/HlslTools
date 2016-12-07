@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.VisualStudio.Core.Util.Extensions;
 
-namespace ShaderTools.VisualStudio.Core.Navigation
+namespace ShaderTools.VisualStudio.Core
 {
     internal abstract class LanguageInfoBase : IVsLanguageInfo
     {

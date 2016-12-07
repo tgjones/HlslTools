@@ -87,15 +87,7 @@ namespace ShaderTools.VisualStudio.Core.Navigation
             return VSConstants.S_OK;
         }
 
-        private bool TryCreateDropdownBarClient(out int comboBoxCount, out IVsDropdownBarClient client)
-        {
-            comboBoxCount = 2;
-            client = CreateDropdownBarClient();
-
-            return true;
-        }
-
-        protected abstract IVsDropdownBarClient CreateDropdownBarClient();
+        protected abstract bool TryCreateDropdownBarClient(out int comboBoxCount, out IVsDropdownBarClient client);
 
         private int AddDropdownBar(int comboBoxCount, IVsDropdownBarClient client)
         {

@@ -13,9 +13,11 @@ using ShaderTools.VisualStudio.Hlsl.SyntaxVisualizer;
 
 namespace ShaderTools.VisualStudio.Hlsl
 {
-    [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", Version, IconResourceID = 400)]
-    [Guid(GuidList.guidShaderStudio_VisualStudioPackagePkgString)]
+
+    [PackageRegistration(UseManagedResourcesOnly = true)]
+    [Guid(PackageId)]
+
     [ProvideLanguageService(typeof(HlslLanguageInfo), HlslConstants.LanguageName, 0,
         ShowCompletion = true,
         ShowSmartIndent = true,
@@ -37,18 +39,24 @@ namespace ShaderTools.VisualStudio.Hlsl
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension4)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension5)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension6)]
+    [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension7)]
+    [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension8)]
 
     [ProvideEditorFactory(typeof(HlslEditorFactory), 140, CommonPhysicalViewAttributes = (int) __VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
     [ProvideEditorLogicalView(typeof(HlslEditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
-    [ProvideFileExtensionMapping("{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", "HLSL Editor", typeof(HlslEditorFactory), typeof(HlslLanguageInfo), GuidList.guidShaderStudio_VisualStudioPackagePkgString, 100)]
+    [ProvideFileExtensionMapping("{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", "HLSL Editor", typeof(HlslEditorFactory), typeof(HlslLanguageInfo), PackageId, 100)]
 
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
+
     [ProvideMenuResource("Menus.ctmenu", 1)]
+
     [ProvideToolWindow(typeof(SyntaxVisualizerToolWindow))]
     internal sealed class HlslPackage : LanguagePackageBase
     {
         // Updated by build process.
         public const string Version = "1.0.0";
+
+        private const string PackageId = "0E01DDB3-F537-4C49-9B50-BDA9DCCE2172";
 
         public static HlslPackage Instance { get; private set; }
 

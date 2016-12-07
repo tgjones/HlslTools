@@ -231,7 +231,7 @@
   <ItemGroup>
     <Compile Include="Core\EditorFactoryBase.cs" />
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
-    <Compile Include="Core\Navigation\LanguageInfoBase.cs" />
+    <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="Core\Parsing\BackgroundParserBase.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContext.cs" />
@@ -391,6 +391,8 @@
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="Hlsl\Util\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
+    <Compile Include="ShaderLab\ShaderLabEditorFactory.cs" />
+    <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
@@ -463,12 +465,11 @@
     <Compile Include="Hlsl\Glyphs\DispatcherGlyphService.cs" />
     <Compile Include="Hlsl\Glyphs\Glyph.cs" />
     <Compile Include="Hlsl\Glyphs\GlyphExtensions.cs" />
-    <Compile Include="Guids.cs" />
     <Compile Include="Hlsl\HlslConstants.cs" />
     <Compile Include="Hlsl\Navigation\CodeWindowManager.cs" />
     <Compile Include="Hlsl\Navigation\EditorNavigationDropdownBarClient.cs" />
     <Compile Include="Hlsl\Navigation\EditorNavigationSourceProvider.cs" />
-    <Compile Include="Hlsl\Navigation\HlslLanguageInfo.cs" />
+    <Compile Include="Hlsl\HlslLanguageInfo.cs" />
     <Compile Include="Hlsl\Navigation\EditorNavigationSource.cs" />
     <Compile Include="Hlsl\Navigation\EditorNavigationTarget.cs" />
     <Compile Include="Hlsl\Navigation\NavigationTargetsVisitor.cs" />
@@ -488,6 +489,8 @@
     <Compile Include="Core\Util\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Core\Util\Extensions\VsExtensions.cs" />
     <Compile Include="Hlsl\Text\VisualStudioSourceTextContainer.cs" />
+    <Compile Include="ShaderLab\ShaderLabConstants.cs" />
+    <Compile Include="ShaderLab\ShaderLabPackage.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">
