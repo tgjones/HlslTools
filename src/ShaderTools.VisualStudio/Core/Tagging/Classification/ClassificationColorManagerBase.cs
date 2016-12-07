@@ -5,6 +5,8 @@ using ShaderTools.VisualStudio.Core.Util;
 
 namespace ShaderTools.VisualStudio.Core.Tagging.Classification
 {
+    // Uses some code from https://github.com/fsprojects/VisualFSharpPowerTools/blob/master/src/FSharpVSPowerTools/SyntaxConstructClassifierProvider.cs
+    // to update colours when theme changes.
     internal abstract class ClassificationColorManagerBase
     {
         private readonly ThemeManager _themeManager;

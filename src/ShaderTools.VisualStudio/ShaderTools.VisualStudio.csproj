@@ -233,7 +233,10 @@
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="Core\Parsing\BackgroundParserBase.cs" />
+    <Compile Include="Core\Parsing\BackgroundParserManagerBase.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
+    <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
+    <Compile Include="Core\Text\VisualStudioSourceTextFactoryBase.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionExtensions.cs" />
@@ -391,8 +394,18 @@
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="Hlsl\Util\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
+    <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
+    <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
     <Compile Include="ShaderLab\ShaderLabEditorFactory.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\ClassificationColorManager.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SemanticClassificationMetadata.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\ShaderLabClassificationService.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTagger.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerProvider.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerWorker.cs" />
+    <Compile Include="ShaderLab\Text\VisualStudioSourceTextFactory.cs" />
+    <Compile Include="ShaderLab\Util\Extensions\Extensions.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
@@ -485,7 +498,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Tagging\AsyncTagger.cs" />
     <Compile Include="Hlsl\Util\Extensions\ExceptionExtensions.cs" />
-    <Compile Include="Hlsl\Util\Extensions\IVsShellExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\IVsShellExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Core\Util\Extensions\VsExtensions.cs" />
     <Compile Include="Hlsl\Text\VisualStudioSourceTextContainer.cs" />

@@ -474,5 +474,190 @@ namespace ShaderTools.Unity.Syntax
                     return SyntaxKind.None;
             }
         }
+
+        public static bool IsComment(this SyntaxKind kind)
+        {
+            switch (kind)
+            {
+                case SyntaxKind.SingleLineCommentTrivia:
+                case SyntaxKind.MultiLineCommentTrivia:
+                case SyntaxKind.BlockCommentEndOfFile:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsKeyword(this SyntaxKind kind)
+        {
+            switch (kind)
+            {
+                case SyntaxKind.TrueKeyword:
+                case SyntaxKind.FalseKeyword:
+                case SyntaxKind.ShaderKeyword:
+                case SyntaxKind.PropertiesKeyword:
+                case SyntaxKind.RangeKeyword:
+                case SyntaxKind.FloatKeyword:
+                case SyntaxKind.IntKeyword:
+                case SyntaxKind.ColorKeyword:
+                case SyntaxKind.VectorKeyword:
+                case SyntaxKind._2DKeyword:
+                case SyntaxKind._3DKeyword:
+                case SyntaxKind.CubeKeyword:
+                case SyntaxKind.AnyKeyword:
+                case SyntaxKind.CategoryKeyword:
+                case SyntaxKind.SubShaderKeyword:
+                case SyntaxKind.TagsKeyword:
+                case SyntaxKind.PassKeyword:
+                case SyntaxKind.CgProgramKeyword:
+                case SyntaxKind.CgIncludeKeyword:
+                case SyntaxKind.EndCgKeyword:
+                case SyntaxKind.FallbackKeyword:
+                case SyntaxKind.CustomEditorKeyword:
+                case SyntaxKind.CullKeyword:
+                case SyntaxKind.ZWriteKeyword:
+                case SyntaxKind.ZTestKeyword:
+                case SyntaxKind.OffsetKeyword:
+                case SyntaxKind.BlendKeyword:
+                case SyntaxKind.BlendOpKeyword:
+                case SyntaxKind.ColorMaskKeyword:
+                case SyntaxKind.AlphaToMaskKeyword:
+                case SyntaxKind.LodKeyword:
+                case SyntaxKind.NameKeyword:
+                case SyntaxKind.LightingKeyword:
+                case SyntaxKind.StencilKeyword:
+                case SyntaxKind.RefKeyword:
+                case SyntaxKind.ReadMaskKeyword:
+                case SyntaxKind.WriteMaskKeyword:
+                case SyntaxKind.CompKeyword:
+                case SyntaxKind.CompBackKeyword:
+                case SyntaxKind.CompFrontKeyword:
+                case SyntaxKind.FailKeyword:
+                case SyntaxKind.ZFailKeyword:
+                case SyntaxKind.UsePassKeyword:
+                case SyntaxKind.GrabPassKeyword:
+                case SyntaxKind.DependencyKeyword:
+                case SyntaxKind.MaterialKeyword:
+                case SyntaxKind.DiffuseKeyword:
+                case SyntaxKind.AmbientKeyword:
+                case SyntaxKind.ShininessKeyword:
+                case SyntaxKind.SpecularKeyword:
+                case SyntaxKind.EmissionKeyword:
+                case SyntaxKind.FogKeyword:
+                case SyntaxKind.ModeKeyword:
+                case SyntaxKind.DensityKeyword:
+                case SyntaxKind.SeparateSpecularKeyword:
+                case SyntaxKind.SetTextureKeyword:
+                case SyntaxKind.CombineKeyword:
+                case SyntaxKind.AlphaKeyword:
+                case SyntaxKind.LerpKeyword:
+                case SyntaxKind.DoubleKeyword:
+                case SyntaxKind.QuadKeyword:
+                case SyntaxKind.ConstantColorKeyword:
+                case SyntaxKind.MatrixKeyword:
+                case SyntaxKind.AlphaTestKeyword:
+                case SyntaxKind.ColorMaterialKeyword:
+                case SyntaxKind.BindChannelsKeyword:
+                case SyntaxKind.BindKeyword:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsPunctuation(this SyntaxKind kind)
+        {
+            switch (kind)
+            {
+                case SyntaxKind.OpenParenToken:
+                case SyntaxKind.CloseParenToken:
+                case SyntaxKind.OpenBracketToken:
+                case SyntaxKind.CloseBracketToken:
+                case SyntaxKind.OpenBraceToken:
+                case SyntaxKind.CloseBraceToken:
+                case SyntaxKind.SemiToken:
+                case SyntaxKind.CommaToken:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsOperator(this SyntaxKind kind)
+        {
+            switch (kind)
+            {
+                case SyntaxKind.LessThanToken:
+                case SyntaxKind.LessThanEqualsToken:
+                case SyntaxKind.GreaterThanToken:
+                case SyntaxKind.GreaterThanEqualsToken:
+                case SyntaxKind.LessThanLessThanToken:
+                case SyntaxKind.GreaterThanGreaterThanToken:
+                case SyntaxKind.PlusToken:
+                case SyntaxKind.PlusPlusToken:
+                case SyntaxKind.MinusToken:
+                case SyntaxKind.MinusMinusToken:
+                case SyntaxKind.AsteriskToken:
+                case SyntaxKind.SlashToken:
+                case SyntaxKind.PercentToken:
+                case SyntaxKind.AmpersandToken:
+                case SyntaxKind.BarToken:
+                case SyntaxKind.AmpersandAmpersandToken:
+                case SyntaxKind.BarBarToken:
+                case SyntaxKind.CaretToken:
+                case SyntaxKind.NotToken:
+                case SyntaxKind.TildeToken:
+                case SyntaxKind.QuestionToken:
+                case SyntaxKind.ColonToken:
+                case SyntaxKind.ColonColonToken:
+                case SyntaxKind.EqualsToken:
+                case SyntaxKind.AsteriskEqualsToken:
+                case SyntaxKind.SlashEqualsToken:
+                case SyntaxKind.PercentEqualsToken:
+                case SyntaxKind.PlusEqualsToken:
+                case SyntaxKind.MinusEqualsToken:
+                case SyntaxKind.LessThanLessThanEqualsToken:
+                case SyntaxKind.GreaterThanGreaterThanEqualsToken:
+                case SyntaxKind.AmpersandEqualsToken:
+                case SyntaxKind.CaretEqualsToken:
+                case SyntaxKind.BarEqualsToken:
+                case SyntaxKind.EqualsEqualsToken:
+                case SyntaxKind.ExclamationEqualsToken:
+                case SyntaxKind.DotToken:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsWhitespace(this SyntaxKind kind)
+        {
+            switch (kind)
+            {
+                case SyntaxKind.WhitespaceTrivia:
+                case SyntaxKind.EndOfLineTrivia:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsNumericLiteral(this SyntaxKind kind)
+        {
+            switch (kind)
+            {
+                case SyntaxKind.IntegerLiteralToken:
+                case SyntaxKind.FloatLiteralToken:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
     }
 }

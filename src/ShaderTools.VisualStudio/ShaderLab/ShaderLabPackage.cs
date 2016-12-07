@@ -31,6 +31,8 @@ namespace ShaderTools.VisualStudio.ShaderLab
     {
         private const string PackageId = "448635DC-AF8B-4767-BFDB-26ED6A865158";
 
+        public static ShaderLabPackage Instance { get; private set; }
+
         protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
         {
             return new CodeWindowManager(this, window, this.AsVsServiceProvider());
@@ -44,6 +46,13 @@ namespace ShaderTools.VisualStudio.ShaderLab
         protected override EditorFactoryBase CreateEditorFactory()
         {
             return new ShaderLabEditorFactory(this);
+        }
+
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            Instance = this;
         }
 
         private sealed class CodeWindowManager : CodeWindowManagerBase

@@ -2,7 +2,7 @@
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
+namespace ShaderTools.VisualStudio.Core.Util.Extensions
 {
     internal static class IVsShellExtensions
     {
@@ -12,7 +12,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
             var guid = typeof(T).GUID;
             IVsPackage package;
             ErrorHandler.ThrowOnFailure(shell.LoadPackage(ref guid, out package));
-            return (T)package;
+            return (T) package;
         }
     }
 }

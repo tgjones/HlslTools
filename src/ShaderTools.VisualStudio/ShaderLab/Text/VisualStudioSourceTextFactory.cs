@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.Composition;
-using System.IO;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.VisualStudio.Core.Text;
 
-namespace ShaderTools.VisualStudio.Hlsl.Text
+namespace ShaderTools.VisualStudio.ShaderLab.Text
 {
     [Export]
     internal sealed class VisualStudioSourceTextFactory : VisualStudioSourceTextFactoryBase
@@ -14,7 +13,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Text
 
         [ImportingConstructor]
         public VisualStudioSourceTextFactory(ITextBufferFactoryService textBufferFactoryService, IContentTypeRegistryService contentTypeRegistryService)
-            : base(textBufferFactoryService, contentTypeRegistryService.GetContentType(HlslConstants.ContentTypeName))
+            : base(textBufferFactoryService, contentTypeRegistryService.GetContentType(ShaderLabConstants.ContentTypeName))
         {
         }
     }

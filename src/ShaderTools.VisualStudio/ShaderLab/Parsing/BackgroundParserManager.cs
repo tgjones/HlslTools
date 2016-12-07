@@ -3,12 +3,12 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.VisualStudio.Core.Parsing;
-using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.VisualStudio.ShaderLab.Util.Extensions;
 
-namespace ShaderTools.VisualStudio.Hlsl.Parsing
+namespace ShaderTools.VisualStudio.ShaderLab.Parsing
 {
     [Export(typeof(IWpfTextViewCreationListener))]
-    [ContentType(HlslConstants.ContentTypeName)]
+    [ContentType(ShaderLabConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class BackgroundParserManager : BackgroundParserManagerBase
     {

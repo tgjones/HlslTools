@@ -5,8 +5,6 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace ShaderTools.VisualStudio.Hlsl.Tagging.Classification
 {
-    // Uses some code from https://github.com/fsprojects/VisualFSharpPowerTools/blob/master/src/FSharpVSPowerTools/SyntaxConstructClassifierProvider.cs
-    // to update colours when theme changes.
     internal sealed class SemanticClassificationMetadata
     {
         public const string PunctuationClassificationTypeName = "Hlsl.Punctuation";
