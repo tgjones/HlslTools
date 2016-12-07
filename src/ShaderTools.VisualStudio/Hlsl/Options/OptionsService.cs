@@ -29,7 +29,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Options
                 NewLines = newLinesOptions,
                 Spacing = spacingOptions,
 
-                SpacesPerIndent = HlslToolsPackage.Instance.LanguagePreferences.SpacesPerIndent
+                SpacesPerIndent = HlslPackage.Instance.LanguagePreferences.SpacesPerIndent
             };
 
             GeneralOptions = GetDialogPage<HlslFormattingGeneralOptionsPage>().Options;
@@ -44,7 +44,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Options
         private static TOptionsPage GetDialogPage<TOptionsPage>()
             where TOptionsPage : DialogPage
         {
-            return HlslToolsPackage.Instance.GetDialogPage<TOptionsPage>();
+            return HlslPackage.Instance.GetDialogPage<TOptionsPage>();
         }
     }
 }

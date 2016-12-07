@@ -47,7 +47,7 @@ namespace ShaderTools.VisualStudio.Core.Util
             if (_pane == null)
                 lock (SyncRoot)
                     if (_pane == null)
-                        _pane = HlslToolsPackage.Instance.GetOutputPane(ShaderToolsOutputWindowGuid, "Shader Tools");
+                        _pane = HlslPackage.Instance.GetOutputPane(ShaderToolsOutputWindowGuid, "Shader Tools");
 
             return _pane != null;
         }

@@ -9,7 +9,7 @@ namespace ShaderTools.VisualStudio.Hlsl
     [Guid(GuidList.guidHlslEditorFactory)]
     internal sealed class HlslEditorFactory : EditorFactoryBase
     {
-        public HlslEditorFactory(HlslToolsPackage package)
+        public HlslEditorFactory(HlslPackage package)
             : base(package)
         {
         }

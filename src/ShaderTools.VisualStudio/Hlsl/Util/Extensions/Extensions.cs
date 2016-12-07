@@ -57,7 +57,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
                 var options = new ParserOptions();
                 options.PreprocessorDefines.Add("__INTELLISENSE__");
 
-                var sourceTextFactory = VisualStudioSourceTextFactory.Instance ?? HlslToolsPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
+                var sourceTextFactory = VisualStudioSourceTextFactory.Instance ?? HlslPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
                 var fileSystem = key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
 
                 return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
@@ -66,7 +66,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
 
         public static bool TryGetSemanticModel(this ITextSnapshot snapshot, CancellationToken cancellationToken, out SemanticModel semanticModel)
         {
-            if (HlslToolsPackage.Instance != null && !HlslToolsPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
+            if (HlslPackage.Instance != null && !HlslPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
             {
                 semanticModel = null;
                 return false;

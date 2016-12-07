@@ -45,12 +45,12 @@ namespace ShaderTools.VisualStudio.Hlsl
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(SyntaxVisualizerToolWindow))]
-    internal sealed class HlslToolsPackage : LanguagePackageBase
+    internal sealed class HlslPackage : LanguagePackageBase
     {
         // Updated by build process.
         public const string Version = "1.0.0";
 
-        public static HlslToolsPackage Instance { get; private set; }
+        public static HlslPackage Instance { get; private set; }
 
         internal IOptionsService Options { get; private set; }
 

@@ -119,7 +119,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Editing.BraceCompletion
             var startPosition = startPoint.Position;
             var endPosition = endPoint.Position;
 
-            if (HlslToolsPackage.Instance.LanguagePreferences.IndentMode == vsIndentStyle.vsIndentStyleSmart)
+            if (HlslPackage.Instance.LanguagePreferences.IndentMode == vsIndentStyle.vsIndentStyleSmart)
             {
                 // skip whitespace
                 while (startPosition >= 0 && char.IsWhiteSpace(snapshot[startPosition]))

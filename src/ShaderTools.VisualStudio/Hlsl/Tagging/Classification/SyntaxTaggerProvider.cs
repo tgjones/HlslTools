@@ -26,7 +26,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Classification
         {
             if (!_languagePackageLoaded)
             {
-                var languagePackage = GlobalServiceProvider.GetShell().LoadPackage<HlslToolsPackage>();
+                var languagePackage = GlobalServiceProvider.GetShell().LoadPackage<HlslPackage>();
                 _languagePackageLoaded = languagePackage != null;
             }
 

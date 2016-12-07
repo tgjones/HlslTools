@@ -4,9 +4,9 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
 {
     internal static class ServiceProviderExtensions
     {
-        public static HlslToolsPackage GetHlslToolsService(this SVsServiceProvider serviceProvider)
+        public static HlslPackage GetHlslToolsService(this SVsServiceProvider serviceProvider)
         {
-            return (HlslToolsPackage)serviceProvider.GetService(typeof(HlslToolsPackage));
+            return (HlslPackage)serviceProvider.GetService(typeof(HlslPackage));
         }
     }
 }

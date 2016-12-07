@@ -254,6 +254,7 @@
     <Compile Include="Hlsl\Formatting\FormattingTextViewCreationListener.cs" />
     <Compile Include="Hlsl\HlslEditorFactory.cs" />
     <Compile Include="Core\LanguagePreferences.cs" />
+    <Compile Include="Hlsl\HlslPackage.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionExtensions.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionItem.cs" />
@@ -480,7 +481,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Hlsl\HlslToolsPackage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Core\Tagging\AsyncTagger.cs" />
     <Compile Include="Hlsl\Util\Extensions\ExceptionExtensions.cs" />

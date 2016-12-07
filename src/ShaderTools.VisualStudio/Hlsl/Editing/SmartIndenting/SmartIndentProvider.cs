@@ -10,7 +10,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Editing.SmartIndenting
     {
         public ISmartIndent CreateSmartIndent(ITextView textView)
         {
-            return textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndent(HlslToolsPackage.Instance));
+            return textView.Properties.GetOrCreateSingletonProperty(() => new SmartIndent(HlslPackage.Instance));
         }
     }
 }
