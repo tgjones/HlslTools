@@ -20,7 +20,9 @@ namespace ShaderTools.VisualStudio.ShaderLab.Tagging.Classification
         {
             return new Dictionary<string, Color>
             {
-                { SemanticClassificationMetadata.PunctuationClassificationTypeName, Colors.Black }
+                { SemanticClassificationMetadata.PunctuationClassificationTypeName, Colors.Black },
+                { SemanticClassificationMetadata.ShaderPropertyClassificationTypeName, Color.FromRgb(139, 0, 139) },
+                { SemanticClassificationMetadata.AttributeClassificationTypeName, Color.FromRgb(0, 0, 139) }
             };
         }
 
@@ -28,7 +30,9 @@ namespace ShaderTools.VisualStudio.ShaderLab.Tagging.Classification
         {
             return new Dictionary<string, Color>
             {
-                { SemanticClassificationMetadata.PunctuationClassificationTypeName, Colors.White }
+                { SemanticClassificationMetadata.PunctuationClassificationTypeName, Colors.White },
+                { SemanticClassificationMetadata.ShaderPropertyClassificationTypeName, Color.FromRgb(221, 160, 221) },
+                { SemanticClassificationMetadata.AttributeClassificationTypeName, Color.FromRgb(173, 216, 230) }
             };
         }
     }

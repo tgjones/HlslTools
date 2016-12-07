@@ -85,6 +85,17 @@ namespace ShaderTools.VisualStudio.ShaderLab.Tagging.Classification
 
         private IClassificationType GetClassificationForToken(SyntaxToken token)
         {
+            if (token.Parent != null 
+                && token.Parent.Kind == SyntaxKind.ShaderProperty 
+                && token == ((ShaderPropertySyntax) token.Parent).NameToken)
+                return _classificationService.ShaderProperty;
+
+            if (token.Kind == SyntaxKind.IdentifierToken
+                && token.Parent != null
+                && token.Parent.Kind == SyntaxKind.ShaderPropertyAttribute
+                && token == ((ShaderPropertyAttributeSyntax) token.Parent).Name)
+                return _classificationService.Attribute;
+
             if (token.Kind == SyntaxKind.IdentifierToken && token.ContextualKind == SyntaxKind.IdentifierToken)
                 return _classificationService.Identifier;
 

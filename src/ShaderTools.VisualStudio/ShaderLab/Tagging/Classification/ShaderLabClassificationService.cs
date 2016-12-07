@@ -11,21 +11,8 @@ namespace ShaderTools.VisualStudio.ShaderLab.Tagging.Classification
         private readonly IStandardClassificationService _standardClassificationService;
 
         private IClassificationType _punctuation;
-        private IClassificationType _semantic;
-        private IClassificationType _packOffset;
-        private IClassificationType _registerLocation;
-        private IClassificationType _namespaceIdentifier;
-        private IClassificationType _globalVariableIdentifier;
-        private IClassificationType _fieldIdentifier;
-        private IClassificationType _localVariableIdentifier;
-        private IClassificationType _constantBufferVariableIdentifier;
-        private IClassificationType _parameterIdentifier;
-        private IClassificationType _functionIdentifier;
-        private IClassificationType _methodIdentifier;
-        private IClassificationType _classIdentifier;
-        private IClassificationType _structIdentifier;
-        private IClassificationType _interfaceIdentifier;
-        private IClassificationType _constantBufferIdentifier;
+        private IClassificationType _shaderProperty;
+        private IClassificationType _attribute;
 
         [ImportingConstructor]
         public ShaderLabClassificationService(IClassificationTypeRegistryService classificationTypeRegistryService, IStandardClassificationService standardClassificationService)
@@ -49,5 +36,7 @@ namespace ShaderTools.VisualStudio.ShaderLab.Tagging.Classification
         public IClassificationType Other => _standardClassificationService.Other;
 
         public IClassificationType Punctuation => Get(ref _punctuation, SemanticClassificationMetadata.PunctuationClassificationTypeName);
+        public IClassificationType ShaderProperty => Get(ref _shaderProperty, SemanticClassificationMetadata.ShaderPropertyClassificationTypeName);
+        public IClassificationType Attribute => Get(ref _attribute, SemanticClassificationMetadata.AttributeClassificationTypeName);
     }
 }
