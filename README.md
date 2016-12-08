@@ -14,9 +14,10 @@ See the [changelog](CHANGELOG.md) for changes and roadmap.
 
 ### Why use Shader Tools?
 
-Visual Studio includes basic support for editing HLSL files - and, with Visual Studio Tools for Unity installed,
-it also includes basic support for editing Unity shaders. In addition to that basic feature set,
-Shader Tools for Visual Studio includes many more navigational and editing features:
+Visual Studio itself includes basic support for editing HLSL files - and, with Visual Studio Tools for Unity installed,
+it also includes basic support for editing Unity shaders.
+
+In addition to those basic features, Shader Tools for Visual Studio includes many more navigational and editing features:
 
 <table>
   <thead>
@@ -28,7 +29,7 @@ Shader Tools for Visual Studio includes many more navigational and editing featu
     <tr>
       <th>Visual Studio</th>
       <th>Shader Tools</th>
-      <th>Visual Studio Tools for Unity</th>
+      <th>VS Tools for Unity</th>
       <th>Shader Tools</th>
     </tr>
   </thead>
