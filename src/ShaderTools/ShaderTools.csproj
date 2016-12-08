@@ -358,6 +358,7 @@
     <Compile Include="Unity\Diagnostics\DiagnosticExtensions.cs" />
     <Compile Include="Unity\Diagnostics\DiagnosticFacts.cs" />
     <Compile Include="Unity\Diagnostics\DiagnosticId.cs" />
+    <Compile Include="Unity\Formatting\FormattingOptions.cs" />
     <Compile Include="Unity\Parser\UnityLexer.cs" />
     <Compile Include="Unity\Parser\UnityParser.cs" />
     <Compile Include="Unity\Parser\UnityParser.Unity.cs" />

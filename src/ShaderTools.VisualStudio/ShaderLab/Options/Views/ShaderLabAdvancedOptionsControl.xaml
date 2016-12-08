@@ -1,4 +1,4 @@
-﻿<views:OptionsControlBase x:Class="ShaderTools.VisualStudio.Hlsl.Options.Views.HlslAdvancedOptionsControl"
+﻿<views:OptionsControlBase x:Class="ShaderTools.VisualStudio.ShaderLab.Options.Views.ShaderLabAdvancedOptionsControl"
                           x:ClassModifier="internal"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -12,12 +12,6 @@
     </views:OptionsControlBase.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel>
-            <GroupBox Header="Brace completion">
-                <StackPanel>
-                    <CheckBox x:Name="AddSemicolonForTypesCheckBox" Content="Add semi_colon for types"/>
-                </StackPanel>
-            </GroupBox>
-            
             <GroupBox Header="Outlining">
                 <StackPanel>
                     <CheckBox x:Name="EnterOutliningModeWhenFilesOpenCheckBox" Content="Enter _outlining mode when files open"/>
@@ -34,7 +28,7 @@
             <GroupBox Header="IntelliSense">
                 <StackPanel>
                     <CheckBox x:Name="EnableIntelliSenseCheckBox" Content="Enable _IntelliSense" />
-                    <TextBlock Text="Disabling IntelliSense will disable all HLSL IntelliSense features, including Quick Info, Signature Help, Statement Completion, Go To Definition, Reference Highlighting, and Semantic Highlighting."
+                    <TextBlock Text="Disabling IntelliSense will disable all ShaderLab IntelliSense features, including Quick Info, Statement Completion, and Semantic Highlighting."
                                TextWrapping="Wrap" Margin="0 0 0 2" />
                 </StackPanel>
             </GroupBox>

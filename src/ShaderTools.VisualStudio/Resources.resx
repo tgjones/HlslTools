@@ -120,6 +120,9 @@
   <data name="120" xml:space="preserve">
     <value>Advanced</value>
   </data>
+  <data name="122" xml:space="preserve">
+    <value>Formatting</value>
+  </data>
   <data name="123" xml:space="preserve">
     <value>General</value>
   </data>

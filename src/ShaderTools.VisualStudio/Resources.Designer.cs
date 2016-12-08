@@ -70,6 +70,15 @@ namespace ShaderTools.VisualStudio {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Formatting.
+        /// </summary>
+        internal static string _122 {
+            get {
+                return ResourceManager.GetString("122", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to General.
         /// </summary>
         internal static string _123 {

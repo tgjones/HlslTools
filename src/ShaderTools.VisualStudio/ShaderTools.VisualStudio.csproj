@@ -398,6 +398,25 @@
     <Compile Include="Hlsl\Parsing\BackgroundParserManager.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
+    <Compile Include="ShaderLab\ErrorList\ErrorManagerProvider.cs" />
+    <Compile Include="ShaderLab\ErrorList\SyntaxErrorManager.cs" />
+    <Compile Include="ShaderLab\Options\IShaderLabOptionsService.cs" />
+    <Compile Include="ShaderLab\Options\OptionsService.cs" />
+    <Compile Include="ShaderLab\Options\ShaderLabAdvancedOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShaderLab\Options\ShaderLabFormattingGeneralOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShaderLab\Options\ShaderLabOptionsPageBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShaderLab\Options\Views\ShaderLabFormattingGeneralOptionsControl.xaml.cs">
+      <DependentUpon>ShaderLabFormattingGeneralOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShaderLab\Options\Views\ShaderLabAdvancedOptionsControl.xaml.cs">
+      <DependentUpon>ShaderLabAdvancedOptionsControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
     <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
     <Compile Include="ShaderLab\ShaderLabEditorFactory.cs" />
@@ -593,13 +612,21 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Hlsl\Options\Views\Styles.xaml">
+    <Page Include="Core\Options\Views\Styles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShaderLab\Options\Views\ShaderLabFormattingGeneralOptionsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ShaderLab\Options\Views\ShaderLabAdvancedOptionsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <PropertyGroup>

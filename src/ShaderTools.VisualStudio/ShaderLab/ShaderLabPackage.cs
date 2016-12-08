@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.VisualStudio.Core;
 using ShaderTools.VisualStudio.Core.Navigation;
 using ShaderTools.VisualStudio.Core.Util.Extensions;
+using ShaderTools.VisualStudio.ShaderLab.Options;
 
 namespace ShaderTools.VisualStudio.ShaderLab
 {
@@ -21,6 +22,9 @@ namespace ShaderTools.VisualStudio.ShaderLab
         DefaultToInsertSpaces = true,
         EnableLineNumbers = true,
         RequestStockColors = true)]
+
+    [ProvideLanguageEditorOptionPage(typeof(ShaderLabAdvancedOptionsPage), ShaderLabConstants.LanguageName, null, "Advanced", "120")]
+    [ProvideLanguageEditorOptionPage(typeof(ShaderLabFormattingGeneralOptionsPage), ShaderLabConstants.LanguageName, null, "Formatting", "122")]
 
     [ProvideLanguageExtension(typeof(ShaderLabLanguageInfo), ShaderLabConstants.FileExtension)]
 
