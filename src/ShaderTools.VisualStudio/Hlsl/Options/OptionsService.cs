@@ -2,13 +2,17 @@
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell;
 using ShaderTools.Hlsl.Formatting;
+using ShaderTools.VisualStudio.Core.Options;
 
 namespace ShaderTools.VisualStudio.Hlsl.Options
 {
-    [Export(typeof(IOptionsService))]
-    internal sealed class OptionsService : IOptionsService
+    [Export(typeof(IHlslOptionsService))]
+    internal sealed class OptionsService : IHlslOptionsService
     {
         public event EventHandler OptionsChanged;
+
+        bool IOptionsService.EnableErrorReporting => AdvancedOptions.EnableErrorReporting;
+        bool IOptionsService.EnableSquiggles => AdvancedOptions.EnableSquiggles;
 
         public OptionsService()
         {

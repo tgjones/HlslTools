@@ -15,7 +15,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
     internal sealed class ErrorManagerProvider : IWpfTextViewCreationListener
     {
         [Import]
-        public IOptionsService OptionsService { get; set; }
+        public IHlslOptionsService OptionsService { get; set; }
 
         [Import]
         public SVsServiceProvider ServiceProvider { get; set; }

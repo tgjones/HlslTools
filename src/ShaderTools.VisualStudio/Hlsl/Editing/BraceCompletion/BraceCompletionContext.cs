@@ -13,7 +13,6 @@ using ShaderTools.VisualStudio.Core.Text;
 using ShaderTools.VisualStudio.Hlsl.Formatting;
 using ShaderTools.VisualStudio.Hlsl.Options;
 using ShaderTools.VisualStudio.Hlsl.Tagging.Classification;
-using ShaderTools.VisualStudio.Hlsl.Text;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 using TextSpan = ShaderTools.Core.Text.TextSpan;
 
@@ -24,11 +23,11 @@ namespace ShaderTools.VisualStudio.Hlsl.Editing.BraceCompletion
         private readonly ISmartIndentationService _smartIndentationService;
         private readonly ITextBufferUndoManagerProvider _undoManager;
         private readonly HlslClassificationService _classificationService;
-        private readonly IOptionsService _optionsService;
+        private readonly IHlslOptionsService _optionsService;
 
         public BraceCompletionContext(
             ISmartIndentationService smartIndentationService, ITextBufferUndoManagerProvider undoManager, 
-            HlslClassificationService classificationService, IOptionsService optionsService)
+            HlslClassificationService classificationService, IHlslOptionsService optionsService)
         {
             _smartIndentationService = smartIndentationService;
             _undoManager = undoManager;

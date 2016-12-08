@@ -1,9 +1,10 @@
 ﻿using System;
+using ShaderTools.VisualStudio.Core.Options.Views;
 using ShaderTools.VisualStudio.Hlsl.Options.Views;
 
 namespace ShaderTools.VisualStudio.Hlsl.Options
 {
-    internal sealed class HlslAdvancedOptionsPage : OptionsPageBase<AdvancedOptions>
+    internal sealed class HlslAdvancedOptionsPage : HlslOptionsPageBase<AdvancedOptions>
     {
         protected override OptionsControlBase CreateControl(IServiceProvider serviceProvider) => new HlslAdvancedOptionsControl(Options);
     }

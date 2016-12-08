@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
+namespace ShaderTools.VisualStudio.Core.Options.ViewModels
 {
     internal sealed class Option<T>
     {

@@ -20,7 +20,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Outlining
         public IOutliningManagerService OutliningManagerService { get; set; }
 
         [Import]
-        public IOptionsService OptionsService { get; set; }
+        public IHlslOptionsService OptionsService { get; set; }
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {

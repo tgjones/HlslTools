@@ -5,11 +5,10 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Hlsl.Diagnostics;
-using ShaderTools.VisualStudio.Core.Tagging;
-using ShaderTools.VisualStudio.Hlsl.Options;
+using ShaderTools.Core.Diagnostics;
+using ShaderTools.VisualStudio.Core.Options;
 
-namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
+namespace ShaderTools.VisualStudio.Core.Tagging.Squiggles
 {
     internal abstract class ErrorTagger : AsyncTagger<IErrorTag>
     {
@@ -18,8 +17,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
         private readonly IOptionsService _optionsService;
         private bool _squigglesEnabled;
 
-        protected ErrorTagger(string errorType, ITextView textView,
-            IOptionsService optionsService)
+        protected ErrorTagger(string errorType, ITextView textView, IOptionsService optionsService)
         {
             _errorType = errorType;
             _textView = textView;
@@ -34,13 +32,12 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
 
         private async void OnOptionsChanged(object sender, EventArgs e)
         {
-            var options = _optionsService.AdvancedOptions;
-            _squigglesEnabled = options.EnableErrorReporting && options.EnableSquiggles;
+            _squigglesEnabled = _optionsService.EnableErrorReporting && _optionsService.EnableSquiggles;
 
             await InvalidateTags(_textView.TextSnapshot, CancellationToken.None);
         }
 
-        protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, Diagnostic diagnostic, bool squigglesEnabled)
+        protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, DiagnosticBase diagnostic, bool squigglesEnabled)
         {
             var span = new Span(diagnostic.Span.Start, diagnostic.Span.Length);
             var snapshotSpan = new SnapshotSpan(snapshot, span);
@@ -71,6 +68,6 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
             return Tuple.Create(snapshot, tagSpans);
         }
 
-        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        protected abstract IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

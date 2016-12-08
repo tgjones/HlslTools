@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.VisualStudio.Hlsl.Options.Views
+﻿using ShaderTools.VisualStudio.Core.Options.Views;
+
+namespace ShaderTools.VisualStudio.Hlsl.Options.Views
 {
     internal partial class HlslFormattingGeneralOptionsControl : OptionsControlBase
     {

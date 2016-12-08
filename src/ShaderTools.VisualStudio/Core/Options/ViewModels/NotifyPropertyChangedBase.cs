@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
+namespace ShaderTools.VisualStudio.Core.Options.ViewModels
 {
     internal abstract class NotifyPropertyChangedBase : INotifyPropertyChanged
     {

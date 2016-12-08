@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 
-namespace ShaderTools.VisualStudio.Hlsl.Options.Views
+namespace ShaderTools.VisualStudio.Core.Options.Views
 {
     internal abstract class OptionsControlBase : UserControl
     {

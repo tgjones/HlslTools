@@ -30,7 +30,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Editing.BraceCompletion
         public ITextBufferUndoManagerProvider TextBufferUndoManagerProvider { get; set; }
 
         [Import]
-        public IOptionsService OptionsService { get; set; }
+        public IHlslOptionsService OptionsService { get; set; }
 
         public bool TryCreateContext(ITextView textView, SnapshotPoint openingPoint, char openingBrace, char closingBrace, out IBraceCompletionContext context)
         {

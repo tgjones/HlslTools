@@ -232,6 +232,11 @@
     <Compile Include="Core\EditorFactoryBase.cs" />
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
+    <Compile Include="Core\Options\IOptionsService.cs" />
+    <Compile Include="Core\Options\OptionsPageBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\Options\ViewModels\OptionsPreviewViewModelBase.cs" />
     <Compile Include="Core\Parsing\BackgroundParserBase.cs" />
     <Compile Include="Core\Parsing\BackgroundParserManagerBase.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
@@ -247,7 +252,7 @@
     <Compile Include="Hlsl\Editing\Commenting\CommentingTextViewCreationListener.cs" />
     <Compile Include="Hlsl\Editing\Commenting\UncommentCommandTarget.cs" />
     <Compile Include="Core\ErrorList\ErrorListHelper.cs" />
-    <Compile Include="Hlsl\ErrorList\ErrorManager.cs" />
+    <Compile Include="Core\ErrorList\ErrorManager.cs" />
     <Compile Include="Hlsl\ErrorList\ErrorManagerProvider.cs" />
     <Compile Include="Core\ErrorList\IErrorListHelper.cs" />
     <Compile Include="Hlsl\ErrorList\SemanticErrorManager.cs" />
@@ -361,17 +366,20 @@
     <Compile Include="Hlsl\Options\HlslFormattingIndentationOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Hlsl\Options\IOptionsService.cs" />
+    <Compile Include="Hlsl\Options\HlslOptionsPageBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hlsl\Options\IHlslOptionsService.cs" />
     <Compile Include="Hlsl\Options\OptionsService.cs" />
-    <Compile Include="Hlsl\Options\ViewModels\CheckBoxOptionViewModel.cs" />
+    <Compile Include="Core\Options\ViewModels\CheckBoxOptionViewModel.cs" />
     <Compile Include="Hlsl\Options\ViewModels\FormattingSpacingViewModel.cs" />
     <Compile Include="Hlsl\Options\ViewModels\FormattingNewLinesViewModel.cs" />
-    <Compile Include="Hlsl\Options\ViewModels\HeaderItemViewModel.cs" />
+    <Compile Include="Core\Options\ViewModels\HeaderItemViewModel.cs" />
     <Compile Include="Hlsl\Options\ViewModels\FormattingIndentationViewModel.cs" />
-    <Compile Include="Hlsl\Options\ViewModels\NotifyPropertyChangedBase.cs" />
-    <Compile Include="Hlsl\Options\ViewModels\Option.cs" />
-    <Compile Include="Hlsl\Options\ViewModels\OptionsPreviewViewModelBase.cs" />
-    <Compile Include="Hlsl\Options\ViewModels\RadioButtonViewModelBase.cs" />
+    <Compile Include="Core\Options\ViewModels\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Core\Options\ViewModels\Option.cs" />
+    <Compile Include="Core\Options\ViewModels\RadioButtonViewModelBase.cs" />
+    <Compile Include="Hlsl\Options\ViewModels\HlslOptionsPreviewViewModelBase.cs" />
     <Compile Include="Hlsl\Options\Views\HlslAdvancedOptionsControl.xaml.cs">
       <DependentUpon>HlslAdvancedOptionsControl.xaml</DependentUpon>
     </Compile>
@@ -381,18 +389,14 @@
     <Compile Include="Hlsl\Options\HlslFormattingGeneralOptionsPage.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Hlsl\Options\Views\OptionsControlBase.cs" />
-    <Compile Include="Hlsl\Options\OptionsPageBase.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Hlsl\Options\Views\OptionsPreviewControl.xaml.cs">
+    <Compile Include="Core\Options\Views\OptionsControlBase.cs" />
+    <Compile Include="Core\Options\Views\OptionsPreviewControl.xaml.cs">
       <DependentUpon>OptionsPreviewControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndent.cs" />
     <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndentProvider.cs" />
     <Compile Include="Hlsl\Parsing\BackgroundParserManager.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
-    <Compile Include="Hlsl\Util\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
     <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
     <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
@@ -446,7 +450,7 @@
     <Compile Include="Core\Tagging\IAsyncTagger.cs" />
     <Compile Include="Hlsl\Tagging\Outlining\OutliningTextViewCreationListener.cs" />
     <Compile Include="Hlsl\Tagging\Outlining\OutliningCommandTarget.cs" />
-    <Compile Include="Hlsl\Tagging\Squiggles\ErrorTagger.cs" />
+    <Compile Include="Core\Tagging\Squiggles\ErrorTagger.cs" />
     <Compile Include="Hlsl\Tagging\Squiggles\SemanticErrorTagger.cs" />
     <Compile Include="Hlsl\Tagging\Squiggles\SemanticErrorTaggerProvider.cs" />
     <Compile Include="Hlsl\Tagging\Squiggles\SyntaxErrorTagger.cs" />
@@ -460,15 +464,15 @@
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTreeExtensions.cs" />
     <Compile Include="Core\Util\ExceptionHelper.cs" />
-    <Compile Include="Hlsl\Util\Extensions\EnumerableExtensions.cs" />
-    <Compile Include="Hlsl\Util\Extensions\SnapshotSpanExtensions.cs" />
-    <Compile Include="Hlsl\Util\Extensions\SpanExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\SnapshotSpanExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\SpanExtensions.cs" />
     <Compile Include="Core\Util\Hash.cs" />
-    <Compile Include="Hlsl\Util\Extensions\IProjectionBufferFactoryServiceExtensions.cs" />
-    <Compile Include="Hlsl\Util\Extensions\ITextSnapshotLineExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\IProjectionBufferFactoryServiceExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ITextSnapshotLineExtensions.cs" />
     <Compile Include="Core\Util\LineSpan.cs" />
     <Compile Include="Core\Util\Logger.cs" />
-    <Compile Include="Hlsl\Util\Extensions\StringExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\StringExtensions.cs" />
     <Compile Include="Hlsl\Util\SyntaxOutput\SyntaxExtensions.cs" />
     <Compile Include="Core\Util\ThemeManager.cs" />
     <Compile Include="Core\Util\VisualStudioTheme.cs" />
@@ -585,7 +589,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Hlsl\Options\Views\OptionsPreviewControl.xaml">
+    <Page Include="Core\Options\Views\OptionsPreviewControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

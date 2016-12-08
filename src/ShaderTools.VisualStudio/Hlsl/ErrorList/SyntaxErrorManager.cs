@@ -4,7 +4,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.Core.Diagnostics;
+using ShaderTools.VisualStudio.Core.ErrorList;
 using ShaderTools.VisualStudio.Core.Parsing;
 using ShaderTools.VisualStudio.Core.Util;
 using ShaderTools.VisualStudio.Hlsl.Options;
@@ -15,7 +16,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
 {
     internal sealed class SyntaxErrorManager : ErrorManager
     {
-        public SyntaxErrorManager(BackgroundParser backgroundParser, ITextView textView, IOptionsService optionsService, IServiceProvider serviceProvider, ITextDocumentFactoryService textDocumentFactoryService)
+        public SyntaxErrorManager(BackgroundParser backgroundParser, ITextView textView, IHlslOptionsService optionsService, IServiceProvider serviceProvider, ITextDocumentFactoryService textDocumentFactoryService)
             : base(textView, optionsService, serviceProvider, textDocumentFactoryService)
         {
             backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.OnIdle,
@@ -26,7 +27,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
                 }));
         }
 
-        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             return snapshot.GetSyntaxTree(cancellationToken).GetDiagnostics();
         }

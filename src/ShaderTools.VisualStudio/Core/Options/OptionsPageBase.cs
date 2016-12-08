@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Windows;
 using Microsoft.VisualStudio.Shell;
+using ShaderTools.VisualStudio.Core.Options.Views;
 using ShaderTools.VisualStudio.Core.Util.Extensions;
-using ShaderTools.VisualStudio.Hlsl.Options.Views;
 
-namespace ShaderTools.VisualStudio.Hlsl.Options
+namespace ShaderTools.VisualStudio.Core.Options
 {
-    internal abstract class OptionsPageBase<TOptions> : UIElementDialogPage
+    internal abstract class OptionsPageBase<TOptionsService, TOptions> : UIElementDialogPage
+        where TOptionsService : class, IOptionsService
         where TOptions : class, new()
     {
         private OptionsControlBase _control;
@@ -24,7 +25,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Options
         {
             base.SaveSettingsToStorage();
 
-            var optionsService = Site.AsVsServiceProvider().GetComponentModel().GetService<IOptionsService>();
+            var optionsService = Site.AsVsServiceProvider().GetComponentModel().GetService<TOptionsService>();
             optionsService.RaiseOptionsChanged();
         }
 

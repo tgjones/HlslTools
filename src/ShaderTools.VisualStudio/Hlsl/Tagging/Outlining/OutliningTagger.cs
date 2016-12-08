@@ -17,7 +17,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Outlining
         private readonly ITextBuffer _textBuffer;
         private bool _enabled;
 
-        public OutliningTagger(ITextBuffer textBuffer, BackgroundParser backgroundParser, IOptionsService optionsService)
+        public OutliningTagger(ITextBuffer textBuffer, BackgroundParser backgroundParser, IHlslOptionsService optionsService)
         {
             _textBuffer = textBuffer;
 

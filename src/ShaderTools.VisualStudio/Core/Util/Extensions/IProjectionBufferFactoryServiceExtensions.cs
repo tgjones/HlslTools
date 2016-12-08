@@ -7,14 +7,13 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.VisualStudio.Core.Util;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
+namespace ShaderTools.VisualStudio.Core.Util.Extensions
 {
     // From https://github.com/dotnet/roslyn/blob/master/src/EditorFeatures/Core/Shared/Extensions/IProjectionBufferFactoryServiceExtensions.cs
     internal static class IProjectionBufferFactoryServiceExtensions
     {
-        private const string HlslPreviewContentType = "HlslPreviewContentType";
+        private const string ShaderPreviewContentType = "ShaderPreviewContentType";
 
         /// <summary>
         /// Hack to get view taggers working on our preview surfaces.  We need to define
@@ -22,10 +21,10 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
         /// one who understands this.
         /// </summary>
         [Export]
-        [Name(HlslPreviewContentType)]
+        [Name(ShaderPreviewContentType)]
         [BaseDefinition("text")]
         [BaseDefinition("projection")]
-        public static readonly ContentTypeDefinition HlslPreviewContentTypeDefinition;
+        public static readonly ContentTypeDefinition ShaderPreviewContentTypeDefinition;
 
         public static IProjectionBuffer CreateProjectionBufferWithoutIndentation(
             this IProjectionBufferFactoryService factoryService,
@@ -144,7 +143,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
                 projectionEditResolver: null,
                 sourceSpans: spans,
                 options: ProjectionBufferOptions.None,
-                contentType: registryService.GetContentType(HlslPreviewContentType));
+                contentType: registryService.GetContentType(ShaderPreviewContentType));
         }
 
         private static int DetermineIndentationColumn(

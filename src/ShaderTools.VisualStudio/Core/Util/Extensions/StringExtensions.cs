@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
+namespace ShaderTools.VisualStudio.Core.Util.Extensions
 {
     // https://github.com/dotnet/roslyn/blob/master/src/Workspaces/Core/Portable/Shared/Extensions/StringExtensions.cs
     internal static class StringExtensions

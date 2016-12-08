@@ -15,7 +15,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Formatting
 {
     internal static class FormattingExtensions
     {
-        public static void Format(this ITextBuffer buffer, TextSpan span, IOptionsService optionsService)
+        public static void Format(this ITextBuffer buffer, TextSpan span, IHlslOptionsService optionsService)
         {
             SyntaxTree syntaxTree;
             if (!TryGetSyntaxTree(buffer, out syntaxTree))
@@ -27,7 +27,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Formatting
         }
 
         // https://github.com/Microsoft/nodejstools/blob/master/Nodejs/Product/Nodejs/EditFilter.cs#L866
-        public static void FormatAfterTyping(this ITextView textView, char ch, IOptionsService optionsService)
+        public static void FormatAfterTyping(this ITextView textView, char ch, IHlslOptionsService optionsService)
         {
             if (!ShouldFormatOnCharacter(ch, optionsService))
                 return;
@@ -42,7 +42,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Formatting
             ApplyEdits(textView.TextBuffer, edits);
         }
 
-        private static bool ShouldFormatOnCharacter(char ch, IOptionsService optionsService)
+        private static bool ShouldFormatOnCharacter(char ch, IHlslOptionsService optionsService)
         {
             switch (ch)
             {

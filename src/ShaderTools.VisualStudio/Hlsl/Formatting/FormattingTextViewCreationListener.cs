@@ -16,7 +16,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Formatting
         public IVsEditorAdaptersFactoryService EditorAdaptersFactoryService { get; set; }
 
         [Import]
-        public IOptionsService OptionsService { get; set; }
+        public IHlslOptionsService OptionsService { get; set; }
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {

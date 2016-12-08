@@ -15,7 +15,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Outlining
     internal sealed class OutliningTaggerProvider : ITaggerProvider
     {
         [Import]
-        public IOptionsService OptionsService { get; set; }
+        public IHlslOptionsService OptionsService { get; set; }
 
         public ITagger<T> CreateTagger<T>(ITextBuffer buffer) where T : ITag
         {

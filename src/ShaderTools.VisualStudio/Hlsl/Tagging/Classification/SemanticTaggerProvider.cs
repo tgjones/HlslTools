@@ -14,7 +14,6 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Classification
     internal sealed class SemanticTaggerProvider : SemanticTaggerProviderBase
     {
         private readonly HlslClassificationService _classificationService;
-        private readonly ClassificationColorManager _classificationColorManager;
 
         [ImportingConstructor]
         public SemanticTaggerProvider(HlslClassificationService classificationService, 

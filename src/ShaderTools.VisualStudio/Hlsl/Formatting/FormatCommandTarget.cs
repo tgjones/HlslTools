@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.VisualStudio.Core.Text;
 using ShaderTools.VisualStudio.Hlsl.Options;
-using ShaderTools.VisualStudio.Hlsl.Text;
 using TextSpan = ShaderTools.Core.Text.TextSpan;
 
 namespace ShaderTools.VisualStudio.Hlsl.Formatting
@@ -16,9 +15,9 @@ namespace ShaderTools.VisualStudio.Hlsl.Formatting
     {
         private IOleCommandTarget _nextCommandTarget;
         private readonly IWpfTextView _textView;
-        private readonly IOptionsService _optionsService;
+        private readonly IHlslOptionsService _optionsService;
 
-        public FormatCommandTarget(IVsTextView adapter, IWpfTextView textView, IOptionsService optionsService)
+        public FormatCommandTarget(IVsTextView adapter, IWpfTextView textView, IHlslOptionsService optionsService)
         {
             _textView = textView;
             _optionsService = optionsService;

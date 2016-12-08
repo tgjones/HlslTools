@@ -1,14 +1,11 @@
 ﻿using System;
 using ShaderTools.Hlsl.Formatting;
+using ShaderTools.VisualStudio.Core.Options;
 
 namespace ShaderTools.VisualStudio.Hlsl.Options
 {
-    internal interface IOptionsService
+    internal interface IHlslOptionsService : IOptionsService
     {
-        event EventHandler OptionsChanged;
-
-        void RaiseOptionsChanged();
-
         AdvancedOptions AdvancedOptions { get; }
         GeneralOptions GeneralOptions { get; }
         FormattingOptions FormattingOptions { get; }

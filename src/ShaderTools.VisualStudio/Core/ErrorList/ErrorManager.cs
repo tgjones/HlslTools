@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Hlsl.Diagnostics;
-using ShaderTools.VisualStudio.Core.ErrorList;
-using ShaderTools.VisualStudio.Hlsl.Options;
+using ShaderTools.Core.Diagnostics;
+using ShaderTools.VisualStudio.Core.Options;
 
-namespace ShaderTools.VisualStudio.Hlsl.ErrorList
+namespace ShaderTools.VisualStudio.Core.ErrorList
 {
     internal abstract class ErrorManager
     {
@@ -38,8 +37,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
 
         private void OnOptionsChanged(object sender, EventArgs e)
         {
-            var options = _optionsService.AdvancedOptions;
-            _errorReportingEnabled = options.EnableErrorReporting;
+            _errorReportingEnabled = _optionsService.EnableErrorReporting;
 
             ErrorListHelper?.Clear();
 
@@ -71,6 +69,6 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
             }
         }
 
-        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        protected abstract IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

@@ -60,7 +60,7 @@ namespace ShaderTools.VisualStudio.Hlsl
 
         public static HlslPackage Instance { get; private set; }
 
-        internal IOptionsService Options { get; private set; }
+        internal IHlslOptionsService Options { get; private set; }
 
         protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
         {
@@ -85,7 +85,7 @@ namespace ShaderTools.VisualStudio.Hlsl
 
             Instance = this;
 
-            Options = this.AsVsServiceProvider().GetComponentModel().GetService<IOptionsService>();
+            Options = this.AsVsServiceProvider().GetComponentModel().GetService<IHlslOptionsService>();
         }
     }
 }

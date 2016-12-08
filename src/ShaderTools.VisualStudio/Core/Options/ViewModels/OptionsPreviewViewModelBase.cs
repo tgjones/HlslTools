@@ -5,13 +5,10 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Formatting;
-using ShaderTools.Hlsl.Syntax;
 using ShaderTools.VisualStudio.Core.Util;
-using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.VisualStudio.Core.Util.Extensions;
 
-namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
+namespace ShaderTools.VisualStudio.Core.Options.ViewModels
 {
     internal abstract class OptionsPreviewViewModelBase : NotifyPropertyChangedBase, IDisposable
     {
@@ -23,11 +20,10 @@ namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
         private readonly ITextBufferFactoryService _textBufferFactoryService;
         private readonly IProjectionBufferFactoryService _projectionBufferFactory;
         private readonly IContentTypeRegistryService _contentTypeRegistryService;
-        private readonly IOptionsService _optionsService;
 
         public List<object> Items { get; }
 
-        protected OptionsPreviewViewModelBase(IServiceProvider serviceProvider)
+        protected OptionsPreviewViewModelBase(IServiceProvider serviceProvider, string contentTypeName)
         {
             Items = new List<object>();
 
@@ -38,9 +34,8 @@ namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
             _textEditorFactoryService = componentModel.GetService<ITextEditorFactoryService>();
             _projectionBufferFactory = componentModel.GetService<IProjectionBufferFactoryService>();
             _editorOptions = componentModel.GetService<IEditorOptionsFactoryService>();
-            _optionsService = componentModel.GetService<IOptionsService>();
 
-            _contentType = _contentTypeRegistryService.GetContentType(HlslConstants.ContentTypeName);
+            _contentType = _contentTypeRegistryService.GetContentType(contentTypeName);
         }
 
         public void SetOptionAndUpdatePreview<T>(T value, Option<T> option, string preview)
@@ -59,15 +54,14 @@ namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
             }
         }
 
+        protected abstract string ApplyFormatting(string text);
+
         public void UpdatePreview(string text)
         {
             const string start = "//[";
             const string end = "//]";
 
-            var sourceText = SourceText.From(text);
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(sourceText);
-            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(sourceText, 0, text.Length), _optionsService.FormattingOptions);
-            var formatted = Formatter.ApplyEdits(text, edits);
+            var formatted = ApplyFormatting(text);
 
             var textBuffer = _textBufferFactoryService.CreateTextBuffer(formatted, _contentType);
 
@@ -86,7 +80,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
             var textView = _textEditorFactoryService.CreateTextView(projection,
               _textEditorFactoryService.CreateTextViewRoleSet(PredefinedTextViewRoles.Analyzable));
 
-            this.TextViewHost = _textEditorFactoryService.CreateTextViewHost(textView, setFocus: false);
+            TextViewHost = _textEditorFactoryService.CreateTextViewHost(textView, setFocus: false);
         }
 
         public void Dispose()

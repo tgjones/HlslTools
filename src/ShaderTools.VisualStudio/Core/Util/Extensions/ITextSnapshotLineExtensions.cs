@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.OptionsExtensionMethods;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
+namespace ShaderTools.VisualStudio.Core.Util.Extensions
 {
     // From https://github.com/dotnet/roslyn/blob/master/src/EditorFeatures/Text/Shared/Extensions/ITextSnapshotLineExtensions.cs
     internal static class ITextSnapshotLineExtensions

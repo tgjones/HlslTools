@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Text;
 
-namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
+namespace ShaderTools.VisualStudio.Core.Util.Extensions
 {
     internal static class SnapshotSpanExtensions
     {

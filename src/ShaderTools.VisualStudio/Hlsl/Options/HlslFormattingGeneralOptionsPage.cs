@@ -1,9 +1,10 @@
 ﻿using System;
+using ShaderTools.VisualStudio.Core.Options.Views;
 using ShaderTools.VisualStudio.Hlsl.Options.Views;
 
 namespace ShaderTools.VisualStudio.Hlsl.Options
 {
-    internal sealed class HlslFormattingGeneralOptionsPage : OptionsPageBase<GeneralOptions>
+    internal sealed class HlslFormattingGeneralOptionsPage : HlslOptionsPageBase<GeneralOptions>
     {
         protected override OptionsControlBase CreateControl(IServiceProvider serviceProvider) => new HlslFormattingGeneralOptionsControl(Options);
     }

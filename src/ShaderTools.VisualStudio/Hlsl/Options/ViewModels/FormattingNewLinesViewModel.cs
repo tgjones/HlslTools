@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Windows.Controls;
 using ShaderTools.Hlsl.Formatting;
+using ShaderTools.VisualStudio.Core.Options.ViewModels;
 
 namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
 {
-    internal sealed class FormattingNewLinesViewModel : OptionsPreviewViewModelBase
+    internal sealed class FormattingNewLinesViewModel : HlslOptionsPreviewViewModelBase
     {
         private const string TypePreview = @"
 //[

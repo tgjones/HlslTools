@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.VisualStudio.Hlsl.Options.ViewModels
+﻿namespace ShaderTools.VisualStudio.Core.Options.ViewModels
 {
     internal class HeaderItemViewModel
     {

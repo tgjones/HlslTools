@@ -2,9 +2,9 @@
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ShaderTools.VisualStudio.Hlsl.Options.ViewModels;
+using ShaderTools.VisualStudio.Core.Options.ViewModels;
 
-namespace ShaderTools.VisualStudio.Hlsl.Options.Views
+namespace ShaderTools.VisualStudio.Core.Options.Views
 {
     internal partial class OptionsPreviewControl : OptionsControlBase
     {

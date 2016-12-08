@@ -5,8 +5,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.VisualStudio.Core.ErrorList;
 using ShaderTools.VisualStudio.Core.Parsing;
 using ShaderTools.VisualStudio.Core.Util;
 using ShaderTools.VisualStudio.Hlsl.Options;
@@ -17,7 +18,7 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
 {
     internal sealed class SemanticErrorManager : ErrorManager
     {
-        public SemanticErrorManager(BackgroundParser backgroundParser, ITextView textView, IOptionsService optionsService, IServiceProvider serviceProvider, ITextDocumentFactoryService textDocumentFactoryService) 
+        public SemanticErrorManager(BackgroundParser backgroundParser, ITextView textView, IHlslOptionsService optionsService, IServiceProvider serviceProvider, ITextDocumentFactoryService textDocumentFactoryService) 
             : base(textView, optionsService, serviceProvider, textDocumentFactoryService)
         {
             backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.OnIdle,
@@ -28,11 +29,11 @@ namespace ShaderTools.VisualStudio.Hlsl.ErrorList
                 }));
         }
 
-        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             SemanticModel semanticModel;
             if (!snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
-                return Enumerable.Empty<Diagnostic>();
+                return Enumerable.Empty<DiagnosticBase>();
             return semanticModel.GetDiagnostics();
         }
     }

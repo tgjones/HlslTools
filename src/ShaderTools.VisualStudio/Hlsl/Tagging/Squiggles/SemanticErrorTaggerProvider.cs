@@ -15,7 +15,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
     internal sealed class SemanticErrorTaggerProvider : IViewTaggerProvider
     {
         [Import]
-        public IOptionsService OptionsService { get; set; }
+        public IHlslOptionsService OptionsService { get; set; }
 
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer)
             where T : ITag
