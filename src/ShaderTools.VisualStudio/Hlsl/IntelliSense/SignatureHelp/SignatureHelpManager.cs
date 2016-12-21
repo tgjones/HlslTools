@@ -98,12 +98,14 @@ namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.SignatureHelp
 
             var snapshot = _textView.TextSnapshot;
             var triggerPosition = _textView.GetPosition(snapshot);
+            if (triggerPosition == null)
+                return;
 
             SemanticModel semanticModel = null;
             if (!await Task.Run(() => snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
                 return;
 
-            var model = GetSignatureHelpModel(semanticModel, triggerPosition, _signatureHelpModelProviderService.Providers);
+            var model = GetSignatureHelpModel(semanticModel, triggerPosition.Value, _signatureHelpModelProviderService.Providers);
 
             // If we previously recorded a selected item and the index is still valid,
             // let's restore it.

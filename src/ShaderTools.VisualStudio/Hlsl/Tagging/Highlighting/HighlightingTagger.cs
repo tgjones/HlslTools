@@ -21,19 +21,21 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting
 {
     internal sealed class HighlightingTagger : AsyncTagger<HighlightTag>
     {
+        private readonly ITextBuffer _textBuffer;
         private readonly ITextView _textView;
         private readonly ImmutableArray<IHighlighter> _highlighters;
         private readonly VisualStudioVersion _vsVersion;
 
         private readonly List<ITagSpan<HighlightTag>> _emptyList = new List<ITagSpan<HighlightTag>>();
 
-        public HighlightingTagger(BackgroundParser backgroundParser, ITextView textView, ImmutableArray<IHighlighter> highlighters, IServiceProvider serviceProvider)
+        public HighlightingTagger(ITextBuffer textBuffer, BackgroundParser backgroundParser, ITextView textView, ImmutableArray<IHighlighter> highlighters, IServiceProvider serviceProvider)
         {
             backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.OnIdle,
                 async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
 
             textView.Caret.PositionChanged += OnCaretPositionChanged;
 
+            _textBuffer = textBuffer;
             _textView = textView;
             _highlighters = highlighters;
 
@@ -43,12 +45,16 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting
 
         private async void OnCaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
         {
-            await InvalidateTags(_textView.TextSnapshot, CancellationToken.None);
+            await InvalidateTags(_textBuffer.CurrentSnapshot, CancellationToken.None);
         }
 
         protected override Tuple<ITextSnapshot, List<ITagSpan<HighlightTag>>> GetTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            if (snapshot != _textView.TextSnapshot)
+            if (snapshot != _textBuffer.CurrentSnapshot)
+                return Tuple.Create(snapshot, _emptyList);
+
+            var unmappedPosition = _textView.GetPosition(snapshot);
+            if (unmappedPosition == null)
                 return Tuple.Create(snapshot, _emptyList);
 
             SemanticModel semanticModel;
@@ -56,9 +62,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting
                 return Tuple.Create(snapshot, _emptyList);
 
             var syntaxTree = semanticModel.SyntaxTree;
-
-            var unmappedPosition = _textView.GetPosition(snapshot);
-            var position = syntaxTree.MapRootFilePosition(unmappedPosition);
+            var position = syntaxTree.MapRootFilePosition(unmappedPosition.Value);
 
             var tagSpans = semanticModel.GetHighlights(position, _highlighters)
                 .Select(span => (ITagSpan<HighlightTag>) new TagSpan<HighlightTag>(

@@ -62,6 +62,8 @@ namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion
 
             var snapshot = _textView.TextSnapshot;
             var triggerPosition = _textView.GetPosition(snapshot);
+            if (triggerPosition == null)
+                return;
 
             CompletionModel model = null;
             try
@@ -70,7 +72,7 @@ namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion
                 if (!await Task.Run(() => snapshot.TryGetSemanticModel(token, out semanticModel), token))
                     return;
 
-                await Task.Run(() => model = semanticModel.GetCompletionModel(triggerPosition, snapshot, _completionProviderService.Providers, token), token);
+                await Task.Run(() => model = semanticModel.GetCompletionModel(triggerPosition.Value, snapshot, _completionProviderService.Providers, token), token);
             }
             catch (OperationCanceledException)
             {

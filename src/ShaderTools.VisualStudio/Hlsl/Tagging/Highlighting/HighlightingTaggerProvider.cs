@@ -25,7 +25,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Highlighting
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<HighlightingTagger, T>(buffer,
-                () => new HighlightingTagger(buffer.GetBackgroundParser(), textView, HighlighterService.Highlighters, ServiceProvider));
+                () => new HighlightingTagger(buffer, buffer.GetBackgroundParser(), textView, HighlighterService.Highlighters, ServiceProvider));
         }
     }
 }

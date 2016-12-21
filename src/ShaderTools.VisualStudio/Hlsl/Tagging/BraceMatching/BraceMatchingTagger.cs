@@ -40,11 +40,13 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.BraceMatching
             if (snapshot != _textView.TextSnapshot)
                 return Tuple.Create(snapshot, _emptyList);
 
+            var unmappedPosition = _textView.GetPosition(snapshot);
+            if (unmappedPosition == null)
+                return Tuple.Create(snapshot, _emptyList);
+
             var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
 
-            var unmappedPosition = _textView.GetPosition(snapshot);
-            var position =  syntaxTree.MapRootFilePosition(unmappedPosition);
-
+            var position =  syntaxTree.MapRootFilePosition(unmappedPosition.Value);
             var result = _braceMatcher.MatchBraces(syntaxTree, position);
             if (!result.IsValid)
                 return Tuple.Create(snapshot, _emptyList);

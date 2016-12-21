@@ -101,9 +101,13 @@ namespace ShaderTools.VisualStudio.Hlsl.Util.Extensions
             return semanticModel != null;
         }
 
-        public static int GetPosition(this ITextView syntaxEditor, ITextSnapshot snapshot)
+        public static int? GetPosition(this ITextView syntaxEditor, ITextSnapshot snapshot)
         {
-            return syntaxEditor.Caret.Position.BufferPosition.TranslateTo(snapshot, PointTrackingMode.Negative);
+            var caretPoint = syntaxEditor.Caret.Position.BufferPosition;
+            var snapshotPoint = syntaxEditor.BufferGraph.MapDownToSnapshot(caretPoint, PointTrackingMode.Positive, snapshot, PositionAffinity.Successor);
+            if (snapshotPoint.HasValue)
+                return snapshotPoint.Value.Position;
+            return null;
         }
 
         // From https://github.com/dotnet/roslyn/blob/e39a3aeb1185ef0b349cad96a105969423065eac/src/EditorFeatures/Core/Shared/Extensions/ITextViewExtensions.cs#L278
