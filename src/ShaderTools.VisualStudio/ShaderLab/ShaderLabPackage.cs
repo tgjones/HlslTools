@@ -35,7 +35,17 @@ namespace ShaderTools.VisualStudio.ShaderLab
     {
         private const string PackageId = "448635DC-AF8B-4767-BFDB-26ED6A865158";
 
-        public static ShaderLabPackage Instance { get; private set; }
+        private static ShaderLabPackage _instance;
+        public static ShaderLabPackage Instance
+        {
+            get
+            {
+                if (_instance != null)
+                    return _instance;
+                _instance = ((IVsShell) GetGlobalService(typeof(SVsShell))).LoadPackage<ShaderLabPackage>();
+                return _instance;
+            }
+        }
 
         protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
         {
@@ -54,9 +64,9 @@ namespace ShaderTools.VisualStudio.ShaderLab
 
         protected override void Initialize()
         {
-            base.Initialize();
+            _instance = this;
 
-            Instance = this;
+            base.Initialize();
         }
 
         private sealed class CodeWindowManager : CodeWindowManagerBase

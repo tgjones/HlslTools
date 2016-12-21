@@ -20,7 +20,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
         public ITagger<T> CreateTagger<T>(ITextView textView, ITextBuffer buffer) where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<SyntaxErrorTagger, T>(buffer,
-                () => new SyntaxErrorTagger(textView, buffer.GetBackgroundParser(), OptionsService));
+                () => new SyntaxErrorTagger(textView, buffer, buffer.GetBackgroundParser(), OptionsService));
         }
     }
 }

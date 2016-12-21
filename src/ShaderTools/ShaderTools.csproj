@@ -457,6 +457,7 @@
     <Compile Include="Unity\Syntax\ShaderTagsSyntax.cs" />
     <Compile Include="Unity\Syntax\ShaderTagSyntax.cs" />
     <Compile Include="Unity\Syntax\SubShaderSyntax.cs" />
+    <Compile Include="Unity\Syntax\SyntaxWalker.cs" />
     <Compile Include="Unity\Syntax\UsePassSyntax.cs" />
     <Compile Include="Unity\Syntax\Vector3Syntax.cs" />
     <Compile Include="Unity\Syntax\Vector4Syntax.cs" />

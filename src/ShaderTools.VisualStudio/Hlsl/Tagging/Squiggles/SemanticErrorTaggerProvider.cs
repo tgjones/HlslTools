@@ -21,7 +21,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
             where T : ITag
         {
             return AsyncTaggerUtility.CreateTagger<SemanticErrorTagger, T>(buffer,
-                () => new SemanticErrorTagger(textView, buffer.GetBackgroundParser(), OptionsService));
+                () => new SemanticErrorTagger(textView, buffer, buffer.GetBackgroundParser(), OptionsService));
         }
     }
 }

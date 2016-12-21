@@ -13,14 +13,14 @@ namespace ShaderTools.VisualStudio.Core.Tagging.Squiggles
     internal abstract class ErrorTagger : AsyncTagger<IErrorTag>
     {
         private readonly string _errorType;
-        private readonly ITextView _textView;
+        private readonly ITextBuffer _textBuffer;
         private readonly IOptionsService _optionsService;
         private bool _squigglesEnabled;
 
-        protected ErrorTagger(string errorType, ITextView textView, IOptionsService optionsService)
+        protected ErrorTagger(string errorType, ITextView textView, ITextBuffer textBuffer, IOptionsService optionsService)
         {
             _errorType = errorType;
-            _textView = textView;
+            _textBuffer = textBuffer;
             _optionsService = optionsService;
 
             optionsService.OptionsChanged += OnOptionsChanged;
@@ -34,7 +34,7 @@ namespace ShaderTools.VisualStudio.Core.Tagging.Squiggles
         {
             _squigglesEnabled = _optionsService.EnableErrorReporting && _optionsService.EnableSquiggles;
 
-            await InvalidateTags(_textView.TextSnapshot, CancellationToken.None);
+            await InvalidateTags(_textBuffer.CurrentSnapshot, CancellationToken.None);
         }
 
         protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, DiagnosticBase diagnostic, bool squigglesEnabled)

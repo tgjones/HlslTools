@@ -14,9 +14,9 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
 {
     internal sealed class SyntaxErrorTagger : ErrorTagger
     {
-        public SyntaxErrorTagger(ITextView textView, BackgroundParser backgroundParser,
+        public SyntaxErrorTagger(ITextView textView, ITextBuffer textBuffer, BackgroundParser backgroundParser,
             IHlslOptionsService optionsService)
-            : base(PredefinedErrorTypeNames.SyntaxError, textView, optionsService)
+            : base(PredefinedErrorTypeNames.SyntaxError, textView, textBuffer, optionsService)
         {
             backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.Medium,
                 async x => await InvalidateTags(x.Snapshot, x.CancellationToken));

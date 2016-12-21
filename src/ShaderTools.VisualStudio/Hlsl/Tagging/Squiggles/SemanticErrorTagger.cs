@@ -16,9 +16,9 @@ namespace ShaderTools.VisualStudio.Hlsl.Tagging.Squiggles
 {
     internal sealed class SemanticErrorTagger : ErrorTagger
     {
-        public SemanticErrorTagger(ITextView textView, BackgroundParser backgroundParser,
+        public SemanticErrorTagger(ITextView textView, ITextBuffer textBuffer, BackgroundParser backgroundParser,
             IHlslOptionsService optionsService)
-            : base(PredefinedErrorTypeNames.CompilerError, textView, optionsService)
+            : base(PredefinedErrorTypeNames.CompilerError, textView, textBuffer, optionsService)
         {
             backgroundParser.SubscribeToThrottledSemanticModelAvailable(BackgroundParserSubscriptionDelay.Medium,
                 async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
