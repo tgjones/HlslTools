@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.25928.0
+VisualStudioVersion = 15.0.26014.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools", "ShaderTools\ShaderTools.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
 EndProject
@@ -10,6 +10,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio", "ShaderTools.VisualStudio\ShaderTools.VisualStudio.csproj", "{58B8CB05-E943-403D-8FDE-742CFEB63467}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.Tests", "ShaderTools.VisualStudio.Tests\ShaderTools.VisualStudio.Tests.csproj", "{32C92578-68E5-46DE-836D-DA7DDDB78819}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor", "ShaderTools.Editor\ShaderTools.Editor.csproj", "{25E90301-9E25-4A25-BE0A-94A9D626369A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools", "ShaderTools", "{A9A1351A-112B-4BD2-B832-87F187D2E83F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.Editor", "ShaderTools.Editor", "{5FEC3B8F-290F-4AEF-976B-E93BC040B903}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.Editor.VisualStudio", "ShaderTools.Editor.VisualStudio", "{DB21B39B-9123-42FD-82D7-B0CA0CD95498}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +41,19 @@ Global
 		{32C92578-68E5-46DE-836D-DA7DDDB78819}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32C92578-68E5-46DE-836D-DA7DDDB78819}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32C92578-68E5-46DE-836D-DA7DDDB78819}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2361A2C2-D048-4694-9000-25B4EA846CBA} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
+		{FB35BDC4-AB42-416A-B4EE-9BD62E3E1777} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
+		{58B8CB05-E943-403D-8FDE-742CFEB63467} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
+		{32C92578-68E5-46DE-836D-DA7DDDB78819} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
+		{25E90301-9E25-4A25-BE0A-94A9D626369A} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
 	EndGlobalSection
 EndGlobal
