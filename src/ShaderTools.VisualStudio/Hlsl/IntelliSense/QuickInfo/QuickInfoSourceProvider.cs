@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Tagging.Classification;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.QuickInfo

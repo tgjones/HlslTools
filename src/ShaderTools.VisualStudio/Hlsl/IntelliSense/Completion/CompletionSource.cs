@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.Language.Intellisense;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion
 {

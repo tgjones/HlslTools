@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation

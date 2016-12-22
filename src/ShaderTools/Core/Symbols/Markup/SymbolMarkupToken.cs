@@ -1,32 +1,22 @@
 ﻿using System;
 
-namespace ShaderTools.Hlsl.Symbols.Markup
+namespace ShaderTools.Core.Symbols.Markup
 {
     public sealed class SymbolMarkupToken : IEquatable<SymbolMarkupToken>
     {
-        private readonly SymbolMarkupKind _kind;
-        private readonly string _text;
-
         public SymbolMarkupToken(SymbolMarkupKind kind, string text)
         {
-            _kind = kind;
-            _text = text;
+            Kind = kind;
+            Text = text;
         }
 
-        public SymbolMarkupKind Kind
-        {
-            get { return _kind; }
-        }
+        public SymbolMarkupKind Kind { get; }
 
-        public string Text
-        {
-            get { return _text; }
-        }
+        public string Text { get; }
 
         public bool Equals(SymbolMarkupToken other)
         {
-            return _kind == other._kind &&
-                   string.Equals(_text, other._text);
+            return Kind == other.Kind && string.Equals(Text, other.Text);
         }
 
         public override bool Equals(object obj)
@@ -39,7 +29,7 @@ namespace ShaderTools.Hlsl.Symbols.Markup
         {
             unchecked
             {
-                return ((int)_kind * 397) ^ _text.GetHashCode();
+                return ((int) Kind * 397) ^ Text.GetHashCode();
             }
         }
     }

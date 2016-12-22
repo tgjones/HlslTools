@@ -7,7 +7,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Threading;
 using Microsoft.VisualStudio.Language.Intellisense;
 
-namespace ShaderTools.VisualStudio.Hlsl.Glyphs
+namespace ShaderTools.VisualStudio.Core.Glyphs
 {
     // Based on https://github.com/tunnelvisionlabs/LangSvcV2/blob/master/Tvl.VisualStudio.Language.Implementation/Intellisense/DispatcherGlyphService.cs
     [Export]
@@ -32,22 +32,22 @@ namespace ShaderTools.VisualStudio.Hlsl.Glyphs
             return _glyphCache.GetOrAdd(key, CreateGlyph);
         }
 
-        public Icon GetIcon(StandardGlyphGroup group, StandardGlyphItem item)
-        {
-            var key = ((uint)group << 16) + (uint)item;
-            return _iconCache.GetOrAdd(key, CreateIcon);
-        }
-
         private ImageSource CreateGlyph(uint key)
         {
-            var group = (StandardGlyphGroup)(key >> 16);
-            var item = (StandardGlyphItem)(key & 0xFFFF);
+            var group = (StandardGlyphGroup) (key >> 16);
+            var item = (StandardGlyphItem) (key & 0xFFFF);
             ImageSource source = null;
 
             // create the glyph on the UI thread
             var dispatcher = Dispatcher;
             dispatcher?.Invoke(() => source = GlyphService.GetGlyph(group, item));
             return source;
+        }
+
+        public Icon GetIcon(StandardGlyphGroup group, StandardGlyphItem item)
+        {
+            var key = ((uint) group << 16) + (uint) item;
+            return _iconCache.GetOrAdd(key, CreateIcon);
         }
 
         private Icon CreateIcon(uint key)

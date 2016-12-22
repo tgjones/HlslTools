@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ShaderTools.Core.Symbols;
 using ShaderTools.Hlsl.Binding;
 
 namespace ShaderTools.Hlsl.Symbols

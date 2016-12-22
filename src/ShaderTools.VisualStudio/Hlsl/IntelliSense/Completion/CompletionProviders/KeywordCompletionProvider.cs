@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Util.ContextQuery;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders

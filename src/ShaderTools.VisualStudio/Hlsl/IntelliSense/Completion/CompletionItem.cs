@@ -1,5 +1,5 @@
 ﻿using ShaderTools.Hlsl.Symbols;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion
 {

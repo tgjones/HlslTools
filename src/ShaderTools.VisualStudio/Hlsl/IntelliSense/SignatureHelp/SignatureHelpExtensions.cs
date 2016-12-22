@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using ShaderTools.Core.Symbols.Markup;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Symbols.Markup;
@@ -56,7 +57,7 @@ namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.SignatureHelp
         private static SignatureItem ToSignatureItem<TSymbol>(this TSymbol symbol, Func<SymbolMarkupToken, bool> separatorPredicate)
             where TSymbol : InvocableSymbol
         {
-            var markup = SymbolMarkup.ForSymbol(symbol);
+            var markup = symbol.ToMarkup();
 
             var sb = new StringBuilder();
             var parameterStart = 0;

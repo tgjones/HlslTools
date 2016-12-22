@@ -1,3 +1,5 @@
+using ShaderTools.Core.Symbols;
+
 namespace ShaderTools.Hlsl.Symbols
 {
     public sealed class AttributeSymbol : InvocableSymbol

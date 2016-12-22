@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using ShaderTools.Core.Symbols;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Binding.BoundNodes;
 using ShaderTools.Hlsl.Binding.Signatures;

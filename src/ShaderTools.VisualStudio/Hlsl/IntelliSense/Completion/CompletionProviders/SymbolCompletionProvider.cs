@@ -6,9 +6,8 @@ using System.Linq;
 using System.Text;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Symbols.Markup;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
 {
@@ -148,7 +147,7 @@ namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProvid
         {
             var displayText = symbol.Name;
             var insertionText = symbol.Name;
-            var description = SymbolMarkup.ForSymbol(symbol).ToString();
+            var description = symbol.ToMarkup().ToString();
             var glyph = symbol.GetGlyph();
             return new CompletionItem(displayText, insertionText, description, glyph, symbol);
         }

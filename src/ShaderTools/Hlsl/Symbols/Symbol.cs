@@ -1,13 +1,18 @@
-﻿using ShaderTools.Hlsl.Symbols.Markup;
+﻿using System.Collections.Generic;
+using ShaderTools.Core.Symbols;
+using ShaderTools.Core.Symbols.Markup;
+using ShaderTools.Hlsl.Symbols.Markup;
 
 namespace ShaderTools.Hlsl.Symbols
 {
-    public abstract class Symbol
+    public abstract class Symbol : ISymbol
     {
         public SymbolKind Kind { get; }
         public string Name { get; }
         public string Documentation { get; }
         public Symbol Parent { get; }
+
+        ISymbol ISymbol.Parent => Parent;
 
         internal Symbol(SymbolKind kind, string name, string documentation, Symbol parent)
         {
@@ -19,7 +24,14 @@ namespace ShaderTools.Hlsl.Symbols
 
         public sealed override string ToString()
         {
-            return SymbolMarkup.ForSymbol(this).ToString();
+            return ToMarkup().ToString();
+        }
+
+        public SymbolMarkup ToMarkup()
+        {
+            var nodes = new List<SymbolMarkupToken>();
+            nodes.AppendSymbol(this);
+            return new SymbolMarkup(nodes);
         }
 
         protected bool EqualsImpl(Symbol other)

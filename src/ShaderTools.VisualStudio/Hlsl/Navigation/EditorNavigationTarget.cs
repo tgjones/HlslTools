@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation
 {

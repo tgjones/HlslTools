@@ -3,6 +3,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
+using ShaderTools.Core.Symbols;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;

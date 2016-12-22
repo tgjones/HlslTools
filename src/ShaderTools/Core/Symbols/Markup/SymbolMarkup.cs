@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 
-namespace ShaderTools.Hlsl.Symbols.Markup
+namespace ShaderTools.Core.Symbols.Markup
 {
     public sealed class SymbolMarkup : IEquatable<SymbolMarkup>
     {
@@ -42,13 +42,6 @@ namespace ShaderTools.Hlsl.Symbols.Markup
         public override string ToString()
         {
             return string.Concat(Tokens.Select(n => n.Text));
-        }
-
-        public static SymbolMarkup ForSymbol(Symbol symbol)
-        {
-            var nodes = new List<SymbolMarkupToken>();
-            nodes.AppendSymbol(symbol);
-            return new SymbolMarkup(nodes);
         }
     }
 }

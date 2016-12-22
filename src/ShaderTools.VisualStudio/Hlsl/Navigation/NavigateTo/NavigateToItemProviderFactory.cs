@@ -2,7 +2,7 @@
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Language.NavigateTo.Interfaces;
 using Microsoft.VisualStudio.Text.Projection;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation.NavigateTo
 {

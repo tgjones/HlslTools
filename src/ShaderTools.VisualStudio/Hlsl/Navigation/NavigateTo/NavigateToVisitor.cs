@@ -7,9 +7,8 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
+using ShaderTools.VisualStudio.Core.Glyphs;
 using ShaderTools.VisualStudio.Core.Navigation;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Util.SyntaxOutput;
 
 namespace ShaderTools.VisualStudio.Hlsl.Navigation.NavigateTo

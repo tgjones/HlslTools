@@ -10,8 +10,8 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
-using ShaderTools.Hlsl.Symbols.Markup;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.Core.Symbols.Markup;
+using ShaderTools.VisualStudio.Core.Glyphs;
 using ShaderTools.VisualStudio.Hlsl.Tagging.Classification;
 using Span = Microsoft.VisualStudio.Text.Span;
 

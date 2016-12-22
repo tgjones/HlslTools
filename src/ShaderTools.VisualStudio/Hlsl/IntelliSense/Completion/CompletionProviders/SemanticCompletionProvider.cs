@@ -5,7 +5,7 @@ using System.Linq;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
 {

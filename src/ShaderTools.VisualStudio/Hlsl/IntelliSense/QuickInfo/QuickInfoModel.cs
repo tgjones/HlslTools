@@ -1,10 +1,9 @@
-﻿using ShaderTools.Core.Text;
+﻿using ShaderTools.Core.Symbols.Markup;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Symbols.Markup;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
-using ShaderTools.VisualStudio.Hlsl.Glyphs;
+using ShaderTools.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.QuickInfo
 {
@@ -13,7 +12,7 @@ namespace ShaderTools.VisualStudio.Hlsl.IntelliSense.QuickInfo
         public static QuickInfoModel ForSymbol(SemanticModel semanticModel, TextSpan span, Symbol symbol)
         {
             var glyph = symbol.GetGlyph();
-            var symbolMarkup = SymbolMarkup.ForSymbol(symbol);
+            var symbolMarkup = symbol.ToMarkup();
             return new QuickInfoModel(semanticModel, span, glyph, symbolMarkup, symbol.Documentation);
         }
 

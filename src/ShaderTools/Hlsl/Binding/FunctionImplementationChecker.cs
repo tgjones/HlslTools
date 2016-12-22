@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using ShaderTools.Core.Symbols;
 using ShaderTools.Hlsl.Binding.BoundNodes;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;

@@ -1,4 +1,5 @@
 ﻿using System;
+using ShaderTools.Core.Symbols;
 
 namespace ShaderTools.Hlsl.Symbols
 {

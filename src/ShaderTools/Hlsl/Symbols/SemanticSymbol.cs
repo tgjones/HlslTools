@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using ShaderTools.Core.Symbols;
 
 namespace ShaderTools.Hlsl.Symbols
 {

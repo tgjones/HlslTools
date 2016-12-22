@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.VisualStudio.Hlsl.Glyphs
+﻿namespace ShaderTools.VisualStudio.Core.Glyphs
 {
     public enum Glyph
     {

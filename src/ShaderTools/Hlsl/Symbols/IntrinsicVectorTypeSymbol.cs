@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.Hlsl.Symbols
+﻿using ShaderTools.Core.Symbols;
+
+namespace ShaderTools.Hlsl.Symbols
 {
     public sealed class IntrinsicVectorTypeSymbol : IntrinsicNumericTypeSymbol
     {

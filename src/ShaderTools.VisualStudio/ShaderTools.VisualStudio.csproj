@@ -242,6 +242,9 @@
     <Compile Include="Core\Projection\IProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
+    <Compile Include="Core\Util\Extensions\IDictionaryExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ITextViewExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
     <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
@@ -502,9 +505,9 @@
     <Compile Include="Core\Util\VisualStudioVersion.cs" />
     <Compile Include="Core\Util\VisualStudioVersionUtility.cs" />
     <Compile Include="Hlsl\Util\Extensions\Extensions.cs" />
-    <Compile Include="Hlsl\Glyphs\DispatcherGlyphService.cs" />
-    <Compile Include="Hlsl\Glyphs\Glyph.cs" />
-    <Compile Include="Hlsl\Glyphs\GlyphExtensions.cs" />
+    <Compile Include="Core\Glyphs\DispatcherGlyphService.cs" />
+    <Compile Include="Core\Glyphs\Glyph.cs" />
+    <Compile Include="Core\Glyphs\GlyphExtensions.cs" />
     <Compile Include="Hlsl\HlslConstants.cs" />
     <Compile Include="Hlsl\Navigation\CodeWindowManager.cs" />
     <Compile Include="Hlsl\Navigation\EditorNavigationDropdownBarClient.cs" />

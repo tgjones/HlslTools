@@ -1,7 +1,6 @@
 using System;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Symbols.Markup;
 
 namespace ShaderTools.Tests.Hlsl.Binding
 {
@@ -14,7 +13,7 @@ namespace ShaderTools.Tests.Hlsl.Binding
 
         public static string GetExpressionTypeString(TypeSymbol type)
         {
-            return SymbolMarkup.ForSymbol(type).ToString();
+            return type.ToMarkup().ToString();
         }
 
         public static string GetErrorString(DiagnosticId diagnosticId)

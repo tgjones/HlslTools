@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.Hlsl.Symbols.Markup
+﻿namespace ShaderTools.Core.Symbols.Markup
 {
     public enum SymbolMarkupKind
     {

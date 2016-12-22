@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.Hlsl.Symbols
+﻿namespace ShaderTools.Core.Symbols
 {
     public enum SymbolKind
     {

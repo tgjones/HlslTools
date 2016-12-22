@@ -1,3 +1,5 @@
+using ShaderTools.Core.Symbols;
+
 namespace ShaderTools.Hlsl.Symbols
 {
     public abstract class IntrinsicNumericTypeSymbol : IntrinsicTypeSymbol

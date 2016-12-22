@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Language.Intellisense;
-using ShaderTools.Hlsl.Symbols;
+using ShaderTools.Core.Symbols;
 
-namespace ShaderTools.VisualStudio.Hlsl.Glyphs
+namespace ShaderTools.VisualStudio.Core.Glyphs
 {
     internal static class GlyphExtensions
     {
@@ -58,7 +58,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Glyphs
             return glyphService.GetIcon(glyph.GetStandardGlyphGroup(), StandardGlyphItem.GlyphItemPublic);
         }
 
-        public static Glyph GetGlyph(this Symbol symbol)
+        public static Glyph GetGlyph(this ISymbol symbol)
         {
             switch (symbol.Kind)
             {
@@ -75,7 +75,7 @@ namespace ShaderTools.VisualStudio.Hlsl.Glyphs
                 case SymbolKind.Field:
                     return Glyph.Field;
                 case SymbolKind.Function:
-                    return symbol.Parent is TypeSymbol ? Glyph.Method : Glyph.Function;
+                    return symbol.Parent is ITypeSymbol ? Glyph.Method : Glyph.Function;
                 case SymbolKind.Variable:
                     return Glyph.Variable;
                 case SymbolKind.Parameter:
