@@ -1,0 +1,651 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>12.0</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <!-- This is needed to prevent forced migrations when opening the project in Vs2013 -->
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '12.0' ">
+    <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <!-- This is needed to prevent forced migrations when opening the project in Vs2015 -->
+  <PropertyGroup Condition=" '$(VisualStudioVersion)' == '14.0' ">
+    <MinimumVisualStudioVersion>14.0</MinimumVisualStudioVersion>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{58B8CB05-E943-403D-8FDE-742CFEB63467}</ProjectGuid>
+    <ProjectTypeGuids>{82b43b9b-a64c-4715-b499-d71e9ca2bd60};{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShaderTools.Editor.VisualStudio</RootNamespace>
+    <AssemblyName>ShaderTools.Editor.VisualStudio</AssemblyName>
+    <SignAssembly>True</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CopyVsixExtensionFiles>False</CopyVsixExtensionFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="envdte, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\envdte.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualStudio.ComponentModelHost, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.ComponentModelHost.12.0.4\lib\net45\Microsoft.VisualStudio.ComponentModelHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.CoreUtility.12.0.4\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Editor, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Editor.12.0.4\lib\net45\Microsoft.VisualStudio.Editor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.GraphModel, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.GraphModel.11.0.4\lib\net45\Microsoft.VisualStudio.GraphModel.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Language.12.0.4\lib\net45\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.NavigateTo.Interfaces, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.NavigateTo.12.0.4\lib\net45\Microsoft.VisualStudio.Language.NavigateTo.Interfaces.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.StandardClassification, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Language.12.0.4\lib\net45\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\VSSDK.OLE.Interop.7.0.4\lib\net20\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Shell.12.12.0.4\lib\net45\Microsoft.VisualStudio.Shell.12.0.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Shell.Immutable.10.10.0.4\lib\net40\Microsoft.VisualStudio.Shell.Immutable.10.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Shell.Immutable.11.11.0.4\lib\net45\Microsoft.VisualStudio.Shell.Immutable.11.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Immutable.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Shell.Immutable.12.12.0.4\lib\net45\Microsoft.VisualStudio.Shell.Immutable.12.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\VSSDK.Shell.Interop.7.0.4\lib\net20\Microsoft.VisualStudio.Shell.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.10.0, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\packages\VSSDK.Shell.Interop.10.10.0.4\lib\net20\Microsoft.VisualStudio.Shell.Interop.10.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\packages\VSSDK.Shell.Interop.11.11.0.4\lib\net20\Microsoft.VisualStudio.Shell.Interop.11.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\packages\VSSDK.Shell.Interop.12.12.0.4\lib\net20\Microsoft.VisualStudio.Shell.Interop.12.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\VSSDK.Shell.Interop.8.8.0.4\lib\net20\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.9.0, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\VSSDK.Shell.Interop.9.9.0.4\lib\net20\Microsoft.VisualStudio.Shell.Interop.9.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Data, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Text.12.0.4\lib\net45\Microsoft.VisualStudio.Text.Data.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.Logic, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Text.12.0.4\lib\net45\Microsoft.VisualStudio.Text.Logic.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.UI, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Text.12.0.4\lib\net45\Microsoft.VisualStudio.Text.UI.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Text.UI.Wpf, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Text.12.0.4\lib\net45\Microsoft.VisualStudio.Text.UI.Wpf.dll</HintPath>
+      <Private>True</Private>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\VSSDK.TextManager.Interop.7.0.4\lib\net20\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <HintPath>..\packages\VSSDK.TextManager.Interop.8.8.0.4\lib\net20\Microsoft.VisualStudio.TextManager.Interop.8.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\VSSDK.Threading.12.0.4\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="stdole, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>False</EmbedInteropTypes>
+      <HintPath>..\packages\VSSDK.DTE.7.0.4\lib\net20\stdole.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.1.37.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.1.37\lib\dotnet\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Core.2.2.5\lib\net45\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Interfaces.2.2.5\lib\net45\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-Linq.2.2.5\lib\net45\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rx-PlatformServices.2.2.5\lib\net45\System.Reactive.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UIAutomationTypes" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Core\EditorFactoryBase.cs" />
+    <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
+    <Compile Include="Core\LanguageInfoBase.cs" />
+    <Compile Include="Core\Options\IOptionsService.cs" />
+    <Compile Include="Core\Options\OptionsPageBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\Options\ViewModels\OptionsPreviewViewModelBase.cs" />
+    <Compile Include="Core\Parsing\BackgroundParserBase.cs" />
+    <Compile Include="Core\Parsing\BackgroundParserManagerBase.cs" />
+    <Compile Include="Core\Projection\IProjectionBufferManager.cs" />
+    <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
+    <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
+    <Compile Include="Core\Util\Extensions\IDictionaryExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ITextViewExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
+    <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
+    <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
+    <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
+    <Compile Include="Core\Text\VisualStudioSourceTextFactoryBase.cs" />
+    <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContext.cs" />
+    <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContextProvider.cs" />
+    <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionExtensions.cs" />
+    <Compile Include="Hlsl\Editing\BraceCompletion\BraceKind.cs" />
+    <Compile Include="Hlsl\Editing\BraceCompletion\ProvideBraceCompletionAttribute.cs" />
+    <Compile Include="Hlsl\Editing\Commenting\CommentCommandTarget.cs" />
+    <Compile Include="Hlsl\Editing\Commenting\CommentingExtensions.cs" />
+    <Compile Include="Hlsl\Editing\Commenting\CommentingTextViewCreationListener.cs" />
+    <Compile Include="Hlsl\Editing\Commenting\UncommentCommandTarget.cs" />
+    <Compile Include="Core\ErrorList\ErrorListHelper.cs" />
+    <Compile Include="Core\ErrorList\ErrorManager.cs" />
+    <Compile Include="Hlsl\ErrorList\ErrorManagerProvider.cs" />
+    <Compile Include="Core\ErrorList\IErrorListHelper.cs" />
+    <Compile Include="Hlsl\ErrorList\SemanticErrorManager.cs" />
+    <Compile Include="Hlsl\ErrorList\SyntaxErrorManager.cs" />
+    <Compile Include="Hlsl\Formatting\FormattingExtensions.cs" />
+    <Compile Include="Hlsl\Formatting\FormatCommandTarget.cs" />
+    <Compile Include="Hlsl\Formatting\FormattingTextViewCreationListener.cs" />
+    <Compile Include="Hlsl\HlslEditorFactory.cs" />
+    <Compile Include="Core\LanguagePreferences.cs" />
+    <Compile Include="Hlsl\HlslPackage.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionExtensions.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionItem.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionModel.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionModelManager.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionModelManagerProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\CompletionProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\CompletionProviderService.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\KeywordCompletionProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\SemanticCompletionProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\SymbolCompletionProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionSource.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionSourceProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\HlslCompletionSet.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\ICompletionProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandler.cs" />
+    <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\HlslKeyProcessor.cs" />
+    <Compile Include="Hlsl\IntelliSense\KeyProcessorProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoManager.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoManagerProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModel.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\AttributeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\ConstantBufferQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\FieldAccessQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionDeclarationQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionDefinitionQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\FunctionInvocationQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\GenericMatrixTypeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\GenericVectorTypeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierDeclarationQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\IQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\ClassDefinitionQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\LiteralQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\MacroDefinitionQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\MacroReferenceQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\MatrixTypeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\MethodInvocationQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\NamespaceQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\NumericConstructorInvocationQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\ObjectTypeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\QuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\QuickInfoModelProviderService.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\ScalarTypeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\SemanticQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\TechniqueQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\StructDefinitionQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\VariableDeclarationQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\ParameterQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\VectorTypeQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoSource.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoSourceProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoTrigger.cs" />
+    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoTriggerProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\Parameter.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\Signature.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\ParameterItem.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpCommandHandlerParamInfo.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpCommandHandlerProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpExtensions.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpManager.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpManagerProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModel.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModelProviders\FunctionSignatureHelpModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModelProviders\ISignatureHelpModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModelProviders\MethodSignatureHelpModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModelProviders\NumericConstructorSignatureHelpModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpModelProviders\SignatureHelpModelProviderService.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpSource.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpSourceProvider.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureHelpCommandHandlerTypeChar.cs" />
+    <Compile Include="Hlsl\IntelliSense\SignatureHelp\SignatureItem.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionCommandTarget.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\FieldAccessGoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\FunctionInvocationGoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\GoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IdentifierGoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IQuickInfoModelProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\GoToDefinitionProviderService.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\MacroReferenceGoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\MethodInvocationGoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\SymbolReferenceGoToDefinitionProvider.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionTextViewCreationListener.cs" />
+    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemDisplay.cs" />
+    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemProvider.cs" />
+    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemProviderFactory.cs" />
+    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToVisitor.cs" />
+    <Compile Include="Core\Navigation\NavigationExtensions.cs" />
+    <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
+    <Compile Include="Hlsl\Options\HlslAdvancedOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hlsl\Options\HlslFormattingSpacingOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hlsl\Options\HlslFormattingNewLinesOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hlsl\Options\HlslFormattingIndentationOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hlsl\Options\HlslOptionsPageBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Hlsl\Options\IHlslOptionsService.cs" />
+    <Compile Include="Hlsl\Options\OptionsService.cs" />
+    <Compile Include="Core\Options\ViewModels\CheckBoxOptionViewModel.cs" />
+    <Compile Include="Hlsl\Options\ViewModels\FormattingSpacingViewModel.cs" />
+    <Compile Include="Hlsl\Options\ViewModels\FormattingNewLinesViewModel.cs" />
+    <Compile Include="Core\Options\ViewModels\HeaderItemViewModel.cs" />
+    <Compile Include="Hlsl\Options\ViewModels\FormattingIndentationViewModel.cs" />
+    <Compile Include="Core\Options\ViewModels\NotifyPropertyChangedBase.cs" />
+    <Compile Include="Core\Options\ViewModels\Option.cs" />
+    <Compile Include="Core\Options\ViewModels\RadioButtonViewModelBase.cs" />
+    <Compile Include="Hlsl\Options\ViewModels\HlslOptionsPreviewViewModelBase.cs" />
+    <Compile Include="Hlsl\Options\Views\HlslAdvancedOptionsControl.xaml.cs">
+      <DependentUpon>HlslAdvancedOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Hlsl\Options\Views\HlslFormattingGeneralOptionsControl.xaml.cs">
+      <DependentUpon>HlslFormattingGeneralOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Hlsl\Options\HlslFormattingGeneralOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\Options\Views\OptionsControlBase.cs" />
+    <Compile Include="Core\Options\Views\OptionsPreviewControl.xaml.cs">
+      <DependentUpon>OptionsPreviewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndent.cs" />
+    <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndentProvider.cs" />
+    <Compile Include="Hlsl\Parsing\BackgroundParserManager.cs" />
+    <Compile Include="Core\LanguagePackageBase.cs" />
+    <Compile Include="ProvideFileExtensionMapping.cs" />
+    <Compile Include="ShaderLab\ErrorList\ErrorManagerProvider.cs" />
+    <Compile Include="ShaderLab\ErrorList\SyntaxErrorManager.cs" />
+    <Compile Include="ShaderLab\Options\IShaderLabOptionsService.cs" />
+    <Compile Include="ShaderLab\Options\OptionsService.cs" />
+    <Compile Include="ShaderLab\Options\ShaderLabAdvancedOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShaderLab\Options\ShaderLabFormattingGeneralOptionsPage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShaderLab\Options\ShaderLabOptionsPageBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ShaderLab\Options\Views\ShaderLabFormattingGeneralOptionsControl.xaml.cs">
+      <DependentUpon>ShaderLabFormattingGeneralOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShaderLab\Options\Views\ShaderLabAdvancedOptionsControl.xaml.cs">
+      <DependentUpon>ShaderLabAdvancedOptionsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
+    <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
+    <Compile Include="ShaderLab\ShaderLabEditorFactory.cs" />
+    <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\ClassificationColorManager.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SemanticClassificationMetadata.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\ShaderLabClassificationService.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTagger.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerProvider.cs" />
+    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerWorker.cs" />
+    <Compile Include="ShaderLab\Text\VisualStudioSourceTextFactory.cs" />
+    <Compile Include="ShaderLab\Util\Extensions\Extensions.cs" />
+    <Compile Include="source.extension.cs">
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Compile>
+    <Compile Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindow.cs" />
+    <Compile Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowCommand.cs" />
+    <Compile Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml.cs">
+      <DependentUpon>SyntaxVisualizerToolWindowControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Core\Tagging\AsyncTaggerUtility.cs" />
+    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatcher.cs" />
+    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingResult.cs" />
+    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingTagger.cs" />
+    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingTaggerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\ClassificationColorManager.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\HlslClassificationService.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SemanticClassificationMetadata.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SyntaxTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SyntaxTaggerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SemanticTaggerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SemanticTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SemanticTaggerVisitor.cs" />
+    <Compile Include="Hlsl\Tagging\Classification\SyntaxTaggerWorker.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingTextViewCreationListener.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingCommandTarget.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\Highlighters\HighlighterService.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\Highlighters\IHighlighter.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\Highlighters\SymbolReferenceHighlighter.cs" />
+    <Compile Include="Hlsl\SymbolSearch\SymbolSearchExtensions.cs" />
+    <Compile Include="Hlsl\SymbolSearch\SymbolSpan.cs" />
+    <Compile Include="Hlsl\SymbolSearch\SymbolSpanKind.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingExtensions.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingNavigationManager.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingNavigationManagerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightingTaggerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightSpan.cs" />
+    <Compile Include="Hlsl\Tagging\Highlighting\HighlightTag.cs" />
+    <Compile Include="Core\Tagging\IAsyncTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Outlining\OutliningTextViewCreationListener.cs" />
+    <Compile Include="Hlsl\Tagging\Outlining\OutliningCommandTarget.cs" />
+    <Compile Include="Core\Tagging\Squiggles\ErrorTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Squiggles\SemanticErrorTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Squiggles\SemanticErrorTaggerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Squiggles\SyntaxErrorTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Squiggles\SyntaxErrorTaggerProvider.cs" />
+    <Compile Include="Hlsl\Text\VisualStudioFileSystem.cs" />
+    <Compile Include="Hlsl\Text\VisualStudioSourceTextFactory.cs" />
+    <Compile Include="Core\Text\VisualStudioTextExtensions.cs" />
+    <Compile Include="Core\Text\VisualStudioSourceText.cs" />
+    <Compile Include="Hlsl\Parsing\BackgroundParser.cs" />
+    <Compile Include="Core\Util\CommandTargetBase.cs" />
+    <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />
+    <Compile Include="Hlsl\Util\ContextQuery\SyntaxTreeExtensions.cs" />
+    <Compile Include="Core\Util\ExceptionHelper.cs" />
+    <Compile Include="Core\Util\Extensions\EnumerableExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\SnapshotSpanExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\SpanExtensions.cs" />
+    <Compile Include="Core\Util\Hash.cs" />
+    <Compile Include="Core\Util\Extensions\IProjectionBufferFactoryServiceExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ITextSnapshotLineExtensions.cs" />
+    <Compile Include="Core\Util\LineSpan.cs" />
+    <Compile Include="Core\Util\Logger.cs" />
+    <Compile Include="Core\Util\Extensions\StringExtensions.cs" />
+    <Compile Include="Hlsl\Util\SyntaxOutput\SyntaxExtensions.cs" />
+    <Compile Include="Core\Util\ThemeManager.cs" />
+    <Compile Include="Core\Util\VisualStudioTheme.cs" />
+    <Compile Include="Core\Util\VisualStudioVersion.cs" />
+    <Compile Include="Core\Util\VisualStudioVersionUtility.cs" />
+    <Compile Include="Hlsl\Util\Extensions\Extensions.cs" />
+    <Compile Include="Core\Glyphs\DispatcherGlyphService.cs" />
+    <Compile Include="Core\Glyphs\Glyph.cs" />
+    <Compile Include="Core\Glyphs\GlyphExtensions.cs" />
+    <Compile Include="Hlsl\HlslConstants.cs" />
+    <Compile Include="Hlsl\Navigation\CodeWindowManager.cs" />
+    <Compile Include="Hlsl\Navigation\EditorNavigationDropdownBarClient.cs" />
+    <Compile Include="Hlsl\Navigation\EditorNavigationSourceProvider.cs" />
+    <Compile Include="Hlsl\HlslLanguageInfo.cs" />
+    <Compile Include="Hlsl\Navigation\EditorNavigationSource.cs" />
+    <Compile Include="Hlsl\Navigation\EditorNavigationTarget.cs" />
+    <Compile Include="Hlsl\Navigation\NavigationTargetsVisitor.cs" />
+    <Compile Include="Hlsl\Tagging\Outlining\OutliningTagger.cs" />
+    <Compile Include="Hlsl\Tagging\Outlining\OutliningTaggerProvider.cs" />
+    <Compile Include="Hlsl\Tagging\Outlining\OutliningVisitor.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Core\Tagging\AsyncTagger.cs" />
+    <Compile Include="Hlsl\Util\Extensions\ExceptionExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\IVsShellExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\ServiceProviderExtensions.cs" />
+    <Compile Include="Core\Util\Extensions\VsExtensions.cs" />
+    <Compile Include="Hlsl\Text\VisualStudioSourceTextContainer.cs" />
+    <Compile Include="ShaderLab\ShaderLabConstants.cs" />
+    <Compile Include="ShaderLab\ShaderLabPackage.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="source.extension.resx">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+      <MergeWithCTO>true</MergeWithCTO>
+      <ManifestResourceName>VSPackage</ManifestResourceName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\LICENSE">
+      <Link>Resources\LICENSE</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Resource Include="source.extension.ico">
+      <DependentUpon>source.extension.vsixmanifest</DependentUpon>
+    </Resource>
+    <None Include="..\Key.snk">
+      <Link>Key.snk</Link>
+    </None>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="source.extension.vsixmanifest">
+      <SubType>Designer</SubType>
+      <Generator>VsixManifestGenerator</Generator>
+      <LastGenOutput>source.extension.resx</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\packages\System.Collections.Immutable.1.1.37\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll">
+      <Link>System.Collections.Immutable.dll</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\icon.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="Resources\preview.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Resource Include="Hlsl\SyntaxVisualizer\Resources\TreeView_713.png" />
+    <VSCTCompile Include="Hlsl\SyntaxVisualizer\ShaderToolsPackage.vsct">
+      <ResourceName>Menus.ctmenu</ResourceName>
+    </VSCTCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
+      <Project>{2361a2c2-d048-4694-9000-25b4ea846cba}</Project>
+      <Name>ShaderTools</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Page Include="Hlsl\Options\Views\HlslAdvancedOptionsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Hlsl\Options\Views\HlslFormattingGeneralOptionsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\Options\Views\OptionsPreviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Core\Options\Views\Styles.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ShaderLab\Options\Views\ShaderLabFormattingGeneralOptionsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="ShaderLab\Options\Views\ShaderLabAdvancedOptionsControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <PropertyGroup>
+    <UseCodebase>true</UseCodebase>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

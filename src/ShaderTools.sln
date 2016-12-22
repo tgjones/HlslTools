@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools", "ShaderTools\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Tests", "ShaderTools.Tests\ShaderTools.Tests.csproj", "{FB35BDC4-AB42-416A-B4EE-9BD62E3E1777}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio", "ShaderTools.VisualStudio\ShaderTools.VisualStudio.csproj", "{58B8CB05-E943-403D-8FDE-742CFEB63467}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualStudio", "ShaderTools.Editor.VisualStudio\ShaderTools.Editor.VisualStudio.csproj", "{58B8CB05-E943-403D-8FDE-742CFEB63467}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.Tests", "ShaderTools.VisualStudio.Tests\ShaderTools.VisualStudio.Tests.csproj", "{32C92578-68E5-46DE-836D-DA7DDDB78819}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualStudio.Tests", "ShaderTools.Editor.VisualStudio.Tests\ShaderTools.Editor.VisualStudio.Tests.csproj", "{32C92578-68E5-46DE-836D-DA7DDDB78819}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor", "ShaderTools.Editor\ShaderTools.Editor.csproj", "{25E90301-9E25-4A25-BE0A-94A9D626369A}"
 EndProject
