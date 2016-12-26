@@ -69,6 +69,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
             }
         }
 
-        protected abstract IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

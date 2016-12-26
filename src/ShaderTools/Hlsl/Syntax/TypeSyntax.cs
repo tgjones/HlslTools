@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.Core.Diagnostics;
 
 namespace ShaderTools.Hlsl.Syntax
 {

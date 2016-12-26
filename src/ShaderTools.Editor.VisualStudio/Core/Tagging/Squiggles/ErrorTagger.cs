@@ -37,7 +37,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles
             await InvalidateTags(_textBuffer.CurrentSnapshot, CancellationToken.None);
         }
 
-        protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, DiagnosticBase diagnostic, bool squigglesEnabled)
+        protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, Diagnostic diagnostic, bool squigglesEnabled)
         {
             var span = new Span(diagnostic.Span.Start, diagnostic.Span.Length);
             var snapshotSpan = new SnapshotSpan(snapshot, span);
@@ -68,6 +68,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles
             return Tuple.Create(snapshot, tagSpans);
         }
 
-        protected abstract IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

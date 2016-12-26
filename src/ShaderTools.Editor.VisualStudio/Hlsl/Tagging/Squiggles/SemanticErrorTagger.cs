@@ -24,11 +24,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles
                 async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
         }
 
-        protected override IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             SemanticModel semanticModel;
             if (!snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
-                return Enumerable.Empty<DiagnosticBase>();
+                return Enumerable.Empty<Diagnostic>();
             return semanticModel.GetDiagnostics();
         }
     }

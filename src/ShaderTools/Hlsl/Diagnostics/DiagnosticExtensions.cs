@@ -1,24 +1,17 @@
 ﻿using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
-using ShaderTools.Properties;
 
 namespace ShaderTools.Hlsl.Diagnostics
 {
     internal static class DiagnosticExtensions
     {
-        public static string GetMessage(this DiagnosticId diagnosticId)
-        {
-            return Resources.ResourceManager.GetString(diagnosticId.ToString());
-        }
-
         public static void Report(this ICollection<Diagnostic> diagnostics, TextSpan textSpan, DiagnosticId diagnosticId, params object[] args)
         {
-            var diagnostic = Diagnostic.Format(textSpan, diagnosticId, args);
+            var diagnostic = Diagnostic.Create(HlslMessageProvider.Instance, textSpan, (int) diagnosticId, args);
             diagnostics.Add(diagnostic);
         }
 
@@ -155,17 +148,7 @@ namespace ShaderTools.Hlsl.Diagnostics
 
         public static void ReportAmbiguousInvocation(this ICollection<Diagnostic> diagnostics, TextSpan span, InvocableSymbol symbol1, InvocableSymbol symbol2, IReadOnlyList<TypeSymbol> argumentTypes)
         {
-            if (argumentTypes.Count > 0)
-            {
-                var displayTypes = string.Join(@", ", argumentTypes.Select(t => t.ToDisplayName()));
-                diagnostics.Report(span, DiagnosticId.AmbiguousInvocation, symbol1, symbol2, displayTypes);
-            }
-            else
-            {
-                var message = string.Format(CultureInfo.CurrentCulture, "Invocation is ambiguous between '{0}' and '{1}'.", symbol1, symbol2);
-                var diagnostic = new Diagnostic(span, DiagnosticId.AmbiguousInvocation, message);
-                diagnostics.Add(diagnostic);
-            }
+            diagnostics.Report(span, DiagnosticId.AmbiguousInvocation, symbol1, symbol2);
         }
 
         public static void ReportAmbiguousField(this ICollection<Diagnostic> diagnostics, SyntaxToken name)

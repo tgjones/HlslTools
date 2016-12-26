@@ -3,6 +3,7 @@ using System.Linq;
 using NUnit.Framework;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
+using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
 
@@ -65,7 +66,7 @@ void main()
             var diagnostic = combinedDiagnostics.SingleOrDefault(x => x.Severity == DiagnosticSeverity.Error);
             var result = diagnostic == null
                 ? ExpressionTestUtility.GetExpressionTypeString(invokedFunctionSymbol.Parameters[0].ValueType)
-                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+                : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
             Assert.AreEqual(expectedMatchType, result, $"Expression should have matched the function overload '{expectedMatchType}' but it actually matched '{result}'.");
         }
@@ -138,7 +139,7 @@ void main()
             var diagnostic = combinedDiagnostics.SingleOrDefault(x => x.Severity == DiagnosticSeverity.Error);
             var result = diagnostic == null
                 ? $"{invokedFunctionSymbol.Parameters[0].ValueType.ToMarkup()}, {invokedFunctionSymbol.Parameters[1].ValueType.ToMarkup()}"
-                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+                : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
             Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
         }
@@ -172,7 +173,7 @@ void main()
             var diagnostic = combinedDiagnostics.SingleOrDefault(x => x.Severity == DiagnosticSeverity.Error);
             var result = diagnostic == null
                 ? $"{invokedFunctionSymbol.Parameters[0].ValueType.ToMarkup()}, {invokedFunctionSymbol.Parameters[1].ValueType.ToMarkup()}"
-                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+                : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
             Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
         }

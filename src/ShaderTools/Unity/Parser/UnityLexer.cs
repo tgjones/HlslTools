@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Text;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Parser;
 using ShaderTools.Core.Text;
 using ShaderTools.Unity.Diagnostics;

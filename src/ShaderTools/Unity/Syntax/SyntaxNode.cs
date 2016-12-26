@@ -4,8 +4,8 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
-using ShaderTools.Unity.Diagnostics;
 
 namespace ShaderTools.Unity.Syntax
 {

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Tests.Hlsl.Binding
@@ -43,7 +44,7 @@ namespace ShaderTools.Tests.Hlsl.Binding
             var expressionType = semanticModel.GetExpressionType(expression);
             var result = diagnostic == null
                 ? ExpressionTestUtility.GetExpressionTypeString(expressionType)
-                : ExpressionTestUtility.GetErrorString(diagnostic.DiagnosticId);
+                : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
             Assert.AreEqual(expectedResult, result, $"Expression {source} should have evaluated to '{expectedResult}' but was '{result}'");
         }

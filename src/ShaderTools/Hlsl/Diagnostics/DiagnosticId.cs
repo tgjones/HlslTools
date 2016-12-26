@@ -22,6 +22,7 @@
         EndOfPreprocessorLineExpected,
         MissingPreprocessorFile,
         IncludeNotFound,
+        IncludeUnexpectedError,
         NotEnoughMacroParameters,
         UnexpectedAttribute,
 

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using ShaderTools.Unity.Diagnostics;
+using ShaderTools.Core.Diagnostics;
 
 namespace ShaderTools.Unity.Syntax
 {

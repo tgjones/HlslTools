@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Hlsl.Parser;
 
 namespace ShaderTools.Hlsl.Syntax

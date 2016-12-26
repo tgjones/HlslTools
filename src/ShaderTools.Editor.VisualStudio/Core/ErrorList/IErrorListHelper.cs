@@ -6,7 +6,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 {
     internal interface IErrorListHelper : IDisposable
     {
-        void AddError(DiagnosticBase diagnostic, TextSpan span);
+        void AddError(Diagnostic diagnostic, TextSpan span);
         void Clear();
     }
 }

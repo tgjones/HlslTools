@@ -22,7 +22,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles
                 async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
         }
 
-        protected override IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             return snapshot.GetSyntaxTree(cancellationToken).GetDiagnostics();
         }

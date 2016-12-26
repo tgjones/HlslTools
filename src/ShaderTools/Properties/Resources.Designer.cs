@@ -79,7 +79,7 @@ namespace ShaderTools.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invocation with argument types &apos;{2}&apos; is ambiguous between &apos;{0}&apos; and &apos;{1}&apos;..
+        ///   Looks up a localized string similar to Invocation is ambiguous between &apos;{0}&apos; and &apos;{1}&apos;..
         /// </summary>
         internal static string AmbiguousInvocation {
             get {
@@ -246,6 +246,15 @@ namespace ShaderTools.Properties {
         internal static string IncludeNotFound {
             get {
                 return ResourceManager.GetString("IncludeNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected error opening source file &apos;{0}&apos;: {1}..
+        /// </summary>
+        internal static string IncludeUnexpectedError {
+            get {
+                return ResourceManager.GetString("IncludeUnexpectedError", resourceCulture);
             }
         }
         

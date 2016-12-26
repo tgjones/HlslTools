@@ -23,7 +23,7 @@ void foo() {}";
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
             Assert.That(diagnostics, Has.Length.EqualTo(1));
-            Assert.That(diagnostics[0].DiagnosticId, Is.EqualTo(DiagnosticId.SymbolRedefined));
+            Assert.That((DiagnosticId) diagnostics[0].Descriptor.Code, Is.EqualTo(DiagnosticId.SymbolRedefined));
         }
 
         [Test]
@@ -82,7 +82,7 @@ void main()
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
             Assert.That(diagnostics, Has.Length.EqualTo(1));
-            Assert.That(diagnostics[0].DiagnosticId, Is.EqualTo(DiagnosticId.FunctionMissingImplementation));
+            Assert.That((DiagnosticId) diagnostics[0].Descriptor.Code, Is.EqualTo(DiagnosticId.FunctionMissingImplementation));
         }
     }
 }

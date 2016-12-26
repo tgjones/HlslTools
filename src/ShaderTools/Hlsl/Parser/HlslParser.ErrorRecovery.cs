@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
@@ -288,9 +289,10 @@ namespace ShaderTools.Hlsl.Parser
 
                 _tokens[_tokenIndex] = current
                     .WithLeadingTrivia(leadingTrivia)
-                    .WithDiagnostic(Diagnostic.Format(
+                    .WithDiagnostic(Diagnostic.Create(
+                        HlslMessageProvider.Instance,
                         tokens.First().GetTextSpanRoot(),
-                        DiagnosticId.TokenUnexpected,
+                        (int) DiagnosticId.TokenUnexpected,
                         tokens.First().Text));
             }
 

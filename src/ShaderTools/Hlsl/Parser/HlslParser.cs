@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
@@ -149,7 +150,7 @@ namespace ShaderTools.Hlsl.Parser
         protected TNode WithDiagnostic<TNode>(TNode node, DiagnosticId diagnosticId, params object[] args)
             where TNode : SyntaxNode
         {
-            var diagnostic = Diagnostic.Format(node.GetTextSpanSafe(), diagnosticId, args);
+            var diagnostic = Diagnostic.Create(HlslMessageProvider.Instance, node.GetTextSpanSafe(), (int) diagnosticId, args);
             return node.WithDiagnostic(diagnostic);
         }
 

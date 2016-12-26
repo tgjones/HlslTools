@@ -23,7 +23,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
             _textDocument = textDocument;
         }
 
-        public void AddError(DiagnosticBase diagnostic, TextSpan span)
+        public void AddError(Diagnostic diagnostic, TextSpan span)
         {
             lock (_lockObject)
             {

@@ -27,7 +27,7 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.ErrorList
                 }));
         }
 
-        protected override IEnumerable<DiagnosticBase> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             return snapshot.GetSyntaxTree(cancellationToken).GetDiagnostics();
         }

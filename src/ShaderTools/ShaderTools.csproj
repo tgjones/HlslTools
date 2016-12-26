@@ -46,7 +46,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\Diagnostics\DiagnosticBase.cs" />
+    <Compile Include="Core\Diagnostics\Diagnostic.cs" />
+    <Compile Include="Core\Diagnostics\DiagnosticDescriptor.cs" />
+    <Compile Include="Core\Diagnostics\MessageProvider.cs" />
     <Compile Include="Core\Symbols\ISymbol.cs" />
     <Compile Include="Core\Symbols\ITypeSymbol.cs" />
     <Compile Include="Hlsl\Binding\Binder.cs" />
@@ -154,8 +156,8 @@
     <Compile Include="Hlsl\Compilation\Conversion.cs" />
     <Compile Include="Hlsl\Compilation\ConversionTypes.cs" />
     <Compile Include="Hlsl\Compilation\SemanticModel.cs" />
-    <Compile Include="Hlsl\Diagnostics\DiagnosticFacts.cs" />
     <Compile Include="Core\Diagnostics\DiagnosticSeverity.cs" />
+    <Compile Include="Hlsl\Diagnostics\HlslMessageProvider.cs" />
     <Compile Include="Hlsl\Formatting\Edit.cs" />
     <Compile Include="Hlsl\Formatting\Formatter.cs" />
     <Compile Include="Hlsl\Formatting\FormattingOptions.cs" />
@@ -229,7 +231,6 @@
     <Compile Include="Hlsl\Syntax\StringLiteralExpressionSyntax.cs" />
     <Compile Include="Hlsl\Syntax\SyntaxVisitor.cs" />
     <Compile Include="Hlsl\Syntax\SyntaxWalker.cs" />
-    <Compile Include="Hlsl\Diagnostics\Diagnostic.cs" />
     <Compile Include="Hlsl\Diagnostics\DiagnosticExtensions.cs" />
     <Compile Include="Hlsl\Diagnostics\DiagnosticId.cs" />
     <Compile Include="Core\Parser\CharReader.cs" />
@@ -357,10 +358,9 @@
     <Compile Include="Hlsl\Symbols\IntrinsicTypes.cs" />
     <Compile Include="Core\Symbols\SymbolKind.cs" />
     <Compile Include="Hlsl\Util\ConsList.cs" />
-    <Compile Include="Unity\Diagnostics\Diagnostic.cs" />
     <Compile Include="Unity\Diagnostics\DiagnosticExtensions.cs" />
-    <Compile Include="Unity\Diagnostics\DiagnosticFacts.cs" />
     <Compile Include="Unity\Diagnostics\DiagnosticId.cs" />
+    <Compile Include="Unity\Diagnostics\ShaderLabMessageProvider.cs" />
     <Compile Include="Unity\Formatting\FormattingOptions.cs" />
     <Compile Include="Unity\Parser\UnityLexer.cs" />
     <Compile Include="Unity\Parser\UnityParser.cs" />

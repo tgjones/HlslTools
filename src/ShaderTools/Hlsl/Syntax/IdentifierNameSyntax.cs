@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
-using ShaderTools.Hlsl.Diagnostics;
+using ShaderTools.Core.Diagnostics;
 
 namespace ShaderTools.Hlsl.Syntax
 {

@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Parser;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
@@ -290,13 +291,13 @@ namespace ShaderTools.Hlsl.Parser
                     include = _fileSystem.GetInclude(includeFilename);
                     if (include == null)
                     {
-                        includeDirective = includeDirective.WithDiagnostic(Diagnostic.Format(includeDirective.GetTextSpan(), DiagnosticId.IncludeNotFound, includeFilename));
+                        includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.GetTextSpan(), (int) DiagnosticId.IncludeNotFound, includeFilename));
                         triviaList.Add(includeDirective);
                     }
                 }
                 catch (Exception ex)
                 {
-                    includeDirective = includeDirective.WithDiagnostic(new Diagnostic(includeDirective.GetTextSpan(), DiagnosticId.IncludeNotFound, ex.Message));
+                    includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.GetTextSpan(), (int) DiagnosticId.IncludeNotFound, includeFilename, ex.Message));
                     include = null;
                     triviaList.Add(includeDirective);
                 }
@@ -538,7 +539,7 @@ namespace ShaderTools.Hlsl.Parser
             {
                 case '\0':
                     if (_includeStack.Count == 1 && _directives.HasUnfinishedIf())
-                        _diagnostics.Add(Diagnostic.Format(CurrentSpanStart, DiagnosticId.EndIfDirectiveExpected));
+                        _diagnostics.Add(Diagnostic.Create(HlslMessageProvider.Instance, CurrentSpanStart, (int) DiagnosticId.EndIfDirectiveExpected));
                     _kind = SyntaxKind.EndOfFileToken;
                     break;
 

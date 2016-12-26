@@ -1,21 +1,16 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
-using ShaderTools.Properties;
 using ShaderTools.Unity.Syntax;
 
 namespace ShaderTools.Unity.Diagnostics
 {
     internal static class DiagnosticExtensions
     {
-        public static string GetMessage(this DiagnosticId diagnosticId)
-        {
-            return Resources.ResourceManager.GetString(diagnosticId.ToString());
-        }
-
         public static void Report(this ICollection<Diagnostic> diagnostics, TextSpan textSpan, DiagnosticId diagnosticId, params object[] args)
         {
-            var diagnostic = Diagnostic.Format(textSpan, diagnosticId, args);
+            var diagnostic = Diagnostic.Create(ShaderLabMessageProvider.Instance, textSpan, (int) diagnosticId, args);
             diagnostics.Add(diagnostic);
         }
 

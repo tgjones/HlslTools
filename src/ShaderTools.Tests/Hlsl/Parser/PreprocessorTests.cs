@@ -1147,7 +1147,7 @@ float bar;
 
         private void VerifyErrorCode(SyntaxNode node, params DiagnosticId[] expected)
         {
-            var actual = node.GetDiagnostics().Select(e => e.DiagnosticId).ToList();
+            var actual = node.GetDiagnostics().Select(e => (DiagnosticId) e.Descriptor.Code).ToList();
 
             // no error
             if ((expected.Length == 0) && (actual.Count == 0))

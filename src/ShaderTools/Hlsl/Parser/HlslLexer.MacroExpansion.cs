@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Parser
 {
@@ -49,7 +49,7 @@ namespace ShaderTools.Hlsl.Parser
                         expandedTokens = new List<SyntaxToken>
                         {
                             token
-                                .WithDiagnostic(Diagnostic.Format(token.Span, DiagnosticId.NotEnoughMacroParameters, token.Text))
+                                .WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, token.Span, (int) DiagnosticId.NotEnoughMacroParameters, token.Text))
                                 .WithTrailingTrivia(new[] { macroArguments })
                         };
                         return true;

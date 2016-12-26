@@ -6,6 +6,7 @@ using System.Threading;
 using ShaderTools.Core.Text;
 using ShaderTools.Unity.Syntax;
 using ShaderTools.Unity.Diagnostics;
+using ShaderTools.Core.Diagnostics;
 
 namespace ShaderTools.Unity.Parser
 {
@@ -161,7 +162,7 @@ namespace ShaderTools.Unity.Parser
         protected TNode WithDiagnostic<TNode>(TNode node, DiagnosticId diagnosticId, params object[] args)
             where TNode : SyntaxNode
         {
-            var diagnostic = Diagnostic.Format(node.Span, diagnosticId, args);
+            var diagnostic = Diagnostic.Create(ShaderLabMessageProvider.Instance, node.Span, (int) diagnosticId, args);
             return node.WithDiagnostic(diagnostic);
         }
 

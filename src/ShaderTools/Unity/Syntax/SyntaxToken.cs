@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
-using ShaderTools.Unity.Diagnostics;
 
 namespace ShaderTools.Unity.Syntax
 {

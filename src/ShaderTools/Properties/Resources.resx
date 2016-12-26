@@ -199,7 +199,7 @@
     <value>Attribute not expected in this context.</value>
   </data>
   <data name="AmbiguousInvocation" xml:space="preserve">
-    <value>Invocation with argument types '{2}' is ambiguous between '{0}' and '{1}'.</value>
+    <value>Invocation is ambiguous between '{0}' and '{1}'.</value>
   </data>
   <data name="AmbiguousReference" xml:space="preserve">
     <value>Name '{0}' is ambiguous between '{1}' and '{2}'.</value>
@@ -269,5 +269,8 @@
   </data>
   <data name="TokenExpectedMultipleChoices" xml:space="preserve">
     <value>Found '{0}' but expected one of the following: {1}.</value>
+  </data>
+  <data name="IncludeUnexpectedError" xml:space="preserve">
+    <value>Unexpected error opening source file '{0}': {1}.</value>
   </data>
 </root>

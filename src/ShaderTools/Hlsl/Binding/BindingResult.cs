@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Hlsl.Binding.BoundNodes;
-using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Hlsl.Binding

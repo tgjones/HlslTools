@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Diagnostics;
 using ShaderTools.Hlsl.Binding;
 using ShaderTools.Hlsl.Binding.BoundNodes;
-using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
 
