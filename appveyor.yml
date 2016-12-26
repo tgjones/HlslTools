@@ -6,7 +6,7 @@ install:
 
 before_build:
   - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
-  - ps: Vsix-TokenReplacement src\ShaderTools.VisualStudio\Hlsl\HlslPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: Vsix-TokenReplacement src\ShaderTools.Editor.VisualStudio\Hlsl\HlslPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
   - ps: Vsix-TokenReplacement src\ShaderTools\Hlsl\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
 
 build_script:
@@ -15,7 +15,7 @@ build_script:
 
 test_script:
   - nunit-console src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll
-  - nunit-console-x86 src/ShaderTools.VisualStudio.Tests/bin/Release/ShaderTools.VisualStudio.Tests.dll
+  - nunit-console-x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
