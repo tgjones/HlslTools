@@ -113,7 +113,7 @@
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.Editor.VisualStudio\ShaderTools.Editor.VisualStudio.csproj">
       <Project>{58B8CB05-E943-403D-8FDE-742CFEB63467}</Project>
-      <Name>ShaderTools.VisualStudio</Name>
+      <Name>ShaderTools.Editor.VisualStudio</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
       <Project>{2361A2C2-D048-4694-9000-25B4EA846CBA}</Project>

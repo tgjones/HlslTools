@@ -19,6 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.Editor", "Shade
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.Editor.VisualStudio", "ShaderTools.Editor.VisualStudio", "{DB21B39B-9123-42FD-82D7-B0CA0CD95498}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxGenerator", "SyntaxGenerator\SyntaxGenerator.csproj", "{258A2D6D-2A88-4938-B45E-37D73F3A400A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,10 @@ Global
 		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25E90301-9E25-4A25-BE0A-94A9D626369A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -55,5 +63,6 @@ Global
 		{58B8CB05-E943-403D-8FDE-742CFEB63467} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
 		{32C92578-68E5-46DE-836D-DA7DDDB78819} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
 		{25E90301-9E25-4A25-BE0A-94A9D626369A} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
+		{258A2D6D-2A88-4938-B45E-37D73F3A400A} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
 	EndGlobalSection
 EndGlobal

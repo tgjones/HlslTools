@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <AvailableItemName Include="SyntaxDefinition" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <SyntaxGeneratorPath Condition=" '$(SyntaxGeneratorPath)' == '' ">$(MSBuildThisFileDirectory)bin\$(Configuration)\</SyntaxGeneratorPath>
+
+    <PrepareResourcesDependsOn>
+      GenerateSyntax;
+      $(PrepareResourcesDependsOn)
+    </PrepareResourcesDependsOn>
+
+    <CoreCompileDependsOn>
+      GenerateSyntax;
+      $(CoreCompileDependsOn)
+    </CoreCompileDependsOn>
+  </PropertyGroup>
+
+  <UsingTask TaskName="GenerateSyntaxTask" AssemblyFile="$(SyntaxGeneratorPath)SyntaxGenerator.dll" />
+
+  <Target Name="GenerateSyntax" DependsOnTargets="ResolveReferences" BeforeTargets="CoreCompile">
+    <GenerateSyntaxTask
+      Compile="@(SyntaxDefinition)"
+      IntermediateOutputDirectory="$(IntermediateOutputPath)">
+      <Output TaskParameter="GeneratedCompile" ItemName="GenerateSyntaxTask_Compile" />
+      <Output TaskParameter="GeneratedCompile" ItemName="FileWrites" />
+      <Output TaskParameter="AdditionalWrittenFiles" ItemName="FileWrites" />
+    </GenerateSyntaxTask>
+    <ItemGroup>
+      <Compile Include="@(GenerateSyntaxTask_Compile)" />
+    </ItemGroup>
+  </Target>
+</Project>
