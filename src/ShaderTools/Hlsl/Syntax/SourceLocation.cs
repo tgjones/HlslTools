@@ -69,5 +69,10 @@ namespace ShaderTools.Hlsl.Syntax
         {
             return Position.ToString();
         }
+
+        public static explicit operator int(SourceLocation c)
+        {
+            return c.Position;
+        }
     }
 }
