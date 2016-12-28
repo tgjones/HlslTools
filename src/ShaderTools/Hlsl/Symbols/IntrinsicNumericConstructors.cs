@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ShaderTools.Hlsl.Symbols
 {
-    internal static class IntrinsicNumericConstructors
+    public static class IntrinsicNumericConstructors
     {
         public static readonly IEnumerable<FunctionSymbol> AllFunctions;
 

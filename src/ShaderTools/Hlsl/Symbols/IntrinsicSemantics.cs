@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 
 namespace ShaderTools.Hlsl.Symbols
 {
-    internal static class IntrinsicSemantics
+    public static class IntrinsicSemantics
     {
         public static readonly ImmutableArray<SemanticSymbol> AllSemantics;
 

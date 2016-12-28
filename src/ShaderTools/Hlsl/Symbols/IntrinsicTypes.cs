@@ -6,7 +6,7 @@ using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Hlsl.Symbols
 {
-    internal static class IntrinsicTypes
+    public static class IntrinsicTypes
     {
         public static readonly IntrinsicScalarTypeSymbol Void;
         public static readonly IntrinsicScalarTypeSymbol String;

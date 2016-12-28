@@ -4,7 +4,7 @@ using System.Collections.Immutable;
 
 namespace ShaderTools.Hlsl.Symbols
 {
-    internal static class IntrinsicAttributes
+    public static class IntrinsicAttributes
     {
         public static readonly ImmutableArray<AttributeSymbol> AllAttributes;
 
