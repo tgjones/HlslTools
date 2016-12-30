@@ -370,7 +370,6 @@
     <Compile Include="Unity\Syntax\AttributeArgumentListSyntax.cs" />
     <Compile Include="Unity\Syntax\BaseCommandSetTextureCombineValueSyntax.cs" />
     <Compile Include="Unity\Syntax\BasePassSyntax.cs" />
-    <Compile Include="Unity\Syntax\BaseVectorSyntax.cs" />
     <Compile Include="Unity\Syntax\ExpressionSyntax.cs" />
     <Compile Include="Unity\Syntax\LiteralExpressionSyntax.cs" />
     <Compile Include="Unity\Syntax\PrefixUnaryExpressionSyntax.cs" />
@@ -480,6 +479,12 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <SyntaxDefinition Include="Unity\Syntax\Syntax.xml">
+      <Generator>MSBuild:GenerateCodeFromAttributes</Generator>
+      <SubType>Designer</SubType>
+    </SyntaxDefinition>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

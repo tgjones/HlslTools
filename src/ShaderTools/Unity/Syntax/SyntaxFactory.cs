@@ -7,7 +7,7 @@ using ShaderTools.Unity.Parser;
 
 namespace ShaderTools.Unity.Syntax
 {
-    public static class SyntaxFactory
+    public static partial class SyntaxFactory
     {
         public static SyntaxTree ParseUnitySyntaxTree(SourceText sourceText, CancellationToken cancellationToken = default(CancellationToken))
         {

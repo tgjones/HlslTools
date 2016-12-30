@@ -7,6 +7,12 @@ namespace SyntaxGenerator.Model
     public class Tree
     {
         [XmlAttribute]
+        public string Namespace;
+
+        [XmlAttribute]
+        public string LanguageName;
+
+        [XmlAttribute]
         public string Root;
 
         [XmlElement(ElementName = "Node", Type = typeof(Node))]

@@ -55,24 +55,21 @@ namespace SyntaxGenerator
                     var serializer = new XmlSerializer(typeof(Tree));
                     Tree tree = (Tree) serializer.Deserialize(reader);
 
-                    var outputPath = IntermediateOutputDirectory;
+                    var outputPath = Path.Combine(IntermediateOutputDirectory, Path.GetDirectoryName(sourceFile.ItemSpec));
+                    if (!Directory.Exists(outputPath))
+                        Directory.CreateDirectory(outputPath);
+
                     var prefix = Path.GetFileName(sourceFile.ItemSpec);
-                    var outputMainFile = Path.Combine(outputPath, $"{prefix}.Main.Generated.cs");
-                    var outputInternalFile = Path.Combine(outputPath, $"{prefix}.Internal.Generated.cs");
-                    var outputSyntaxFile = Path.Combine(outputPath, $"{prefix}.Syntax.Generated.cs");
 
                     _cts.Token.ThrowIfCancellationRequested();
 
+                    var outputMainFile = Path.Combine(outputPath, $"{prefix}.Main.Generated.cs");
                     WriteToFile(tree, SourceWriter.WriteMain, outputMainFile);
                     outputFiles.Add(new TaskItem(outputMainFile));
 
                     _cts.Token.ThrowIfCancellationRequested();
 
-                    //WriteToFile(tree, SourceWriter.WriteInternal, outputInternalFile);
-                    //outputFiles.Add(new TaskItem(outputInternalFile));
-
-                    //_cts.Token.ThrowIfCancellationRequested();
-
+                    var outputSyntaxFile = Path.Combine(outputPath, $"{prefix}.Syntax.Generated.cs");
                     WriteToFile(tree, SourceWriter.WriteSyntax, outputSyntaxFile);
                     outputFiles.Add(new TaskItem(outputSyntaxFile));
 

@@ -16,8 +16,6 @@ namespace SyntaxGenerator.Writer
 
         public static void WriteMain(TextWriter writer, Tree tree) => new SourceWriter(writer, tree).WriteMain();
 
-        public static void WriteInternal(TextWriter writer, Tree tree) => new SourceWriter(writer, tree).WriteInternal();
-
         public static void WriteSyntax(TextWriter writer, Tree tree) => new SourceWriter(writer, tree).WriteSyntax();
 
         private void WriteFileHeader()
@@ -29,24 +27,8 @@ namespace SyntaxGenerator.Writer
             WriteLine("using System.Collections.Generic;");
             WriteLine("using System.Linq;");
             WriteLine("using System.Threading;");
-            //WriteLine("using Microsoft.CodeAnalysis.Syntax.InternalSyntax;");
-            //WriteLine("using Roslyn.Utilities;");
+            WriteLine("using ShaderTools.Core.Diagnostics;");
             WriteLine();
-        }
-
-        private void WriteInternal()
-        {
-            WriteFileHeader();
-
-            WriteLine("namespace Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax");
-            WriteLine("{");
-            WriteLine();
-            this.WriteGreenTypes();
-            this.WriteGreenVisitors();
-            this.WriteGreenRewriter();
-            this.WriteContextualGreenFactories();
-            this.WriteStaticGreenFactories();
-            WriteLine("}");
         }
 
         private void WriteSyntax()
@@ -54,10 +36,10 @@ namespace SyntaxGenerator.Writer
             WriteFileHeader();
 
             WriteLine();
-            WriteLine("namespace ShaderTools.Hlsl.Syntax");
+            WriteLine($"namespace {Tree.Namespace}");
             WriteLine("{");
             WriteLine();
-            this.WriteRedTypes();
+            WriteGreenTypes();
             WriteLine("}");
         }
 
@@ -66,13 +48,12 @@ namespace SyntaxGenerator.Writer
             WriteFileHeader();
 
             WriteLine();
-            WriteLine("namespace Microsoft.CodeAnalysis.CSharp");
+            WriteLine($"namespace {Tree.Namespace}");
             WriteLine("{");
-            WriteLine("    using Microsoft.CodeAnalysis.CSharp.Syntax;");
             WriteLine();
-            this.WriteRedVisitors();
-            this.WriteRedRewriter();
-            this.WriteRedFactories();
+            WriteVisitors();
+            WriteRewriter();
+            WriteFactories();
             WriteLine("}");
         }
 
@@ -94,12 +75,12 @@ namespace SyntaxGenerator.Writer
             if (node is AbstractNode)
             {
                 AbstractNode nd = (AbstractNode) node;
-                WriteLine("  internal abstract partial class {0} : {1}", node.Name, node.Base);
+                WriteLine("  public abstract partial class {0} : {1}", node.Name, node.Base);
                 WriteLine("  {");
 
-                // ctor with diagnostics and annotations
-                WriteLine("    internal {0}(SyntaxKind kind, DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)", node.Name);
-                WriteLine("      : base(kind, diagnostics, annotations)");
+                // ctor with diagnostics
+                WriteLine("    internal {0}(SyntaxKind kind, Diagnostic[] diagnostics)", node.Name);
+                WriteLine("      : base(kind, diagnostics)");
                 WriteLine("    {");
                 if (node.Name == "DirectiveTriviaSyntax")
                 {
@@ -107,20 +88,9 @@ namespace SyntaxGenerator.Writer
                 }
                 WriteLine("    }");
 
-                // ctor without diagnostics and annotations
+                // ctor without diagnostics
                 WriteLine("    internal {0}(SyntaxKind kind)", node.Name);
                 WriteLine("      : base(kind)");
-                WriteLine("    {");
-                if (node.Name == "DirectiveTriviaSyntax")
-                {
-                    WriteLine("      this.flags |= NodeFlags.ContainsDirectives;");
-                }
-                WriteLine("    }");
-
-                // object reader constructor
-                WriteLine();
-                WriteLine("    protected {0}(ObjectReader reader)", node.Name);
-                WriteLine("       : base(reader)");
                 WriteLine("    {");
                 if (node.Name == "DirectiveTriviaSyntax")
                 {
@@ -142,8 +112,8 @@ namespace SyntaxGenerator.Writer
                         if (IsSeparatedNodeList(field.Type) ||
                             IsNodeList(field.Type))
                         {
-                            WriteLine("    public abstract {0}Microsoft.CodeAnalysis.Syntax.InternalSyntax.{1} {2} {{ get; }}",
-                                (IsNew(field) ? "new " : ""), field.Type, field.Name);
+                            WriteLine("    public abstract {0}{1}.{2} {3} {{ get; }}",
+                                (IsNew(field) ? "new " : ""), Tree.Namespace, field.Type, field.Name);
                         }
                         else
                         {
@@ -169,7 +139,7 @@ namespace SyntaxGenerator.Writer
             {
                 Node nd = (Node) node;
 
-                WriteLine("  internal sealed partial class {0} : {1}", node.Name, node.Base);
+                WriteLine("  public sealed partial class {0} : {1}", node.Name, node.Base);
                 WriteLine("  {");
 
                 var valueFields = nd.Fields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
@@ -188,34 +158,20 @@ namespace SyntaxGenerator.Writer
                     WriteLine("    internal readonly {0} {1};", field.Type, CamelCase(field.Name));
                 }
 
-                // write constructor with diagnostics and annotations
+                // write constructor with diagnostics
                 WriteLine();
                 Write("    internal {0}(SyntaxKind kind", node.Name);
 
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
-                WriteLine(", DiagnosticInfo[] diagnostics, SyntaxAnnotation[] annotations)");
-                WriteLine("        : base(kind, diagnostics, annotations)");
+                WriteLine(", Diagnostic[] diagnostics)");
+                WriteLine("        : base(kind, diagnostics)");
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
                 WriteLine();
 
-                // write constructor with async
-                WriteLine();
-                Write("    internal {0}(SyntaxKind kind", node.Name);
-
-                WriteGreenNodeConstructorArgs(nodeFields, valueFields);
-
-                WriteLine(", SyntaxFactoryContext context)");
-                WriteLine("        : base(kind)");
-                WriteLine("    {");
-                WriteLine("        this.SetFactoryContext(context);");
-                WriteCtorBody(valueFields, nodeFields);
-                WriteLine("    }");
-                WriteLine();
-
-                // write constructor without diagnostics and annotations
+                // write constructor without diagnostics
                 WriteLine();
                 Write("    internal {0}(SyntaxKind kind", node.Name);
 
@@ -235,20 +191,20 @@ namespace SyntaxGenerator.Writer
                     WriteComment(field.PropertyComment, "    ");
                     if (IsNodeList(field.Type))
                     {
-                        WriteLine("    public {0}Microsoft.CodeAnalysis.Syntax.InternalSyntax.{1} {2} {{ get {{ return new Microsoft.CodeAnalysis.Syntax.InternalSyntax.{1}(this.{3}); }} }}",
-                            OverrideOrNewModifier(field), field.Type, field.Name, CamelCase(field.Name)
+                        WriteLine("    public {0}{1}.{2} {3} {{ get {{ return new {1}.{2}(this.{4}); }} }}",
+                            OverrideOrNewModifier(field), Tree.Namespace, field.Type, field.Name, CamelCase(field.Name)
                             );
                     }
                     else if (IsSeparatedNodeList(field.Type))
                     {
-                        WriteLine("    public {0}Microsoft.CodeAnalysis.Syntax.InternalSyntax.{1} {2} {{ get {{ return new Microsoft.CodeAnalysis.Syntax.InternalSyntax.{1}(new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode>(this.{3})); }} }}",
-                            OverrideOrNewModifier(field), field.Type, field.Name, CamelCase(field.Name), i
+                        WriteLine("    public {0}{1}.{2} {3} {{ get {{ return new {1}.{2}(new {1}.SyntaxList<{6}SyntaxNode>(this.{4})); }} }}",
+                            OverrideOrNewModifier(field), Tree.Namespace, field.Type, field.Name, CamelCase(field.Name), i, Tree.LanguageName
                             );
                     }
                     else if (field.Type == "SyntaxNodeOrTokenList")
                     {
-                        WriteLine("    public {0}Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode> {1} {{ get {{ return new Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode>(this.{2}); }} }}",
-                            OverrideOrNewModifier(field), field.Name, CamelCase(field.Name)
+                        WriteLine("    public {0}{1}.SyntaxList<{4}SyntaxNode> {2} {{ get {{ return new {1}.SyntaxList<{4}SyntaxNode>(this.{3}); }} }}",
+                            OverrideOrNewModifier(field), Tree.Namespace, field.Name, CamelCase(field.Name), Tree.LanguageName
                             );
                     }
                     else
@@ -283,18 +239,10 @@ namespace SyntaxGenerator.Writer
                 WriteLine("        }");
                 WriteLine("    }");
 
-                WriteLine();
-                WriteLine("    internal override SyntaxNode CreateRed(SyntaxNode parent, int position)");
-                WriteLine("    {");
-                WriteLine("      return new CSharp.Syntax.{0}(this, parent, position);", node.Name);
-                WriteLine("    }");
-
                 this.WriteGreenAcceptMethods(nd);
                 this.WriteGreenUpdateMethod(nd);
+                this.WriteRedSetters(nd);
                 this.WriteSetDiagnostics(nd);
-                this.WriteSetAnnotations(nd);
-
-                this.WriteGreenSerialization(nd);
 
                 WriteLine("  }");
             }
@@ -314,92 +262,6 @@ namespace SyntaxGenerator.Writer
             {
                 var field = valueFields[i];
                 Write(", {0} {1}", field.Type, CamelCase(field.Name));
-            }
-        }
-
-        private void WriteGreenSerialization(Node node)
-        {
-            var valueFields = node.Fields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
-            var nodeFields = node.Fields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
-
-            // object reader constructor
-            WriteLine();
-            WriteLine("    internal {0}(ObjectReader reader)", node.Name);
-            WriteLine("        : base(reader)");
-            WriteLine("    {");
-
-            WriteLine("      this.SlotCount = {0};", nodeFields.Count);
-
-            for (int i = 0, n = nodeFields.Count; i < n; i++)
-            {
-                var field = nodeFields[i];
-                string type = GetFieldType(field, green: true);
-                WriteLine("      var {0} = ({1})reader.ReadValue();", CamelCase(field.Name), type);
-                WriteLine("      if ({0} != null)", CamelCase(field.Name));
-                WriteLine("      {");
-                WriteLine("         AdjustFlagsAndWidth({0});", CamelCase(field.Name));
-                WriteLine("         this.{0} = {0};", CamelCase(field.Name), type);
-                WriteLine("      }");
-            }
-
-            for (int i = 0, n = valueFields.Count; i < n; i++)
-            {
-                var field = valueFields[i];
-                string type = GetFieldType(field, green: true);
-                WriteLine("      this.{0} = ({1})reader.{2}();", CamelCase(field.Name), type, GetReaderMethod(type));
-            }
-
-            WriteLine("    }");
-
-            // IWritable 
-            WriteLine();
-            WriteLine("    internal override void WriteTo(ObjectWriter writer)");
-            WriteLine("    {");
-            WriteLine("      base.WriteTo(writer);");
-
-            for (int i = 0, n = nodeFields.Count; i < n; i++)
-            {
-                var field = nodeFields[i];
-                string type = GetFieldType(field, green: true);
-                WriteLine("      writer.WriteValue(this.{0});", CamelCase(field.Name));
-            }
-
-            for (int i = 0, n = valueFields.Count; i < n; i++)
-            {
-                var field = valueFields[i];
-                var type = GetFieldType(field, green: true);
-                WriteLine("      writer.{0}(this.{1});", GetWriterMethod(type), CamelCase(field.Name));
-            }
-
-            WriteLine("    }");
-
-            // IReadable
-            WriteLine();
-            WriteLine("    internal override Func<ObjectReader, object> GetReader()");
-            WriteLine("    {");
-            WriteLine("       return r => new {0}(r);", node.Name);
-            WriteLine("    }");
-        }
-
-        private string GetWriterMethod(string type)
-        {
-            switch (type)
-            {
-                case "bool":
-                    return "WriteBoolean";
-                default:
-                    throw new InvalidOperationException(string.Format("Type '{0}' not supported for object reader serialization.", type));
-            }
-        }
-
-        private string GetReaderMethod(string type)
-        {
-            switch (type)
-            {
-                case "bool":
-                    return "ReadBoolean";
-                default:
-                    throw new InvalidOperationException(string.Format("Type '{0}' not supported for object reader serialization.", type));
             }
         }
 
@@ -433,29 +295,10 @@ namespace SyntaxGenerator.Writer
             }
         }
 
-        private void WriteSetAnnotations(Node node)
-        {
-            WriteLine();
-            WriteLine("    internal override GreenNode SetAnnotations(SyntaxAnnotation[] annotations)");
-            WriteLine("    {");
-
-            Write("         return new {0}(", node.Name);
-            Write("this.Kind, ");
-            for (int f = 0; f < node.Fields.Count; f++)
-            {
-                var field = node.Fields[f];
-                if (f > 0)
-                    Write(", ");
-                Write("this.{0}", CamelCase(field.Name));
-            }
-            WriteLine(", GetDiagnostics(), annotations);");
-            WriteLine("    }");
-        }
-
         private void WriteSetDiagnostics(Node node)
         {
             WriteLine();
-            WriteLine("    internal override GreenNode SetDiagnostics(DiagnosticInfo[] diagnostics)");
+            WriteLine($"    internal override {Tree.Root} SetDiagnostics(Diagnostic[] diagnostics)");
             WriteLine("    {");
 
             Write("         return new {0}(", node.Name);
@@ -467,7 +310,7 @@ namespace SyntaxGenerator.Writer
                     Write(", ");
                 Write("this.{0}", CamelCase(field.Name));
             }
-            WriteLine(", diagnostics, GetAnnotations());");
+            WriteLine(", diagnostics);");
             WriteLine("    }");
         }
 
@@ -479,18 +322,18 @@ namespace SyntaxGenerator.Writer
             //WriteLine("        return visitor.Visit{0}(this, argument);", StripPost(node.Name, "Syntax"));
             //WriteLine("    }");
             WriteLine();
-            WriteLine("    public override TResult Accept<TResult>(CSharpSyntaxVisitor<TResult> visitor)");
+            WriteLine($"    public override TResult Accept<TResult>({Tree.LanguageName}SyntaxVisitor<TResult> visitor)");
             WriteLine("    {");
             WriteLine("        return visitor.Visit{0}(this);", StripPost(node.Name, "Syntax"));
             WriteLine("    }");
             WriteLine();
-            WriteLine("    public override void Accept(CSharpSyntaxVisitor visitor)");
+            WriteLine($"    public override void Accept({Tree.LanguageName}SyntaxVisitor visitor)");
             WriteLine("    {");
             WriteLine("        visitor.Visit{0}(this);", StripPost(node.Name, "Syntax"));
             WriteLine("    }");
         }
 
-        private void WriteGreenVisitors()
+        private void WriteVisitors()
         {
             //WriteGreenVisitor(true, true);
             //WriteLine();
@@ -504,7 +347,7 @@ namespace SyntaxGenerator.Writer
             var nodes = Tree.Types.Where(n => !(n is PredefinedNode)).ToList();
 
             WriteLine();
-            WriteLine("  internal partial class CSharpSyntaxVisitor" + (withResult ? "<" + (withArgument ? "TArgument, " : "") + "TResult>" : ""));
+            WriteLine($"  public abstract class {Tree.LanguageName}SyntaxVisitor" + (withResult ? "<" + (withArgument ? "TArgument, " : "") + "TResult>" : ""));
             WriteLine("  {");
             int nWritten = 0;
             for (int i = 0, n = nodes.Count; i < n; i++)
@@ -580,10 +423,7 @@ namespace SyntaxGenerator.Writer
                 WriteLine(");");
                 WriteLine("            var diags = this.GetDiagnostics();");
                 WriteLine("            if (diags != null && diags.Length > 0)");
-                WriteLine("               newNode = newNode.WithDiagnosticsGreen(diags);");
-                WriteLine("            var annotations = this.GetAnnotations();");
-                WriteLine("            if (annotations != null && annotations.Length > 0)");
-                WriteLine("               newNode = newNode.WithAnnotationsGreen(annotations);");
+                WriteLine("               newNode = newNode.WithDiagnostics(diags);");
                 WriteLine("            return newNode;");
                 WriteLine("        }");
             }
@@ -593,294 +433,7 @@ namespace SyntaxGenerator.Writer
             WriteLine("    }");
         }
 
-        private void WriteGreenRewriter()
-        {
-            var nodes = Tree.Types.Where(n => !(n is PredefinedNode)).ToList();
-
-            WriteLine();
-            WriteLine("  internal partial class CSharpSyntaxRewriter : CSharpSyntaxVisitor<CSharpSyntaxNode>");
-            WriteLine("  {");
-            int nWritten = 0;
-            for (int i = 0, n = nodes.Count; i < n; i++)
-            {
-                var node = nodes[i] as Node;
-                if (node != null)
-                {
-                    var nodeFields = node.Fields.Where(nd => IsNodeOrNodeList(nd.Type)).ToList();
-
-                    if (nWritten > 0)
-                        WriteLine();
-                    nWritten++;
-                    WriteLine("    public override CSharpSyntaxNode Visit{0}({1} node)", StripPost(node.Name, "Syntax"), node.Name);
-                    WriteLine("    {");
-                    for (int f = 0; f < nodeFields.Count; f++)
-                    {
-                        var field = nodeFields[f];
-                        if (IsAnyList(field.Type))
-                        {
-                            WriteLine("      var {0} = this.VisitList(node.{1});", CamelCase(field.Name), field.Name);
-                        }
-                        else
-                        {
-                            WriteLine("      var {0} = ({1})this.Visit(node.{2});", CamelCase(field.Name), field.Type, field.Name);
-                        }
-                    }
-                    if (nodeFields.Count > 0)
-                    {
-                        Write("      return node.Update(");
-                        for (int f = 0; f < node.Fields.Count; f++)
-                        {
-                            var field = node.Fields[f];
-                            if (f > 0)
-                                Write(", ");
-                            if (IsNodeOrNodeList(field.Type))
-                            {
-                                Write(CamelCase(field.Name));
-                            }
-                            else
-                            {
-                                Write("node.{0}", field.Name);
-                            }
-                        }
-                        WriteLine(");");
-                    }
-                    else
-                    {
-                        WriteLine("      return node;");
-                    }
-                    WriteLine("    }");
-                }
-            }
-            WriteLine("  }");
-        }
-
-        private void WriteContextualGreenFactories()
-        {
-            var nodes = Tree.Types.Where(n => !(n is PredefinedNode) && !(n is AbstractNode)).ToList();
-            WriteLine();
-            WriteLine("  internal partial class ContextAwareSyntax");
-            WriteLine("  {");
-
-            WriteLine();
-            WriteLine("    private SyntaxFactoryContext context;");
-            WriteLine();
-
-            WriteLine();
-            WriteLine("    public ContextAwareSyntax(SyntaxFactoryContext context)");
-            WriteLine("    {");
-            WriteLine("        this.context = context;");
-            WriteLine("    }");
-
-            WriteGreenFactories(nodes, withSyntaxFactoryContext: true);
-
-            WriteLine("  }");
-        }
-
-        private void WriteStaticGreenFactories()
-        {
-            var nodes = Tree.Types.Where(n => !(n is PredefinedNode) && !(n is AbstractNode)).ToList();
-            WriteLine();
-            WriteLine("  internal static partial class SyntaxFactory");
-            WriteLine("  {");
-
-            WriteGreenFactories(nodes);
-
-            WriteGreenTypeList();
-
-            WriteLine("  }");
-        }
-
-        private void WriteGreenFactories(List<TreeType> nodes, bool withSyntaxFactoryContext = false)
-        {
-            for (int i = 0, n = nodes.Count; i < n; i++)
-            {
-                var node = nodes[i];
-                this.WriteGreenFactory((Node) node, withSyntaxFactoryContext);
-                if (i < n - 1)
-                    WriteLine();
-            }
-        }
-
-        private void WriteGreenTypeList()
-        {
-            WriteLine();
-            WriteLine("    internal static IEnumerable<Type> GetNodeTypes()");
-            WriteLine("    {");
-            WriteLine("        return new Type[] {");
-
-            var nodes = Tree.Types.Where(n => !(n is PredefinedNode) && !(n is AbstractNode)).ToList();
-            for (int i = 0, n = nodes.Count; i < n; i++)
-            {
-                var node = nodes[i];
-                Write("           typeof({0})", node.Name);
-                if (i < n - 1)
-                    Write(",");
-                WriteLine();
-            }
-
-            WriteLine("        };");
-            WriteLine("    }");
-        }
-
-
-        private void WriteGreenFactory(Node nd, bool withSyntaxFactoryContext = false)
-        {
-            var valueFields = nd.Fields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
-            var nodeFields = nd.Fields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
-
-            Write("    public {0}{1} {2}(", withSyntaxFactoryContext ? "" : "static ", nd.Name, StripPost(nd.Name, "Syntax"));
-            WriteGreenFactoryParameters(nd);
-            WriteLine(")");
-            WriteLine("    {");
-
-            // validate kind
-            if (nd.Kinds.Count > 1)
-            {
-                WriteLine("      switch (kind)");
-                WriteLine("      {");
-                foreach (var k in nd.Kinds)
-                {
-                    WriteLine("        case SyntaxKind.{0}:", k.Name);
-                }
-                WriteLine("          break;");
-                WriteLine("        default:");
-                WriteLine("          throw new ArgumentException(\"kind\");");
-                WriteLine("      }");
-            }
-
-            // validate parameters
-            WriteLine("#if DEBUG");
-            for (int i = 0, n = nodeFields.Count; i < n; i++)
-            {
-                var field = nodeFields[i];
-                var pname = CamelCase(field.Name);
-
-                if (!IsAnyList(field.Type) && !IsOptional(field))
-                {
-                    WriteLine("      if ({0} == null)", CamelCase(field.Name));
-                    WriteLine("        throw new ArgumentNullException(nameof({0}));", CamelCase(field.Name));
-                }
-                if (field.Type == "SyntaxToken" && field.Kinds != null && field.Kinds.Count > 0)
-                {
-                    if (IsOptional(field))
-                    {
-                        WriteLine("      if ({0} != null)", CamelCase(field.Name));
-                        WriteLine("      {");
-                    }
-                    WriteLine("      switch ({0}.Kind)", pname);
-                    WriteLine("      {");
-                    foreach (var kind in field.Kinds)
-                    {
-                        WriteLine("        case SyntaxKind.{0}:", kind.Name);
-                    }
-                    //we need to check for Kind=None as well as node == null because that's what the red factory will pass
-                    if (IsOptional(field))
-                    {
-                        WriteLine("        case SyntaxKind.None:");
-                    }
-                    WriteLine("          break;");
-                    WriteLine("        default:");
-                    WriteLine("          throw new ArgumentException(\"{0}\");", pname);
-                    WriteLine("      }");
-                    if (IsOptional(field))
-                    {
-                        WriteLine("      }");
-                    }
-                }
-            }
-
-            WriteLine("#endif");
-
-            if (nd.Name != "SkippedTokensTriviaSyntax" &&
-                nd.Name != "DocumentationCommentTriviaSyntax" &&
-                nd.Name != "IncompleteMemberSyntax" &&
-                valueFields.Count + nodeFields.Count <= 3)
-            {
-                //int hash;
-                //var cached = SyntaxNodeCache.TryGetNode((int)SyntaxKind.IdentifierName, identifier, this.context, out hash);
-                //if (cached != null) return (IdentifierNameSyntax)cached;
-
-                //var result = new IdentifierNameSyntax(SyntaxKind.IdentifierName, identifier, this.context);
-                //if (hash >= 0)
-                //{
-                //    SyntaxNodeCache.AddNode(result, hash);
-                //}
-
-                //return result;
-
-                WriteLine();
-                //int hash;
-                WriteLine("      int hash;");
-                //SyntaxNode cached = SyntaxNodeCache.TryGetNode(SyntaxKind.IdentifierName, identifier, this.context, out hash);
-                if (withSyntaxFactoryContext)
-                {
-                    Write("      var cached = CSharpSyntaxNodeCache.TryGetNode((int)");
-                }
-                else
-                {
-                    Write("      var cached = SyntaxNodeCache.TryGetNode((int)");
-                }
-
-                WriteCtorArgList(nd, withSyntaxFactoryContext, valueFields, nodeFields);
-                WriteLine(", out hash);");
-                //    if (cached != null) return (IdentifierNameSyntax)cached;
-                WriteLine("      if (cached != null) return ({0})cached;", nd.Name);
-                WriteLine();
-
-                //var result = new IdentifierNameSyntax(SyntaxKind.IdentifierName, identifier);
-                Write("      var result = new {0}(", nd.Name);
-                WriteCtorArgList(nd, withSyntaxFactoryContext, valueFields, nodeFields);
-                WriteLine(");");
-                //if (hash >= 0)
-                WriteLine("      if (hash >= 0)");
-                //{
-                WriteLine("      {");
-                //    SyntaxNodeCache.AddNode(result, hash);
-                WriteLine("          SyntaxNodeCache.AddNode(result, hash);");
-                //}
-                WriteLine("      }");
-                WriteLine();
-
-                //return result;
-                WriteLine("      return result;");
-            }
-            else
-            {
-                WriteLine();
-                Write("      return new {0}(", nd.Name);
-                WriteCtorArgList(nd, withSyntaxFactoryContext, valueFields, nodeFields);
-                WriteLine(");");
-            }
-
-            WriteLine("    }");
-        }
-
-        private void WriteGreenFactoryParameters(Node nd)
-        {
-            if (nd.Kinds.Count > 1)
-            {
-                Write("SyntaxKind kind, ");
-            }
-            for (int i = 0, n = nd.Fields.Count; i < n; i++)
-            {
-                var field = nd.Fields[i];
-                if (i > 0)
-                    Write(", ");
-                var type = field.Type;
-                if (type == "SyntaxNodeOrTokenList")
-                {
-                    type = "Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode>";
-                }
-                else if (IsSeparatedNodeList(field.Type) ||
-                         IsNodeList(field.Type))
-                {
-                    type = "Microsoft.CodeAnalysis.Syntax.InternalSyntax." + type;
-                }
-                Write("{0} {1}", type, CamelCase(field.Name));
-            }
-        }
-
-        private void WriteCtorArgList(Node nd, bool withSyntaxFactoryContext, List<Field> valueFields, List<Field> nodeFields)
+        private void WriteCtorArgList(Node nd, List<Field> valueFields, List<Field> nodeFields)
         {
             if (nd.Kinds.Count == 1)
             {
@@ -911,415 +464,6 @@ namespace SyntaxGenerator.Writer
                 Write(", ");
                 Write(CamelCase(field.Name));
             }
-            if (withSyntaxFactoryContext)
-            {
-                Write(", this.context");
-            }
-        }
-
-        private void WriteRedTypes()
-        {
-            var nodes = Tree.Types.Where(n => !(n is PredefinedNode)).ToList();
-            for (int i = 0, n = nodes.Count; i < n; i++)
-            {
-                var node = nodes[i];
-                WriteLine();
-                this.WriteRedType(node);
-            }
-        }
-
-        private void WriteRedType(TreeType node)
-        {
-            WriteComment(node.TypeComment, "  ");
-
-            if (node is AbstractNode)
-            {
-                AbstractNode nd = (AbstractNode) node;
-                WriteLine("  public abstract partial class {0} : {1}", node.Name, node.Base);
-                WriteLine("  {");
-                WriteLine("    internal {0}(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.CSharpSyntaxNode green, SyntaxNode parent, int position)", node.Name);
-                WriteLine("      : base(green, parent, position)");
-                WriteLine("    {");
-                WriteLine("    }");
-
-                var valueFields = nd.Fields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
-                var nodeFields = nd.Fields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
-
-                for (int i = 0, n = nodeFields.Count; i < n; i++)
-                {
-                    var field = nodeFields[i];
-                    if (IsNodeOrNodeList(field.Type))
-                    {
-                        //red SyntaxLists can't contain tokens, so we switch to SyntaxTokenList
-                        var fieldType = field.Type == "SyntaxList<SyntaxToken>" ? "SyntaxTokenList" : field.Type;
-                        WriteLine();
-                        WriteComment(field.PropertyComment, "    ");
-                        WriteLine("    {0} abstract {1}{2} {3} {{ get; }}", "public", (IsNew(field) ? "new " : ""), fieldType, field.Name);
-                    }
-                }
-
-                for (int i = 0, n = valueFields.Count; i < n; i++)
-                {
-                    var field = valueFields[i];
-                    WriteLine();
-                    WriteComment(field.PropertyComment, "    ");
-                    WriteLine("    {0} abstract {1}{2} {3} {{ get; }}", "public", (IsNew(field) ? "new " : ""), field.Type, field.Name);
-                }
-
-                WriteLine("  }");
-            }
-            else if (node is Node)
-            {
-                Node nd = (Node) node;
-                WriteLine("  public sealed partial class {0} : {1}", node.Name, node.Base);
-                WriteLine("  {");
-
-                var valueFields = nd.Fields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
-                var nodeFields = nd.Fields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
-
-                for (int i = 0, n = nodeFields.Count; i < n; i++)
-                {
-                    var field = nodeFields[i];
-                    if (field.Type != "SyntaxToken"
-                        && field.Type != "SyntaxList<SyntaxToken>"
-                        )
-                    {
-                        if (IsSeparatedNodeList(field.Type) || field.Type == "SyntaxNodeOrTokenList")
-                        {
-                            WriteLine("    private SyntaxNode {0};", CamelCase(field.Name));
-                        }
-                        else
-                        {
-                            var type = GetFieldType(field, green: false);
-                            WriteLine("    private {0} {1};", type, CamelCase(field.Name));
-                        }
-                    }
-                }
-
-                // write constructor
-                WriteLine();
-                WriteLine("    internal {0}(Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.CSharpSyntaxNode green, SyntaxNode parent, int position)", node.Name);
-                WriteLine("        : base(green, parent, position)");
-                WriteLine("    {");
-                WriteLine("    }");
-                WriteLine();
-
-                // property accessors
-                for (int i = 0, n = nodeFields.Count; i < n; i++)
-                {
-                    var field = nodeFields[i];
-                    if (field.Type == "SyntaxToken")
-                    {
-                        WriteComment(field.PropertyComment, "    ");
-                        WriteLine("    {0} {1}{2} {3} ", "public", OverrideOrNewModifier(field), field.Type, field.Name);
-                        WriteLine("    {");
-                        if (IsOptional(field))
-                        {
-                            WriteLine("        get");
-                            WriteLine("        {");
-                            WriteLine("            var slot = ((Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.{0})this.Green).{1};", node.Name, CamelCase(field.Name));
-                            WriteLine("            if (slot != null)");
-                            WriteLine("                return new SyntaxToken(this, slot, {0}, {1});", GetChildPosition(i), GetChildIndex(i));
-                            WriteLine();
-                            WriteLine("            return default(SyntaxToken);");
-                            WriteLine("        }");
-                        }
-                        else
-                        {
-                            WriteLine("      get {{ return new SyntaxToken(this, ((Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.{0})this.Green).{1}, {2}, {3}); }}", node.Name, CamelCase(field.Name), GetChildPosition(i), GetChildIndex(i));
-                        }
-                        WriteLine("    }");
-                    }
-                    else if (field.Type == "SyntaxList<SyntaxToken>")
-                    {
-                        WriteComment(field.PropertyComment, "    ");
-                        WriteLine("    {0} {1}SyntaxTokenList {2} ", "public", OverrideOrNewModifier(field), field.Name);
-                        WriteLine("    {");
-                        WriteLine("        get");
-                        WriteLine("        {");
-                        WriteLine("            var slot = this.Green.GetSlot({0});", i);
-                        WriteLine("            if (slot != null)");
-                        WriteLine("                return new SyntaxTokenList(this, slot, {0}, {1});", GetChildPosition(i), GetChildIndex(i));
-                        WriteLine();
-                        WriteLine("            return default(SyntaxTokenList);");
-                        WriteLine("        }");
-                        WriteLine("    }");
-                    }
-                    else
-                    {
-                        WriteComment(field.PropertyComment, "    ");
-                        WriteLine("    {0} {1}{2} {3} ", "public", OverrideOrNewModifier(field), field.Type, field.Name);
-                        WriteLine("    {");
-                        WriteLine("        get");
-                        WriteLine("        {");
-
-                        if (IsNodeList(field.Type))
-                        {
-                            WriteLine("            return new {0}(this.GetRed(ref this.{1}, {2}));", field.Type, CamelCase(field.Name), i);
-                        }
-                        else if (IsSeparatedNodeList(field.Type))
-                        {
-                            WriteLine("            var red = this.GetRed(ref this.{0}, {1});", CamelCase(field.Name), i);
-                            WriteLine("            if (red != null)", i);
-                            WriteLine("                return new {0}(red, {1});", field.Type, GetChildIndex(i));
-                            WriteLine();
-                            WriteLine("            return default({0});", field.Type);
-                        }
-                        else if (field.Type == "SyntaxNodeOrTokenList")
-                        {
-                            throw new InvalidOperationException("field cannot be a random SyntaxNodeOrTokenList");
-                        }
-                        else
-                        {
-                            if (i == 0)
-                            {
-                                WriteLine("            return this.GetRedAtZero(ref this.{0});", CamelCase(field.Name));
-                            }
-                            else
-                            {
-                                WriteLine("            return this.GetRed(ref this.{0}, {1});", CamelCase(field.Name), i);
-                            }
-                        }
-                        WriteLine("        }");
-                        WriteLine("    }");
-                    }
-                    WriteLine();
-                }
-
-                for (int i = 0, n = valueFields.Count; i < n; i++)
-                {
-                    var field = valueFields[i];
-                    WriteComment(field.PropertyComment, "    ");
-                    WriteLine("    {0} {1}{2} {3} {{ get {{ return ((Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.{4})this.Green).{3}; }} }}",
-                        "public", OverrideOrNewModifier(field), field.Type, field.Name, node.Name
-                        );
-                    WriteLine();
-                }
-
-                //GetNodeSlot forces creation of a red node.
-                WriteLine("    internal override SyntaxNode GetNodeSlot(int index)");
-                WriteLine("    {");
-                WriteLine("        switch (index)");
-                WriteLine("        {");
-                for (int i = 0, n = nodeFields.Count; i < n; i++)
-                {
-                    var field = nodeFields[i];
-
-                    if (field.Type != "SyntaxToken" && field.Type != "SyntaxList<SyntaxToken>")
-                    {
-                        if (i == 0)
-                        {
-                            WriteLine("            case {0}: return this.GetRedAtZero(ref this.{1});", i, CamelCase(field.Name));
-                        }
-                        else
-                        {
-                            WriteLine("            case {0}: return this.GetRed(ref this.{1}, {0});", i, CamelCase(field.Name));
-                        }
-                    }
-                }
-                WriteLine("            default: return null;");
-                WriteLine("        }");
-                WriteLine("    }");
-
-                //GetCachedSlot returns a red node if we have it.
-                WriteLine("    internal override SyntaxNode GetCachedSlot(int index)");
-                WriteLine("    {");
-                WriteLine("        switch (index)");
-                WriteLine("        {");
-                for (int i = 0, n = nodeFields.Count; i < n; i++)
-                {
-                    var field = nodeFields[i];
-                    if (field.Type != "SyntaxToken" && field.Type != "SyntaxList<SyntaxToken>")
-                    {
-                        WriteLine("            case {0}: return this.{1};", i, CamelCase(field.Name));
-                    }
-                }
-                WriteLine("            default: return null;");
-                WriteLine("        }");
-                WriteLine("    }");
-
-
-                this.WriteRedAcceptMethods(nd);
-                this.WriteRedUpdateMethod(nd);
-                // this.WriteRedWithMethod(nd);
-                this.WriteRedSetters(nd);
-                this.WriteRedListHelperMethods(nd);
-
-                WriteLine("  }");
-            }
-        }
-
-        private string GetChildPosition(int i)
-        {
-            if (i == 0)
-            {
-                return "this.Position";
-            }
-            else
-            {
-                return "this.GetChildPosition(" + i + ")";
-            }
-        }
-
-        private string GetChildIndex(int i)
-        {
-            if (i == 0)
-            {
-                return "0";
-            }
-            else
-            {
-                return "this.GetChildIndex(" + i + ")";
-            }
-        }
-
-        private void WriteRedAcceptMethods(Node node)
-        {
-            //WriteRedAcceptMethod(node, true, true);
-            WriteRedAcceptMethod(node, false, true);
-            WriteRedAcceptMethod(node, false, false);
-        }
-
-        private void WriteRedAcceptMethod(Node node, bool genericArgument, bool genericResult)
-        {
-            string genericArgs =
-                (genericResult && genericArgument) ? "<TArgument, TResult>" :
-                genericResult ? "<TResult>" : "";
-            WriteLine();
-            WriteLine("    public override " + (genericResult ? "TResult" : "void") + " Accept" + genericArgs + "(CSharpSyntaxVisitor" + genericArgs + " visitor{0})", genericArgument ? ", TArgument argument" : "");
-            WriteLine("    {");
-            WriteLine("        " + (genericResult ? "return " : "") + "visitor.Visit{0}(this{1});", StripPost(node.Name, "Syntax"), genericArgument ? ", argument" : "");
-            WriteLine("    }");
-        }
-
-        private void WriteRedVisitors()
-        {
-            //WriteRedVisitor(true, true);
-            WriteRedVisitor(false, true);
-            WriteRedVisitor(false, false);
-        }
-
-        private void WriteRedVisitor(bool genericArgument, bool genericResult)
-        {
-            string genericArgs =
-                (genericResult && genericArgument) ? "<TArgument, TResult>" :
-                genericResult ? "<TResult>" : "";
-            var nodes = Tree.Types.Where(n => !(n is PredefinedNode)).ToList();
-
-            WriteLine();
-            WriteLine("  public partial class CSharpSyntaxVisitor" + genericArgs);
-            WriteLine("  {");
-            int nWritten = 0;
-            for (int i = 0, n = nodes.Count; i < n; i++)
-            {
-                var node = nodes[i] as Node;
-                if (node != null)
-                {
-                    if (nWritten > 0)
-                        WriteLine();
-                    nWritten++;
-                    WriteComment(string.Format("<summary>Called when the visitor visits a {0} node.</summary>", node.Name), "    ");
-                    WriteLine("    public virtual " + (genericResult ? "TResult" : "void") + " Visit{0}({1} node{2})", StripPost(node.Name, "Syntax"), node.Name, genericArgument ? ", TArgument argument" : "");
-                    WriteLine("    {");
-                    WriteLine("      " + (genericResult ? "return " : "") + "this.DefaultVisit(node{0});", genericArgument ? ", argument" : "");
-                    WriteLine("    }");
-                }
-            }
-            WriteLine("  }");
-        }
-
-        private void WriteRedUpdateMethod(Node node)
-        {
-            WriteLine();
-            Write("    {0} {1} Update(", "public", node.Name);
-
-            // parameters
-            for (int f = 0; f < node.Fields.Count; f++)
-            {
-                var field = node.Fields[f];
-                if (f > 0)
-                    Write(", ");
-                var type = field.Type == "SyntaxList<SyntaxToken>" ? "SyntaxTokenList" : field.Type;
-                Write("{0} {1}", type, CamelCase(field.Name));
-            }
-            WriteLine(")");
-            WriteLine("    {");
-
-            Write("        if (");
-            int nCompared = 0;
-            for (int f = 0; f < node.Fields.Count; f++)
-            {
-                var field = node.Fields[f];
-                if (IsDerivedOrListOfDerived("SyntaxNode", field.Type) || IsDerivedOrListOfDerived("SyntaxToken", field.Type) || field.Type == "SyntaxNodeOrTokenList")
-                {
-                    if (nCompared > 0)
-                        Write(" || ");
-                    Write("{0} != this.{1}", CamelCase(field.Name), field.Name);
-                    nCompared++;
-                }
-            }
-            if (nCompared > 0)
-            {
-                WriteLine(")");
-                WriteLine("        {");
-                Write("            var newNode = SyntaxFactory.{0}(", StripPost(node.Name, "Syntax"));
-                if (node.Kinds.Count > 1)
-                {
-                    Write("this.Kind(), ");
-                }
-                for (int f = 0; f < node.Fields.Count; f++)
-                {
-                    var field = node.Fields[f];
-                    if (f > 0)
-                        Write(", ");
-                    Write(CamelCase(field.Name));
-                }
-                WriteLine(");");
-                WriteLine("            var annotations = this.GetAnnotations();");
-                WriteLine("            if (annotations != null && annotations.Length > 0)");
-                WriteLine("               return newNode.WithAnnotations(annotations);");
-                WriteLine("            return newNode;");
-                WriteLine("        }");
-            }
-
-            WriteLine();
-            WriteLine("        return this;");
-            WriteLine("    }");
-        }
-
-        private void WriteRedWithMethod(Node node)
-        {
-            WriteLine();
-            Write("    public {0} With(", node.Name);
-
-            // parameters
-            for (int f = 0; f < node.Fields.Count; f++)
-            {
-                var field = node.Fields[f];
-                var type = this.GetRedPropertyType(field);
-                Write("Optional<{0}> {1} = default(Optional<{0}>)", type, CamelCase(field.Name));
-                if (f < node.Fields.Count - 1)
-                    Write(", ");
-            }
-            WriteLine(")");
-            WriteLine("    {");
-
-            Write("        return this.Update(");
-
-            for (int f = 0; f < node.Fields.Count; f++)
-            {
-                var field = node.Fields[f];
-                var parameterName = CamelCase(field.Name);
-                WriteLine();
-                Write("                    {0}.HasValue ? {0}.Value : this.{1}", parameterName, field.Name);
-                if (f < node.Fields.Count - 1)
-                    Write(",");
-            }
-
-            WriteLine();
-            WriteLine("                    );");
-
-            WriteLine("    }");
         }
 
         private void WriteRedSetters(Node node)
@@ -1419,12 +563,12 @@ namespace SyntaxGenerator.Writer
             WriteLine("    }");
         }
 
-        private void WriteRedRewriter()
+        private void WriteRewriter()
         {
             var nodes = Tree.Types.Where(n => !(n is PredefinedNode)).ToList();
 
             WriteLine();
-            WriteLine("  public partial class CSharpSyntaxRewriter : CSharpSyntaxVisitor<SyntaxNode>");
+            WriteLine($"  public partial class {Tree.LanguageName}SyntaxRewriter : {Tree.LanguageName}SyntaxVisitor<SyntaxNode>");
             WriteLine("  {");
             int nWritten = 0;
             for (int i = 0, n = nodes.Count; i < n; i++)
@@ -1484,7 +628,7 @@ namespace SyntaxGenerator.Writer
             WriteLine("  }");
         }
 
-        private void WriteRedFactories()
+        private void WriteFactories()
         {
             var nodes = Tree.Types.Where(n => !(n is PredefinedNode) && !(n is AbstractNode)).OfType<Node>().ToList();
             WriteLine();
@@ -1633,51 +777,11 @@ namespace SyntaxGenerator.Writer
                 }
             }
 
-            Write("      return ({0})Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxFactory.{1}(", nd.Name, StripPost(nd.Name, "Syntax"));
-            if (nd.Kinds.Count > 1)
-            {
-                Write("kind, ");
-            }
-            for (int i = 0, n = nodeFields.Count; i < n; i++)
-            {
-                var field = nodeFields[i];
-                if (i > 0)
-                    Write(", ");
-                if (field.Type == "SyntaxToken")
-                {
-                    Write("(Syntax.InternalSyntax.SyntaxToken){0}.Node", CamelCase(field.Name));
-                }
-                else if (field.Type == "SyntaxList<SyntaxToken>")
-                {
-                    Write("{0}.Node.ToGreenList<Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.SyntaxToken>()", CamelCase(field.Name));
-                }
-                else if (IsNodeList(field.Type))
-                {
-                    Write("{0}.Node.ToGreenList<Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.{1}>()", CamelCase(field.Name), GetElementType(field.Type));
-                }
-                else if (IsSeparatedNodeList(field.Type))
-                {
-                    Write("{0}.Node.ToGreenSeparatedList<Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.{1}>()", CamelCase(field.Name), GetElementType(field.Type));
-                }
-                else if (field.Type == "SyntaxNodeOrTokenList")
-                {
-                    Write("{0}.Node.ToGreenList<Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.CSharpSyntaxNode>()", CamelCase(field.Name));
-                }
-                else
-                {
-                    Write("{0} == null ? null : (Microsoft.CodeAnalysis.CSharp.Syntax.InternalSyntax.{1}){0}.Green", CamelCase(field.Name), field.Type);
-                }
-            }
-
-            // values are at end
-            for (int i = 0, n = valueFields.Count; i < n; i++)
-            {
-                var field = valueFields[i];
-                Write(", ");
-                Write(CamelCase(field.Name));
-            }
-
-            WriteLine(").CreateRed();");
+            //return new IdentifierNameSyntax(SyntaxKind.IdentifierName, identifier);
+            Write("      return new {0}(", nd.Name);
+            WriteCtorArgList(nd, valueFields, nodeFields);
+            WriteLine(");");
+            
             WriteLine("    }");
 
             this.WriteLine();
