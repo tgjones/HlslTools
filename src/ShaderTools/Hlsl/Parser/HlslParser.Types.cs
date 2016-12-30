@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
@@ -123,7 +124,7 @@ namespace ShaderTools.Hlsl.Parser
             var scalarOrVectorType = ParseScalarOrVectorType();
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
             var typeArgumentList = new TemplateArgumentListSyntax(lessThan,
-                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { scalarOrVectorType }),
+                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { scalarOrVectorType }),
                 greaterThan);
             return new PredefinedObjectTypeSyntax(token, typeArgumentList);
         }
@@ -149,7 +150,7 @@ namespace ShaderTools.Hlsl.Parser
 
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
             var typeArgumentList = new TemplateArgumentListSyntax(lessThan,
-                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { userDefinedType, comma, controlPoints }),
+                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { userDefinedType, comma, controlPoints }),
                 greaterThan);
             return new PredefinedObjectTypeSyntax(token, typeArgumentList);
         }
@@ -160,7 +161,7 @@ namespace ShaderTools.Hlsl.Parser
             var type = ParseType(false);
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
             var typeArgumentList = new TemplateArgumentListSyntax(lessThan,
-                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { type }),
+                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { type }),
                 greaterThan);
             return new PredefinedObjectTypeSyntax(token, typeArgumentList);
         }
@@ -171,7 +172,7 @@ namespace ShaderTools.Hlsl.Parser
             var type = ParseScalarOrVectorOrMatrixOrUserDefinedType();
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
             var typeArgumentList = new TemplateArgumentListSyntax(lessThan,
-                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { type }),
+                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { type }),
                 greaterThan);
             return new PredefinedObjectTypeSyntax(token, typeArgumentList);
         }
@@ -182,7 +183,7 @@ namespace ShaderTools.Hlsl.Parser
             var type = ParseScalarOrVectorOrUserDefinedType();
             var greaterThan = Match(SyntaxKind.GreaterThanToken);
             var typeArgumentList = new TemplateArgumentListSyntax(lessThan,
-                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { type }),
+                new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { type }),
                 greaterThan);
             return new PredefinedObjectTypeSyntax(token, typeArgumentList);
         }
@@ -196,7 +197,7 @@ namespace ShaderTools.Hlsl.Parser
                 var type = ParseScalarOrVectorType();
                 var greaterThan = Match(SyntaxKind.GreaterThanToken);
                 templateArgumentList = new TemplateArgumentListSyntax(lessThan,
-                    new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { type }),
+                    new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { type }),
                     greaterThan);
             }
             return new PredefinedObjectTypeSyntax(token, templateArgumentList);
@@ -207,7 +208,7 @@ namespace ShaderTools.Hlsl.Parser
             var lessThan = Match(SyntaxKind.LessThanToken);
             var type = ParseScalarOrVectorType();
 
-            var arguments = new List<SyntaxNode> { type };
+            var arguments = new List<SyntaxNodeBase> { type };
             if (Current.Kind == SyntaxKind.CommaToken)
             {
                 var comma = Match(SyntaxKind.CommaToken);

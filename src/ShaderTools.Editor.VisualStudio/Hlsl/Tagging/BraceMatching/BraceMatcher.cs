@@ -78,7 +78,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.BraceMatching
 
         private static bool FindMatchingBrace(SourceLocation position, int direction, SyntaxNode parent, SyntaxKind syntaxKind, out TextSpan right)
         {
-            var tokens = parent.ChildNodes.Where(t => t.Kind == syntaxKind);
+            var tokens = parent.ChildNodes.Where(t => t.IsKind(syntaxKind));
             var relevantTokens = (direction < 0)
                 ? from t in tokens
                     where t.SourceRange.End <= position

@@ -64,7 +64,7 @@ namespace ShaderTools.Hlsl.Syntax
                 }
                 else
                 {
-                    foreach (var descendantToken in childNode.DescendantTokens(descendIntoTrivia))
+                    foreach (var descendantToken in ((SyntaxNode) childNode).DescendantTokens(descendIntoTrivia))
                         yield return descendantToken;
                 }
             }
@@ -77,7 +77,7 @@ namespace ShaderTools.Hlsl.Syntax
                 if (childNode.IsToken)
                     yield return (SyntaxToken) childNode;
                 else
-                    foreach (var descendantToken in childNode.DescendantTokensReverse())
+                    foreach (var descendantToken in ((SyntaxNode) childNode).DescendantTokensReverse())
                         yield return descendantToken;
             }
         }
@@ -314,7 +314,7 @@ namespace ShaderTools.Hlsl.Syntax
                 yield return current;
 
                 foreach (var child in current.ChildNodes.Reverse())
-                    stack.Push(child);
+                    stack.Push((SyntaxNode) child);
             }
         }
 
@@ -453,9 +453,9 @@ namespace ShaderTools.Hlsl.Syntax
             return node != null && node.Parent.IsKind(kind);
         }
 
-        public static bool IsKind(this SyntaxNode node, SyntaxKind kind)
+        public static bool IsKind(this SyntaxNodeBase node, SyntaxKind kind)
         {
-            return node != null && node.Kind == kind;
+            return node != null && node.RawKind == (ushort) kind;
         }
 
         public static bool IsKind(this SyntaxNode node, SyntaxKind kind1, SyntaxKind kind2)

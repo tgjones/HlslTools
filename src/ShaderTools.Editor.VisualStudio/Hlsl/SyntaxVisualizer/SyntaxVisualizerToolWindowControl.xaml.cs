@@ -221,7 +221,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
             };
 
             foreach (var childNode in node.ChildNodes)
-                AddNode(treeViewItem.Items, childNode, string.Empty);
+                AddNode(treeViewItem.Items, (SyntaxNode) childNode, string.Empty);
 
             if (node.IsToken)
             {

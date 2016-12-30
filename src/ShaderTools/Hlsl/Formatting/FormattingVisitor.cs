@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
@@ -1397,7 +1398,7 @@ namespace ShaderTools.Hlsl.Formatting
             foreach (var childNode in separatedSyntaxList.GetWithSeparators())
             {
                 if (odd)
-                    Visit(childNode);
+                    Visit((SyntaxNode) childNode);
                 else
                     FormatCommaToken((SyntaxToken) childNode);
 

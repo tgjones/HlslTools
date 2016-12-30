@@ -34,11 +34,11 @@ namespace ShaderTools.Hlsl.Syntax
 
             LeadingTrivia = leadingTrivia.ToImmutableArray();
             foreach (var triviaNode in LeadingTrivia)
-                triviaNode.Parent = this;
+                ((SyntaxNodeBase) triviaNode).Parent = this;
 
             TrailingTrivia = trailingTrivia.ToImmutableArray();
             foreach (var triviaNode in TrailingTrivia)
-                triviaNode.Parent = this;
+                ((SyntaxNodeBase) triviaNode).Parent = this;
 
             FullSourceRange = ComputeFullSpan(sourceRange, LeadingTrivia, TrailingTrivia);
 
@@ -83,7 +83,8 @@ namespace ShaderTools.Hlsl.Syntax
 
         public override IEnumerable<DirectiveTriviaSyntax> GetDirectives()
         {
-            return LeadingTrivia.OfType<DirectiveTriviaSyntax>().Union(TrailingTrivia.OfType<DirectiveTriviaSyntax>());
+            return LeadingTrivia.OfType<DirectiveTriviaSyntax>()
+                .Union(TrailingTrivia.OfType<DirectiveTriviaSyntax>());
         }
 
         public override void Accept(SyntaxVisitor visitor) => visitor.VisitSyntaxToken(this);
@@ -96,7 +97,7 @@ namespace ShaderTools.Hlsl.Syntax
         public MacroReference MacroReference { get; }
         public bool IsFirstTokenInMacroExpansion { get; }
 
-        public override SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }

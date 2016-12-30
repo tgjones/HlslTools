@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
@@ -197,7 +198,7 @@ namespace ShaderTools.Hlsl.Parser
         {
             var openParen = Match(SyntaxKind.OpenParenToken);
 
-            var paramList = new List<SyntaxNode>();
+            var paramList = new List<SyntaxNodeBase>();
             if (Current.Kind != SyntaxKind.CloseParenToken)
             {
                 paramList.Add(Match(SyntaxKind.IdentifierToken));
@@ -408,7 +409,7 @@ namespace ShaderTools.Hlsl.Parser
                 var closeParen = Match(SyntaxKind.CloseParenToken);
                 expr = new FunctionInvocationExpressionSyntax((IdentifierNameSyntax) expr, new ArgumentListSyntax(
                     openParen,
-                    new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNode> { name }),
+                    new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { name }),
                     closeParen));
             }
 

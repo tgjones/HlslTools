@@ -1,3 +1,5 @@
+using ShaderTools.Core.Syntax;
+
 namespace ShaderTools.Hlsl.Syntax
 {
     public class AttributeArgumentListSyntax : SyntaxNode

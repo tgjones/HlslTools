@@ -55,7 +55,7 @@ namespace ShaderTools.Hlsl.Syntax
                     }
                     else
                     {
-                        var t = GetLastToken(nodeOrToken, tokenPredicate, triviaPredicate);
+                        var t = GetLastToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
                         if (t != null)
                             return t;
                     }
@@ -88,7 +88,7 @@ namespace ShaderTools.Hlsl.Syntax
                         }
                         else
                         {
-                            var t = GetLastToken(nodeOrToken, tokenPredicate, triviaPredicate);
+                            var t = GetLastToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
                             if (t != null)
                                 return t;
                         }
@@ -193,7 +193,7 @@ namespace ShaderTools.Hlsl.Syntax
                     }
                     else
                     {
-                        var t = GetFirstToken(nodeOrToken, tokenPredicate, triviaPredicate);
+                        var t = GetFirstToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
                         if (t != null)
                             return t;
                     }
@@ -226,7 +226,7 @@ namespace ShaderTools.Hlsl.Syntax
                         }
                         else
                         {
-                            var t = GetFirstToken(nodeOrToken, tokenPredicate, triviaPredicate);
+                            var t = GetFirstToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
                             if (t != null)
                                 return t;
                         }
@@ -268,7 +268,7 @@ namespace ShaderTools.Hlsl.Syntax
                 }
                 else
                 {
-                    var t = GetFirstToken(nodeOrToken, tokenPredicate, triviaPredicate);
+                    var t = GetFirstToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
                     if (t != null)
                         return t;
                 }
@@ -320,7 +320,7 @@ namespace ShaderTools.Hlsl.Syntax
                 }
                 else
                 {
-                    var t = GetLastToken(nodeOrToken, tokenPredicate, triviaPredicate);
+                    var t = GetLastToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
                     if (t != null)
                         return t;
                 }

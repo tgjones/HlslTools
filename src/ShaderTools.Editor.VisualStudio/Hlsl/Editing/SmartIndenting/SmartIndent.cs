@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
+using System.Linq;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
 {
@@ -55,7 +56,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
             if (position < textSpan.Start || position > textSpan.End)
                 return indent;
 
-            foreach (var child in node.ChildNodes)
+            foreach (var child in node.ChildNodes.Cast<SyntaxNode>())
             {
                 var childSpan = child.GetTextSpanRoot();
 

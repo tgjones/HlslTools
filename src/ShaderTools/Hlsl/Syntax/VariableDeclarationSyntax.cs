@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Hlsl.Syntax
 {

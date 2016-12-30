@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Hlsl.Syntax
 {
@@ -30,7 +31,7 @@ namespace ShaderTools.Hlsl.Syntax
             return visitor.VisitIdentifierName(this);
         }
 
-        public override SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             return new IdentifierNameSyntax(Name, diagnostics);
         }

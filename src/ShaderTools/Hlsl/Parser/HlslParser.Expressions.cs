@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
@@ -320,7 +321,7 @@ namespace ShaderTools.Hlsl.Parser
         {
             openToken = Match(openKind);
 
-            var args = new List<SyntaxNode>();
+            var args = new List<SyntaxNodeBase>();
 
             if (atLeastOneArg || Current.Kind != closeKind)
             {

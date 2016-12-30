@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Tests.Hlsl.Parser
@@ -72,7 +73,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(typeDeclarationSyntax.SemicolonToken.IsMissing, Is.False);
 
             Assert.That(ast.ChildNodes[1], Is.TypeOf<VariableDeclarationStatementSyntax>());
-            Assert.That(ast.ChildNodes[2].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -82,8 +83,8 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.TypeDeclarationStatement));
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
             var eof = (SyntaxToken) ast.ChildNodes[1];
             Assert.That(eof.LeadingTrivia, Has.Length.EqualTo(1));
             Assert.That(eof.LeadingTrivia[0].ToString(), Is.EqualTo("b"));
@@ -96,8 +97,8 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.TypeDeclarationStatement));
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
             var eof = (SyntaxToken)ast.ChildNodes[1];
             Assert.That(eof.LeadingTrivia, Has.Length.EqualTo(2));
             Assert.That(eof.LeadingTrivia[0].ToString(), Is.EqualTo("b"));
@@ -111,7 +112,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(1));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.EndOfFileToken);
             Assert.That(((SyntaxToken)ast.ChildNodes[0]).LeadingTrivia, Has.Length.EqualTo(1));
         }
 
@@ -122,7 +123,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.TypeDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax) ast.ChildNodes[0];
             Assert.That(typeDeclarationStatement.Type.Kind, Is.EqualTo(SyntaxKind.StructType));
             var sd = (StructTypeSyntax) typeDeclarationStatement.Type;
@@ -130,7 +131,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
             Assert.That(sd.Fields, Has.Count.EqualTo(0));
             Assert.That(typeDeclarationStatement.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -140,7 +141,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.TypeDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(typeDeclarationStatement.Type.Kind, Is.EqualTo(SyntaxKind.ClassType));
             var sd = (ClassTypeSyntax)typeDeclarationStatement.Type;
@@ -148,7 +149,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
             Assert.That(sd.Members, Has.Count.EqualTo(0));
             Assert.That(typeDeclarationStatement.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -158,7 +159,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.TypeDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(typeDeclarationStatement.Type.Kind, Is.EqualTo(SyntaxKind.InterfaceType));
             var sd = (InterfaceTypeSyntax)typeDeclarationStatement.Type;
@@ -166,7 +167,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
             Assert.That(sd.Methods, Has.Count.EqualTo(0));
             Assert.That(typeDeclarationStatement.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -176,13 +177,13 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.ConstantBufferDeclaration));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.ConstantBufferDeclaration);
             var sd = (ConstantBufferSyntax)ast.ChildNodes[0];
             Assert.That(sd.OpenBraceToken.IsMissing, Is.False);
             Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
             Assert.That(sd.SemicolonToken, Is.Null);
             Assert.That(sd.Declarations, Has.Count.EqualTo(0));
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -192,7 +193,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var sd = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(sd.Declaration.IsMissing, Is.False);
             Assert.That(sd.Declaration.Type.ToString(), Is.EqualTo("SamplerState"));
@@ -204,7 +205,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(initializer.Properties.Count, Is.EqualTo(0));
             Assert.That(initializer.CloseBraceToken.IsMissing, Is.True);
             Assert.That(sd.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -214,7 +215,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.FunctionDeclaration));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
             var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
             Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
             Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
@@ -222,7 +223,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.True);
             Assert.That(sd.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -233,7 +234,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.FunctionDeclaration));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
             var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
             Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
             Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
@@ -241,8 +242,8 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.True);
             Assert.That(sd.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
-            Assert.That(ast.ChildNodes[2].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.FunctionDefinition);
+            AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -253,7 +254,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.FunctionDeclaration));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
             var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
             Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
             Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
@@ -261,8 +262,8 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.True);
             Assert.That(sd.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
-            Assert.That(ast.ChildNodes[2].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.FunctionDefinition);
+            AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -272,7 +273,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(1));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -282,7 +283,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var sd = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(sd.Declaration.Variables, Has.Count.EqualTo(1));
             Assert.That(sd.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
@@ -290,7 +291,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(initializer.EqualsToken.IsMissing, Is.False);
             Assert.That(initializer.Value.Kind, Is.EqualTo(SyntaxKind.ArrayInitializerExpression));
             Assert.That(sd.SemicolonToken.IsMissing, Is.True);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -300,7 +301,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDefinition);
             var sd = (FunctionDefinitionSyntax)ast.ChildNodes[0];
             Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
             Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
@@ -317,7 +318,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(compExpr.Right.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.False);
             Assert.That(sd.SemicolonToken, Is.Null);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -327,7 +328,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDefinition);
             var sd = (FunctionDefinitionSyntax)ast.ChildNodes[0];
             Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
             Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
@@ -340,7 +341,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.That(forStatement.Initializer.Kind, Is.EqualTo(SyntaxKind.SimpleAssignmentExpression));
             Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.False);
             Assert.That(sd.SemicolonToken, Is.Null);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -350,15 +351,15 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(vds.Declaration.Type.ToString(), Is.EqualTo("float"));
             Assert.That(vds.Declaration.Variables[0].Identifier.IsMissing, Is.True);
             Assert.That(vds.Declaration.Variables[0].Identifier.Diagnostics, Has.Length.EqualTo(1));
             Assert.That(vds.SemicolonToken.LeadingTrivia, Has.Length.EqualTo(1));
             Assert.That(vds.SemicolonToken.LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.SkippedTokensTrivia));
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
-            Assert.That(ast.ChildNodes[2].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.VariableDeclarationStatement);
+            AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
         [Test]
@@ -368,11 +369,11 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(vds.Declaration.Type.ToString(), Is.EqualTo("int"));
             Assert.That(vds.Declaration.Variables[0].Identifier.IsMissing, Is.False);
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
             Assert.That(ast.ChildNodes[1].Diagnostics, Has.Length.EqualTo(1));
             Assert.That(((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia, Has.Length.EqualTo(1));
             Assert.That(((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.SkippedTokensTrivia));
@@ -385,14 +386,19 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             Assert.That(ast, Is.Not.Null);
             Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia, Has.Length.EqualTo(1));
             Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.SkippedTokensTrivia));
             Assert.That(((SkippedTokensTriviaSyntax) vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0]).Tokens, Has.Count.EqualTo(4));
             Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics, Has.Length.EqualTo(1));
             Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics[0].Message, Is.EqualTo("Unexpected token '4'."));
-            Assert.That(ast.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
+        }
+
+        private static void AssertNodeKind(SyntaxNodeBase node, SyntaxKind kind)
+        {
+            Assert.AreEqual((ushort) kind, node.RawKind);
         }
 
         [TestCaseSource(nameof(GetInProgressMethodCode))]

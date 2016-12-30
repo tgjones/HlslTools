@@ -307,7 +307,7 @@ namespace ShaderTools.Hlsl.Parser
                 {
                     var openParen = Match(SyntaxKind.OpenParenToken);
 
-                    var argumentsList = new List<SyntaxNode>();
+                    var argumentsList = new List<SyntaxNodeBase>();
                     argumentsList.Add(ParseExpression());
 
                     while (Current.Kind == SyntaxKind.CommaToken)

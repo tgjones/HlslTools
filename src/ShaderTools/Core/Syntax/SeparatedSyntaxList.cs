@@ -5,27 +5,27 @@ using System.Diagnostics;
 using System.Diagnostics.Contracts;
 using System.Linq;
 
-namespace ShaderTools.Hlsl.Syntax
+namespace ShaderTools.Core.Syntax
 {
     public struct SeparatedSyntaxList<TNode> : IEquatable<SeparatedSyntaxList<TNode>>, IReadOnlyList<TNode>
-        where TNode : SyntaxNode
+        where TNode : SyntaxNodeBase
     {
-        private readonly List<SyntaxNode> _list;
+        private readonly IList<SyntaxNodeBase> _list;
 
-        internal SeparatedSyntaxList(List<SyntaxNode> list)
+        internal SeparatedSyntaxList(IList<SyntaxNodeBase> list)
         {
             Validate(list);
             _list = list;
         }
 
         [Conditional("DEBUG")]
-        private static void Validate(List<SyntaxNode> list)
+        private static void Validate(IList<SyntaxNodeBase> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
                 var item = list[i];
                 if ((i & 1) != 0)
-                    Debug.Assert(item is SyntaxToken, "odd elements of a separated list must be tokens");
+                    Debug.Assert(item.IsToken, "odd elements of a separated list must be tokens");
             }
         }
 
@@ -41,21 +41,21 @@ namespace ShaderTools.Hlsl.Syntax
         /// <param name="index">The index.</param>
         /// <returns></returns>
         [Pure]
-        public SyntaxToken GetSeparator(int index)
+        public SyntaxNodeBase GetSeparator(int index)
         {
-            return (SyntaxToken) _list[(index << 1) + 1];
+            return _list[(index << 1) + 1];
         }
 
         [Pure]
-        public List<SyntaxNode> GetWithSeparators()
+        public IList<SyntaxNodeBase> GetWithSeparators()
         {
             return _list;
         }
 
         [Pure]
-        public IEnumerable<SyntaxToken> GetSeparators()
+        public IEnumerable<SyntaxNodeBase> GetSeparators()
         {
-            return _list.Where((item, index) => index % 2 != 0).Cast<SyntaxToken>();
+            return _list.Where((item, index) => index % 2 != 0);
         } 
 
         public static bool operator ==(SeparatedSyntaxList<TNode> left, SeparatedSyntaxList<TNode> right)

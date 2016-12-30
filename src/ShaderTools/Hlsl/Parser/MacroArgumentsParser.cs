@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Hlsl.Parser
@@ -16,7 +17,7 @@ namespace ShaderTools.Hlsl.Parser
         {
             var openParen = Match(SyntaxKind.OpenParenToken);
 
-            var arguments = new List<SyntaxNode>();
+            var arguments = new List<SyntaxNodeBase>();
 
             CommaIsSeparatorStack.Push(true);
 

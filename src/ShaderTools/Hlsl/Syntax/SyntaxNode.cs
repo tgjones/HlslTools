@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
@@ -14,99 +13,60 @@ namespace ShaderTools.Hlsl.Syntax
     /// Base class for all nodes in the HLSL AST.
     /// </summary>
     [DebuggerDisplay("{ToString(true)}")]
-    public abstract class SyntaxNode
+    public abstract class SyntaxNode : SyntaxNodeBase
     {
-        public readonly SyntaxKind Kind;
-        public SyntaxNode Parent { get; internal set; }
-        public SourceRange SourceRange { get; protected set; }
-        public SourceRange FullSourceRange { get; protected set; }
+        public SyntaxKind Kind => (SyntaxKind) RawKind;
 
-        public string DocumentationSummary;
+        public new SyntaxNode Parent => (SyntaxNode) base.Parent;
 
-        public IList<SyntaxNode> ChildNodes { get; }
-
-        public ImmutableArray<Diagnostic> Diagnostics { get; }
-
-        public virtual bool IsToken => false;
-
-        public virtual bool IsMissing
-        {
-            get { return ChildNodes.All(n => n.IsMissing); }
-        }
-
-        public virtual bool ContainsDiagnostics
-        {
-            get { return Diagnostics.Any() || ChildNodes.Any(t => t.ContainsDiagnostics); }
-        }
-
-        public virtual bool ContainsDirectives
-        {
-            get { return this.DescendantTokens().Any(t => t.ContainsDirectives); }
-        }
-
-        public virtual IEnumerable<Diagnostic> GetDiagnostics()
-        {
-            return Diagnostics.Union(ChildNodes.SelectMany(x => x.GetDiagnostics()));
-        }
+        // TODO: Evaluate this upfront.
+        public override bool ContainsDirectives => this.DescendantTokens().Any(t => t.ContainsDirectives);
 
         public virtual IEnumerable<DirectiveTriviaSyntax> GetDirectives()
         {
-            return ChildNodes.SelectMany(x => x.GetDirectives());
+            var directives = new List<DirectiveTriviaSyntax>();
+            GetDirectives(this, directives);
+            return directives;
+        }
+
+        private static void GetDirectives(SyntaxNodeBase node, List<DirectiveTriviaSyntax> directives)
+        {
+            if (node != null && node.ContainsDirectives)
+            {
+                var d = node as DirectiveTriviaSyntax;
+                if (d != null)
+                {
+                    directives.Add(d);
+                }
+                else
+                {
+                    if (node.IsToken)
+                    {
+                        var token = (SyntaxToken) node;
+                        foreach (var trivia in token.LeadingTrivia)
+                            GetDirectives(trivia, directives);
+                        foreach (var trivia in token.TrailingTrivia)
+                            GetDirectives(trivia, directives);
+                    }
+                    else
+                    {
+                        foreach (var childNode in node.ChildNodes)
+                            GetDirectives(childNode, directives);
+                    }
+                }
+            }
         }
 
         protected SyntaxNode(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)
+            : base((ushort) kind, diagnostics)
         {
-            ChildNodes = new List<SyntaxNode>();
-            Kind = kind;
-            Diagnostics = diagnostics.ToImmutableArray();
+            
         }
 
         protected SyntaxNode(SyntaxKind kind)
+            : base((ushort) kind)
         {
-            ChildNodes = new List<SyntaxNode>();
-            Kind = kind;
-            Diagnostics = ImmutableArray<Diagnostic>.Empty;
-        }
-
-        protected void RegisterChildNodes<T>(out List<T> nodes, List<T> values)
-            where T : SyntaxNode
-        {
-            nodes = values;
-            foreach (var childNode in values)
-            {
-                SourceRange = SourceRange.Union(SourceRange, childNode.SourceRange);
-                FullSourceRange = SourceRange.Union(FullSourceRange, childNode.FullSourceRange);
-                ChildNodes.Add(childNode);
-                childNode.Parent = this;
-            }
-        }
-
-        protected void RegisterChildNodes<T>(out SeparatedSyntaxList<T> nodes, SeparatedSyntaxList<T> values)
-            where T : SyntaxNode
-        {
-            nodes = values;
-            foreach (var childNode in values.GetWithSeparators())
-            {
-                SourceRange = SourceRange.Union(SourceRange, childNode.SourceRange);
-                FullSourceRange = SourceRange.Union(FullSourceRange, childNode.FullSourceRange);
-                ChildNodes.Add(childNode);
-                childNode.Parent = this;
-            }
-        }
-
-        protected void RegisterChildNode<T>(out T node, T value)
-            where T : SyntaxNode
-        {
-            if (value == null)
-            {
-                node = null;
-                return;
-            }
-            SourceRange = SourceRange.Union(SourceRange, value.SourceRange);
-            FullSourceRange = SourceRange.Union(FullSourceRange, value.FullSourceRange);
-            node = value;
-            ChildNodes.Add(node);
-            node.Parent = this;
+            
         }
 
         public abstract void Accept(SyntaxVisitor visitor);
@@ -130,7 +90,7 @@ namespace ShaderTools.Hlsl.Syntax
             var child = children.First();
 
             if (!child.IsToken)
-                return child.FindToken(position, descendIntoTrivia);
+                return ((SyntaxNode) child).FindToken(position, descendIntoTrivia);
 
             var token = (SyntaxToken) child;
 
@@ -152,14 +112,9 @@ namespace ShaderTools.Hlsl.Syntax
             {
                 foreach (var childNode in ChildNodes)
                     if (childNode != null)
-                        stack = childNode.ApplyDirectives(stack);
+                        stack = ((SyntaxNode) childNode).ApplyDirectives(stack);
             }
             return stack;
-        }
-
-        public virtual SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
-        {
-            throw new NotImplementedException("SetDiagnostics not implemented for " + GetType().Name);
         }
 
         public override string ToString()
@@ -204,7 +159,7 @@ namespace ShaderTools.Hlsl.Syntax
                 var child = ChildNodes[i];
                 if (child != null)
                 {
-                    child.WriteTo(sb, leading | !first, trailing | (i < lastIndex), includeNonRootFile, ignoreMacroReferences);
+                    ((SyntaxNode) child).WriteTo(sb, leading | !first, trailing | (i < lastIndex), includeNonRootFile, ignoreMacroReferences);
                     first = false;
                 }
             }

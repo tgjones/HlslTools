@@ -158,7 +158,7 @@ int i = TABLESIZE;
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -189,7 +189,7 @@ float g = FOO(3, 4);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(3));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax) node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -208,7 +208,7 @@ float g = FOO(3, 4);
             Assert.That(addExpr.Right.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
             Assert.That(((LiteralExpressionSyntax)addExpr.Right).Token.Text, Is.EqualTo("2"));
 
-            Assert.That(node.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[1]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
         }
 
         [Test]
@@ -227,7 +227,7 @@ float g = FOO(3, 4);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -266,7 +266,7 @@ float g = FOO(3, 4);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -318,7 +318,7 @@ PARAM(float, PASTE(bar, baz)) = 1.0f;
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PARAM" });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -348,7 +348,7 @@ FOO(Diffuse, texCoords.xy)
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(4));
 
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
             var varDeclStatement1 = (VariableDeclarationStatementSyntax) node.ChildNodes[0];
             Assert.That(varDeclStatement1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
             Assert.That(((PredefinedObjectTypeSyntax) varDeclStatement1.Declaration.Type).ObjectTypeToken.Text, Is.EqualTo("Texture2D"));
@@ -356,7 +356,7 @@ FOO(Diffuse, texCoords.xy)
             Assert.That(varDeclStatement1.Declaration.Variables[0].Identifier.Text, Is.EqualTo("g_DiffuseTexture"));
             Assert.That(varDeclStatement1.Declaration.Variables[0].Initializer, Is.Null);
 
-            Assert.That(node.ChildNodes[1].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[1]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
             var varDeclStatement2 = (VariableDeclarationStatementSyntax)node.ChildNodes[1];
             Assert.That(varDeclStatement2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
             Assert.That(((PredefinedObjectTypeSyntax)varDeclStatement2.Declaration.Type).ObjectTypeToken.Text, Is.EqualTo("SamplerState"));
@@ -364,7 +364,7 @@ FOO(Diffuse, texCoords.xy)
             Assert.That(varDeclStatement2.Declaration.Variables[0].Identifier.Text, Is.EqualTo("DiffuseSampler"));
             Assert.That(varDeclStatement2.Declaration.Variables[0].Initializer, Is.Null);
 
-            Assert.That(node.ChildNodes[2].Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
+            Assert.That(((SyntaxNode) node.ChildNodes[2]).Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
             var funcDefStatement = (FunctionDefinitionSyntax) node.ChildNodes[2];
             Assert.That(funcDefStatement.ReturnType.Kind, Is.EqualTo(SyntaxKind.PredefinedVectorType));
             Assert.That(((VectorTypeSyntax)funcDefStatement.ReturnType).TypeToken.Text, Is.EqualTo("float4"));
@@ -409,7 +409,7 @@ PARAM(float, PASTE(bar, FOO)) = 1.0f;
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PARAM" });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -439,7 +439,7 @@ float f = FOO(x, b);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -469,7 +469,7 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "TEX_COMP_FULL" });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
@@ -513,7 +513,7 @@ string Bar = FOO(some/thing);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
@@ -544,7 +544,7 @@ TEX2D(MyTexture);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "TEX2D" });
 
             Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(node.ChildNodes[0].Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
             Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));

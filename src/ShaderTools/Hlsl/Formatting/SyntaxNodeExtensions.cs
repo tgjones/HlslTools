@@ -29,7 +29,7 @@ namespace ShaderTools.Hlsl.Formatting
             else
             {
                 foreach (var childNode in node.ChildNodes)
-                    foreach (var locatedNode in GetRootLocatedNodes(childNode))
+                    foreach (var locatedNode in GetRootLocatedNodes((SyntaxNode) childNode))
                         yield return locatedNode;
             }
         }

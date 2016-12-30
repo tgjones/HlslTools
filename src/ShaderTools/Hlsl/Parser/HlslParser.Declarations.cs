@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Hlsl.Parser
@@ -158,7 +159,7 @@ namespace ShaderTools.Hlsl.Parser
 
             var openParen = Match(SyntaxKind.OpenParenToken);
 
-            var parameters = new List<SyntaxNode>();
+            var parameters = new List<SyntaxNodeBase>();
             while (Current.Kind != SyntaxKind.CloseParenToken)
             {
                 if (IsPossibleParameter())

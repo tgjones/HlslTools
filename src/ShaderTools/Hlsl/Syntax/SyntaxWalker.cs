@@ -5,7 +5,7 @@ namespace ShaderTools.Hlsl.Syntax
         protected override void DefaultVisit(SyntaxNode node)
         {
             foreach (var childNode in node.ChildNodes)
-                Visit(childNode);
+                Visit((SyntaxNode) childNode);
         }
     }
 }

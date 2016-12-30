@@ -33,7 +33,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
             _cancellationToken.ThrowIfCancellationRequested();
 
             foreach (var syntaxNodeOrToken in node.ChildNodes)
-                ClassifyNodeOrToken(syntaxNodeOrToken);
+                ClassifyNodeOrToken((SyntaxNode) syntaxNodeOrToken);
         }
 
         private void ClassifyNodeOrToken(SyntaxNode nodeOrToken)

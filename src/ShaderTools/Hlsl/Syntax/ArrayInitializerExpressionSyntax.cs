@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.Hlsl.Syntax
+﻿using ShaderTools.Core.Syntax;
+
+namespace ShaderTools.Hlsl.Syntax
 {
     public class ArrayInitializerExpressionSyntax : ExpressionSyntax
     {

@@ -32,6 +32,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         {
             var topLevelTargets = node.ChildNodes
                 .Where(x => !x.IsToken)
+                .Cast<SyntaxNode>()
                 .SelectMany(Visit)
                 .Where(x => x != null)
                 .ToList();

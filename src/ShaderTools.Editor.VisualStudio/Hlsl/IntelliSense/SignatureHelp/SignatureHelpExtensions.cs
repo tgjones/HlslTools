@@ -7,9 +7,7 @@ using ShaderTools.Core.Symbols.Markup;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Symbols.Markup;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
 {
@@ -17,9 +15,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
     {
         public static bool IsBetweenParentheses(this SyntaxNode node, SourceLocation position)
         {
-            var argumentList = node.ChildNodes.SingleOrDefault(n => n.Kind == SyntaxKind.ArgumentList);
+            var argumentList = node.ChildNodes.SingleOrDefault(n => n.IsKind(SyntaxKind.ArgumentList));
             if (argumentList != null)
-                return argumentList.IsBetweenParentheses(position);
+                return ((SyntaxNode) argumentList).IsBetweenParentheses(position);
 
             // If there is a nested ArgumentList that contains this position, don't show signature help for this node type.
             if (node.DescendantNodes().Any(x => x.Kind == SyntaxKind.ArgumentList && x.IsBetweenParentheses(position)))
@@ -35,7 +33,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
 
         private static SyntaxToken GetSingleChildToken(this SyntaxNode node, SyntaxKind tokenKind)
         {
-            return (SyntaxToken) node.ChildNodes.Where(x => x.IsToken).Single(nt => nt.Kind == tokenKind);
+            return (SyntaxToken) node.ChildNodes.Where(x => x.IsToken).Single(nt => nt.IsKind(tokenKind));
         }
 
         public static int GetParameterIndex(this ArgumentListSyntax argumentList, SourceLocation position)

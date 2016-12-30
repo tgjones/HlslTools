@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
@@ -40,13 +41,13 @@ namespace ShaderTools.Hlsl.Parser
         {
             TypeSyntax type;
             var mods = new List<SyntaxToken>();
-            var variables = new List<SyntaxNode>();
+            var variables = new List<SyntaxNodeBase>();
             ParseDeclarationModifiers(mods);
             ParseVariableDeclaration(out type, variables);
             return new VariableDeclarationSyntax(mods, type, new SeparatedSyntaxList<VariableDeclaratorSyntax>(variables));
         }
 
-        private void ParseVariableDeclaration(out TypeSyntax type, List<SyntaxNode> variables)
+        private void ParseVariableDeclaration(out TypeSyntax type, List<SyntaxNodeBase> variables)
         {
             type = ParseType(false);
             ParseVariableDeclarators(type, variables, variableDeclarationsExpected: true);
@@ -57,7 +58,7 @@ namespace ShaderTools.Hlsl.Parser
             var typedefKeyword = NextTokenIf(SyntaxKind.TypedefKeyword);
 
             var mods = new List<SyntaxToken>();
-            var variables = new List<SyntaxNode>();
+            var variables = new List<SyntaxNodeBase>();
             ParseDeclarationModifiers(mods);
             var type = ParseType(false);
 
@@ -82,7 +83,7 @@ namespace ShaderTools.Hlsl.Parser
             }
         }
 
-        private void ParseTypeAliases(List<SyntaxNode> variables)
+        private void ParseTypeAliases(List<SyntaxNodeBase> variables)
         {
             variables.Add(ParseTypeAlias());
 
@@ -135,7 +136,7 @@ namespace ShaderTools.Hlsl.Parser
             return new TypeAliasSyntax(name, arrayRankSpecifiers, qualifiers, annotations);
         }
 
-        private void ParseVariableDeclarators(TypeSyntax type, List<SyntaxNode> variables, bool variableDeclarationsExpected)
+        private void ParseVariableDeclarators(TypeSyntax type, List<SyntaxNodeBase> variables, bool variableDeclarationsExpected)
         {
             variables.Add(ParseVariableDeclarator(type));
 
@@ -289,7 +290,7 @@ namespace ShaderTools.Hlsl.Parser
         {
             var openBrace = Match(SyntaxKind.OpenBraceToken);
 
-            var initializers = new List<SyntaxNode>();
+            var initializers = new List<SyntaxNodeBase>();
             while (Current.Kind != SyntaxKind.CloseBraceToken)
             {
                 if (Current.Kind == SyntaxKind.OpenBraceToken)
@@ -428,7 +429,7 @@ namespace ShaderTools.Hlsl.Parser
         {
             var openBrace = Match(SyntaxKind.OpenBraceToken);
 
-            var list = new List<SyntaxNode>();
+            var list = new List<SyntaxNodeBase>();
             while (Current.Kind != SyntaxKind.CloseBraceToken)
             {
                 if (IsPossibleVariableInitializer())

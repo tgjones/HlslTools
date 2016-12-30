@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Immutable;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Parser;
 
 namespace ShaderTools.Hlsl.Syntax
@@ -68,7 +69,7 @@ namespace ShaderTools.Hlsl.Syntax
             return visitor.VisitBadDirectiveTrivia(this);
         }
 
-        public override SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             return new BadDirectiveTriviaSyntax(_hashToken, Identifier, _endOfDirectiveToken, IsActive, diagnostics);
         }
@@ -481,7 +482,7 @@ namespace ShaderTools.Hlsl.Syntax
             return visitor.VisitIncludeDirectiveTrivia(this);
         }
 
-        public override SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             return new IncludeDirectiveTriviaSyntax(_hashToken, IncludeKeyword, Filename, _endOfDirectiveToken, IsActive, diagnostics);
         }

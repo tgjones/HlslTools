@@ -51,6 +51,7 @@
     <Compile Include="Core\Diagnostics\MessageProvider.cs" />
     <Compile Include="Core\Symbols\ISymbol.cs" />
     <Compile Include="Core\Symbols\ITypeSymbol.cs" />
+    <Compile Include="Core\Syntax\SyntaxNodeBase.cs" />
     <Compile Include="Core\Syntax\SyntaxTreeBase.cs" />
     <Compile Include="Core\Text\FilePoint.cs" />
     <Compile Include="Hlsl\Binding\Binder.cs" />
@@ -265,7 +266,7 @@
     <Compile Include="Hlsl\Syntax\InitializerSyntax.cs" />
     <Compile Include="Hlsl\Syntax\MacroReference.cs" />
     <Compile Include="Hlsl\Syntax\FunctionInvocationExpressionSyntax.cs" />
-    <Compile Include="Hlsl\Syntax\SeparatedSyntaxList.cs" />
+    <Compile Include="Core\Syntax\SeparatedSyntaxList.cs" />
     <Compile Include="Hlsl\Syntax\SyntaxFactory.cs" />
     <Compile Include="Hlsl\Syntax\AttributeSyntax.cs" />
     <Compile Include="Hlsl\Syntax\BaseListSyntax.cs" />

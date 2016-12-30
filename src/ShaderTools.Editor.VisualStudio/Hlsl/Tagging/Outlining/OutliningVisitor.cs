@@ -28,7 +28,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
         public override void VisitCompilationUnit(CompilationUnitSyntax node)
         {
             foreach (var childNode in node.ChildNodes)
-                Visit(childNode);
+                Visit((SyntaxNode) childNode);
         }
 
         public override void VisitTypeDeclarationStatement(TypeDeclarationStatementSyntax node)
