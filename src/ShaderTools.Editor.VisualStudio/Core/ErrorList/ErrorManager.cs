@@ -4,6 +4,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
@@ -64,11 +65,15 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
             lock (_lockObject)
             {
                 ErrorListHelper?.Clear();
-                foreach (var diagnostic in diagnostics)
-                    ErrorListHelper?.AddError(diagnostic, diagnostic.Span);
+
+                foreach (var diagnostic in diagnostics.Item2)
+                {
+                    var span = diagnostics.Item1.GetSourceTextSpan(diagnostic.SourceRange);
+                    ErrorListHelper?.AddError(diagnostic, span);
+                }
             }
         }
 
-        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        protected abstract Tuple<SyntaxTreeBase, IEnumerable<Diagnostic>> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

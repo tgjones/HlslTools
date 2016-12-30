@@ -4,6 +4,7 @@ using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.ContextQuery;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
 {

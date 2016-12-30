@@ -51,6 +51,8 @@
     <Compile Include="Core\Diagnostics\MessageProvider.cs" />
     <Compile Include="Core\Symbols\ISymbol.cs" />
     <Compile Include="Core\Symbols\ITypeSymbol.cs" />
+    <Compile Include="Core\Syntax\SyntaxTreeBase.cs" />
+    <Compile Include="Core\Text\FilePoint.cs" />
     <Compile Include="Hlsl\Binding\Binder.cs" />
     <Compile Include="Hlsl\Binding\Binder.Types.cs" />
     <Compile Include="Hlsl\Binding\Binder.Lookup.cs" />
@@ -225,8 +227,8 @@
     <Compile Include="Hlsl\Syntax\QualifiedDeclarationNameSyntax.cs" />
     <Compile Include="Hlsl\Syntax\QualifiedNameSyntax.cs" />
     <Compile Include="Hlsl\Syntax\SamplerStateInitializerSyntax.cs" />
-    <Compile Include="Hlsl\Syntax\SourceLocation.cs" />
-    <Compile Include="Hlsl\Syntax\SourceRange.cs" />
+    <Compile Include="Core\Text\SourceLocation.cs" />
+    <Compile Include="Core\Text\SourceRange.cs" />
     <Compile Include="Hlsl\Syntax\StateArrayInitializerSyntax.cs" />
     <Compile Include="Hlsl\Syntax\StringLiteralExpressionSyntax.cs" />
     <Compile Include="Hlsl\Syntax\SyntaxVisitor.cs" />
@@ -291,7 +293,6 @@
     <Compile Include="Hlsl\Syntax\FunctionDefinitionSyntax.cs" />
     <Compile Include="Hlsl\Syntax\GenericMatrixTypeSyntax.cs" />
     <Compile Include="Hlsl\Syntax\GenericVectorTypeSyntax.cs" />
-    <Compile Include="Hlsl\Syntax\IncompleteDeclarationSyntax.cs" />
     <Compile Include="Hlsl\Syntax\InterfaceTypeSyntax.cs" />
     <Compile Include="Hlsl\Syntax\NumericConstructorInvocationExpressionSyntax.cs" />
     <Compile Include="Hlsl\Syntax\NumericTypeSyntax.cs" />

@@ -1,7 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Globalization;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Core.Text;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Core.Diagnostics
 {
@@ -11,24 +10,24 @@ namespace ShaderTools.Core.Diagnostics
 
         public DiagnosticDescriptor Descriptor { get; }
 
-        public TextSpan Span { get; }
+        public SourceRange SourceRange { get; }
 
         public string Message { get; }
 
         public DiagnosticSeverity Severity => Descriptor.Severity;
 
-        private Diagnostic(DiagnosticDescriptor descriptor, TextSpan textSpan, string message)
+        private Diagnostic(DiagnosticDescriptor descriptor, SourceRange sourceRange, string message)
         {
             Descriptor = descriptor;
-            Span = textSpan;
+            SourceRange = sourceRange;
             Message = message;
         }
 
-        internal static Diagnostic Create(MessageProvider messageProvider, TextSpan span, int errorCode, params object[] arguments)
+        internal static Diagnostic Create(MessageProvider messageProvider, SourceRange sourceRange, int errorCode, params object[] arguments)
         {
             var descriptor = GetOrCreateDescriptor(errorCode, messageProvider);
             var message = string.Format(CultureInfo.CurrentCulture, descriptor.MessageFormat, arguments);
-            return new Diagnostic(descriptor, span, message);
+            return new Diagnostic(descriptor, sourceRange, message);
         }
 
         private static DiagnosticDescriptor GetOrCreateDescriptor(int errorCode, MessageProvider messageProvider)
@@ -46,7 +45,7 @@ namespace ShaderTools.Core.Diagnostics
 
         public override string ToString()
         {
-            return $"{Span} {Message}";
+            return $"{SourceRange} {Message}";
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Parser;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
@@ -205,9 +206,9 @@ namespace ShaderTools.Hlsl.Parser
             return new SourceRange(new SourceLocation(_currentFileSegmentAbsolutePosition + span.Start - FileSegments.Last().Start), span.Length);
         }
 
-        private TextSpan CurrentSpan => TextSpan.FromBounds(Text, _start, _charReader.Position);
+        private SourceRange CurrentSpan => MakeAbsolute(TextSpan.FromBounds(Text, _start, _charReader.Position));
 
-        private TextSpan CurrentSpanStart => TextSpan.FromBounds(Text, _start, Math.Min(_start + 2, Text.Length));
+        private SourceRange CurrentSpanStart => MakeAbsolute(TextSpan.FromBounds(Text, _start, Math.Min(_start + 2, Text.Length)));
 
         private void ReadTrivia(List<SyntaxNode> target, bool isTrailing)
         {
@@ -291,13 +292,13 @@ namespace ShaderTools.Hlsl.Parser
                     include = _fileSystem.GetInclude(includeFilename);
                     if (include == null)
                     {
-                        includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.GetTextSpan(), (int) DiagnosticId.IncludeNotFound, includeFilename));
+                        includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));
                         triviaList.Add(includeDirective);
                     }
                 }
                 catch (Exception ex)
                 {
-                    includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.GetTextSpan(), (int) DiagnosticId.IncludeNotFound, includeFilename, ex.Message));
+                    includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename, ex.Message));
                     include = null;
                     triviaList.Add(includeDirective);
                 }

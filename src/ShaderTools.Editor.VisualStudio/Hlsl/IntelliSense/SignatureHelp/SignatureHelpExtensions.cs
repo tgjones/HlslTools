@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using ShaderTools.Core.Symbols.Markup;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Symbols.Markup;

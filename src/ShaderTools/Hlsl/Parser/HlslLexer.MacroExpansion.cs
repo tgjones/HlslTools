@@ -49,7 +49,7 @@ namespace ShaderTools.Hlsl.Parser
                         expandedTokens = new List<SyntaxToken>
                         {
                             token
-                                .WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, token.Span, (int) DiagnosticId.NotEnoughMacroParameters, token.Text))
+                                .WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, token.SourceRange, (int) DiagnosticId.NotEnoughMacroParameters, token.Text))
                                 .WithTrailingTrivia(new[] { macroArguments })
                         };
                         return true;

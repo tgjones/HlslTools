@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 
 namespace ShaderTools.Unity.Syntax
@@ -17,8 +18,8 @@ namespace ShaderTools.Unity.Syntax
     {
         public readonly SyntaxKind Kind;
         public SyntaxNode Parent { get; internal set; }
-        public TextSpan Span { get; protected set; }
-        public TextSpan FullSpan { get; protected set; }
+        public SourceRange SourceRange { get; protected set; }
+        public SourceRange FullSourceRange { get; protected set; }
 
         public string DocumentationSummary;
 
@@ -68,8 +69,8 @@ namespace ShaderTools.Unity.Syntax
             nodes = values;
             foreach (var childNode in values)
             {
-                Span = TextSpan.Union(Span, childNode.Span);
-                FullSpan = TextSpan.Union(FullSpan, childNode.FullSpan);
+                SourceRange = SourceRange.Union(SourceRange, childNode.SourceRange);
+                FullSourceRange = SourceRange.Union(FullSourceRange, childNode.FullSourceRange);
                 ChildNodes.Add(childNode);
                 childNode.Parent = this;
             }
@@ -81,8 +82,8 @@ namespace ShaderTools.Unity.Syntax
             nodes = values;
             foreach (var childNode in values.GetWithSeparators())
             {
-                Span = TextSpan.Union(Span, childNode.Span);
-                FullSpan = TextSpan.Union(FullSpan, childNode.FullSpan);
+                SourceRange = SourceRange.Union(SourceRange, childNode.SourceRange);
+                FullSourceRange = SourceRange.Union(FullSourceRange, childNode.FullSourceRange);
                 ChildNodes.Add(childNode);
                 childNode.Parent = this;
             }
@@ -96,8 +97,8 @@ namespace ShaderTools.Unity.Syntax
                 node = null;
                 return;
             }
-            Span = TextSpan.Union(Span, value.Span);
-            FullSpan = TextSpan.Union(FullSpan, value.FullSpan);
+            SourceRange = SourceRange.Union(SourceRange, value.SourceRange);
+            FullSourceRange = SourceRange.Union(FullSourceRange, value.FullSourceRange);
             node = value;
             ChildNodes.Add(node);
             node.Parent = this;
@@ -106,19 +107,19 @@ namespace ShaderTools.Unity.Syntax
         public abstract void Accept(SyntaxVisitor visitor);
         public abstract T Accept<T>(SyntaxVisitor<T> visitor);
 
-        public SyntaxToken FindToken(int position, bool descendIntoTrivia = false)
+        public SyntaxToken FindToken(SourceLocation position, bool descendIntoTrivia = false)
         {
-            if (FullSpan.End == position)
+            if (FullSourceRange.End == position)
             {
                 var compilationUnit = this as CompilationUnitSyntax;
                 if (compilationUnit != null)
                     return compilationUnit.EndOfFileToken;
             }
 
-            if (!FullSpan.Contains(position))
+            if (!FullSourceRange.Contains(position))
                 throw new ArgumentOutOfRangeException(nameof(position));
 
-            var children = ChildNodes.Where(nodeOrToken => nodeOrToken.FullSpan.Contains(position));
+            var children = ChildNodes.Where(nodeOrToken => nodeOrToken.FullSourceRange.Contains(position));
             Debug.Assert(children.Any());
 
             var child = children.First();
@@ -131,7 +132,7 @@ namespace ShaderTools.Unity.Syntax
             if (descendIntoTrivia)
             {
                 var triviaStructure = token.LeadingTrivia.Concat(token.TrailingTrivia)
-                    .FirstOrDefault(t => t is StructuredTriviaSyntax && t.FullSpan.Contains(position));
+                    .FirstOrDefault(t => t is StructuredTriviaSyntax && t.FullSourceRange.Contains(position));
 
                 if (triviaStructure != null)
                     return triviaStructure.FindToken(position, true);

@@ -1,5 +1,6 @@
 using System.ComponentModel.Composition;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;

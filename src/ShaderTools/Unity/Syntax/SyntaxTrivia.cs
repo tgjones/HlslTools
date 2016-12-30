@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 
 namespace ShaderTools.Unity.Syntax
@@ -14,12 +15,12 @@ namespace ShaderTools.Unity.Syntax
 
         public string Text { get; }
 
-        internal SyntaxTrivia(SyntaxKind kind, string text, TextSpan span, ImmutableArray<Diagnostic> diagnostics)
+        internal SyntaxTrivia(SyntaxKind kind, string text, SourceRange sourceRange, ImmutableArray<Diagnostic> diagnostics)
             : base(kind, diagnostics)
         {
             Text = text;
-            Span = span;
-            FullSpan = span;
+            SourceRange = sourceRange;
+            FullSourceRange = sourceRange;
         }
 
         public override void Accept(SyntaxVisitor visitor)

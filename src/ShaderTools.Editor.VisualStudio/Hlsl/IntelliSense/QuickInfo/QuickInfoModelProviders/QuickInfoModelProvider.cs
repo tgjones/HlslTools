@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
 

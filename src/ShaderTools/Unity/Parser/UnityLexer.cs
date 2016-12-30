@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Parser;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Unity.Diagnostics;
 using ShaderTools.Unity.Syntax;
@@ -72,7 +73,12 @@ namespace ShaderTools.Unity.Parser
             ReadTrivia(_trailingTrivia, isTrailing: true);
             var trailingTrivia = _trailingTrivia.ToImmutableArray();
 
-            return new SyntaxToken(kind, _contextualKind, false, span, text, _value, leadingTrivia, trailingTrivia, diagnostics);
+            return new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), text, _value, leadingTrivia, trailingTrivia, diagnostics);
+        }
+
+        private SourceRange MakeAbsolute(TextSpan span)
+        {
+            return new SourceRange(new SourceLocation(span.Start), span.Length);
         }
 
         private void ReadCgTrivia(List<SyntaxNode> target)
@@ -92,9 +98,9 @@ namespace ShaderTools.Unity.Parser
             AddTrivia(target, SyntaxKind.CgProgramTrivia);
         }
 
-        private TextSpan CurrentSpan => TextSpan.FromBounds(Text, _start, _charReader.Position);
+        private SourceRange CurrentSpan => MakeAbsolute(TextSpan.FromBounds(Text, _start, _charReader.Position));
 
-        private TextSpan CurrentSpanStart => TextSpan.FromBounds(Text, _start, Math.Min(_start + 2, Text.Length));
+        private SourceRange CurrentSpanStart => MakeAbsolute(TextSpan.FromBounds(Text, _start, Math.Min(_start + 2, Text.Length)));
 
         private void ReadTrivia(List<SyntaxNode> target, bool isTrailing)
         {
@@ -227,7 +233,7 @@ namespace ShaderTools.Unity.Parser
             var span = TextSpan.FromBounds(Text, start, end);
             var text = Text.GetText(span);
             var diagnostics = _diagnostics.ToImmutableArray();
-            var trivia = new SyntaxTrivia(kind, text, span, diagnostics);
+            var trivia = new SyntaxTrivia(kind, text, MakeAbsolute(span), diagnostics);
             target.Add(trivia);
 
             _diagnostics.Clear();

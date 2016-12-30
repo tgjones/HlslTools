@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 
@@ -147,8 +148,11 @@ namespace ShaderTools.Hlsl.Parser
                     endIsActive, branchTaken, isTrue);
             }
 
+            var exprFirstToken = expr.GetFirstToken();
+            var exprLastToken = expr.GetLastToken();
+
             eod = eod.WithLeadingTrivia(eod.LeadingTrivia.Add(new SyntaxTrivia(SyntaxKind.DisabledTextTrivia, expr.ToFullString(),
-                expr.SourceRange, expr.GetTextSpan(),
+                expr.SourceRange, TextSpan.FromBounds(_lexer.Text, exprFirstToken.Span.Start, exprLastToken.Span.End),
                 ImmutableArray<Diagnostic>.Empty)).ToArray());
             if (_directiveStack.HasUnfinishedIf())
                 return WithDiagnostic(new BadDirectiveTriviaSyntax(hash, keyword, eod, isActive), DiagnosticId.EndIfDirectiveExpected);

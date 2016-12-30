@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
@@ -105,7 +106,7 @@ namespace ShaderTools.Hlsl.Parser
             if (result.Kind != kind)
             {
                 var diagnostics = new List<Diagnostic>(result.Diagnostics);
-                diagnostics.ReportTokenExpected(result.Span, result, kind);
+                diagnostics.ReportTokenExpected(result.SourceRange, result, kind);
                 result = result.WithDiagnostics(diagnostics);
             }
             NextToken();
@@ -130,7 +131,7 @@ namespace ShaderTools.Hlsl.Parser
                 var skippedTokensTrivia = CreateSkippedTokensTrivia(new[] { Current });
                 
                 var diagnostics = new List<Diagnostic>(Lookahead.Diagnostics);
-                diagnostics.ReportTokenUnexpected(Current.Span, Current);
+                diagnostics.ReportTokenUnexpected(Current.SourceRange, Current);
 
                 NextToken();
 
@@ -150,7 +151,7 @@ namespace ShaderTools.Hlsl.Parser
         protected TNode WithDiagnostic<TNode>(TNode node, DiagnosticId diagnosticId, params object[] args)
             where TNode : SyntaxNode
         {
-            var diagnostic = Diagnostic.Create(HlslMessageProvider.Instance, node.GetTextSpanSafe(), (int) diagnosticId, args);
+            var diagnostic = Diagnostic.Create(HlslMessageProvider.Instance, node.SourceRange, (int) diagnosticId, args);
             return node.WithDiagnostic(diagnostic);
         }
 
@@ -163,7 +164,7 @@ namespace ShaderTools.Hlsl.Parser
             if (leadingLocatedTrivia != null)
                 missingTokenSpan = new TextSpan(leadingLocatedTrivia.Span.SourceText, leadingLocatedTrivia.Span.Start, 0);
             
-            var diagnosticSpan = GetDiagnosticTextSpanForMissingToken();
+            var diagnosticSpan = GetDiagnosticSourceRangeForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
             diagnostics.ReportTokenExpected(diagnosticSpan, Current, kind);
 

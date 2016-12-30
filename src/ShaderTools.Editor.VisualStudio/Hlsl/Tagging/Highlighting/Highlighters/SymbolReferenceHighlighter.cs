@@ -4,6 +4,7 @@ using System.Linq;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting.Highlighters
 {

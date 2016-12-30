@@ -6,6 +6,8 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
+using ShaderTools.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles
@@ -37,9 +39,9 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles
             await InvalidateTags(_textBuffer.CurrentSnapshot, CancellationToken.None);
         }
 
-        protected ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, Diagnostic diagnostic, bool squigglesEnabled)
+        private ITagSpan<IErrorTag> CreateTagSpan(ITextSnapshot snapshot, TextSpan textSpan, Diagnostic diagnostic, bool squigglesEnabled)
         {
-            var span = new Span(diagnostic.Span.Start, diagnostic.Span.Length);
+            var span = new Span(textSpan.Start, textSpan.Length);
             var snapshotSpan = new SnapshotSpan(snapshot, span);
             var errorTag = new ErrorTag(_errorType, diagnostic.Message);
             var errorTagSpan = new TagSpan<IErrorTag>(snapshotSpan, errorTag);
@@ -60,14 +62,16 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles
             if (!_squigglesEnabled)
                 return Tuple.Create(snapshot, new List<ITagSpan<IErrorTag>>());
 
-            var tagSpans = GetDiagnostics(snapshot, cancellationToken)
+            var diagnostics = GetDiagnostics(snapshot, cancellationToken);
+            var tagSpans = diagnostics.Item2
+                .Select(x => new { Diagnostic = x, Span = diagnostics.Item1.GetSourceTextSpan(x.SourceRange) })
                 .Where(x => x.Span.IsInRootFile)
-                .Select(d => CreateTagSpan(snapshot, d, _squigglesEnabled))
+                .Select(d => CreateTagSpan(snapshot, d.Span, d.Diagnostic, _squigglesEnabled))
                 .Where(x => x != null)
                 .ToList();
             return Tuple.Create(snapshot, tagSpans);
         }
 
-        protected abstract IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
+        protected abstract Tuple<SyntaxTreeBase, IEnumerable<Diagnostic>> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken);
     }
 }

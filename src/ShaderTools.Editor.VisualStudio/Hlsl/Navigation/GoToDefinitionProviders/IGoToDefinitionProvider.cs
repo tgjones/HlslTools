@@ -1,7 +1,6 @@
-﻿using ShaderTools.Core.Text;
+﻿using ShaderTools.Core.Syntax;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders
 {

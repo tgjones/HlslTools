@@ -245,6 +245,7 @@
     <Compile Include="Core\Util\Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
+    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
     <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
@@ -349,7 +350,6 @@
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\FunctionInvocationGoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\GoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IdentifierGoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IQuickInfoModelProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\GoToDefinitionProviderService.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\MacroReferenceGoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\MethodInvocationGoToDefinitionProvider.cs" />

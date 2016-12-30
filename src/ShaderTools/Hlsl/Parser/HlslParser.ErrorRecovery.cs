@@ -291,7 +291,7 @@ namespace ShaderTools.Hlsl.Parser
                     .WithLeadingTrivia(leadingTrivia)
                     .WithDiagnostic(Diagnostic.Create(
                         HlslMessageProvider.Instance,
-                        tokens.First().GetTextSpanRoot(),
+                        tokens.First().SourceRange,
                         (int) DiagnosticId.TokenUnexpected,
                         tokens.First().Text));
             }

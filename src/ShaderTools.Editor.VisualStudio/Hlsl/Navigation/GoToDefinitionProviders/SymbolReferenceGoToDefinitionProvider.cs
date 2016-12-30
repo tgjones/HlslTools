@@ -4,6 +4,7 @@ using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders
 {

@@ -7,6 +7,7 @@ using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion
 {

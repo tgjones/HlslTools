@@ -26,7 +26,7 @@ namespace ShaderTools.Tests.Unity.Parser
 
             foreach (var token in tokens)
                 foreach (var diagnostic in token.GetDiagnostics())
-                    Debug.WriteLine($"{diagnostic} at {diagnostic.Span}");
+                    Debug.WriteLine($"{diagnostic} at {diagnostic.SourceRange}");
 
             Assert.That(tokens.Any(t => t.ContainsDiagnostics), Is.False);
         }

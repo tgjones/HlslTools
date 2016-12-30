@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Binding.BoundNodes;
 using ShaderTools.Hlsl.Binding.Signatures;
@@ -135,12 +136,12 @@ namespace ShaderTools.Hlsl.Binding
 
                 var symbol1 = result.Selected.Signature.Symbol;
                 var symbol2 = result.Candidates.First(c => !Equals(c.Signature.Symbol, symbol1)).Signature.Symbol;
-                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, indexTypes);
+                Diagnostics.ReportAmbiguousInvocation(syntax.SourceRange, symbol1, symbol2, indexTypes);
             }
 
             // Convert all arguments (if necessary)
 
-            var convertedIndex = BindArgument(index, result, 0, syntax.Index.GetTextSpanSafe());
+            var convertedIndex = BindArgument(index, result, 0, syntax.Index.SourceRange);
 
             return new BoundElementAccessExpression(target, convertedIndex, result);
         }
@@ -194,8 +195,8 @@ namespace ShaderTools.Hlsl.Binding
 
             // Convert arguments (if necessary)
 
-            var convertedLeft = BindArgument(boundLeft, result, 0, syntax.Left.GetTextSpanSafe());
-            var convertedRight = BindArgument(boundRight, result, 1, syntax.Right.GetTextSpanSafe());
+            var convertedLeft = BindArgument(boundLeft, result, 0, syntax.Left.SourceRange);
+            var convertedRight = BindArgument(boundRight, result, 1, syntax.Right.SourceRange);
 
             return new BoundBinaryExpression(operatorKind, convertedLeft, convertedRight, result);
         }
@@ -222,7 +223,7 @@ namespace ShaderTools.Hlsl.Binding
             var boundTargetType = Bind(syntax.Type, x => BindType(x, null));
             var targetType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, boundTargetType.TypeSymbol);
 
-            return BindConversion(syntax.GetTextSpanSafe(), Bind(syntax.Expression, BindExpression), targetType);
+            return BindConversion(syntax.SourceRange, Bind(syntax.Expression, BindExpression), targetType);
         }
 
         private BoundExpression BindCompoundExpression(CompoundExpressionSyntax syntax)
@@ -232,7 +233,7 @@ namespace ShaderTools.Hlsl.Binding
                 Bind(syntax.Right, BindExpression));
         }
 
-        private BoundExpression BindConversion(TextSpan diagnosticSpan, BoundExpression expression, TypeSymbol targetType)
+        private BoundExpression BindConversion(SourceRange diagnosticSpan, BoundExpression expression, TypeSymbol targetType)
         {
             var sourceType = expression.Type;
 
@@ -384,7 +385,7 @@ namespace ShaderTools.Hlsl.Binding
 
             // Convert argument (if necessary)
 
-            var convertedArgument = BindArgument(expression, result, 0, operand.GetTextSpanSafe());
+            var convertedArgument = BindArgument(expression, result, 0, operand.SourceRange);
 
             return new BoundUnaryExpression(operatorKind, convertedArgument, result);
         }
@@ -413,10 +414,10 @@ namespace ShaderTools.Hlsl.Binding
 
                 var symbol1 = result.Selected.Signature.Symbol;
                 var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
-                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
+                Diagnostics.ReportAmbiguousInvocation(syntax.SourceRange, symbol1, symbol2, argumentTypes);
             }
 
-            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].GetTextSpanSafe())).ToImmutableArray();
+            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].SourceRange)).ToImmutableArray();
 
             return new BoundNumericConstructorInvocationExpression(syntax, typeSymbol, convertedArguments, result);
         }
@@ -452,12 +453,12 @@ namespace ShaderTools.Hlsl.Binding
 
                 var symbol1 = result.Selected.Signature.Symbol;
                 var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
-                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
+                Diagnostics.ReportAmbiguousInvocation(syntax.SourceRange, symbol1, symbol2, argumentTypes);
             }
 
             // Convert all arguments (if necessary)
 
-            var convertedArguments = arguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].GetTextSpanSafe())).ToImmutableArray();
+            var convertedArguments = arguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].SourceRange)).ToImmutableArray();
 
             return new BoundMethodInvocationExpression(syntax, target, convertedArguments, result);
         }
@@ -506,15 +507,15 @@ namespace ShaderTools.Hlsl.Binding
 
                 var symbol1 = result.Selected.Signature.Symbol;
                 var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
-                Diagnostics.ReportAmbiguousInvocation(syntax.GetTextSpanSafe(), symbol1, symbol2, argumentTypes);
+                Diagnostics.ReportAmbiguousInvocation(syntax.SourceRange, symbol1, symbol2, argumentTypes);
             }
 
-            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].GetTextSpanSafe())).ToImmutableArray();
+            var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].SourceRange)).ToImmutableArray();
 
             return new BoundFunctionInvocationExpression(syntax, convertedArguments, result);
         }
 
-        private BoundExpression BindArgument<T>(BoundExpression expression, OverloadResolutionResult<T> result, int argumentIndex, TextSpan diagnosticSpan)
+        private BoundExpression BindArgument<T>(BoundExpression expression, OverloadResolutionResult<T> result, int argumentIndex, SourceRange diagnosticSpan)
             where T : Signature
         {
             var selected = result.Selected;

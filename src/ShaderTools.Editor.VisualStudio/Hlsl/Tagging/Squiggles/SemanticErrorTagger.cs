@@ -11,6 +11,8 @@ using ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
+using System;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles
 {
@@ -24,12 +26,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles
                 async x => await InvalidateTags(x.Snapshot, x.CancellationToken));
         }
 
-        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override Tuple<SyntaxTreeBase, IEnumerable<Diagnostic>> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             SemanticModel semanticModel;
             if (!snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
-                return Enumerable.Empty<Diagnostic>();
-            return semanticModel.GetDiagnostics();
+                return Tuple.Create<SyntaxTreeBase, IEnumerable<Diagnostic>>(null, Enumerable.Empty<Diagnostic>());
+            return Tuple.Create((SyntaxTreeBase) semanticModel.SyntaxTree, semanticModel.GetDiagnostics());
         }
     }
 }

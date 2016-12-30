@@ -31,7 +31,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
             var shaderLabSyntaxTree = SyntaxFactory.ParseUnitySyntaxTree(new Text.VisualStudioSourceText(snapshot, null));
 
             var cgBlockVisitor = new CgBlockVisitor();
-            cgBlockVisitor.Visit(shaderLabSyntaxTree.Root);
+            //cgBlockVisitor.Visit(shaderLabSyntaxTree.Root);
             var cgBlockSpans = cgBlockVisitor.CgBlockSpans;
 
             var dataBufferSpans = new List<object>();
@@ -72,12 +72,14 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
 
             public override void VisitCgProgram(CgProgramSyntax node)
             {
-                CgBlockSpans.Add(new Span(node.CgProgramKeyword.Span.End, node.EndCgKeyword.Span.Start - node.CgProgramKeyword.Span.End));
+                throw new NotImplementedException();
+                //CgBlockSpans.Add(new Span(node.CgProgramKeyword.Span.End, node.EndCgKeyword.Span.Start - node.CgProgramKeyword.Span.End));
             }
 
             public override void VisitCgInclude(CgIncludeSyntax node)
             {
-                CgBlockSpans.Add(new Span(node.CgIncludeKeyword.Span.End, node.EndCgKeyword.Span.Start - node.CgIncludeKeyword.Span.End));
+                throw new NotImplementedException();
+                //CgBlockSpans.Add(new Span(node.CgIncludeKeyword.Span.End, node.EndCgKeyword.Span.Start - node.CgIncludeKeyword.Span.End));
             }
         }
 

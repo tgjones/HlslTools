@@ -4,6 +4,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
+using ShaderTools.Core.Text;
 using ShaderTools.Unity.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
@@ -25,60 +26,63 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
 
         public void ClassifySyntax(SyntaxTree syntaxTree)
         {
-            ClassifyNode(syntaxTree.Root);
+            ClassifyNode(syntaxTree, syntaxTree.Root);
         }
 
-        private void ClassifyNode(SyntaxNode node)
+        private void ClassifyNode(SyntaxTree syntaxTree, SyntaxNode node)
         {
             _cancellationToken.ThrowIfCancellationRequested();
 
             foreach (var syntaxNodeOrToken in node.ChildNodes)
-                ClassifyNodeOrToken(syntaxNodeOrToken);
+                ClassifyNodeOrToken(syntaxTree, syntaxNodeOrToken);
         }
 
-        private void ClassifyNodeOrToken(SyntaxNode nodeOrToken)
+        private void ClassifyNodeOrToken(SyntaxTree syntaxTree, SyntaxNode nodeOrToken)
         {
             if (!nodeOrToken.IsToken)
-                ClassifyNode(nodeOrToken);
+                ClassifyNode(syntaxTree, nodeOrToken);
             else
-                ClassifyToken((SyntaxToken)nodeOrToken);
+                ClassifyToken(syntaxTree, (SyntaxToken)nodeOrToken);
         }
 
-        private void ClassifyToken(SyntaxToken token)
+        private void ClassifyToken(SyntaxTree syntaxTree, SyntaxToken token)
         {
             foreach (var trivia in token.LeadingTrivia)
-                ClassifyTrivia(trivia);
+                ClassifyTrivia(syntaxTree, trivia);
 
             var kind = GetClassificationForToken(token);
             if (kind != null)
-                AddClassification(token, kind);
+                AddClassification(syntaxTree, token, kind);
 
             foreach (var trivia in token.TrailingTrivia)
-                ClassifyTrivia(trivia);
+                ClassifyTrivia(syntaxTree, trivia);
         }
 
-        private void ClassifyTrivia(SyntaxNode trivia)
+        private void ClassifyTrivia(SyntaxTree syntaxTree, SyntaxNode trivia)
         {
             if (trivia.Kind == SyntaxKind.WhitespaceTrivia || trivia.Kind == SyntaxKind.EndOfLineTrivia)
-                AddClassification((SyntaxTrivia) trivia, _classificationService.WhiteSpace);
+                AddClassification(syntaxTree, (SyntaxTrivia) trivia, _classificationService.WhiteSpace);
             else if (trivia.Kind.IsComment())
-                AddClassification((SyntaxTrivia)trivia, _classificationService.Comment);
+                AddClassification(syntaxTree, (SyntaxTrivia)trivia, _classificationService.Comment);
             else
-                ClassifyNode(trivia);
+                ClassifyNode(syntaxTree, trivia);
         }
 
-        private void AddClassification(SyntaxNode node, IClassificationType classificationType)
+        private void AddClassification(SyntaxTree syntaxTree, SyntaxNode node, IClassificationType classificationType)
         {
             if (classificationType == null)
                 throw new ArgumentNullException(nameof(classificationType));
 
-            if (node.Span.Length > 0)
-                _results.Add(CreateClassificationTagSpan(node, classificationType));
+            if (node.SourceRange.Length > 0)
+            {
+                var textSpan = syntaxTree.GetSourceTextSpan(node.SourceRange);
+                _results.Add(CreateClassificationTagSpan(textSpan, node, classificationType));
+            }
         }
 
-        private ITagSpan<IClassificationTag> CreateClassificationTagSpan(SyntaxNode node, IClassificationType classificationType)
+        private ITagSpan<IClassificationTag> CreateClassificationTagSpan(TextSpan span, SyntaxNode node, IClassificationType classificationType)
         {
-            var snapshotSpan = new SnapshotSpan(_snapshot, node.Span.Start, node.Span.Length);
+            var snapshotSpan = new SnapshotSpan(_snapshot, span.Start, span.Length);
             var classificationTag = new ClassificationTag(classificationType);
             return new TagSpan<ClassificationTag>(snapshotSpan, classificationTag);
         }

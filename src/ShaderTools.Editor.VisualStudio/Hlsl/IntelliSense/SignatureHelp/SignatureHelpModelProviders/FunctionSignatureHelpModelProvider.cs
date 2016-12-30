@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;

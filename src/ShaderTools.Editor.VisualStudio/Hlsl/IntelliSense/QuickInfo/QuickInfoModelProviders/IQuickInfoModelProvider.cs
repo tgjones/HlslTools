@@ -1,5 +1,5 @@
-﻿using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Syntax;
+﻿using ShaderTools.Core.Syntax;
+using ShaderTools.Hlsl.Compilation;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoModelProviders
 {

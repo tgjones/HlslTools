@@ -1,6 +1,6 @@
 using System;
 
-namespace ShaderTools.Hlsl.Syntax
+namespace ShaderTools.Core.Syntax
 {
     public struct SourceRange : IEquatable<SourceRange>
     {

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.ErrorList;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
 using ShaderTools.Editor.VisualStudio.Core.Util;
@@ -27,9 +28,10 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.ErrorList
                 }));
         }
 
-        protected override IEnumerable<Diagnostic> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        protected override Tuple<SyntaxTreeBase, IEnumerable<Diagnostic>> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            return snapshot.GetSyntaxTree(cancellationToken).GetDiagnostics();
+            var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+            return Tuple.Create((SyntaxTreeBase) syntaxTree, syntaxTree.GetDiagnostics());
         }
     }
 }

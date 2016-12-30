@@ -3,19 +3,18 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ShaderTools.Core.Symbols;
-using ShaderTools.Core.Text;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Binding.BoundNodes;
 using ShaderTools.Hlsl.Binding.Signatures;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Binding
 {
     internal partial class Binder
     {
-        private void AddSymbol(Symbol symbol, TextSpan diagnosticSpan, bool allowDuplicates = false)
+        private void AddSymbol(Symbol symbol, SourceRange diagnosticSpan, bool allowDuplicates = false)
         {
             if (_symbols.Any(x => x.Key == symbol.Name && (!allowDuplicates || x.Value.Any(y => y.Kind != symbol.Kind))))
                 Diagnostics.ReportSymbolRedefined(diagnosticSpan, symbol);

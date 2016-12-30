@@ -6,6 +6,7 @@ using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
 {

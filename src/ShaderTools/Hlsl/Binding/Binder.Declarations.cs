@@ -52,7 +52,7 @@ namespace ShaderTools.Hlsl.Binding
         private BoundNode BindTechniqueDeclaration(TechniqueSyntax declaration)
         {
             var techniqueSymbol = new TechniqueSymbol(declaration.Name.Text);
-            AddSymbol(techniqueSymbol, declaration.Name.Span);
+            AddSymbol(techniqueSymbol, declaration.Name.SourceRange);
 
             var techniqueBinder = new Binder(_sharedBinderState, this);
             var boundPasses = declaration.Passes.Select(x => techniqueBinder.Bind(x, techniqueBinder.BindPass));
@@ -82,7 +82,7 @@ namespace ShaderTools.Hlsl.Binding
             variableType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, variableType);
 
             var symbol = new TypeAliasSymbol(syntax, variableType);
-            AddSymbol(symbol, syntax.Identifier.Span);
+            AddSymbol(symbol, syntax.Identifier.SourceRange);
 
             var boundQualifiers = new List<BoundVariableQualifier>();
             foreach (var qualifier in syntax.Qualifiers)
@@ -96,7 +96,7 @@ namespace ShaderTools.Hlsl.Binding
             var enclosingNamespace = LookupEnclosingNamespace();
             var namespaceSymbol = new NamespaceSymbol(declaration, enclosingNamespace);
 
-            AddSymbol(namespaceSymbol, declaration.Name.Span);
+            AddSymbol(namespaceSymbol, declaration.Name.SourceRange);
 
             var namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
             namespaceSymbol.Binder = namespaceBinder;
@@ -132,7 +132,7 @@ namespace ShaderTools.Hlsl.Binding
             variableType = BindArrayRankSpecifiers(syntax.ArrayRankSpecifiers, variableType);
 
             var symbol = createSymbol(syntax, variableType);
-            AddSymbol(symbol, syntax.Identifier.Span);
+            AddSymbol(symbol, syntax.Identifier.SourceRange);
 
             var boundQualifiers = new List<BoundVariableQualifier>();
             foreach (var qualifier in syntax.Qualifiers)
@@ -197,7 +197,7 @@ namespace ShaderTools.Hlsl.Binding
             else
             {
                 functionSymbol = new SourceFunctionSymbol(declaration, parent, boundReturnType.TypeSymbol);
-                AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
+                AddSymbol(functionSymbol, declaration.Name.SourceRange, true);
             }
 
             if (declaration.Semantic != null)
@@ -251,7 +251,7 @@ namespace ShaderTools.Hlsl.Binding
             if (functionSymbol != null)
             {
                 if (functionSymbol.DefinitionSyntax != null)
-                    Diagnostics.ReportSymbolRedefined(declaration.Name.GetTextSpanSafe(), functionSymbol);
+                    Diagnostics.ReportSymbolRedefined(declaration.Name.SourceRange, functionSymbol);
                 else
                     functionSymbol.DefinitionSyntax = declaration;
             }
@@ -260,7 +260,7 @@ namespace ShaderTools.Hlsl.Binding
                 if (isQualifiedName)
                     Diagnostics.ReportUndeclaredFunctionInNamespaceOrClass((QualifiedDeclarationNameSyntax) declaration.Name);
                 functionSymbol = new SourceFunctionSymbol(declaration, parent, boundReturnType.TypeSymbol);
-                containerBinder.AddSymbol(functionSymbol, declaration.Name.GetTextSpanSafe(), true);
+                containerBinder.AddSymbol(functionSymbol, declaration.Name.SourceRange, true);
             }
 
             if (declaration.Semantic != null)
@@ -351,7 +351,7 @@ namespace ShaderTools.Hlsl.Binding
             var classBinder = new Binder(_sharedBinderState, this);
 
             var classSymbol = new ClassSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), classBinder);
-            AddSymbol(classSymbol, declaration.Name.Span);
+            AddSymbol(classSymbol, declaration.Name.SourceRange);
 
             var members = new List<BoundNode>();
 
@@ -384,7 +384,7 @@ namespace ShaderTools.Hlsl.Binding
             BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
 
             var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray());
-            AddSymbol(structSymbol, declaration.Name?.Span ?? declaration.GetTextSpanSafe());
+            AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
 
             var variables = new List<BoundMultipleVariableDeclarations>();
             var structBinder = new Binder(_sharedBinderState, this);
@@ -406,7 +406,7 @@ namespace ShaderTools.Hlsl.Binding
         private BoundInterfaceType BindInterfaceDeclaration(InterfaceTypeSyntax declaration, Symbol parent)
         {
             var interfaceSymbol = new InterfaceSymbol(declaration, parent);
-            AddSymbol(interfaceSymbol, declaration.Name.Span);
+            AddSymbol(interfaceSymbol, declaration.Name.SourceRange);
 
             var methods = new List<BoundFunction>();
             var interfaceBinder = new Binder(_sharedBinderState, this);

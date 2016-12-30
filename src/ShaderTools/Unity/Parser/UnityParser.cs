@@ -7,6 +7,7 @@ using ShaderTools.Core.Text;
 using ShaderTools.Unity.Syntax;
 using ShaderTools.Unity.Diagnostics;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Unity.Parser
 {
@@ -87,7 +88,7 @@ namespace ShaderTools.Unity.Parser
             if (result.Kind != kind)
             {
                 var diagnostics = new List<Diagnostic>(result.Diagnostics);
-                diagnostics.ReportTokenExpected(result.Span, result, kind);
+                diagnostics.ReportTokenExpected(result.SourceRange, result, kind);
                 result = result.WithDiagnostics(diagnostics);
             }
             NextToken();
@@ -112,7 +113,7 @@ namespace ShaderTools.Unity.Parser
                 var skippedTokensTrivia = CreateSkippedTokensTrivia(new[] { Current });
 
                 var diagnostics = new List<Diagnostic>(Lookahead.Diagnostics);
-                diagnostics.ReportTokenUnexpected(Current.Span, Current);
+                diagnostics.ReportTokenUnexpected(Current.SourceRange, Current);
 
                 NextToken();
 
@@ -142,7 +143,7 @@ namespace ShaderTools.Unity.Parser
                 var skippedTokensTrivia = CreateSkippedTokensTrivia(new[] { Current });
 
                 var diagnostics = new List<Diagnostic>(Lookahead.Diagnostics);
-                diagnostics.ReportTokenUnexpected(Current.Span, Current);
+                diagnostics.ReportTokenUnexpected(Current.SourceRange, Current);
 
                 NextToken();
 
@@ -162,15 +163,15 @@ namespace ShaderTools.Unity.Parser
         protected TNode WithDiagnostic<TNode>(TNode node, DiagnosticId diagnosticId, params object[] args)
             where TNode : SyntaxNode
         {
-            var diagnostic = Diagnostic.Create(ShaderLabMessageProvider.Instance, node.Span, (int) diagnosticId, args);
+            var diagnostic = Diagnostic.Create(ShaderLabMessageProvider.Instance, node.SourceRange, (int) diagnosticId, args);
             return node.WithDiagnostic(diagnostic);
         }
 
         protected SyntaxToken InsertMissingToken(SyntaxKind kind)
         {
-            var missingTokenSourceRange = new TextSpan(_lexer.Text, Current.FullSpan.Start, 0);
+            var missingTokenSourceRange = new SourceRange(Current.FullSourceRange.Start, 0);
 
-            var diagnosticSpan = GetDiagnosticTextSpanForMissingToken();
+            var diagnosticSpan = GetDiagnosticSourceRangeForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
             diagnostics.ReportTokenExpected(diagnosticSpan, Current, kind);
 
@@ -179,25 +180,25 @@ namespace ShaderTools.Unity.Parser
 
         protected SyntaxToken InsertMissingToken(SyntaxKind preferred, SyntaxKind[] otherOptions)
         {
-            var missingTokenSourceRange = new TextSpan(_lexer.Text, Current.FullSpan.Start, 0);
+            var missingTokenSourceRange = new SourceRange(Current.FullSourceRange.Start, 0);
 
-            var diagnosticSpan = GetDiagnosticTextSpanForMissingToken();
+            var diagnosticSpan = GetDiagnosticSourceRangeForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
             diagnostics.ReportTokenExpectedMultipleChoices(diagnosticSpan, Current, new[] { preferred }.Concat(otherOptions));
 
             return new SyntaxToken(preferred, true, missingTokenSourceRange).WithDiagnostics(diagnostics);
         }
 
-        protected TextSpan GetDiagnosticTextSpanForMissingToken()
+        protected SourceRange GetDiagnosticSourceRangeForMissingToken()
         {
             if (_tokenIndex > 0)
             {
                 var previousToken = _tokens[_tokenIndex - 1];
                 if (previousToken.TrailingTrivia.Any(x => x.Kind == SyntaxKind.EndOfLineTrivia))
-                    return new TextSpan(previousToken.Span.SourceText, previousToken.Span.End, 2);
+                    return new SourceRange(previousToken.SourceRange.End, 2);
             }
 
-            return Current.Span;
+            return Current.SourceRange;
         }
 
         private StructuredTriviaSyntax CreateSkippedTokensTrivia(IReadOnlyCollection<SyntaxToken> tokens)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;

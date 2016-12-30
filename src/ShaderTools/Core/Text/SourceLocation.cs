@@ -1,4 +1,4 @@
-namespace ShaderTools.Hlsl.Syntax
+namespace ShaderTools.Core.Syntax
 {
     public struct SourceLocation
     {

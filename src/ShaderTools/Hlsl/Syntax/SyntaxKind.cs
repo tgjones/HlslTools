@@ -612,7 +612,6 @@ namespace ShaderTools.Hlsl.Syntax
 
         Parameter,
 
-        IncompleteMember,
         BadToken
     }
 }

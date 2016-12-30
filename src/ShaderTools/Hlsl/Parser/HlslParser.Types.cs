@@ -527,7 +527,7 @@ namespace ShaderTools.Hlsl.Parser
             if (dimension == null && expectSize)
             {
                 var diagnostics = open.Diagnostics.ToList();
-                diagnostics.ReportTokenExpected(GetDiagnosticTextSpanForMissingToken(), Lookahead, SyntaxKind.NumericLiteralExpression);
+                diagnostics.ReportTokenExpected(GetDiagnosticSourceRangeForMissingToken(), Lookahead, SyntaxKind.NumericLiteralExpression);
                 open = open.WithDiagnostics(diagnostics);
             }
 

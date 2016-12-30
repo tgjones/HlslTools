@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 
 namespace ShaderTools.Hlsl.Syntax
@@ -86,31 +87,31 @@ namespace ShaderTools.Hlsl.Syntax
             return node?.Parent;
         }
 
-        public static TextSpan GetTextSpan(this SyntaxNode node)
-        {
-            var firstToken = node.GetFirstTokenInDescendants();
-            if (firstToken == null)
-                return TextSpan.None;
+//        public static TextSpan GetTextSpan(this SyntaxNode node)
+//        {
+//            var firstToken = node.GetFirstTokenInDescendants();
+//            if (firstToken == null)
+//                return TextSpan.None;
 
-            var lastToken = node.GetLastTokenInDescendants();
-            if (lastToken == null)
-                return TextSpan.None;
+//            var lastToken = node.GetLastTokenInDescendants();
+//            if (lastToken == null)
+//                return TextSpan.None;
 
-#if DEBUG
-            var tokens = node.DescendantTokens().ToList();
-            if (!tokens.Any())
-                throw new ArgumentException();
+//#if DEBUG
+//            var tokens = node.DescendantTokens().ToList();
+//            if (!tokens.Any())
+//                throw new ArgumentException();
 
-            var filename = tokens[0].Span.Filename;
-            if (tokens.Skip(1).Any(x => x.Span.Filename != filename))
-                throw new ArgumentException("GetTextSpan cannot be called for nodes that span more than one file.");
-#endif
+//            var filename = tokens[0].Span.Filename;
+//            if (tokens.Skip(1).Any(x => x.Span.Filename != filename))
+//                throw new ArgumentException("GetTextSpan cannot be called for nodes that span more than one file.");
+//#endif
 
-            return TextSpan.FromBounds(
-                firstToken.Span.SourceText,
-                firstToken.Span.Start, 
-                lastToken.Span.End);
-        }
+//            return TextSpan.FromBounds(
+//                firstToken.Span.SourceText,
+//                firstToken.Span.Start, 
+//                lastToken.Span.End);
+//        }
 
         public static TextSpan GetTextSpanSafe(this SyntaxNode node)
         {

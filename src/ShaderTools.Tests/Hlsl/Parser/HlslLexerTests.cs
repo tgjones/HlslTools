@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using NUnit.Framework;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
@@ -107,7 +108,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             foreach (var token in tokens)
                 foreach (var diagnostic in token.GetDiagnostics())
-                    Debug.WriteLine($"{diagnostic} at {diagnostic.Span}");
+                    Debug.WriteLine($"{diagnostic} at {diagnostic.SourceRange}");
 
             Assert.That(tokens.Any(t => t.ContainsDiagnostics), Is.False);
         }
