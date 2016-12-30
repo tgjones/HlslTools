@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using ShaderTools.Core.Syntax;
 using ShaderTools.Unity.Diagnostics;
 using ShaderTools.Unity.Syntax;
 
@@ -145,7 +146,7 @@ namespace ShaderTools.Unity.Parser
             {
                 var openParen = Match(SyntaxKind.OpenParenToken);
 
-                var argumentsList = new List<SyntaxNode>();
+                var argumentsList = new List<SyntaxNodeBase>();
                 argumentsList.Add(ParseUnityExpression());
 
                 while (Current.Kind == SyntaxKind.CommaToken)

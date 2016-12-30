@@ -34,11 +34,11 @@ namespace ShaderTools.Unity.Syntax
 
             LeadingTrivia = leadingTrivia.ToImmutableArray();
             foreach (var triviaNode in LeadingTrivia)
-                triviaNode.Parent = this;
+                ((SyntaxNodeBase) triviaNode).Parent = this;
 
             TrailingTrivia = trailingTrivia.ToImmutableArray();
             foreach (var triviaNode in TrailingTrivia)
-                triviaNode.Parent = this;
+                ((SyntaxNodeBase) triviaNode).Parent = this;
 
             FullSourceRange = ComputeFullSpan(sourceRange, LeadingTrivia, TrailingTrivia);
 
@@ -79,7 +79,7 @@ namespace ShaderTools.Unity.Syntax
         public ImmutableArray<SyntaxNode> LeadingTrivia { get; }
         public ImmutableArray<SyntaxNode> TrailingTrivia { get; }
 
-        public override SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
+        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
             return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics);
         }

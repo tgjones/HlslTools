@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
 
 namespace ShaderTools.Unity.Syntax
 {
@@ -14,94 +12,24 @@ namespace ShaderTools.Unity.Syntax
     /// Base class for all nodes in the Unity AST.
     /// </summary>
     [DebuggerDisplay("{ToFullString()}")]
-    public abstract class SyntaxNode
+    public abstract class SyntaxNode : SyntaxNodeBase
     {
-        public readonly SyntaxKind Kind;
-        public SyntaxNode Parent { get; internal set; }
-        public SourceRange SourceRange { get; protected set; }
-        public SourceRange FullSourceRange { get; protected set; }
+        public SyntaxKind Kind => (SyntaxKind) RawKind;
 
-        public string DocumentationSummary;
+        public new SyntaxNode Parent => (SyntaxNode) base.Parent;
 
-        public IList<SyntaxNode> ChildNodes { get; }
-
-        public ImmutableArray<Diagnostic> Diagnostics { get; }
-
-        public virtual bool IsToken => false;
-
-        public virtual bool IsMissing
-        {
-            get { return ChildNodes.All(n => n.IsMissing); }
-        }
-
-        public virtual bool ContainsDiagnostics
-        {
-            get { return Diagnostics.Any() || ChildNodes.Any(t => t.ContainsDiagnostics); }
-        }
-
-        public virtual bool ContainsDirectives
-        {
-            get { return this.DescendantTokens().Any(t => t.ContainsDirectives); }
-        }
-
-        public virtual IEnumerable<Diagnostic> GetDiagnostics()
-        {
-            return Diagnostics.Union(ChildNodes.SelectMany(x => x.GetDiagnostics()));
-        }
+        public override bool ContainsDirectives => false;
 
         protected SyntaxNode(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)
+            : base((ushort) kind, diagnostics)
         {
-            ChildNodes = new List<SyntaxNode>();
-            Kind = kind;
-            Diagnostics = diagnostics.ToImmutableArray();
+            
         }
 
         protected SyntaxNode(SyntaxKind kind)
+            : base((ushort) kind)
         {
-            ChildNodes = new List<SyntaxNode>();
-            Kind = kind;
-            Diagnostics = ImmutableArray<Diagnostic>.Empty;
-        }
-
-        protected void RegisterChildNodes<T>(out List<T> nodes, List<T> values)
-            where T : SyntaxNode
-        {
-            nodes = values;
-            foreach (var childNode in values)
-            {
-                SourceRange = SourceRange.Union(SourceRange, childNode.SourceRange);
-                FullSourceRange = SourceRange.Union(FullSourceRange, childNode.FullSourceRange);
-                ChildNodes.Add(childNode);
-                childNode.Parent = this;
-            }
-        }
-
-        protected void RegisterChildNodes<T>(out SeparatedSyntaxList<T> nodes, SeparatedSyntaxList<T> values)
-            where T : SyntaxNode
-        {
-            nodes = values;
-            foreach (var childNode in values.GetWithSeparators())
-            {
-                SourceRange = SourceRange.Union(SourceRange, childNode.SourceRange);
-                FullSourceRange = SourceRange.Union(FullSourceRange, childNode.FullSourceRange);
-                ChildNodes.Add(childNode);
-                childNode.Parent = this;
-            }
-        }
-
-        protected void RegisterChildNode<T>(out T node, T value)
-            where T : SyntaxNode
-        {
-            if (value == null)
-            {
-                node = null;
-                return;
-            }
-            SourceRange = SourceRange.Union(SourceRange, value.SourceRange);
-            FullSourceRange = SourceRange.Union(FullSourceRange, value.FullSourceRange);
-            node = value;
-            ChildNodes.Add(node);
-            node.Parent = this;
+            
         }
 
         public abstract void Accept(SyntaxVisitor visitor);
@@ -125,7 +53,7 @@ namespace ShaderTools.Unity.Syntax
             var child = children.First();
 
             if (!child.IsToken)
-                return child.FindToken(position, descendIntoTrivia);
+                return ((SyntaxNode) child).FindToken(position, descendIntoTrivia);
 
             var token = (SyntaxToken) child;
 
@@ -139,11 +67,6 @@ namespace ShaderTools.Unity.Syntax
             }
 
             return token;
-        }
-
-        public virtual SyntaxNode SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
-        {
-            throw new NotImplementedException("SetDiagnostics not implemented for " + GetType().Name);
         }
 
         public override string ToString()
@@ -176,7 +99,7 @@ namespace ShaderTools.Unity.Syntax
                 var child = ChildNodes[i];
                 if (child != null)
                 {
-                    child.WriteTo(sb, leading | !first, trailing | (i < lastIndex));
+                    ((SyntaxNode) child).WriteTo(sb, leading | !first, trailing | (i < lastIndex));
                     first = false;
                 }
             }

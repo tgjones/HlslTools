@@ -374,7 +374,6 @@
     <Compile Include="Unity\Syntax\ExpressionSyntax.cs" />
     <Compile Include="Unity\Syntax\LiteralExpressionSyntax.cs" />
     <Compile Include="Unity\Syntax\PrefixUnaryExpressionSyntax.cs" />
-    <Compile Include="Unity\Syntax\SeparatedSyntaxList.cs" />
     <Compile Include="Unity\Syntax\SkippedTokensTriviaSyntax.cs" />
     <Compile Include="Unity\Syntax\StructuredTriviaSyntax.cs" />
     <Compile Include="Unity\Syntax\SyntaxFactory.cs" />

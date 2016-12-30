@@ -34,7 +34,7 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
             _cancellationToken.ThrowIfCancellationRequested();
 
             foreach (var syntaxNodeOrToken in node.ChildNodes)
-                ClassifyNodeOrToken(syntaxTree, syntaxNodeOrToken);
+                ClassifyNodeOrToken(syntaxTree, (SyntaxNode) syntaxNodeOrToken);
         }
 
         private void ClassifyNodeOrToken(SyntaxTree syntaxTree, SyntaxNode nodeOrToken)

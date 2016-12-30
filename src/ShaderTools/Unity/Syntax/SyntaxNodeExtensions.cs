@@ -24,7 +24,7 @@ namespace ShaderTools.Unity.Syntax
                 }
                 else
                 {
-                    foreach (var descendantToken in childNode.DescendantTokens(descendIntoTrivia))
+                    foreach (var descendantToken in ((SyntaxNode) childNode).DescendantTokens(descendIntoTrivia))
                         yield return descendantToken;
                 }
             }
