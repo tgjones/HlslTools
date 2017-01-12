@@ -9,7 +9,7 @@ namespace ShaderTools.Hlsl.Syntax
         public readonly SyntaxToken CloseParenToken;
 
         public AttributeArgumentListSyntax(SyntaxToken openParenToken, SeparatedSyntaxList<LiteralExpressionSyntax> arguments, SyntaxToken closeParenToken)
-            : base(SyntaxKind.Attribute)
+            : base(SyntaxKind.AttributeArgumentList)
         {
             RegisterChildNode(out OpenParenToken, openParenToken);
             RegisterChildNodes(out Arguments, arguments);

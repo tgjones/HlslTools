@@ -4,4 +4,28 @@
   <PredefinedNode Name="SyntaxToken" Base="SyntaxNode"/>
 
   <AbstractNode Name="BaseVectorSyntax" Base="SyntaxNode" />
+
+  <Node Name="AttributeArgumentListSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary>Attribute argument list syntax.</summary>
+    </TypeComment>
+    <Kind Name="AttributeArgumentList"/>
+    <Field Name="OpenParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary>Gets the open paren token.</summary>
+      </PropertyComment>
+      <Kind Name="OpenParenToken"/>
+    </Field>
+    <Field Name="Arguments" Type="SeparatedSyntaxList&lt;LiteralExpressionSyntax&gt;">
+      <PropertyComment>
+        <summary>Gets the arguments syntax list.</summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary>Gets the close paren token.</summary>
+      </PropertyComment>
+      <Kind Name="CloseParenToken"/>
+    </Field>
+  </Node>
 </Tree>

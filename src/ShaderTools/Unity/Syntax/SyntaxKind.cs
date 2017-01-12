@@ -151,7 +151,6 @@
         FalseLiteralExpression,
 
         // Attributes
-        Attribute,
         AttributeArgumentList,
 
         IncompleteMember,

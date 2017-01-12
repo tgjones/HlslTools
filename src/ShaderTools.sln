@@ -1,12 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26014.0
+VisualStudioVersion = 15.0.26020.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools", "ShaderTools\ShaderTools.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{258A2D6D-2A88-4938-B45E-37D73F3A400A} = {258A2D6D-2A88-4938-B45E-37D73F3A400A}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Tests", "ShaderTools.Tests\ShaderTools.Tests.csproj", "{FB35BDC4-AB42-416A-B4EE-9BD62E3E1777}"
 EndProject
