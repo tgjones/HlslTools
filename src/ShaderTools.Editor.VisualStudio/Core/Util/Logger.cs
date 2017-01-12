@@ -34,7 +34,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util
                 Log(ex.ToString());
         }
 
-        public static void ShowMessage(string message, string title = "Shader Tools",
+        public static void ShowMessage(string message, string title = "HLSL Tools",
             MessageBoxButtons messageBoxButtons = MessageBoxButtons.OK,
             MessageBoxIcon messageBoxIcon = MessageBoxIcon.Warning,
             MessageBoxDefaultButton messageBoxDefaultButton = MessageBoxDefaultButton.Button1)
@@ -47,7 +47,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util
             if (_pane == null)
                 lock (SyncRoot)
                     if (_pane == null)
-                        _pane = HlslPackage.Instance.GetOutputPane(ShaderToolsOutputWindowGuid, "Shader Tools");
+                        _pane = HlslPackage.Instance.GetOutputPane(ShaderToolsOutputWindowGuid, "HLSL Tools");
 
             return _pane != null;
         }

@@ -5,12 +5,12 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using ShaderTools.Editor.VisualStudio.Hlsl;
 
-[assembly: AssemblyTitle("Shader Tools for Visual Studio")]
+[assembly: AssemblyTitle("HLSL Tools for Visual Studio")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Tim Jones")]
-[assembly: AssemblyProduct("Shader Tools for Visual Studio")]
-[assembly: AssemblyCopyright("Copyright © 2015-2016 Tim Jones")]
+[assembly: AssemblyProduct("HLSL Tools for Visual Studio")]
+[assembly: AssemblyCopyright("Copyright © 2015-2017 Tim Jones")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]   
 [assembly: ComVisible(false)]     
