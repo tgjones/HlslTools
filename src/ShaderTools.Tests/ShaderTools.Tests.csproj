@@ -52,6 +52,7 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Options\ConfigFileTests.cs" />
     <Compile Include="Hlsl\Binding\BinaryExpressionTests.cs" />
     <Compile Include="Hlsl\Binding\ExpressionTestUtility.cs" />
     <Compile Include="Hlsl\Binding\FunctionDeclarationTests.cs" />

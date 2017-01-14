@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
@@ -16,7 +17,8 @@ namespace ShaderTools.Hlsl.Parser
 {
     public sealed partial class HlslLexer : ILexer
     {
-        private readonly IIncludeFileSystem _fileSystem;
+        private readonly ParserOptions _options;
+        private readonly IIncludeFileResolver _includeFileResolver;
         private readonly List<SyntaxNode> _leadingTrivia = new List<SyntaxNode>();
         private readonly List<SyntaxNode> _trailingTrivia = new List<SyntaxNode>();
         private readonly List<Diagnostic> _diagnostics = new List<Diagnostic>();
@@ -58,20 +60,21 @@ namespace ShaderTools.Hlsl.Parser
         // - {main.hlsl, 101, 200}
         internal List<FileSegment> FileSegments { get; }
 
-        public HlslLexer(SourceText text, ParserOptions options = null, IIncludeFileSystem fileSystem = null)
+        public HlslLexer(SourceText text, ParserOptions options = null, IIncludeFileSystem includeFileSystem = null)
         {
-            _fileSystem = fileSystem ?? new DummyFileSystem();
+            _includeFileResolver = new IncludeFileResolver(includeFileSystem ?? new DummyFileSystem());
             _directives = DirectiveStack.Empty;
 
             if (options != null)
                 foreach (var define in options.PreprocessorDefines)
                 {
                     _directives = _directives.Add(new Directive(new ObjectLikeDefineDirectiveTriviaSyntax(
-                        null, null, SyntaxFactory.ParseToken(define), new List<SyntaxToken>
-                        {
-                            SyntaxFactory.ParseToken("1")
-                        }, null, true)));
+                        null, null, SyntaxFactory.ParseToken(define.Key),
+                        SyntaxFactory.ParseAllTokens(SourceText.From(define.Value)).ToList(),
+                        null, true)));
                 }
+
+            _options = options ?? new ParserOptions();
 
             ExpandMacros = true;
 
@@ -283,13 +286,13 @@ namespace ShaderTools.Hlsl.Parser
 
             if (directive.Kind == SyntaxKind.IncludeDirectiveTrivia)
             {
-                var includeDirective = (IncludeDirectiveTriviaSyntax)directive;
+                var includeDirective = (IncludeDirectiveTriviaSyntax) directive;
                 var includeFilename = includeDirective.TrimmedFilename;
 
                 SourceText include;
                 try
                 {
-                    include = _fileSystem.GetInclude(includeFilename);
+                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().Text.Filename, _options.AdditionalIncludeDirectories);
                     if (include == null)
                     {
                         includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));

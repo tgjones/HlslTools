@@ -13,9 +13,10 @@ namespace ShaderTools.Tests.Hlsl.Support
             _parentDirectory = Path.GetDirectoryName(parentFile);
         }
 
-        public SourceText GetInclude(string path)
+        public bool TryGetFile(string path, out SourceText text)
         {
-            return new StringText(File.ReadAllText(Path.Combine(_parentDirectory, path)), path);
+            text = new StringText(File.ReadAllText(Path.Combine(_parentDirectory, path)), path);
+            return true;
         }
     }
 }

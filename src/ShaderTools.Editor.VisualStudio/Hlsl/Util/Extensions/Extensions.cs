@@ -13,6 +13,7 @@ using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
+using ShaderTools.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 {
@@ -23,6 +24,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 
         private static readonly object TextContainerKey = new object();
         private static readonly object IncludeFileSystemKey = new object();
+        private static readonly object ConfigFileKey = new object();
         private static readonly object BackgroundParserKey = new object();
 
         public static VisualStudioSourceTextContainer GetTextContainer(this ITextBuffer textBuffer)
@@ -35,6 +37,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(IncludeFileSystemKey,
                 () => new VisualStudioFileSystem(textBuffer.GetTextContainer(), sourceTextFactory));
+        }
+
+        public static ConfigFile GetConfigFile(this ITextBuffer textBuffer)
+        {
+            return textBuffer.Properties.GetOrCreateSingletonProperty(ConfigFileKey,
+                () => ConfigFileLoader.LoadAndMergeConfigFile(textBuffer.GetTextDocument().FilePath));
         }
 
         public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer)
@@ -54,11 +62,18 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
             {
                 var sourceText = key.ToSourceText();
 
+                var configFile = snapshot.TextBuffer.GetConfigFile();
+
                 var options = new ParserOptions();
-                options.PreprocessorDefines.Add("__INTELLISENSE__");
+                options.PreprocessorDefines.Add("__INTELLISENSE__", "1");
+
+                foreach (var kvp in configFile.HlslPreprocessorDefinitions)
+                    options.PreprocessorDefines.Add(kvp.Key, kvp.Value);
+
+                options.AdditionalIncludeDirectories.AddRange(configFile.HlslAdditionalIncludeDirectories);
 
                 var sourceTextFactory = VisualStudioSourceTextFactory.Instance ?? HlslPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
-                var fileSystem = key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
+                var fileSystem = (VisualStudioFileSystem) key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
 
                 return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
             });

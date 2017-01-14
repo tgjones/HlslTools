@@ -13,12 +13,15 @@ namespace ShaderTools.Tests.Hlsl.Support
             _includes = includes;
         }
 
-        public SourceText GetInclude(string path)
+        public bool TryGetFile(string path, out SourceText text)
         {
-            string include;
-            return _includes.TryGetValue(path, out include) 
-                ? new StringText(include, path)
-                : null;
+            if (_includes.TryGetValue(path, out string include))
+            {
+                text = new StringText(include, path);
+                return true;
+            }
+            text = null;
+            return false;
         }
     }
 }

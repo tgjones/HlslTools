@@ -2,6 +2,7 @@
 
 [![Join the chat at https://gitter.im/tgjones/HlslTools](https://badges.gitter.im/tgjones/HlslTools.svg)](https://gitter.im/tgjones/HlslTools)
 
+A Visual Studio 2015 / 2017 extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
 
 [![Build status](https://ci.appveyor.com/api/projects/status/4ykbwleeg5c8o1l4?svg=true)](https://ci.appveyor.com/project/tgjones/hlsltools) [![Issue Stats](http://www.issuestats.com/github/tgjones/hlsltools/badge/pr?style=flat-square)](http://www.issuestats.com/github/tgjones/hlsltools) [![Issue Stats](http://www.issuestats.com/github/tgjones/hlsltools/badge/issue?style=flat-square)](http://www.issuestats.com/github/tgjones/hlsltools)
 
@@ -15,6 +16,7 @@ See the [changelog](CHANGELOG.md) for changes and roadmap.
 Since Visual Studio 2012, Visual Studio has shipped with basic support for editing HLSL files.
 In addition to that basic feature set, HLSL Tools includes many more navigational and editing features:
 
+| VS2015 / VS2017      | VS2015 / VS2017 with HLSL Tools |
 | -------------------- | ------------------------------- |
 | Syntax highlighting  | Syntax highlighting             |
 | Automatic formatting | Automatic formatting            |
@@ -123,6 +125,36 @@ Inspired by Roslyn, HLSL Tools includes a syntax visualizer. It's primarily of i
 but may be of interest to language nerds, so it's included in the main extension. Open it using `View > Other Windows > HLSL Syntax Visualizer`.
 
 ![Syntax visualizer demo](art/syntax-visualizer.gif)
+
+### Custom preprocessor definitions and additional include directories
+
+HLSL Tools will, by default, only use the directory containing the source file to search for `#include` files.
+
+You can customise this, and add additional preprocessor definitions, by creating a file named `shadertoolsconfig.json`:
+
+``` json
+{
+  "hlsl.preprocessorDefinitions": {
+    "MY_PREPROCESSOR_DEFINE_1": "Foo",
+    "MY_PREPROCESSOR_DEFINE_2": 1
+  },
+  "hlsl.additionalIncludeDirectories": [
+    "C:\\Code\\MyDirectoryA",
+    "C:\\Code\\MyDirectoryB",
+    ".", // Directory containing this config file
+    "..\\RelativeDirectory"
+  ]
+}
+```
+
+HLSL Tools will look for a file named `shadertoolsconfig.json` in the directory of an opened file,
+and in every parent directory. A search for `shadertoolsconfig.json` files will stop when the drive
+root is reached or a `shadertoolsconfig.json` file with `"root": true` is found. If multiple config
+files are found during this search, they will be combined, with properties in closer files taking
+precedence.
+
+Config files are cached for performance reasons. If you make make changes to a config file,
+you'll need to close and re-open any source files that use that config file.
 
 ### Getting involved
 

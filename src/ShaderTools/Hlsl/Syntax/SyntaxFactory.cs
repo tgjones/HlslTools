@@ -54,7 +54,7 @@ namespace ShaderTools.Hlsl.Syntax
         {
             var tokens = new List<SyntaxToken>();
 
-            var lexer = new HlslLexer(sourceText, fileSystem: fileSystem);
+            var lexer = new HlslLexer(sourceText, includeFileSystem: fileSystem);
             SyntaxToken token;
             do
             {

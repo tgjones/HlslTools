@@ -8,6 +8,8 @@ using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.Core.Text;
+using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {
@@ -41,7 +43,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             if (includeDirectiveTrivia == null)
                 return false;
 
-            var include = _textView.TextBuffer.GetIncludeFileSystem(_sourceTextFactory).GetInclude(includeDirectiveTrivia.TrimmedFilename);
+            var includeFileResolver = new IncludeFileResolver(_textView.TextBuffer.GetIncludeFileSystem(_sourceTextFactory));
+
+            var include = includeFileResolver.OpenInclude(
+                includeDirectiveTrivia.TrimmedFilename,
+                _textView.TextBuffer.GetTextContainer().Filename,
+                _textView.TextBuffer.GetConfigFile().HlslAdditionalIncludeDirectories);
+
             if (include == null)
                 return false;
 

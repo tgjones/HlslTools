@@ -45,14 +45,18 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ValueTuple, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Core\Diagnostics\Diagnostic.cs" />
     <Compile Include="Core\Diagnostics\DiagnosticDescriptor.cs" />
     <Compile Include="Core\Diagnostics\MessageProvider.cs" />
+    <Compile Include="Core\Options\ConfigFile.cs" />
+    <Compile Include="Core\Options\ConfigFileLoader.cs" />
     <Compile Include="Core\Symbols\ISymbol.cs" />
     <Compile Include="Core\Symbols\ITypeSymbol.cs" />
     <Compile Include="Core\Syntax\SyntaxNodeBase.cs" />
@@ -249,6 +253,8 @@
     <Compile Include="Hlsl\Parser\HlslParser.Declarations.cs" />
     <Compile Include="Hlsl\Parser\HlslParser.Expressions.cs" />
     <Compile Include="Hlsl\Parser\LexerMode.cs" />
+    <Compile Include="Hlsl\Text\IIncludeFileResolver.cs" />
+    <Compile Include="Hlsl\Text\IncludeFileResolver.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
