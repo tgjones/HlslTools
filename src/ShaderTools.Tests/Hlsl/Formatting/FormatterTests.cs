@@ -1639,7 +1639,7 @@ float f3;
             bool allowSyntaxErrors = false)
         {
             Func<string, SyntaxTree> parse = code =>
-                SyntaxFactory.ParseSyntaxTree(SourceText.From(code),
+                SyntaxFactory.ParseSyntaxTree(SourceText.From(code, "__RootFile__.hlsl"),
                     fileSystem: new InMemoryFileSystem(includes ?? new Dictionary<string, string>()));
 
             // Arrange.

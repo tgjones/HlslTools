@@ -18,7 +18,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
         public VisualStudioSourceText CreateSourceText(string filePath)
         {
             var textBuffer = _textBufferFactoryService.CreateTextBuffer(File.ReadAllText(filePath), _contentType);
-            return new VisualStudioSourceText(textBuffer.CurrentSnapshot, filePath);
+            return new VisualStudioSourceText(textBuffer.CurrentSnapshot, filePath, false);
         }
     }
 }

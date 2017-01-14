@@ -26,5 +26,7 @@
         public abstract string Filename { get; }
 
         public abstract int GetLineNumberFromPosition(int position);
+
+        public abstract bool IsRoot { get; }
     }
 }

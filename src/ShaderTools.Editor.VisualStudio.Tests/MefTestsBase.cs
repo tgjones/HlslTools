@@ -57,7 +57,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests
 
         protected CompositionContainer Container { get; private set; }
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
             var editorCatalogs = GetEditorCatalogs(EditorVersion.Vs2015);

@@ -48,6 +48,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             var include = includeFileResolver.OpenInclude(
                 includeDirectiveTrivia.TrimmedFilename,
                 _textView.TextBuffer.GetTextContainer().Filename,
+                _textView.TextBuffer.GetTextContainer().Filename,
                 _textView.TextBuffer.GetConfigFile().HlslAdditionalIncludeDirectories);
 
             if (include == null)

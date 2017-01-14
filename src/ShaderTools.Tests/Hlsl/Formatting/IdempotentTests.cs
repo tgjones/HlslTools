@@ -3,7 +3,6 @@ using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Tests.Hlsl.Support;
 
 namespace ShaderTools.Tests.Hlsl.Formatting
@@ -14,18 +13,20 @@ namespace ShaderTools.Tests.Hlsl.Formatting
         [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetTestShaders))]
         public void CanFormatAndReformat(string testFile)
         {
+            testFile = Path.Combine(TestContext.CurrentContext.TestDirectory, testFile);
+
             // Arrange.
             var sourceCode = File.ReadAllText(testFile);
-            var syntaxTree1 = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode), fileSystem: new TestFileSystem(testFile));
+            var syntaxTree1 = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode, testFile), fileSystem: new TestFileSystem());
 
             // Format.
             var formattedCode1 = FormatCode(sourceCode, syntaxTree1);
-            var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode1), fileSystem: new TestFileSystem(testFile));
+            var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode1, testFile), fileSystem: new TestFileSystem());
             ShaderTestUtility.CheckForParseErrors(syntaxTree2);
 
             // Format again.
             var formattedCode2 = FormatCode(formattedCode1, syntaxTree2);
-            var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode2), fileSystem: new TestFileSystem(testFile));
+            var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode2, testFile), fileSystem: new TestFileSystem());
             ShaderTestUtility.CheckForParseErrors(syntaxTree3);
 
             Assert.That(formattedCode2, Is.EqualTo(formattedCode1));

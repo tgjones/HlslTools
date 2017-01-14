@@ -5,6 +5,6 @@ namespace ShaderTools.Hlsl.Text
 {
     public interface IIncludeFileResolver
     {
-        SourceText OpenInclude(string includeFilename, string currentFilename, IEnumerable<string> additionalIncludeDirectories);
+        SourceText OpenInclude(string includeFilename, string currentFilename, string rootFilename, IEnumerable<string> additionalIncludeDirectories);
     }
 }

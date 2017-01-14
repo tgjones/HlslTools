@@ -24,37 +24,7 @@ namespace ShaderTools.Hlsl.Syntax
 
         public virtual IEnumerable<DirectiveTriviaSyntax> GetDirectives()
         {
-            var directives = new List<DirectiveTriviaSyntax>();
-            GetDirectives(this, directives);
-            return directives;
-        }
-
-        private static void GetDirectives(SyntaxNodeBase node, List<DirectiveTriviaSyntax> directives)
-        {
-            if (node != null && node.ContainsDirectives)
-            {
-                var d = node as DirectiveTriviaSyntax;
-                if (d != null)
-                {
-                    directives.Add(d);
-                }
-                else
-                {
-                    if (node.IsToken)
-                    {
-                        var token = (SyntaxToken) node;
-                        foreach (var trivia in token.LeadingTrivia)
-                            GetDirectives(trivia, directives);
-                        foreach (var trivia in token.TrailingTrivia)
-                            GetDirectives(trivia, directives);
-                    }
-                    else
-                    {
-                        foreach (var childNode in node.ChildNodes)
-                            GetDirectives(childNode, directives);
-                    }
-                }
-            }
+            return ChildNodes.Cast<SyntaxNode>().SelectMany(x => x.GetDirectives());
         }
 
         protected SyntaxNode(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)

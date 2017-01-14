@@ -4,7 +4,6 @@ using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Tests.Hlsl.Support;
 
 namespace ShaderTools.Tests.Hlsl.Formatting
@@ -15,10 +14,14 @@ namespace ShaderTools.Tests.Hlsl.Formatting
         [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetTestShaders))]
         public void CanGetRootLocatedNodes(string testFile)
         {
+            testFile = Path.Combine(TestContext.CurrentContext.TestDirectory, testFile);
+
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode), fileSystem: new TestFileSystem(testFile));
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(
+                SourceText.From(sourceCode, testFile), 
+                fileSystem: new TestFileSystem());
 
             // Check roundtripping.
             var allRootTokensAndTrivia = syntaxTree.Root.GetRootLocatedNodes();

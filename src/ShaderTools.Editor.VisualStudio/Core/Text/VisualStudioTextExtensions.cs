@@ -2,6 +2,7 @@
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Core.Text;
+using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Text
 {
@@ -14,7 +15,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
             if (textSnapshot == null)
                 throw new ArgumentNullException(nameof(textSnapshot));
 
-            return SnapshotMap.GetValue(textSnapshot, ts => new VisualStudioSourceText(ts, null));
+            return SnapshotMap.GetValue(textSnapshot, ts => new VisualStudioSourceText(ts, ts.TextBuffer.GetTextDocument()?.FilePath, true));
         }
 
         public static ITextSnapshot ToTextSnapshot(this SourceText text)

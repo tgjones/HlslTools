@@ -39,6 +39,7 @@ namespace ShaderTools.Hlsl.Parser
         private object _value;
         private int _start;
 
+        private readonly SourceText _rootText;
         private readonly Stack<IncludeContext> _includeStack;
         private CharReader _charReader;
 
@@ -77,6 +78,8 @@ namespace ShaderTools.Hlsl.Parser
             _options = options ?? new ParserOptions();
 
             ExpandMacros = true;
+
+            _rootText = text;
 
             FileSegments = new List<FileSegment>();
             _includeStack = new Stack<IncludeContext>();
@@ -292,7 +295,10 @@ namespace ShaderTools.Hlsl.Parser
                 SourceText include;
                 try
                 {
-                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().Text.Filename, _options.AdditionalIncludeDirectories);
+                    include = _includeFileResolver.OpenInclude(includeFilename,
+                        _includeStack.Peek().Text.Filename, 
+                        _rootText.Filename,
+                        _options.AdditionalIncludeDirectories);
                     if (include == null)
                     {
                         includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));

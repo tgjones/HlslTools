@@ -19,7 +19,7 @@ namespace ShaderTools.Tests.Unity.Parser
             // http://docs.unity3d.com/Manual/SL-BuiltinIncludes.html
 
             // Act.
-            var tokens = LexAllTokens(SourceText.From(File.ReadAllText(testFile)));
+            var tokens = LexAllTokens(SourceText.From(File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, testFile))));
 
             // Assert.
             Assert.That(tokens, Has.Count.GreaterThan(0));

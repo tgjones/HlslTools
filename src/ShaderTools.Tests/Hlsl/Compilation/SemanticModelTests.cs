@@ -16,10 +16,12 @@ namespace ShaderTools.Tests.Hlsl.Compilation
         [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetTestShaders))]
         public void CanGetSemanticModel(string testFile)
         {
+            testFile = Path.Combine(TestContext.CurrentContext.TestDirectory, testFile);
+
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode), fileSystem: new TestFileSystem(testFile));
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode, testFile), fileSystem: new TestFileSystem());
             ShaderTestUtility.CheckForParseErrors(syntaxTree);
 
             // Get semantic model.

@@ -6,11 +6,12 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
 {
     internal sealed class VisualStudioSourceText : SourceText
     {
-        public VisualStudioSourceText(ITextSnapshot snapshot, string filename)
+        public VisualStudioSourceText(ITextSnapshot snapshot, string filename, bool isRoot)
         {
             Snapshot = snapshot;
             Length = Snapshot.Length;
             Filename = filename;
+            IsRoot = isRoot;
         }
 
         public override string GetText(TextSpan textSpan)
@@ -33,5 +34,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
 
             return Snapshot.GetLineNumberFromPosition(position);
         }
+
+        public override bool IsRoot { get; }
     }
 }

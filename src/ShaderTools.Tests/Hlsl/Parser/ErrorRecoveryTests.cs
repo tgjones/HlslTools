@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using ShaderTools.Core.Syntax;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Tests.Hlsl.Parser
@@ -428,12 +429,15 @@ namespace ShaderTools.Tests.Hlsl.Parser
 }";
 
             for (var i = 1; i <= code.Length; i++)
-                yield return new TestCaseData(code.Substring(0, i));
+                yield return new TestCaseData(code.Substring(0, i))
+                {
+                    TestName = $"{{m}} with {i} characters"
+                };
         }
 
         private static CompilationUnitSyntax BuildSyntaxTree(string code)
         {
-            var compilationUnit = SyntaxFactory.ParseCompilationUnit(code);
+            var compilationUnit = SyntaxFactory.ParseCompilationUnit(SourceText.From(code));
             Assert.That(compilationUnit.ToFullString(), Is.EqualTo(code));
             return compilationUnit;
         }

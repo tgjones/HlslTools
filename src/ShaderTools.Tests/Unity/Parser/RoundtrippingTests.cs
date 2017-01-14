@@ -12,7 +12,7 @@ namespace ShaderTools.Tests.Unity.Parser
         [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetUnityTestShaders))]
         public void CanBuildUnitySyntaxTree(string testFile)
         {
-            var sourceCode = File.ReadAllText(testFile);
+            var sourceCode = File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, testFile));
 
             // Build syntax tree.
             var syntaxTree = SyntaxFactory.ParseUnitySyntaxTree(

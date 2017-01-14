@@ -13,7 +13,7 @@ namespace ShaderTools.Hlsl.Text
             _fileSystem = fileSystem;
         }
 
-        public SourceText OpenInclude(string includeFilename, string currentFilename, IEnumerable<string> additionalIncludeDirectories)
+        public SourceText OpenInclude(string includeFilename, string currentFilename, string rootFilename, IEnumerable<string> additionalIncludeDirectories)
         {
             SourceText text;
 
@@ -24,10 +24,18 @@ namespace ShaderTools.Hlsl.Text
                 return text;
             }
 
-            // Then, if current file has been saved (i.e. has a filename), try same directory as current file.
+            // If current file has been saved (i.e. has a filename), try same directory as current file.
             if (currentFilename != null)
             {
                 var rootFileDirectory = Path.GetDirectoryName(currentFilename);
+                if (_fileSystem.TryGetFile(Path.Combine(rootFileDirectory, includeFilename), out text))
+                    return text;
+            }
+
+            // If this is not the root file, try same directory as root file.
+            if (rootFilename != currentFilename)
+            {
+                var rootFileDirectory = Path.GetDirectoryName(rootFilename);
                 if (_fileSystem.TryGetFile(Path.Combine(rootFileDirectory, includeFilename), out text))
                     return text;
             }

@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using NUnit.Framework;
+using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Tests.Hlsl.Parser
@@ -489,7 +490,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
         private static CompilationUnitSyntax ParseFile(string text)
         {
-            return SyntaxFactory.ParseCompilationUnit(text);
+            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text));
         }
     }
 }

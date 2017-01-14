@@ -75,7 +75,6 @@ void main()
         [TestCase("float", "half", "#ambiguous")]
         [TestCase("half", "half", "#ambiguous")]
         [TestCase("half2", "half", "#ambiguous")]
-        [TestCase("float", "half", "#ambiguous")]
         [TestCase("double", "half", "double, float")]
         [TestCase("double", "double", "#ambiguous")]
         [TestCase("double", "bool", "#ambiguous")]

@@ -8,11 +8,12 @@ namespace ShaderTools.Core.Text
         private readonly string _text;
         private readonly StringTextLineCollection _lines;
 
-        public StringText(string text, string filename = null)
+        public StringText(string text, string filename = null, bool isRoot = true)
         {
             _text = text;
             Filename = filename;
             _lines = Parse(this, text);
+            IsRoot = isRoot;
         }
 
         private static StringTextLineCollection Parse(SourceText sourceText, string text)
@@ -102,6 +103,8 @@ namespace ShaderTools.Core.Text
 
             return lower - 1;
         }
+
+        public override bool IsRoot { get; }
     }
 
     public struct TextLine : IEquatable<TextLine>

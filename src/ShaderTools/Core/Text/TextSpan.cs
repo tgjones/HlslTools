@@ -9,7 +9,7 @@ namespace ShaderTools.Core.Text
         public TextSpan(SourceText sourceText, int start, int length)
         {
             SourceText = sourceText;
-            IsInRootFile = sourceText?.Filename == null;
+            IsInRootFile = sourceText != null && sourceText.IsRoot;
             Filename = sourceText?.Filename;
             Start = start;
             End = Start + length;

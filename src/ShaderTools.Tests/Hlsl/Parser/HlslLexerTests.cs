@@ -101,7 +101,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
         public void CanLexShader(string testFile)
         {
             // Act.
-            var tokens = LexAllTokens(testFile);
+            var tokens = LexAllTokens(Path.Combine(TestContext.CurrentContext.TestDirectory, testFile));
 
             // Assert.
             Assert.That(tokens, Has.Count.GreaterThan(0));
@@ -117,7 +117,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(string testFile)
         {
-            return LexAllTokens(SourceText.From(File.ReadAllText(testFile)), new TestFileSystem(testFile));
+            return LexAllTokens(SourceText.From(File.ReadAllText(testFile), testFile), new TestFileSystem());
         }
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(SourceText text, IIncludeFileSystem fileSystem = null)

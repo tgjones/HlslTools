@@ -28,7 +28,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
 
             var snapshot = diskBuffer.CurrentSnapshot;
 
-            var shaderLabSyntaxTree = SyntaxFactory.ParseUnitySyntaxTree(new Text.VisualStudioSourceText(snapshot, null));
+            var shaderLabSyntaxTree = SyntaxFactory.ParseUnitySyntaxTree(new Text.VisualStudioSourceText(snapshot, null, true));
 
             var cgBlockVisitor = new CgBlockVisitor();
             //cgBlockVisitor.Visit(shaderLabSyntaxTree.Root);

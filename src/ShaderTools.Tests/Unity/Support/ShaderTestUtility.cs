@@ -11,13 +11,18 @@ namespace ShaderTools.Tests.Unity.Support
     {
         public static IEnumerable<TestCaseData> FindTestShaders(string rootFolder)
         {
-            return Directory.GetFiles(rootFolder, "*.*", SearchOption.AllDirectories)
+            var testDirectory = TestContext.CurrentContext.TestDirectory;
+            return Directory.GetFiles(Path.Combine(testDirectory, rootFolder), "*.*", SearchOption.AllDirectories)
                 .Where(x =>
                 {
                     var ext = Path.GetExtension(x).ToLower();
                     return ext == ".shader";
                 })
-                .Select(x => new TestCaseData(x));
+                .Select(x => x.Substring(testDirectory.Length + 1))
+                .Select(x => new TestCaseData(x)
+                {
+                    TestName = "{m}{a:1000}"
+                });
         }
 
         internal static IEnumerable<TestCaseData> GetUnityTestShaders()

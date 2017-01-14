@@ -14,8 +14,8 @@ build_script:
   - msbuild src/ShaderTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
-  - nunit-console src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll
-  - nunit-console-x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll
+  - nunit3-console src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll --result=myresults.xml;format=AppVeyor
+  - nunit3-console src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll --result=myresults.xml;format=AppVeyor
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery

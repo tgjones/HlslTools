@@ -15,9 +15,9 @@ namespace ShaderTools.Hlsl.Syntax
             return Parse(sourceText, options, fileSystem ?? new DummyFileSystem(), p => p.ParseCompilationUnit(cancellationToken));
         }
 
-        public static CompilationUnitSyntax ParseCompilationUnit(string text, IIncludeFileSystem fileSystem = null)
+        public static CompilationUnitSyntax ParseCompilationUnit(SourceText sourceText, IIncludeFileSystem fileSystem = null)
         {
-            return (CompilationUnitSyntax) Parse(SourceText.From(text), null, fileSystem, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
+            return (CompilationUnitSyntax) Parse(sourceText, null, fileSystem, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
         }
 
         public static SyntaxTree ParseExpression(string text)

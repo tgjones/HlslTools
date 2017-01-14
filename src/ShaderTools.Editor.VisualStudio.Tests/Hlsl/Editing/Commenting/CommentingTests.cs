@@ -24,7 +24,7 @@ using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.Commenting
 {
-    [TestFixture, RequiresSTA]
+    [TestFixture, Apartment(System.Threading.ApartmentState.STA)]
     internal class CommentingTests : MefTestsBase
     {
         [Test]

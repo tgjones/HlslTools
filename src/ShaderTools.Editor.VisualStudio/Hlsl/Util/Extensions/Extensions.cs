@@ -42,7 +42,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
         public static ConfigFile GetConfigFile(this ITextBuffer textBuffer)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(ConfigFileKey,
-                () => ConfigFileLoader.LoadAndMergeConfigFile(textBuffer.GetTextDocument().FilePath));
+                () => ConfigFileLoader.LoadAndMergeConfigFile(textBuffer.GetTextDocument()?.FilePath));
         }
 
         public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer)
