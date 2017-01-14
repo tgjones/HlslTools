@@ -60,7 +60,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests
         [OneTimeSetUp]
         public void TestFixtureSetUp()
         {
-            var editorCatalogs = GetEditorCatalogs(EditorVersion.Vs2015);
+            var editorCatalogs = GetEditorCatalogs(EditorVersion.Vs2017);
             var localCatalog = new DirectoryCatalog(".");
             var catalog = new AggregateCatalog(editorCatalogs.Union(new[] { localCatalog }));
             Container = new CompositionContainer(catalog, new UndoExportProvider());
@@ -222,6 +222,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests
                 case EditorVersion.Vs2012: return 11;
                 case EditorVersion.Vs2013: return 12;
                 case EditorVersion.Vs2015: return 14;
+                case EditorVersion.Vs2017: return 15;
                 default:
                     throw new Exception(string.Format("Unexpected enum value {0}", version));
             }
@@ -243,6 +244,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests
             Vs2012,
             Vs2013,
             Vs2015,
+            Vs2017
         }
 
         protected virtual void OnTestFixtureSetUp()
