@@ -340,6 +340,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.Equal(1, sd.Body.Statements.Count);
             Assert.Equal(SyntaxKind.ForStatement, sd.Body.Statements[0].Kind);
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
+            Assert.NotNull(forStatement.Initializer);
             Assert.Equal(SyntaxKind.SimpleAssignmentExpression, forStatement.Initializer.Kind);
             Assert.False(sd.ParameterList.CloseParenToken.IsMissing);
             Assert.Null(sd.SemicolonToken);
@@ -431,6 +432,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 }";
 
             for (var i = 1; i <= code.Length; i++)
+                yield return new object[] { code.Substring(0, i) };
         }
 
         private static CompilationUnitSyntax BuildSyntaxTree(string code)
