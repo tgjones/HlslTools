@@ -8,14 +8,14 @@ before_build:
   - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
   - ps: Vsix-TokenReplacement src\ShaderTools.Editor.VisualStudio\Hlsl\HlslPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
   - ps: Vsix-TokenReplacement src\ShaderTools\Hlsl\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
+  - ps: nuget restore src/ShaderTools.sln -Verbosity quiet
 
 build_script:
-  - nuget restore src/ShaderTools.sln -Verbosity quiet
   - msbuild src/ShaderTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
-  - xunit.console.clr4 src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll /appveyor
-  - xunit.console.clr4 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll /appveyor
+  - '%xunit20%\xunit.console.x86 src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll -appveyor'
+  - '%xunit20%\xunit.console.x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll -appveyor'
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
