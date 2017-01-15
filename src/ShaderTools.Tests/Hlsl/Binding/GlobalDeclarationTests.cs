@@ -1,17 +1,15 @@
 using System.Collections.Immutable;
 using System.Linq;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Binding
 {
-    [TestFixture]
     public class GlobalDeclarationTests
     {
-        [Test]
+        [Fact]
         public void DetectsRedefinitionAsVariable()
         {
             var code = @"
@@ -22,11 +20,11 @@ int foo;";
             var semanticModel = compilation.GetSemanticModel();
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
-            Assert.That(diagnostics, Has.Length.EqualTo(1));
-            Assert.That((DiagnosticId) diagnostics[0].Descriptor.Code, Is.EqualTo(DiagnosticId.SymbolRedefined));
+            Assert.Equal(1, diagnostics.Length);
+            Assert.Equal(DiagnosticId.SymbolRedefined, (DiagnosticId) diagnostics[0].Descriptor.Code);
         }
 
-        [Test]
+        [Fact]
         public void DetectsRedefinitionAsFunction()
         {
             var code = @"
@@ -37,11 +35,11 @@ void foo();";
             var semanticModel = compilation.GetSemanticModel();
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
-            Assert.That(diagnostics, Has.Length.EqualTo(1));
-            Assert.That((DiagnosticId) diagnostics[0].Descriptor.Code, Is.EqualTo(DiagnosticId.SymbolRedefined));
+            Assert.Equal(1, diagnostics.Length);
+            Assert.Equal(DiagnosticId.SymbolRedefined, (DiagnosticId) diagnostics[0].Descriptor.Code);
         }
 
-        [Test]
+        [Fact]
         public void DetectsUndeclaredVariable()
         {
             var code = @"
@@ -54,8 +52,8 @@ void main()
             var semanticModel = compilation.GetSemanticModel();
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
-            Assert.That(diagnostics, Has.Length.EqualTo(1));
-            Assert.That((DiagnosticId) diagnostics[0].Descriptor.Code, Is.EqualTo(DiagnosticId.UndeclaredVariable));
+            Assert.Equal(1, diagnostics.Length);
+            Assert.Equal(DiagnosticId.UndeclaredVariable, (DiagnosticId) diagnostics[0].Descriptor.Code);
         }
     }
 }

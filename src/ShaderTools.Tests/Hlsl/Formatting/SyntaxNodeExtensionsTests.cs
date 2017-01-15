@@ -1,21 +1,19 @@
 ﻿using System.IO;
 using System.Text;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Tests.Hlsl.Support;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Formatting
 {
-    [TestFixture]
     public class SyntaxNodeExtensionsTests
     {
-        [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetTestShaders))]
+        [Theory]
+        [MemberData(nameof(ShaderTestUtility.GetTestShaders), MemberType = typeof(ShaderTestUtility))]
         public void CanGetRootLocatedNodes(string testFile)
         {
-            testFile = Path.Combine(TestContext.CurrentContext.TestDirectory, testFile);
-
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
@@ -29,7 +27,7 @@ namespace ShaderTools.Tests.Hlsl.Formatting
             foreach (var locatedNode in allRootTokensAndTrivia)
                 sb.Append(locatedNode.Text);
             var roundtrippedText = sb.ToString();
-            Assert.That(roundtrippedText, Is.EqualTo(sourceCode));
+            Assert.Equal(sourceCode, roundtrippedText);
         }
     }
 }

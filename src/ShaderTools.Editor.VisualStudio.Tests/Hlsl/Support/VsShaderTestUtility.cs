@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
-using NUnit.Framework;
 using ShaderTools.Tests.Hlsl.Support;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support
 {
     internal static class VsShaderTestUtility
     {
-        public static IEnumerable<TestCaseData> GetTestShaders()
+        public static IEnumerable<object> GetTestShaders()
         {
-            return ShaderTestUtility.FindTestShaders("../../../ShaderTools.Tests/Hlsl/Shaders");
+            return ShaderTestUtility.FindTestShaders(@"Hlsl\Shaders");
         }
     }
 }

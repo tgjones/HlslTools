@@ -1,33 +1,33 @@
 ﻿using System.Diagnostics;
 using System.Linq;
-using NUnit.Framework;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Binding
 {
-    [TestFixture]
     public class FunctionInvocationExpressionTests
     {
-        [TestCase("int", "int")]
-        [TestCase("uint", "int")]
-        [TestCase("float", "float")]
-        [TestCase("half", "#ambiguous")]
-        [TestCase("half1", "#ambiguous")]
-        [TestCase("float1", "float")]
-        [TestCase("half2", "#ambiguous")]
-        [TestCase("float2x1", "float2")]
-        [TestCase("float1x2", "float2")]
-        [TestCase("float1x3", "#ambiguous")]
-        [TestCase("float3x1", "#ambiguous")]
-        [TestCase("float2x3", "float")]
-        [TestCase("float3x3", "float3x3")]
-        [TestCase("half2x3", "#ambiguous")]
-        [TestCase("int2x2", "int")]
-        [TestCase("MyStruct", "#undeclared")]
+        [Theory]
+        [InlineData("int", "int")]
+        [InlineData("uint", "int")]
+        [InlineData("float", "float")]
+        [InlineData("half", "#ambiguous")]
+        [InlineData("half1", "#ambiguous")]
+        [InlineData("float1", "float")]
+        [InlineData("half2", "#ambiguous")]
+        [InlineData("float2x1", "float2")]
+        [InlineData("float1x2", "float2")]
+        [InlineData("float1x3", "#ambiguous")]
+        [InlineData("float3x1", "#ambiguous")]
+        [InlineData("float2x3", "float")]
+        [InlineData("float3x3", "float3x3")]
+        [InlineData("half2x3", "#ambiguous")]
+        [InlineData("int2x2", "int")]
+        [InlineData("MyStruct", "#undeclared")]
         public void TestFunctionOverloadResolution1Arg(string type, string expectedMatchType)
         {
             var code = $@"
@@ -47,7 +47,7 @@ void main()
 }}";
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
             var syntaxTreeSource = syntaxTree.Root.ToFullString();
-            Assert.AreEqual(code, syntaxTreeSource, $"Source should have been {code} but is {syntaxTreeSource}.");
+            Assert.Equal(code, syntaxTreeSource);
 
             var expression = (FunctionInvocationExpressionSyntax) syntaxTree.Root.ChildNodes
                 .OfType<FunctionDefinitionSyntax>()
@@ -68,36 +68,37 @@ void main()
                 ? ExpressionTestUtility.GetExpressionTypeString(invokedFunctionSymbol.Parameters[0].ValueType)
                 : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
-            Assert.AreEqual(expectedMatchType, result, $"Expression should have matched the function overload '{expectedMatchType}' but it actually matched '{result}'.");
+            Assert.Equal(expectedMatchType, result);
         }
 
-        [TestCase("float", "float", "float, float")]
-        [TestCase("float", "half", "#ambiguous")]
-        [TestCase("half", "half", "#ambiguous")]
-        [TestCase("half2", "half", "#ambiguous")]
-        [TestCase("double", "half", "double, float")]
-        [TestCase("double", "double", "#ambiguous")]
-        [TestCase("double", "bool", "#ambiguous")]
-        [TestCase("double", "int", "double, int")]
-        [TestCase("float2", "int", "float2, float")]
-        [TestCase("float2", "half", "float2, float")]
-        [TestCase("float2", "float", "float2, float")]
-        [TestCase("float2", "double", "float2, float")]
-        [TestCase("float3", "bool", "#ambiguous")]
-        [TestCase("float3", "int", "float, int")]
-        [TestCase("float3", "float", "#ambiguous")]
-        [TestCase("int3", "float", "#ambiguous")]
-        [TestCase("int3", "int", "#ambiguous")]
-        [TestCase("float3", "double", "float, double")]
-        [TestCase("float3x3", "bool", "float3x3, float")]
-        [TestCase("float3x3", "half", "float3x3, float")]
-        [TestCase("float3x3", "float", "float3x3, float")]
-        [TestCase("float3x3", "double", "float3x3, float")]
-        [TestCase("float", "int2", "float, int")]
-        [TestCase("float", "half2", "#ambiguous")]
-        [TestCase("float", "float2", "float, float")]
-        [TestCase("float", "double2", "float, double")]
-        [TestCase("float4x4", "float", "#ambiguous")]
+        [Theory]
+        [InlineData("float", "float", "float, float")]
+        [InlineData("float", "half", "#ambiguous")]
+        [InlineData("half", "half", "#ambiguous")]
+        [InlineData("half2", "half", "#ambiguous")]
+        [InlineData("double", "half", "double, float")]
+        [InlineData("double", "double", "#ambiguous")]
+        [InlineData("double", "bool", "#ambiguous")]
+        [InlineData("double", "int", "double, int")]
+        [InlineData("float2", "int", "float2, float")]
+        [InlineData("float2", "half", "float2, float")]
+        [InlineData("float2", "float", "float2, float")]
+        [InlineData("float2", "double", "float2, float")]
+        [InlineData("float3", "bool", "#ambiguous")]
+        [InlineData("float3", "int", "float, int")]
+        [InlineData("float3", "float", "#ambiguous")]
+        [InlineData("int3", "float", "#ambiguous")]
+        [InlineData("int3", "int", "#ambiguous")]
+        [InlineData("float3", "double", "float, double")]
+        [InlineData("float3x3", "bool", "float3x3, float")]
+        [InlineData("float3x3", "half", "float3x3, float")]
+        [InlineData("float3x3", "float", "float3x3, float")]
+        [InlineData("float3x3", "double", "float3x3, float")]
+        [InlineData("float", "int2", "float, int")]
+        [InlineData("float", "half2", "#ambiguous")]
+        [InlineData("float", "float2", "float, float")]
+        [InlineData("float", "double2", "float, double")]
+        [InlineData("float4x4", "float", "#ambiguous")]
         public void TestFunctionOverloadResolution2Args(string type1, string type2, string expectedMatchTypes)
         {
             var code = $@"
@@ -118,7 +119,7 @@ void main()
 }}";
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
             var syntaxTreeSource = syntaxTree.Root.ToFullString();
-            Assert.AreEqual(code, syntaxTreeSource, $"Source should have been {code} but is {syntaxTreeSource}.");
+            Assert.Equal(code, syntaxTreeSource);
 
             var expression = (FunctionInvocationExpressionSyntax) syntaxTree.Root.ChildNodes
                 .OfType<FunctionDefinitionSyntax>()
@@ -140,23 +141,24 @@ void main()
                 ? $"{invokedFunctionSymbol.Parameters[0].ValueType.ToMarkup()}, {invokedFunctionSymbol.Parameters[1].ValueType.ToMarkup()}"
                 : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
-            Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
+            Assert.Equal(expectedMatchTypes, result);
         }
 
-        [TestCase("min", "float", "float", "float, float")]
-        [TestCase("mul", "float4", "float4x4", "float4, float4x4")]
-        [TestCase("mul", "float3", "float4x4", "float3, float3x4")]
-        [TestCase("mul", "float4", "float3x4", "float1x3, float3x4")]
-        [TestCase("mul", "float1", "float3x4", "float, float3x4")]
-        [TestCase("mul", "float4", "float4x3", "float4, float4x3")]
-        [TestCase("mul", "float4x3", "float3x4", "float4x3, float3x4")]
-        [TestCase("dot", "int", "uint", "int1, int1")]
+        [Theory]
+        [InlineData("min", "float", "float", "float, float")]
+        [InlineData("mul", "float4", "float4x4", "float4, float4x4")]
+        [InlineData("mul", "float3", "float4x4", "float3, float3x4")]
+        [InlineData("mul", "float4", "float3x4", "float1x3, float3x4")]
+        [InlineData("mul", "float1", "float3x4", "float, float3x4")]
+        [InlineData("mul", "float4", "float4x3", "float4, float4x3")]
+        [InlineData("mul", "float4x3", "float3x4", "float4x3, float3x4")]
+        [InlineData("dot", "int", "uint", "int1, int1")]
         public void TestIntrinsicFunctionOverloading(string function, string type1, string type2, string expectedMatchTypes)
         {
             var expressionCode = $"{function}(({type1}) 0, ({type2}) 0)";
             var syntaxTree = SyntaxFactory.ParseExpression(expressionCode);
             var syntaxTreeSource = syntaxTree.Root.ToFullString();
-            Assert.AreEqual(expressionCode, syntaxTreeSource, $"Source should have been {expressionCode} but is {syntaxTreeSource}.");
+            Assert.Equal(expressionCode, syntaxTreeSource);
 
             var expression = (ExpressionSyntax) syntaxTree.Root;
 
@@ -174,7 +176,7 @@ void main()
                 ? $"{invokedFunctionSymbol.Parameters[0].ValueType.ToMarkup()}, {invokedFunctionSymbol.Parameters[1].ValueType.ToMarkup()}"
                 : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
-            Assert.AreEqual(expectedMatchTypes, result, $"Expression should have matched the function overload '{expectedMatchTypes}' but it actually matched '{result}'.");
+            Assert.Equal(expectedMatchTypes, result);
         }
     }
 }

@@ -1,16 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Syntax
 {
-    [TestFixture]
     public class SyntaxTreeNavigationTests
     {
-        [Test]
+        [Fact]
         public void TestGetPreviousTokenIncludingSkippedTokens()
         {
             var text =
@@ -20,11 +18,11 @@ namespace ShaderTools.Tests.Hlsl.Syntax
   int b;
 }";
             var tree = SyntaxFactory.ParseSyntaxTree(SourceText.From(text));
-            Assert.AreEqual(text, tree.Root.ToFullString());
+            Assert.Equal(text, tree.Root.ToFullString());
 
             var tokens = tree.Root.DescendantTokens(descendIntoTrivia: true).Where(t => t.Span.Length > 0).ToList();
-            Assert.AreEqual(11, tokens.Count);
-            Assert.AreEqual("garbage", tokens[6].Text);
+            Assert.Equal(11, tokens.Count);
+            Assert.Equal("garbage", tokens[6].Text);
 
             var list = new List<SyntaxToken>(tokens.Count);
             var token = tree.Root.GetLastToken(includeSkippedTokens: true);
@@ -35,10 +33,10 @@ namespace ShaderTools.Tests.Hlsl.Syntax
             }
             list.Reverse();
 
-            Assert.AreEqual(tokens.Count, list.Count);
+            Assert.Equal(tokens.Count, list.Count);
             for (int i = 0; i < tokens.Count; i++)
             {
-                Assert.AreEqual(list[i], tokens[i]);
+                Assert.Equal(list[i], tokens[i]);
             }
         }
     }

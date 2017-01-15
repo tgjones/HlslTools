@@ -5,8 +5,8 @@ using System.ComponentModel.Composition.Primitives;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Win32;
-using NUnit.Framework;
+using System.Runtime.InteropServices;
+using Microsoft.VisualStudio.Setup.Configuration;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 
 namespace ShaderTools.Editor.VisualStudio.Tests
@@ -14,53 +14,43 @@ namespace ShaderTools.Editor.VisualStudio.Tests
     // Based partly on https://github.com/jaredpar/EditorUtils/blob/master/Src/EditorUtils/EditorHostFactory.cs
     internal abstract class MefTestsBase
     {
-        private static readonly string[] EditorComponents =
+        private static readonly string[] LocalEditorComponents =
+        {
+            // Must include this because several editor options are actually stored as exported information 
+            // on this DLL.  Including most importantly, the tabsize information
+            "Microsoft.VisualStudio.Text.Logic",
+
+            // Include this DLL to get several more EditorOptions including WordWrapStyle
+            "Microsoft.VisualStudio.Text.UI",
+
+            // Include this DLL to get more EditorOptions values and the core editor
+            "Microsoft.VisualStudio.Text.UI.Wpf"
+        };
+
+        private static readonly string[] PrivateEditorComponents =
         {
             // Core editor components
-            "Microsoft.VisualStudio.Platform.VSEditor.dll",
+            @"Common7\IDE\CommonExtensions\Microsoft\Editor\Microsoft.VisualStudio.Platform.VSEditor.dll",
 
             // Not entirely sure why this is suddenly needed
-            "Microsoft.VisualStudio.Text.Internal.dll",
+            @"Common7\IDE\PrivateAssemblies\Microsoft.VisualStudio.Text.Internal.dll",
 
             // Must include this because several editor options are actually stored as exported information 
             // on this DLL.  Including most importantly, the tabsize information
-            "Microsoft.VisualStudio.Text.Logic.dll",
+            @"Common7\IDE\CommonExtensions\Microsoft\Editor\Microsoft.VisualStudio.Text.Logic.dll",
 
             // Include this DLL to get several more EditorOptions including WordWrapStyle
-            "Microsoft.VisualStudio.Text.UI.dll",
+            @"Common7\IDE\CommonExtensions\Microsoft\Editor\Microsoft.VisualStudio.Text.UI.dll",
 
             // Include this DLL to get more EditorOptions values and the core editor
-            "Microsoft.VisualStudio.Text.UI.Wpf.dll"
-        };
-
-        /// <summary>
-        /// A list of key names for versions of Visual Studio which have the editor components 
-        /// necessary to create an EditorHost instance.  Listed in preference order
-        /// </summary>
-        private static readonly string[] VisualStudioSkuKeyNames =
-        {
-            // Standard non-express SKU of Visual Studio
-            "VisualStudio",
-
-            // Windows Desktop express
-            "WDExpress",
-
-            // Visual C# express
-            "VCSExpress",
-
-            // Visual C++ express
-            "VCExpress",
-
-            // Visual Basic Express
-            "VBExpress",
+            @"Common7\IDE\CommonExtensions\Microsoft\Editor\Microsoft.VisualStudio.Text.UI.Wpf.dll"
         };
 
         protected CompositionContainer Container { get; private set; }
 
-        [OneTimeSetUp]
-        public void TestFixtureSetUp()
+        protected MefTestsBase()
         {
-            var editorCatalogs = GetEditorCatalogs(EditorVersion.Vs2017);
+            var editorCatalogs = GetEditorCatalogs();
             var localCatalog = new DirectoryCatalog(".");
             var catalog = new AggregateCatalog(editorCatalogs.Union(new[] { localCatalog }));
             Container = new CompositionContainer(catalog, new UndoExportProvider());
@@ -72,179 +62,127 @@ namespace ShaderTools.Editor.VisualStudio.Tests
         /// Load the list of editor assemblies into the specified catalog list.  This method will
         /// throw on failure
         /// </summary>
-        private static IEnumerable<ComposablePartCatalog> GetEditorCatalogs(EditorVersion editorVersion)
+        private static IEnumerable<ComposablePartCatalog> GetEditorCatalogs()
         {
-            string version;
-            string installDirectory;
-            if (!TryGetEditorInfo(editorVersion, out version, out installDirectory))
+            if (!TryGetInstallDirectory(out string installedVersion, out string installDirectory))
             {
                 throw new Exception("Unable to calculate the version of Visual Studio installed on the machine");
             }
 
-            if (!TryLoadInteropAssembly(installDirectory))
+            LoadInteropAssemblies(installDirectory);
+
+            // Load the locally referenced editor compontents.
+            foreach (var name in LocalEditorComponents)
             {
-                var message = string.Format("Unable to load the interop assemblies.  Install directory is: {0}", installDirectory);
-                throw new Exception(message);
+                var assembly = Assembly.Load(name);
+                yield return new AssemblyCatalog(assembly);
             }
 
-            // Load the core editor compontents from the GAC
-            var versionInfo = string.Format(", Version={0}, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL", version);
-            foreach (var name in EditorComponents)
+            // Load the core editor compontents.
+            foreach (var name in PrivateEditorComponents)
             {
-                var simpleName = name.Substring(0, name.Length - 4);
-                var qualifiedName = simpleName + versionInfo;
-
-                Assembly assembly;
-                try
-                {
-                    assembly = Assembly.Load(qualifiedName);
-                }
-                catch (Exception e)
-                {
-                    var msg = string.Format("Unable to load editor dependency {0}", name);
-                    throw new Exception(msg, e);
-                }
-
+                var fullPath = Path.Combine(installDirectory, name);
+                var assembly = Assembly.LoadFrom(fullPath);
                 yield return new AssemblyCatalog(assembly);
             }
         }
 
-        private static bool TryGetEditorInfo(EditorVersion editorVersion, out string fullVersion, out string installDirectory)
-        {
-            var shortVersion = GetShortVersionString(editorVersion);
-            return TryGetEditorInfoCore(shortVersion, out fullVersion, out installDirectory);
-        }
-
-        private static bool TryGetEditorInfoCore(string shortVersion, out string fullversion, out string installDirectory)
-        {
-            if (TryGetInstallDirectory(shortVersion, out installDirectory))
-            {
-                fullversion = string.Format("{0}.0.0", shortVersion);
-                return true;
-            }
-
-            fullversion = null;
-            return false;
-        }
-
         /// <summary>
-        /// Try and get the installation directory for the specified version of Visual Studio.  This 
-        /// will fail if the specified version of Visual Studio isn't installed
+        /// Try and get the installation directory for any version of Visual Studio 2017+.
         /// </summary>
-        private static bool TryGetInstallDirectory(string shortVersion, out string installDirectory)
-        {
-            foreach (var skuKeyName in VisualStudioSkuKeyNames)
-            {
-                if (TryGetInstallDirectory(skuKeyName, shortVersion, out installDirectory))
-                {
-                    return true;
-                }
-            }
-
-            installDirectory = null;
-            return false;
-        }
-
-        /// <summary>
-        /// Try and get the installation directory for the specified SKU of Visual Studio.  This 
-        /// will fail if the specified version of Visual Studio isn't installed
-        /// </summary>
-        private static bool TryGetInstallDirectory(string skuKeyName, string shortVersion, out string installDirectory)
+        private static bool TryGetInstallDirectory(out string installedVersion, out string installDirectory)
         {
             try
             {
-                var subKeyPath = String.Format(@"Software\Microsoft\{0}\{1}", skuKeyName, shortVersion);
-                using (var key = Registry.LocalMachine.OpenSubKey(subKeyPath, writable: false))
+                var query = GetQuery();
+                var query2 = (ISetupConfiguration2) query;
+                var e = query2.EnumAllInstances();
+
+                var helper = (ISetupHelper) query;
+
+                int fetched;
+                var instances = new ISetupInstance[1];
+                do
                 {
-                    if (key != null)
+                    e.Next(1, instances, out fetched);
+                    if (fetched > 0)
                     {
-                        installDirectory = key.GetValue("InstallDir", null) as string;
-                        if (!String.IsNullOrEmpty(installDirectory))
-                        {
-                            return true;
-                        }
+                        var instance = instances[0];
+
+                        installedVersion = instance.GetInstallationVersion();
+                        installDirectory = instance.GetInstallationPath();
+                        return true;
                     }
                 }
+                while (fetched > 0);
             }
             catch (Exception ex)
             {
-                // Ignore and try the next version
-                Console.WriteLine("Error getting install directory for '{0}', '{1}': {2}", skuKeyName, shortVersion, ex);
+                Console.Error.WriteLine($"Error 0x{ex.HResult:x8}: {ex.Message}");
             }
 
+            installedVersion = null;
             installDirectory = null;
             return false;
         }
 
-        /// <summary>
-        /// The interop assembly isn't included in the GAC and it doesn't offer any MEF components (it's
-        /// just a simple COM interop library).  Hence it needs to be loaded a bit specially.  Just find
-        /// the assembly on disk and hook into the resolve event
-        /// </summary>
-        private static bool TryLoadInteropAssembly(string installDirectory)
+        private const int REGDB_E_CLASSNOTREG = unchecked((int) 0x80040154);
+
+        private static ISetupConfiguration GetQuery()
         {
-            const string interopName = "Microsoft.VisualStudio.Platform.VSEditor.Interop";
-            const string interopNameWithExtension = interopName + ".dll";
-            var interopAssemblyPath = Path.Combine(installDirectory, "PrivateAssemblies");
-            interopAssemblyPath = Path.Combine(interopAssemblyPath, interopNameWithExtension);
             try
             {
-                var interopAssembly = Assembly.LoadFrom(interopAssemblyPath);
-                if (interopAssembly == null)
+                // Try to CoCreate the class object. 
+                return new SetupConfiguration();
+            }
+            catch (COMException ex) when (ex.HResult == REGDB_E_CLASSNOTREG)
+            {
+                // Try to get the class object using app-local call. 
+                ISetupConfiguration query;
+                var result = GetSetupConfiguration(out query, IntPtr.Zero);
+
+                if (result < 0)
                 {
-                    return false;
+                    throw new COMException("Failed to get query", result);
                 }
 
-                var comparer = StringComparer.OrdinalIgnoreCase;
-                AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
-                {
-                    if (comparer.Equals(e.Name, interopAssembly.FullName))
-                    {
-                        return interopAssembly;
-                    }
-
-                    return null;
-                };
-
-                return true;
-            }
-            catch (Exception)
-            {
-                return false;
+                return query;
             }
         }
 
-        private static int GetVersionNumber(EditorVersion version)
-        {
-            switch (version)
-            {
-                case EditorVersion.Vs2010: return 10;
-                case EditorVersion.Vs2012: return 11;
-                case EditorVersion.Vs2013: return 12;
-                case EditorVersion.Vs2015: return 14;
-                case EditorVersion.Vs2017: return 15;
-                default:
-                    throw new Exception(string.Format("Unexpected enum value {0}", version));
-            }
-        }
-
-        private static string GetShortVersionString(EditorVersion version)
-        {
-            var number = GetVersionNumber(version);
-            return string.Format("{0}.0", number);
-        }
+        [DllImport("Microsoft.VisualStudio.Setup.Configuration.Native.dll", ExactSpelling = true, PreserveSig = true)]
+        private static extern int GetSetupConfiguration(
+            [MarshalAs(UnmanagedType.Interface), Out]out ISetupConfiguration configuration,
+            IntPtr reserved);
 
         /// <summary>
-        /// The supported list of editor versions 
+        /// This is for assemblies that don't offer any MEF components (i.e. just a simple COM interop library).
         /// </summary>
-        /// <remarks>These must be listed in ascending version order</remarks>
-        private enum EditorVersion
+        private static void LoadInteropAssemblies(string installDirectory)
         {
-            Vs2010,
-            Vs2012,
-            Vs2013,
-            Vs2015,
-            Vs2017
+            var interopAssemblies = new string[]
+            {
+                "Microsoft.VisualStudio.Platform.VSEditor.Interop.dll",
+                "Microsoft.VisualStudio.Threading.dll"
+            };
+
+            var loadedAssemblies = interopAssemblies
+                .Select(x =>
+                {
+                    var interopAssemblyPath = Path.Combine(installDirectory, "Common7", "IDE", "PrivateAssemblies", x);
+                    var interopAssembly = Assembly.LoadFrom(interopAssemblyPath);
+                    if (interopAssembly == null)
+                        throw new Exception($"Unable to load interop assembly: {x}");
+                    return interopAssembly;
+                })
+                .ToDictionary(x => x.FullName, x => x, StringComparer.OrdinalIgnoreCase);
+
+            AppDomain.CurrentDomain.AssemblyResolve += (sender, e) =>
+            {
+                if (loadedAssemblies.TryGetValue(e.Name, out Assembly assembly))
+                    return assembly;
+                return null;
+            };
         }
 
         protected virtual void OnTestFixtureSetUp()

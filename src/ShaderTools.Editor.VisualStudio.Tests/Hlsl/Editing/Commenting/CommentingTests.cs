@@ -18,16 +18,16 @@
 //*********************************************************//
 
 using Microsoft.VisualStudio.Text;
-using NUnit.Framework;
 using ShaderTools.Editor.VisualStudio.Hlsl.Editing.Commenting;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
+using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.Commenting
 {
-    [TestFixture, Apartment(System.Threading.ApartmentState.STA)]
+    //[Apartment(System.Threading.ApartmentState.STA)]
     internal class CommentingTests : MefTestsBase
     {
-        [Test]
+        [Fact]
         public void TestCommentCurrentLine()
         {
             var buffer = TextBufferUtility.CreateTextBuffer(Container, @"int i;
@@ -38,7 +38,7 @@ float f;");
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"//int i;
+            Assert.Equal(@"//int i;
 float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
 
@@ -46,12 +46,12 @@ float f;",
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"//int i;
+            Assert.Equal(@"//int i;
 //float f;",
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestUnCommentCurrentLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -62,7 +62,7 @@ float f;",
 
             view.CommentOrUncommentBlock(false);
 
-            Assert.AreEqual(@"int i;
+            Assert.Equal(@"int i;
 //float f;",
                  view.TextBuffer.CurrentSnapshot.GetText());
 
@@ -70,12 +70,12 @@ float f;",
 
             view.CommentOrUncommentBlock(false);
 
-            Assert.AreEqual(@"int i;
+            Assert.Equal(@"int i;
 float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestComment()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -90,12 +90,12 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"//int i;
+            Assert.Equal(@"//int i;
 //float f;",
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentEmptyLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -111,13 +111,13 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"//int i;
+            Assert.Equal(@"//int i;
 
 //float f;",
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentWhiteSpaceLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -133,13 +133,13 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"//int i;
+            Assert.Equal(@"//int i;
    
 //float f;",
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentIndented()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -160,7 +160,7 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"void f(){
+            Assert.Equal(@"void f(){
     //int i;
     //half h;
     float f;
@@ -168,7 +168,7 @@ float f;"));
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentIndentedBlankLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -190,7 +190,7 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"void f(){
+            Assert.Equal(@"void f(){
     //int i;
 
     //half h;
@@ -199,7 +199,7 @@ float f;"));
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentBlankLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -211,13 +211,13 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"int i;
+            Assert.Equal(@"int i;
 
 float f;",
              view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentIndentedWhiteSpaceLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -239,7 +239,7 @@ float f;",
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"void f(){
+            Assert.Equal(@"void f(){
     //int i;
   
     //half h;
@@ -248,7 +248,7 @@ float f;",
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestUnCommentIndented()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -269,7 +269,7 @@ float f;",
 
             view.CommentOrUncommentBlock(false);
 
-            Assert.AreEqual(@"void f(){
+            Assert.Equal(@"void f(){
     int i;
     half h;
     float f;
@@ -277,7 +277,7 @@ float f;",
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestUnComment()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -292,12 +292,12 @@ float f;",
 
             view.CommentOrUncommentBlock(false);
 
-            Assert.AreEqual(@"int i;
+            Assert.Equal(@"int i;
 float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentStartOfLastLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -312,12 +312,12 @@ float f;"));
 
             view.CommentOrUncommentBlock(true);
 
-            Assert.AreEqual(@"//int i;
+            Assert.Equal(@"//int i;
 float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Test]
+        [Fact]
         public void TestCommentAfterCodeIsNotUncommented()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -333,7 +333,7 @@ float f;"));
 
             view.CommentOrUncommentBlock(false);
 
-            Assert.AreEqual(@"int i;//comment that should stay a comment;
+            Assert.Equal(@"int i;//comment that should stay a comment;
 half h;//another comment that should stay a comment;
 float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());

@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Tests.Hlsl.Support;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Formatting
 {
-    [TestFixture]
     internal class FormatterTests
     {
-        [Test]
+        [Fact]
         public void Annotations()
         {
             const string before = @"
@@ -38,7 +36,7 @@ float bumpHeight <
 > = 0.5;");
         }
 
-        [Test]
+        [Fact]
         public void Attributes()
         {
             const string before = @"
@@ -59,7 +57,7 @@ void main()
 }");
         }
 
-        [Test]
+        [Fact]
         public void BuiltInTypes()
         {
             const string before = @"
@@ -127,7 +125,7 @@ samplerCUBE envMapSampler = sampler_state
 };");
         }
 
-        [Test]
+        [Fact]
         public void ConditionalExpression()
         {
             const string before = @"
@@ -143,7 +141,7 @@ void main()
 }");
         }
 
-        [Test]
+        [Fact]
         public void Directives()
         {
             const string before = @"
@@ -196,7 +194,7 @@ void main()
 #line  20  ""Myfile.hlsl"" ", includes: includes);
         }
 
-        [Test]
+        [Fact]
         public void MacroExpansion()
         {
             const string before = @"
@@ -214,7 +212,7 @@ int i = FOO;
 int j = BAR(1, 2);");
         }
 
-        [Test]
+        [Fact]
         public void StateArrays()
         {
             const string before = @"
@@ -243,31 +241,31 @@ RasterizerState g_rasterizerState[2]
 };");
         }
 
-        [Test]
+        [Fact]
         public void Empty()
         {
             AssertFormat("", "");
         }
 
-        [Test]
+        [Fact]
         public void VariableDeclaration1()
         {
             AssertFormat("int  i;", "int i;");
         }
 
-        [Test]
+        [Fact]
         public void VariableDeclaration2()
         {
             AssertFormat("int  i; ", "int i;");
         }
 
-        [Test]
+        [Fact]
         public void VariableDeclarationWithEqualsClauseInitializer()
         {
             AssertFormat("int  i  =  0 ;", "int i = 0;");
         }
 
-        [Test]
+        [Fact]
         public void VariableDeclarationWithInlineComments()
         {
             AssertFormat("int  i  /*  comment */    /* another comment */  ;", "int i /*  comment */ /* another comment */;");
@@ -275,19 +273,19 @@ RasterizerState g_rasterizerState[2]
             AssertFormat("int  /*  comment */    /* another comment */   i;", "int /*  comment */ /* another comment */ i;");
         }
 
-        [Test]
+        [Fact]
         public void VariableDeclarationWithMultiTokenType()
         {
             AssertFormat("unsigned  int  i  ;", "unsigned int i;");
         }
 
-        [Test]
+        [Fact]
         public void VariableDeclarationWithMultipleVariables()
         {
             AssertFormat("int  i=0,j;", "int i = 0, j;");
         }
 
-        [Test]
+        [Fact]
         public void ForLoop()
         {
             AssertFormat(@"
@@ -303,7 +301,7 @@ void main()
 }");
         }
 
-        [Test]
+        [Fact]
         public void IndentBlockContents()
         {
             const string before = @"
@@ -342,7 +340,7 @@ int Method()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void IndentBraces()
         {
             const string before = @"
@@ -381,7 +379,7 @@ int Method()
     }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void IndentSwitchCase()
         {
             const string before = @"
@@ -440,7 +438,7 @@ void main(int foo)
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void IndentPreprocessorDirectives()
         {
             const string before = @"
@@ -509,7 +507,7 @@ void main(int foo)
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineForTypes()
         {
             const string before = @"
@@ -564,7 +562,7 @@ class C
 };", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineWithInterveningSingleLineComment()
         {
             const string before = @"
@@ -611,7 +609,7 @@ struct S
 };", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineForTechniquesAndPasses()
         {
             const string before = @"
@@ -655,7 +653,7 @@ technique T
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineForFunctions()
         {
             const string before = @"
@@ -689,7 +687,7 @@ float4 main()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineForControlBlocks()
         {
             const string before = @"
@@ -728,7 +726,7 @@ float4 main()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineForStateBlocks()
         {
             const string before = @"
@@ -765,7 +763,7 @@ DepthStencilState DepthDisabling
 };", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BraceOnNewLineForArrayInitializerBraces()
         {
             const string before = @"
@@ -824,7 +822,7 @@ float3 wave[2] =
 };", options: options);
         }
 
-        [Test]
+        [Fact]
         public void ElseOnNewLine()
         {
             const string before = @"
@@ -871,7 +869,7 @@ void main()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void FunctionDeclarationSpacing()
         {
             const string before = @"
@@ -926,7 +924,7 @@ void Bar ( int x )
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void FunctionCallSpacing()
         {
             const string before = @"
@@ -987,7 +985,7 @@ void Bar(int x)
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void ControlFlowStatements()
         {
             const string before = @"
@@ -1100,7 +1098,7 @@ void main()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void SpaceWithinExpressionParentheses()
         {
             const string before = @"
@@ -1128,7 +1126,7 @@ void main()
 }", options: new FormattingOptions { Spacing = new SpacingOptions { InsertSpacesWithinParenthesesOfExpressions = true } });
         }
 
-        [Test]
+        [Fact]
         public void TypeCastSpacing()
         {
             const string before = @"
@@ -1166,7 +1164,7 @@ void main()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void DeclarationStatementSpacing()
         {
             const string before = @"
@@ -1180,7 +1178,7 @@ float3 pos = float3(1, 2, 3);
 ");
         }
 
-        [Test]
+        [Fact]
         public void SemanticRegisterPackOffsetSpacing()
         {
             const string before = @"
@@ -1241,7 +1239,7 @@ cbuffer cbPerObject : register( b0 )
 ", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BracketsSpacing()
         {
             const string before = @"
@@ -1292,7 +1290,7 @@ void main()
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BaseTypeSpacing()
         {
             const string before = @"
@@ -1363,7 +1361,7 @@ class cHemiAmbientLight : cAmbientLight
 ", options: options);
         }
 
-        [Test]
+        [Fact]
         public void CommaDotSpacing()
         {
             const string before = @"
@@ -1408,7 +1406,7 @@ void main()
 ", options: options);
         }
 
-        [Test]
+        [Fact]
         public void BinaryOperatorSpacing()
         {
             const string before = @"
@@ -1444,7 +1442,7 @@ void main(int x, int y)
 }", options: options);
         }
 
-        [Test]
+        [Fact]
         public void DoNotKeepStatementAndMemberDeclarationsOnSameLine()
         {
             const string before = @"
@@ -1469,7 +1467,7 @@ void main()
 }");
         }
 
-        [Test]
+        [Fact]
         public void LeaveMultilineExpressionsAlone()
         {
             const string before = @"
@@ -1509,7 +1507,7 @@ y);
 ");
         }
 
-        [Test]
+        [Fact]
         public void TrailingWhitespace()
         {
             const string before = @"
@@ -1543,7 +1541,7 @@ void main()
 }");
         }
 
-        [Test]
+        [Fact]
         public void KitchenSink()
         {
             const string before = @"
@@ -1618,7 +1616,7 @@ struct S
 ", includes: includes);
         }
 
-        [Test]
+        [Fact]
         public void LeaveSkippedTokensAlone()
         {
             // This is the current behaviour, but it's not ideal.
@@ -1656,7 +1654,7 @@ float f3;
             // Assert.
             if (!allowSyntaxErrors)
                 ShaderTestUtility.CheckForParseErrors(parse(formattedCode));
-            Assert.That(formattedCode, Is.EqualTo(expectedNewText));
+            Assert.Equal(expectedNewText, formattedCode);
         }
 
         // TODO: CanFormatInvalidCode

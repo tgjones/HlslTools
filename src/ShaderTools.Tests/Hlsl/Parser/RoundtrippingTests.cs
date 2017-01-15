@@ -1,19 +1,17 @@
 ﻿using System.IO;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Tests.Hlsl.Support;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Parser
 {
-    [TestFixture]
     public class RoundtrippingTests
     {
-        [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetTestShaders))]
+        [Theory]
+        [MemberData(nameof(ShaderTestUtility.GetTestShaders), MemberType = typeof(ShaderTestUtility))]
         public void CanBuildSyntaxTree(string testFile)
         {
-            testFile = Path.Combine(TestContext.CurrentContext.TestDirectory, testFile);
-
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
@@ -23,7 +21,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
 
             // Check roundtripping.
             var roundtrippedText = syntaxTree.Root.ToFullString();
-            Assert.That(roundtrippedText, Is.EqualTo(sourceCode));
+            Assert.Equal(sourceCode, roundtrippedText);
         }
     }
 }

@@ -4,11 +4,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using NUnit.Framework;
 using ShaderTools.Editor.VisualStudio.Core.Tagging;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
+using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
 {
@@ -16,12 +16,11 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
         where TTagger : AsyncTagger<TTag>
         where TTag : ITag
     {
-        [TestCaseSource(typeof(VsShaderTestUtility), nameof(VsShaderTestUtility.GetTestShaders))]
-        public async Task CanDoTagging(string testFile)
+        protected async Task RunTestAsync(string testFile)
         {
             // Arrange.
             VisualStudioSourceTextFactory.Instance = Container.GetExportedValue<VisualStudioSourceTextFactory>();
-            var sourceCode = File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, testFile));
+            var sourceCode = File.ReadAllText(testFile);
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
             var backgroundParser = new BackgroundParser(textBuffer);
             var snapshot = textBuffer.CurrentSnapshot;
@@ -36,7 +35,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
 
             // Assert.
             if (MustCreateTagSpans)
-                Assert.That(tagSpans.Any());
+                Assert.NotEmpty(tagSpans);
 
             backgroundParser.Dispose();
         }

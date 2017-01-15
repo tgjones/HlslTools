@@ -1,416 +1,418 @@
 using System.Collections.Generic;
-using NUnit.Framework;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Parser
 {
-    [TestFixture]
     public class ErrorRecoveryTests
     {
-        [Test]
+        [Fact]
         public void HandlesSingleMissingToken()
         {
             var ast = BuildSyntaxTree("struct s int a; };");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0], Is.TypeOf<TypeDeclarationStatementSyntax>());
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
+            Assert.IsType<TypeDeclarationStatementSyntax>(ast.ChildNodes[0]);
 
             var typeDeclarationSyntax = (TypeDeclarationStatementSyntax) ast.ChildNodes[0];
-            Assert.That(typeDeclarationSyntax.Type.Kind, Is.EqualTo(SyntaxKind.StructType));
+            Assert.Equal(SyntaxKind.StructType, typeDeclarationSyntax.Type.Kind);
 
             var structDefinitionSyntax = (StructTypeSyntax)typeDeclarationSyntax.Type;
-            Assert.That(structDefinitionSyntax.StructKeyword.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.Name.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.OpenBraceToken.IsMissing, Is.True);
-            Assert.That(structDefinitionSyntax.CloseBraceToken.IsMissing, Is.False);
+            Assert.False(structDefinitionSyntax.StructKeyword.IsMissing);
+            Assert.False(structDefinitionSyntax.Name.IsMissing);
+            Assert.True(structDefinitionSyntax.OpenBraceToken.IsMissing);
+            Assert.False(structDefinitionSyntax.CloseBraceToken.IsMissing);
 
-            Assert.That(typeDeclarationSyntax.SemicolonToken.IsMissing, Is.False);
+            Assert.False(typeDeclarationSyntax.SemicolonToken.IsMissing);
         }
 
-        [Test]
+        [Fact]
         public void HandlesSingleExtraToken()
         {
             var ast = BuildSyntaxTree("struct s t { int a; };");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(ast.ChildNodes[0], Is.TypeOf<TypeDeclarationStatementSyntax>());
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
+            Assert.IsType<TypeDeclarationStatementSyntax>(ast.ChildNodes[0]);
 
             var typeDeclarationSyntax = (TypeDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(typeDeclarationSyntax.Type.Kind, Is.EqualTo(SyntaxKind.StructType));
+            Assert.Equal(SyntaxKind.StructType, typeDeclarationSyntax.Type.Kind);
 
             var structDefinitionSyntax = (StructTypeSyntax)typeDeclarationSyntax.Type;
-            Assert.That(structDefinitionSyntax.StructKeyword.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.Name.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.OpenBraceToken.LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(structDefinitionSyntax.CloseBraceToken.IsMissing, Is.False);
+            Assert.False(structDefinitionSyntax.StructKeyword.IsMissing);
+            Assert.False(structDefinitionSyntax.Name.IsMissing);
+            Assert.False(structDefinitionSyntax.OpenBraceToken.IsMissing);
+            Assert.Equal(1, structDefinitionSyntax.OpenBraceToken.LeadingTrivia.Length);
+            Assert.False(structDefinitionSyntax.CloseBraceToken.IsMissing);
 
-            Assert.That(typeDeclarationSyntax.SemicolonToken.IsMissing, Is.False);
+            Assert.False(typeDeclarationSyntax.SemicolonToken.IsMissing);
         }
 
-        [Test]
+        [Fact]
         public void HandlesMultipleExtraTokens()
         {
             var ast = BuildSyntaxTree("struct s t { { int a; }; int b;");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
-            Assert.That(ast.ChildNodes[0], Is.TypeOf<TypeDeclarationStatementSyntax>());
+            Assert.NotNull(ast);
+            Assert.Equal(3, ast.ChildNodes.Count);
+            Assert.IsType<TypeDeclarationStatementSyntax>(ast.ChildNodes[0]);
 
             var typeDeclarationSyntax = (TypeDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(typeDeclarationSyntax.Type.Kind, Is.EqualTo(SyntaxKind.StructType));
+            Assert.Equal(SyntaxKind.StructType, typeDeclarationSyntax.Type.Kind);
 
             var structDefinitionSyntax = (StructTypeSyntax)typeDeclarationSyntax.Type;
-            Assert.That(structDefinitionSyntax.StructKeyword.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.Name.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(structDefinitionSyntax.OpenBraceToken.LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(structDefinitionSyntax.CloseBraceToken.IsMissing, Is.False);
+            Assert.False(structDefinitionSyntax.StructKeyword.IsMissing);
+            Assert.False(structDefinitionSyntax.Name.IsMissing);
+            Assert.False(structDefinitionSyntax.OpenBraceToken.IsMissing);
+            Assert.Equal(1, structDefinitionSyntax.OpenBraceToken.LeadingTrivia.Length);
+            Assert.False(structDefinitionSyntax.CloseBraceToken.IsMissing);
 
-            Assert.That(typeDeclarationSyntax.SemicolonToken.IsMissing, Is.False);
+            Assert.False(typeDeclarationSyntax.SemicolonToken.IsMissing);
 
-            Assert.That(ast.ChildNodes[1], Is.TypeOf<VariableDeclarationStatementSyntax>());
+            Assert.IsType< VariableDeclarationStatementSyntax>(ast.ChildNodes[1]);
             AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteDeclaration()
         {
             var ast = BuildSyntaxTree("struct s { int a; }; b");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
             var eof = (SyntaxToken) ast.ChildNodes[1];
-            Assert.That(eof.LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(eof.LeadingTrivia[0].ToString(), Is.EqualTo("b"));
+            Assert.Equal(1, eof.LeadingTrivia.Length);
+            Assert.Equal("b", eof.LeadingTrivia[0].ToString());
         }
 
-        [Test]
+        [Fact]
         public void HandlesGarbageAtEndOfFile()
         {
             var ast = BuildSyntaxTree("struct s { int a; }; b $");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
             var eof = (SyntaxToken)ast.ChildNodes[1];
-            Assert.That(eof.LeadingTrivia, Has.Length.EqualTo(2));
-            Assert.That(eof.LeadingTrivia[0].ToString(), Is.EqualTo("b"));
-            Assert.That(eof.LeadingTrivia[1].ToString(), Is.EqualTo("$"));
+            Assert.Equal(2, eof.LeadingTrivia.Length);
+            Assert.Equal("b", eof.LeadingTrivia[0].ToString());
+            Assert.Equal("$", eof.LeadingTrivia[1].ToString());
         }
 
-        [Test]
+        [Fact]
         public void HandlesSingleInvalidToken()
         {
             var ast = BuildSyntaxTree("0");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(1));
+            Assert.NotNull(ast);
+            Assert.Equal(1, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.EndOfFileToken);
-            Assert.That(((SyntaxToken)ast.ChildNodes[0]).LeadingTrivia, Has.Length.EqualTo(1));
+            Assert.Equal(1, ((SyntaxToken)ast.ChildNodes[0]).LeadingTrivia.Length);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteStruct()
         {
             var ast = BuildSyntaxTree("struct s {");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax) ast.ChildNodes[0];
-            Assert.That(typeDeclarationStatement.Type.Kind, Is.EqualTo(SyntaxKind.StructType));
+            Assert.Equal(SyntaxKind.StructType, typeDeclarationStatement.Type.Kind);
             var sd = (StructTypeSyntax) typeDeclarationStatement.Type;
-            Assert.That(sd.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
-            Assert.That(sd.Fields, Has.Count.EqualTo(0));
-            Assert.That(typeDeclarationStatement.SemicolonToken.IsMissing, Is.True);
+            Assert.False(sd.OpenBraceToken.IsMissing);
+            Assert.True(sd.CloseBraceToken.IsMissing);
+            Assert.Empty(sd.Fields);
+            Assert.True(typeDeclarationStatement.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteClass()
         {
             var ast = BuildSyntaxTree("class c {");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(typeDeclarationStatement.Type.Kind, Is.EqualTo(SyntaxKind.ClassType));
+            Assert.Equal(SyntaxKind.ClassType, typeDeclarationStatement.Type.Kind);
             var sd = (ClassTypeSyntax)typeDeclarationStatement.Type;
-            Assert.That(sd.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
-            Assert.That(sd.Members, Has.Count.EqualTo(0));
-            Assert.That(typeDeclarationStatement.SemicolonToken.IsMissing, Is.True);
+            Assert.False(sd.OpenBraceToken.IsMissing);
+            Assert.True(sd.CloseBraceToken.IsMissing);
+            Assert.Empty(sd.Members);
+            Assert.True(typeDeclarationStatement.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteInterface()
         {
             var ast = BuildSyntaxTree("interface i {");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(typeDeclarationStatement.Type.Kind, Is.EqualTo(SyntaxKind.InterfaceType));
+            Assert.Equal(SyntaxKind.InterfaceType, typeDeclarationStatement.Type.Kind);
             var sd = (InterfaceTypeSyntax)typeDeclarationStatement.Type;
-            Assert.That(sd.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
-            Assert.That(sd.Methods, Has.Count.EqualTo(0));
-            Assert.That(typeDeclarationStatement.SemicolonToken.IsMissing, Is.True);
+            Assert.False(sd.OpenBraceToken.IsMissing);
+            Assert.True(sd.CloseBraceToken.IsMissing);
+            Assert.Empty(sd.Methods);
+            Assert.True(typeDeclarationStatement.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteCBuffer()
         {
             var ast = BuildSyntaxTree("cbuffer cb {");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.ConstantBufferDeclaration);
             var sd = (ConstantBufferSyntax)ast.ChildNodes[0];
-            Assert.That(sd.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(sd.CloseBraceToken.IsMissing, Is.True);
-            Assert.That(sd.SemicolonToken, Is.Null);
-            Assert.That(sd.Declarations, Has.Count.EqualTo(0));
+            Assert.False(sd.OpenBraceToken.IsMissing);
+            Assert.True(sd.CloseBraceToken.IsMissing);
+            Assert.Null(sd.SemicolonToken);
+            Assert.Empty(sd.Declarations);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteSamplerState()
         {
             var ast = BuildSyntaxTree("SamplerState s {");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
+
             var sd = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(sd.Declaration.IsMissing, Is.False);
-            Assert.That(sd.Declaration.Type.ToString(), Is.EqualTo("SamplerState"));
-            Assert.That(sd.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(sd.Declaration.Variables[0].Identifier.ToString(), Is.EqualTo("s"));
-            Assert.That(sd.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.StateInitializer));
+            Assert.False(sd.Declaration.IsMissing);
+            Assert.Equal("SamplerState", sd.Declaration.Type.ToString());
+            Assert.Equal(1, sd.Declaration.Variables.Count);
+            Assert.Equal("s", sd.Declaration.Variables[0].Identifier.ToString());
+            Assert.Equal(SyntaxKind.StateInitializer, sd.Declaration.Variables[0].Initializer.Kind);
+
             var initializer = (StateInitializerSyntax) sd.Declaration.Variables[0].Initializer;
-            Assert.That(initializer.OpenBraceToken.IsMissing, Is.False);
-            Assert.That(initializer.Properties.Count, Is.EqualTo(0));
-            Assert.That(initializer.CloseBraceToken.IsMissing, Is.True);
-            Assert.That(sd.SemicolonToken.IsMissing, Is.True);
+            Assert.False(initializer.OpenBraceToken.IsMissing);
+            Assert.Empty(initializer.Properties);
+            Assert.True(initializer.CloseBraceToken.IsMissing);
+            Assert.True(sd.SemicolonToken.IsMissing);
+
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteFunctionDeclaration()
         {
             var ast = BuildSyntaxTree("void main(");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
             var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
-            Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
-            Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
-            Assert.That(sd.ParameterList.OpenParenToken.IsMissing, Is.False);
-            Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
-            Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.True);
-            Assert.That(sd.SemicolonToken.IsMissing, Is.True);
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.Empty(sd.ParameterList.Parameters);
+            Assert.True(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.True(sd.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteFunctionDeclarationWithSubsequentFunctionDeclaration()
         {
             var ast = BuildSyntaxTree(@"void main(
                 float4 PS(float a) {}");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
+            Assert.NotNull(ast);
+            Assert.Equal(3, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
             var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
-            Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
-            Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
-            Assert.That(sd.ParameterList.OpenParenToken.IsMissing, Is.False);
-            Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
-            Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.True);
-            Assert.That(sd.SemicolonToken.IsMissing, Is.True);
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.Empty(sd.ParameterList.Parameters);
+            Assert.True(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.True(sd.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.FunctionDefinition);
             AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteFunctionDeclarationWithSubsequentFunctionDeclarationWithNoArguments()
         {
             var ast = BuildSyntaxTree(@"void main(
                 float4 PS() {}");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
+            Assert.NotNull(ast);
+            Assert.Equal(3, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
             var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
-            Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
-            Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
-            Assert.That(sd.ParameterList.OpenParenToken.IsMissing, Is.False);
-            Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
-            Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.True);
-            Assert.That(sd.SemicolonToken.IsMissing, Is.True);
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.Empty(sd.ParameterList.Parameters);
+            Assert.True(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.True(sd.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.FunctionDefinition);
             AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesInvalidArrayDeclaration()
         {
             var ast = BuildSyntaxTree(@"h []");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(1));
+            Assert.NotNull(ast);
+            Assert.Equal(1, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteArrayInitializer()
         {
             var ast = BuildSyntaxTree("int a[] = { 0 ");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var sd = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(sd.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(sd.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(1, sd.Declaration.Variables.Count);
+            Assert.Equal(SyntaxKind.EqualsValueClause, sd.Declaration.Variables[0].Initializer.Kind);
             var initializer = (EqualsValueClauseSyntax) sd.Declaration.Variables[0].Initializer;
-            Assert.That(initializer.EqualsToken.IsMissing, Is.False);
-            Assert.That(initializer.Value.Kind, Is.EqualTo(SyntaxKind.ArrayInitializerExpression));
-            Assert.That(sd.SemicolonToken.IsMissing, Is.True);
+            Assert.False(initializer.EqualsToken.IsMissing);
+            Assert.Equal(SyntaxKind.ArrayInitializerExpression, initializer.Value.Kind);
+            Assert.True(sd.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesIncompleteForStatementExpressionList()
         {
             var ast = BuildSyntaxTree("void main() { for (i = 0, }");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDefinition);
             var sd = (FunctionDefinitionSyntax)ast.ChildNodes[0];
-            Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
-            Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
-            Assert.That(sd.ParameterList.OpenParenToken.IsMissing, Is.False);
-            Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
-            Assert.That(sd.Body.Statements, Has.Count.EqualTo(1));
-            Assert.That(sd.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ForStatement));
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.Empty(sd.ParameterList.Parameters);
+            Assert.Equal(1, sd.Body.Statements.Count);
+            Assert.Equal(SyntaxKind.ForStatement, sd.Body.Statements[0].Kind);
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
-            Assert.That(forStatement.Initializer, Is.Not.Null);
-            Assert.That(forStatement.Initializer.Kind, Is.EqualTo(SyntaxKind.CompoundExpression));
+            Assert.NotNull(forStatement.Initializer);
+            Assert.Equal(SyntaxKind.CompoundExpression, forStatement.Initializer.Kind);
             var compExpr = (CompoundExpressionSyntax) forStatement.Initializer;
-            Assert.That(compExpr.Left.Kind, Is.EqualTo(SyntaxKind.SimpleAssignmentExpression));
-            Assert.That(compExpr.Right.IsMissing, Is.True);
-            Assert.That(compExpr.Right.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
-            Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.False);
-            Assert.That(sd.SemicolonToken, Is.Null);
+            Assert.Equal(SyntaxKind.SimpleAssignmentExpression, compExpr.Left.Kind);
+            Assert.True(compExpr.Right.IsMissing);
+            Assert.Equal(SyntaxKind.IdentifierName, compExpr.Right.Kind);
+            Assert.False(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.Null(sd.SemicolonToken);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void HandlesExtraForStatementIncrementorList()
         {
             var ast = BuildSyntaxTree("void main() { for (i = 0; i < 10; i++_) {}}");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDefinition);
             var sd = (FunctionDefinitionSyntax)ast.ChildNodes[0];
-            Assert.That(sd.ReturnType.ToString(), Is.EqualTo("void"));
-            Assert.That(sd.Name.ToString(), Is.EqualTo("main"));
-            Assert.That(sd.ParameterList.OpenParenToken.IsMissing, Is.False);
-            Assert.That(sd.ParameterList.Parameters, Has.Count.EqualTo(0));
-            Assert.That(sd.Body.Statements, Has.Count.EqualTo(1));
-            Assert.That(sd.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ForStatement));
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.Empty(sd.ParameterList.Parameters);
+            Assert.Equal(1, sd.Body.Statements.Count);
+            Assert.Equal(SyntaxKind.ForStatement, sd.Body.Statements[0].Kind);
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
-            Assert.That(forStatement.Initializer, Is.Not.Null);
-            Assert.That(forStatement.Initializer.Kind, Is.EqualTo(SyntaxKind.SimpleAssignmentExpression));
-            Assert.That(sd.ParameterList.CloseParenToken.IsMissing, Is.False);
-            Assert.That(sd.SemicolonToken, Is.Null);
+            Assert.Equal(SyntaxKind.SimpleAssignmentExpression, forStatement.Initializer.Kind);
+            Assert.False(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.Null(sd.SemicolonToken);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void CorrectlyReportsInvalidIdentifier()
         {
             var ast = BuildSyntaxTree("float 4; float f3;");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(3));
+            Assert.NotNull(ast);
+            Assert.Equal(3, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(vds.Declaration.Type.ToString(), Is.EqualTo("float"));
-            Assert.That(vds.Declaration.Variables[0].Identifier.IsMissing, Is.True);
-            Assert.That(vds.Declaration.Variables[0].Identifier.Diagnostics, Has.Length.EqualTo(1));
-            Assert.That(vds.SemicolonToken.LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(vds.SemicolonToken.LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.SkippedTokensTrivia));
+            Assert.Equal("float", vds.Declaration.Type.ToString());
+            Assert.True(vds.Declaration.Variables[0].Identifier.IsMissing);
+            Assert.Equal(1, vds.Declaration.Variables[0].Identifier.Diagnostics.Length);
+            Assert.Equal(1, vds.SemicolonToken.LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.SkippedTokensTrivia, vds.SemicolonToken.LeadingTrivia[0].Kind);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.VariableDeclarationStatement);
             AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
         }
 
-        [Test]
+        [Fact]
         public void CorrectlyReportsInvalidKeyword()
         {
             var ast = BuildSyntaxTree("int f; in");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(vds.Declaration.Type.ToString(), Is.EqualTo("int"));
-            Assert.That(vds.Declaration.Variables[0].Identifier.IsMissing, Is.False);
+            Assert.Equal("int", vds.Declaration.Type.ToString());
+            Assert.False(vds.Declaration.Variables[0].Identifier.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
-            Assert.That(ast.ChildNodes[1].Diagnostics, Has.Length.EqualTo(1));
-            Assert.That(((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.SkippedTokensTrivia));
+            Assert.Equal(1, ast.ChildNodes[1].Diagnostics.Length);
+            Assert.Equal(1, ((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.SkippedTokensTrivia, ((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia[0].Kind);
         }
 
-        [Test]
+        [Fact]
         public void CorrectlyReportsSkippedTokens()
         {
             var ast = BuildSyntaxTree("4 4 4; float f3;");
 
-            Assert.That(ast, Is.Not.Null);
-            Assert.That(ast.ChildNodes, Has.Count.EqualTo(2));
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.SkippedTokensTrivia));
-            Assert.That(((SkippedTokensTriviaSyntax) vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0]).Tokens, Has.Count.EqualTo(4));
-            Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics, Has.Length.EqualTo(1));
-            Assert.That(vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics[0].Message, Is.EqualTo("Unexpected token '4'."));
+            Assert.Equal(1, vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.SkippedTokensTrivia, vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0].Kind);
+            Assert.Equal(4, ((SkippedTokensTriviaSyntax) vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0]).Tokens.Count);
+            Assert.Equal(1, vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics.Length);
+            Assert.Equal("Unexpected token '4'.", vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics[0].Message);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }
 
         private static void AssertNodeKind(SyntaxNodeBase node, SyntaxKind kind)
         {
-            Assert.AreEqual((ushort) kind, node.RawKind);
+            Assert.Equal((ushort) kind, node.RawKind);
         }
 
-        [TestCaseSource(nameof(GetInProgressMethodCode))]
+        [Theory]
+        [MemberData(nameof(GetInProgressMethodCode))]
         public void HandlesTypingMethod(string code)
         {
             var ast = BuildSyntaxTree(code);
 
-            Assert.That(ast, Is.Not.Null);
+            Assert.NotNull(ast);
         }
 
-        private static IEnumerable<TestCaseData> GetInProgressMethodCode()
+        private static IEnumerable<object> GetInProgressMethodCode()
         {
             const string code = @"void main()
 {
@@ -429,16 +431,12 @@ namespace ShaderTools.Tests.Hlsl.Parser
 }";
 
             for (var i = 1; i <= code.Length; i++)
-                yield return new TestCaseData(code.Substring(0, i))
-                {
-                    TestName = $"{{m}} with {i} characters"
-                };
         }
 
         private static CompilationUnitSyntax BuildSyntaxTree(string code)
         {
             var compilationUnit = SyntaxFactory.ParseCompilationUnit(SourceText.From(code));
-            Assert.That(compilationUnit.ToFullString(), Is.EqualTo(code));
+            Assert.Equal(code, compilationUnit.ToFullString());
             return compilationUnit;
         }
     }

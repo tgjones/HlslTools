@@ -1,15 +1,13 @@
-﻿using NUnit.Framework;
-using ShaderTools.Core.Text;
+﻿using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting;
+using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
 {
-    [TestFixture]
     public class SmartIndentTests
     {
-        [Test]
+        [Fact]
         public void TestIndent()
         {
             T(@"struct S
@@ -63,7 +61,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
             var code = codeWithCaret.Remove(caret, 1);
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
             var actualIndent = SmartIndent.FindTotalParentChainIndent(syntaxTree.Root, caret, 0);
-            Assert.AreEqual(expectedIndent, actualIndent);
+            Assert.Equal(expectedIndent, actualIndent);
         }
     }
 }

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
 using ShaderTools.Tests.Hlsl.Support;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Parser
 {
-    [TestFixture]
     public class PreprocessorTests
     {
-        [Test]
+        [Fact]
         public void TestDefineAndTrueEqualityExpression()
         {
             const string text = @"
@@ -34,7 +33,7 @@ float b;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestNegDefineWithNoValue()
         {
             const string text = @"
@@ -54,7 +53,7 @@ FOO
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestNegDefineWithNoValueAndEqualityExpression()
         {
             const string text = @"
@@ -73,7 +72,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestDefineAndArithmeticExpression()
         {
             const string text = @"
@@ -94,7 +93,7 @@ float b;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestDefineAndFalseEqualityExpression()
         {
             const string text = @"
@@ -115,7 +114,7 @@ float b;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestDefineWithParentheses()
         {
             const string text = @"
@@ -128,7 +127,7 @@ float b;
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestDefineWithContinuation()
         {
             const string text = @"
@@ -142,7 +141,7 @@ float b;
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestMacroExpansionOrder()
         {
             const string text = @"
@@ -157,24 +156,24 @@ int i = TABLESIZE;
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("i"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("i", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var equalsValueClause = (EqualsValueClauseSyntax)varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, equalsValueClause.Value.Kind);
 
             var numericExpr = (LiteralExpressionSyntax) equalsValueClause.Value;
-            Assert.That(numericExpr.Token.Text, Is.EqualTo("1024"));
+            Assert.Equal("1024", numericExpr.Token.Text);
         }
 
-        [Test]
+        [Fact]
         public void TestFunctionLikeDefine()
         {
             const string text = @"
@@ -188,30 +187,30 @@ float g = FOO(3, 4);
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(3));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(3, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax) node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("f"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("f", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var equalsValueClause = (EqualsValueClauseSyntax) varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.AddExpression));
+            Assert.Equal(SyntaxKind.AddExpression, equalsValueClause.Value.Kind);
 
             var addExpr = (BinaryExpressionSyntax) equalsValueClause.Value;
-            Assert.That(addExpr.Left.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
-            Assert.That(((LiteralExpressionSyntax) addExpr.Left).Token.Text, Is.EqualTo("1"));
-            Assert.That(addExpr.OperatorToken.Kind, Is.EqualTo(SyntaxKind.PlusToken));
-            Assert.That(addExpr.Right.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
-            Assert.That(((LiteralExpressionSyntax)addExpr.Right).Token.Text, Is.EqualTo("2"));
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, addExpr.Left.Kind);
+            Assert.Equal("1", ((LiteralExpressionSyntax) addExpr.Left).Token.Text);
+            Assert.Equal(SyntaxKind.PlusToken, addExpr.OperatorToken.Kind);
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, addExpr.Right.Kind);
+            Assert.Equal("2", ((LiteralExpressionSyntax)addExpr.Right).Token.Text);
 
-            Assert.That(((SyntaxNode) node.ChildNodes[1]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[1]).Kind);
         }
 
-        [Test]
+        [Fact]
         public void TestNestedFunctionLikeDefines()
         {
             const string text = @"
@@ -226,32 +225,32 @@ float g = FOO(3, 4);
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("i"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("i", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var equalsValueClause = (EqualsValueClauseSyntax)varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.AddExpression));
+            Assert.Equal(SyntaxKind.AddExpression, equalsValueClause.Value.Kind);
 
             var addExpr = (BinaryExpressionSyntax)equalsValueClause.Value;
-            Assert.That(addExpr.Left.Kind, Is.EqualTo(SyntaxKind.MultiplyExpression));
+            Assert.Equal(SyntaxKind.MultiplyExpression, addExpr.Left.Kind);
 
             var mulExpr = (BinaryExpressionSyntax) addExpr.Left;
-            Assert.That(mulExpr.Left.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
-            Assert.That(mulExpr.OperatorToken.Kind, Is.EqualTo(SyntaxKind.AsteriskToken));
-            Assert.That(mulExpr.Right.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, mulExpr.Left.Kind);
+            Assert.Equal(SyntaxKind.AsteriskToken, mulExpr.OperatorToken.Kind);
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, mulExpr.Right.Kind);
 
-            Assert.That(addExpr.OperatorToken.Kind, Is.EqualTo(SyntaxKind.PlusToken));
-            Assert.That(addExpr.Right.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
+            Assert.Equal(SyntaxKind.PlusToken, addExpr.OperatorToken.Kind);
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, addExpr.Right.Kind);
         }
 
-        [Test]
+        [Fact]
         public void TestNegNotEnoughParamsOnFunctionLikeMacroReference()
         {
             const string text = @"
@@ -265,24 +264,24 @@ float g = FOO(3, 4);
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("i"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("i", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var equalsValueClause = (EqualsValueClauseSyntax)varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.Equal(SyntaxKind.IdentifierName, equalsValueClause.Value.Kind);
 
             var identName = (IdentifierNameSyntax)equalsValueClause.Value;
-            Assert.That(identName.Name.Text, Is.EqualTo("MULTIPLY"));
+            Assert.Equal("MULTIPLY", identName.Name.Text);
         }
 
-        [Test]
+        [Fact]
         public void TestNegFunctionLikeDefineWithTokenPasteOperator()
         {
             const string text = @"
@@ -300,7 +299,7 @@ PARAM_DEFN(float, Transparency##FOO) = 0.5;
                 new DirectiveInfo { Kind = SyntaxKind.BadDirectiveTrivia, Status = NodeStatus.IsActive, Text = "##FOO) = 0.5;" });
         }
 
-        [Test]
+        [Fact]
         public void TestFunctionLikeDefineWithNestedPaste()
         {
             const string text = @"
@@ -317,18 +316,18 @@ PARAM(float, PASTE(bar, baz)) = 1.0f;
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PASTE" },
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PARAM" });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("barbaz"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("barbaz", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
         }
 
-        [Test]
+        [Fact]
         public void TestFunctionLikeDefineWithPasteWithMultiTokenArguments()
         {
             const string text = @"
@@ -346,52 +345,52 @@ FOO(Diffuse, texCoords.xy)
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(4));
+            Assert.Equal(4, node.ChildNodes.Count);
 
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
             var varDeclStatement1 = (VariableDeclarationStatementSyntax) node.ChildNodes[0];
-            Assert.That(varDeclStatement1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
-            Assert.That(((PredefinedObjectTypeSyntax) varDeclStatement1.Declaration.Type).ObjectTypeToken.Text, Is.EqualTo("Texture2D"));
-            Assert.That(varDeclStatement1.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement1.Declaration.Variables[0].Identifier.Text, Is.EqualTo("g_DiffuseTexture"));
-            Assert.That(varDeclStatement1.Declaration.Variables[0].Initializer, Is.Null);
+            Assert.Equal(SyntaxKind.PredefinedObjectType, varDeclStatement1.Declaration.Type.Kind);
+            Assert.Equal("Texture2D", ((PredefinedObjectTypeSyntax) varDeclStatement1.Declaration.Type).ObjectTypeToken.Text);
+            Assert.Equal(1, varDeclStatement1.Declaration.Variables.Count);
+            Assert.Equal("g_DiffuseTexture", varDeclStatement1.Declaration.Variables[0].Identifier.Text);
+            Assert.Null(varDeclStatement1.Declaration.Variables[0].Initializer);
 
-            Assert.That(((SyntaxNode) node.ChildNodes[1]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[1]).Kind);
             var varDeclStatement2 = (VariableDeclarationStatementSyntax)node.ChildNodes[1];
-            Assert.That(varDeclStatement2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
-            Assert.That(((PredefinedObjectTypeSyntax)varDeclStatement2.Declaration.Type).ObjectTypeToken.Text, Is.EqualTo("SamplerState"));
-            Assert.That(varDeclStatement2.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement2.Declaration.Variables[0].Identifier.Text, Is.EqualTo("DiffuseSampler"));
-            Assert.That(varDeclStatement2.Declaration.Variables[0].Initializer, Is.Null);
+            Assert.Equal(SyntaxKind.PredefinedObjectType, varDeclStatement2.Declaration.Type.Kind);
+            Assert.Equal("SamplerState", ((PredefinedObjectTypeSyntax)varDeclStatement2.Declaration.Type).ObjectTypeToken.Text);
+            Assert.Equal(1, varDeclStatement2.Declaration.Variables.Count);
+            Assert.Equal("DiffuseSampler", varDeclStatement2.Declaration.Variables[0].Identifier.Text);
+            Assert.Null(varDeclStatement2.Declaration.Variables[0].Initializer);
 
-            Assert.That(((SyntaxNode) node.ChildNodes[2]).Kind, Is.EqualTo(SyntaxKind.FunctionDefinition));
+            Assert.Equal(SyntaxKind.FunctionDefinition, ((SyntaxNode) node.ChildNodes[2]).Kind);
             var funcDefStatement = (FunctionDefinitionSyntax) node.ChildNodes[2];
-            Assert.That(funcDefStatement.ReturnType.Kind, Is.EqualTo(SyntaxKind.PredefinedVectorType));
-            Assert.That(((VectorTypeSyntax)funcDefStatement.ReturnType).TypeToken.Text, Is.EqualTo("float4"));
-            Assert.That(funcDefStatement.Name.Kind, Is.EqualTo(SyntaxKind.IdentifierDeclarationName));
-            Assert.That(((IdentifierDeclarationNameSyntax)funcDefStatement.Name).Name.Text, Is.EqualTo("GetTex"));
+            Assert.Equal(SyntaxKind.PredefinedVectorType, funcDefStatement.ReturnType.Kind);
+            Assert.Equal("float4", ((VectorTypeSyntax)funcDefStatement.ReturnType).TypeToken.Text);
+            Assert.Equal(SyntaxKind.IdentifierDeclarationName, funcDefStatement.Name.Kind);
+            Assert.Equal("GetTex", ((IdentifierDeclarationNameSyntax)funcDefStatement.Name).Name.Text);
 
-            Assert.That(funcDefStatement.Body.Statements, Has.Count.EqualTo(1));
-            Assert.That(funcDefStatement.Body.Statements[0].Kind, Is.EqualTo(SyntaxKind.ReturnStatement));
+            Assert.Equal(1, funcDefStatement.Body.Statements.Count);
+            Assert.Equal(SyntaxKind.ReturnStatement, funcDefStatement.Body.Statements[0].Kind);
             var returnStatement = (ReturnStatementSyntax) funcDefStatement.Body.Statements[0];
-            Assert.That(returnStatement.Expression.Kind, Is.EqualTo(SyntaxKind.MethodInvocationExpression));
+            Assert.Equal(SyntaxKind.MethodInvocationExpression, returnStatement.Expression.Kind);
             var invocationExpr = (MethodInvocationExpressionSyntax) returnStatement.Expression;
-            Assert.That(invocationExpr.Target.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.Equal(SyntaxKind.IdentifierName, invocationExpr.Target.Kind);
             var identifierNameExpr = (IdentifierNameSyntax) invocationExpr.Target;
-            Assert.That(identifierNameExpr.Name.Text, Is.EqualTo("g_DiffuseTexture"));
-            Assert.That(invocationExpr.Name.Text, Is.EqualTo("Sample"));
-            Assert.That(invocationExpr.ArgumentList.Arguments, Has.Count.EqualTo(2));
-            Assert.That(invocationExpr.ArgumentList.Arguments[0].Kind, Is.EqualTo(SyntaxKind.IdentifierName));
-            Assert.That(((IdentifierNameSyntax)invocationExpr.ArgumentList.Arguments[0]).Name.Text, Is.EqualTo("DiffuseSampler"));
-            Assert.That(invocationExpr.ArgumentList.Arguments[1].Kind, Is.EqualTo(SyntaxKind.FieldAccessExpression));
-            Assert.That(((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression.Kind, Is.EqualTo(SyntaxKind.FieldAccessExpression));
-            Assert.That(((FieldAccessExpressionSyntax)((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
-            Assert.That(((IdentifierNameSyntax) ((FieldAccessExpressionSyntax)((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression).Name.Text, Is.EqualTo("input"));
-            Assert.That(((FieldAccessExpressionSyntax) ((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Name.Text, Is.EqualTo("texCoords"));
-            Assert.That(((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Name.Text, Is.EqualTo("xy"));
+            Assert.Equal("g_DiffuseTexture", identifierNameExpr.Name.Text);
+            Assert.Equal("Sample", invocationExpr.Name.Text);
+            Assert.Equal(2, invocationExpr.ArgumentList.Arguments.Count);
+            Assert.Equal(SyntaxKind.IdentifierName, invocationExpr.ArgumentList.Arguments[0].Kind);
+            Assert.Equal("DiffuseSampler", ((IdentifierNameSyntax)invocationExpr.ArgumentList.Arguments[0]).Name.Text);
+            Assert.Equal(SyntaxKind.FieldAccessExpression, invocationExpr.ArgumentList.Arguments[1].Kind);
+            Assert.Equal(SyntaxKind.FieldAccessExpression, ((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression.Kind);
+            Assert.Equal(SyntaxKind.IdentifierName, ((FieldAccessExpressionSyntax)((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression.Kind);
+            Assert.Equal("input", ((IdentifierNameSyntax) ((FieldAccessExpressionSyntax)((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Expression).Name.Text);
+            Assert.Equal("texCoords", ((FieldAccessExpressionSyntax) ((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Expression).Name.Text);
+            Assert.Equal("xy", ((FieldAccessExpressionSyntax)invocationExpr.ArgumentList.Arguments[1]).Name.Text);
         }
 
-        [Test]
+        [Fact]
         public void TestFunctionLikeDefineWithNestedPasteIncludingMacro()
         {
             const string text = @"
@@ -408,24 +407,24 @@ PARAM(float, PASTE(bar, FOO)) = 1.0f;
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PASTE" },
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "PARAM" });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("barFOO"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("barFOO", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var equalsValueClause = (EqualsValueClauseSyntax)varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.NumericLiteralExpression));
+            Assert.Equal(SyntaxKind.NumericLiteralExpression, equalsValueClause.Value.Kind);
 
             var floatLiteral = (LiteralExpressionSyntax)equalsValueClause.Value;
-            Assert.That(floatLiteral.Token.Text, Is.EqualTo("1.0f"));
+            Assert.Equal("1.0f", floatLiteral.Token.Text);
         }
 
-        [Test]
+        [Fact]
         public void TestTokenPastingOperator()
         {
             const string text = @"
@@ -438,24 +437,24 @@ float f = FOO(x, b);
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("f"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("f", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var equalsValueClause = (EqualsValueClauseSyntax)varDeclStatement.Declaration.Variables[0].Initializer;
-            Assert.That(equalsValueClause.Value.Kind, Is.EqualTo(SyntaxKind.IdentifierName));
+            Assert.Equal(SyntaxKind.IdentifierName, equalsValueClause.Value.Kind);
 
             var ident = (IdentifierNameSyntax)equalsValueClause.Value;
-            Assert.That(ident.Name.Text, Is.EqualTo("xb"));
+            Assert.Equal("xb", ident.Name.Text);
         }
 
-        [Test]
+        [Fact]
         public void TestStringificationOperator()
         {
             const string text = @"
@@ -468,38 +467,38 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "TEX_COMP_FULL" });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
-            Assert.That(((PredefinedObjectTypeSyntax) varDeclStatement.Declaration.Type).ObjectTypeToken.Kind, Is.EqualTo(SyntaxKind.Texture2DKeyword));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("MyTex"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Annotations.Annotations, Has.Count.EqualTo(2));
+            Assert.Equal(SyntaxKind.PredefinedObjectType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(SyntaxKind.Texture2DKeyword, ((PredefinedObjectTypeSyntax) varDeclStatement.Declaration.Type).ObjectTypeToken.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("MyTex", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.Equal(2, varDeclStatement.Declaration.Variables[0].Annotations.Annotations.Count);
 
             var annotation1 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[0];
-            Assert.That(annotation1.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(annotation1.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Build_TexComp_DdsFormat"));
-            Assert.That(annotation1.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(annotation1.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
-            Assert.That(((EqualsValueClauseSyntax) annotation1.Declaration.Variables[0].Initializer).Value.Kind, Is.EqualTo(SyntaxKind.StringLiteralExpression));
-            Assert.That(((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens, Has.Count.EqualTo(1));
-            Assert.That(((StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens[0].Text, Is.EqualTo("\"dxt5\""));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, annotation1.Declaration.Type.Kind);
+            Assert.Equal("Build_TexComp_DdsFormat", annotation1.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(annotation1.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, annotation1.Declaration.Variables[0].Initializer.Kind);
+            Assert.Equal(SyntaxKind.StringLiteralExpression, ((EqualsValueClauseSyntax) annotation1.Declaration.Variables[0].Initializer).Value.Kind);
+            Assert.Equal(1, ((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens.Count);
+            Assert.Equal("\"dxt5\"", ((StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens[0].Text);
 
             var annotation2 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[1];
-            Assert.That(annotation2.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(annotation2.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Build_TexComp_IsPacked"));
-            Assert.That(annotation2.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(annotation2.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
-            Assert.That(((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value.Kind, Is.EqualTo(SyntaxKind.StringLiteralExpression));
-            Assert.That(((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value).Tokens, Has.Count.EqualTo(1));
-            Assert.That(((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value).Tokens[0].Text, Is.EqualTo("\"true\""));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, annotation2.Declaration.Type.Kind);
+            Assert.Equal("Build_TexComp_IsPacked", annotation2.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(annotation2.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, annotation2.Declaration.Variables[0].Initializer.Kind);
+            Assert.Equal(SyntaxKind.StringLiteralExpression, ((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value.Kind);
+            Assert.Equal(1, ((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value).Tokens.Count);
+            Assert.Equal("\"true\"", ((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation2.Declaration.Variables[0].Initializer).Value).Tokens[0].Text);
 
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Null);
+            Assert.Null(varDeclStatement.Declaration.Variables[0].Initializer);
         }
 
-        [Test]
+        [Fact]
         public void TestStringificationOperatorWithArgumentContainingMultipleTokens()
         {
             const string text = @"
@@ -512,25 +511,25 @@ string Bar = FOO(some/thing);
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedScalarType));
-            Assert.That(((ScalarTypeSyntax) varDeclStatement.Declaration.Type).TypeTokens, Has.Count.EqualTo(1));
-            Assert.That(((ScalarTypeSyntax) varDeclStatement.Declaration.Type).TypeTokens[0].Text, Is.EqualTo("string"));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("Bar"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Not.Null);
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer.Kind, Is.EqualTo(SyntaxKind.EqualsValueClause));
+            Assert.Equal(SyntaxKind.PredefinedScalarType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, ((ScalarTypeSyntax) varDeclStatement.Declaration.Type).TypeTokens.Count);
+            Assert.Equal("string", ((ScalarTypeSyntax) varDeclStatement.Declaration.Type).TypeTokens[0].Text);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("Bar", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.NotNull(varDeclStatement.Declaration.Variables[0].Initializer);
+            Assert.Equal(SyntaxKind.EqualsValueClause, varDeclStatement.Declaration.Variables[0].Initializer.Kind);
 
             var initializerExpr = (StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax) varDeclStatement.Declaration.Variables[0].Initializer).Value;
-            Assert.That(initializerExpr.Tokens, Has.Count.EqualTo(2));
-            Assert.That(initializerExpr.Tokens[0].Text, Is.EqualTo("\"some/thing\""));
-            Assert.That(initializerExpr.Tokens[1].Text, Is.EqualTo("\"else\""));
+            Assert.Equal(2, initializerExpr.Tokens.Count);
+            Assert.Equal("\"some/thing\"", initializerExpr.Tokens[0].Text);
+            Assert.Equal("\"else\"", initializerExpr.Tokens[1].Text);
         }
 
-        [Test]
+        [Fact]
         public void TestMacroBodyContaining2D()
         {
             const string text = @"
@@ -543,17 +542,17 @@ TEX2D(MyTexture);
             VerifyDirectivesSpecial(node,
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "TEX2D" });
 
-            Assert.That(node.ChildNodes, Has.Count.EqualTo(2));
-            Assert.That(((SyntaxNode) node.ChildNodes[0]).Kind, Is.EqualTo(SyntaxKind.VariableDeclarationStatement));
+            Assert.Equal(2, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, ((SyntaxNode) node.ChildNodes[0]).Kind);
 
             var varDeclStatement = (VariableDeclarationStatementSyntax)node.ChildNodes[0];
-            Assert.That(varDeclStatement.Declaration.Type.Kind, Is.EqualTo(SyntaxKind.PredefinedObjectType));
-            Assert.That(varDeclStatement.Declaration.Variables, Has.Count.EqualTo(1));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Identifier.Text, Is.EqualTo("MyTexture2D"));
-            Assert.That(varDeclStatement.Declaration.Variables[0].Initializer, Is.Null);
+            Assert.Equal(SyntaxKind.PredefinedObjectType, varDeclStatement.Declaration.Type.Kind);
+            Assert.Equal(1, varDeclStatement.Declaration.Variables.Count);
+            Assert.Equal("MyTexture2D", varDeclStatement.Declaration.Variables[0].Identifier.Text);
+            Assert.Null(varDeclStatement.Declaration.Variables[0].Initializer);
         }
 
-        [Test]
+        [Fact]
         public void TestNegBadDirectiveName()
         {
             const string text = @"#foo";
@@ -564,7 +563,7 @@ TEX2D(MyTexture);
             VerifyDirectives(node, SyntaxKind.BadDirectiveTrivia);
         }
 
-        [Test]
+        [Fact]
         public void TestNegBadDirectiveNoName()
         {
             const string text = @"#";
@@ -575,7 +574,7 @@ TEX2D(MyTexture);
             VerifyDirectives(node, SyntaxKind.BadDirectiveTrivia);
         }
 
-        [Test]
+        [Fact]
         public void TestNegBadDirectiveNameWithTrailingTokens()
         {
             const string text = @"#foo 2 _ a b";
@@ -586,7 +585,7 @@ TEX2D(MyTexture);
             VerifyDirectives(node, SyntaxKind.BadDirectiveTrivia);
         }
 
-        [Test]
+        [Fact]
         public void TestNegIfFalseWithEof()
         {
             const string text = @"#if false";
@@ -598,7 +597,7 @@ TEX2D(MyTexture);
                 new DirectiveInfo { Kind = SyntaxKind.IfDirectiveTrivia, Status = NodeStatus.IsActive | NodeStatus.NotBranchTaken | NodeStatus.FalseValue });
         }
 
-        [Test]
+        [Fact]
         public void TestNegIfWithNoCondition()
         {
             const string text = @"
@@ -613,7 +612,7 @@ TEX2D(MyTexture);
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestNegIfTrueWithMissingParen()
         {
             const string text = @"
@@ -628,7 +627,7 @@ TEX2D(MyTexture);
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestNegIfFalseWithMissingParen()
         {
             const string text = @"
@@ -643,7 +642,7 @@ TEX2D(MyTexture);
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestIfFalseEndIf()
         {
             const string text = @"
@@ -658,7 +657,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestIfTrueEndIf()
         {
             const string text = @"
@@ -674,7 +673,7 @@ int a;
             VerifyDeclarations(node, new DeclarationInfo { Kind = SyntaxKind.VariableDeclarationStatement, Text = "a" });
         }
 
-        [Test]
+        [Fact]
         public void TestIfTrueElseEndIf()
         {
             const string text = @"
@@ -693,7 +692,7 @@ float b;
             VerifyDeclarations(node, new DeclarationInfo { Kind = SyntaxKind.VariableDeclarationStatement, Text = "a" });
         }
 
-        [Test]
+        [Fact]
         public void TestIfTrueElifEndIf()
         {
             const string text = @"
@@ -712,7 +711,7 @@ float b;
             VerifyDeclarations(node, new DeclarationInfo { Kind = SyntaxKind.VariableDeclarationStatement, Text = "a" });
         }
 
-        [Test]
+        [Fact]
         public void TestIfWithDefinedOnUndefined()
         {
             const string text = @"
@@ -727,7 +726,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestIfWithDefinedOnDefined()
         {
             const string text = @"
@@ -745,7 +744,7 @@ int a;
             VerifyDeclarations(node, new DeclarationInfo { Kind = SyntaxKind.VariableDeclarationStatement, Text = "a" });
         }
 
-        [Test]
+        [Fact]
         public void TestDirectiveAfterSingleLineComment()
         {
             const string text = @"
@@ -757,7 +756,7 @@ int a;
             VerifyDirectives(node);
         }
 
-        [Test]
+        [Fact]
         public void TestSingleLineCommentAfterDirective()
         {
             const string text = @"
@@ -770,7 +769,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "BAR" });
         }
 
-        [Test]
+        [Fact]
         public void TestSingleLineCommentInsideDirective()
         {
             const string text = @"
@@ -786,7 +785,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestIfFalseSingleLineCommentsAndDefine()
         {
             const string text = @"
@@ -805,7 +804,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestIfTrueSingleLineCommentAndDefine()
         {
             const string text = @"
@@ -823,7 +822,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestLine()
         {
             const string text = @"
@@ -836,7 +835,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.LineDirectiveTrivia, Status = NodeStatus.IsActive, Number = 3, Text = @"a\path\to.hlsl" });
         }
 
-        [Test]
+        [Fact]
         public void HandlesPreprocessorDirectives()
         {
             // Act.
@@ -848,23 +847,23 @@ int a;
 #endif");
 
             // Assert.
-            Assert.That(allTokens, Has.Count.EqualTo(4));
-            Assert.That(allTokens[0].Kind, Is.EqualTo(SyntaxKind.FloatKeyword));
-            Assert.That(allTokens[0].LeadingTrivia, Has.Length.EqualTo(5));
-            Assert.That(allTokens[0].LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.EndOfLineTrivia));
-            Assert.That(allTokens[0].LeadingTrivia[1].Kind, Is.EqualTo(SyntaxKind.IfDirectiveTrivia));
-            Assert.That(allTokens[0].LeadingTrivia[2].Kind, Is.EqualTo(SyntaxKind.DisabledTextTrivia));
-            Assert.That(allTokens[0].LeadingTrivia[3].Kind, Is.EqualTo(SyntaxKind.ElseDirectiveTrivia));
-            Assert.That(allTokens[0].LeadingTrivia[4].Kind, Is.EqualTo(SyntaxKind.WhitespaceTrivia));
-            Assert.That(allTokens[0].TrailingTrivia, Has.Length.EqualTo(1));
-            Assert.That(allTokens[1].Kind, Is.EqualTo(SyntaxKind.IdentifierToken));
-            Assert.That(allTokens[2].Kind, Is.EqualTo(SyntaxKind.SemiToken));
-            Assert.That(allTokens[3].Kind, Is.EqualTo(SyntaxKind.EndOfFileToken));
-            Assert.That(allTokens[3].LeadingTrivia, Has.Length.EqualTo(1));
-            Assert.That(allTokens[3].LeadingTrivia[0].Kind, Is.EqualTo(SyntaxKind.EndIfDirectiveTrivia));
+            Assert.Equal(4, allTokens.Count);
+            Assert.Equal(SyntaxKind.FloatKeyword, allTokens[0].Kind);
+            Assert.Equal(5, allTokens[0].LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.EndOfLineTrivia, allTokens[0].LeadingTrivia[0].Kind);
+            Assert.Equal(SyntaxKind.IfDirectiveTrivia, allTokens[0].LeadingTrivia[1].Kind);
+            Assert.Equal(SyntaxKind.DisabledTextTrivia, allTokens[0].LeadingTrivia[2].Kind);
+            Assert.Equal(SyntaxKind.ElseDirectiveTrivia, allTokens[0].LeadingTrivia[3].Kind);
+            Assert.Equal(SyntaxKind.WhitespaceTrivia, allTokens[0].LeadingTrivia[4].Kind);
+            Assert.Equal(1, allTokens[0].TrailingTrivia.Length);
+            Assert.Equal(SyntaxKind.IdentifierToken, allTokens[1].Kind);
+            Assert.Equal(SyntaxKind.SemiToken, allTokens[2].Kind);
+            Assert.Equal(SyntaxKind.EndOfFileToken, allTokens[3].Kind);
+            Assert.Equal(1, allTokens[3].LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.EndIfDirectiveTrivia, allTokens[3].LeadingTrivia[0].Kind);
         }
 
-        [Test]
+        [Fact]
         public void TestInactiveInclude()
         {
             const string text = @"
@@ -883,7 +882,7 @@ int a;
                 new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestActiveInclude()
         {
             const string fooText = @"
@@ -908,7 +907,7 @@ float bar;
                 new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestNegMissingInclude()
         {
             const string text = @"
@@ -922,7 +921,7 @@ float bar;
                 new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive });
         }
 
-        [Test]
+        [Fact]
         public void TestError()
         {
             const string text = @"
@@ -935,7 +934,7 @@ float bar;
                 new DirectiveInfo { Kind = SyntaxKind.ErrorDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"This is a compilation ""error""" });
         }
 
-        [Test]
+        [Fact]
         public void TestPragma()
         {
             const string text = @"
@@ -970,14 +969,15 @@ float bar;
 
         private static void TestRoundTripping(CompilationUnitSyntax node, string text, bool disallowErrors = true)
         {
-            Assert.That(node, Is.Not.Null);
+            Assert.NotNull(node);
+
             var fullText = node.ToFullString();
-            Assert.That(fullText, Is.EqualTo(text));
+            Assert.Equal(text, fullText);
 
             if (disallowErrors)
-                Assert.That(node.GetDiagnostics(), Is.Empty);
+                Assert.Empty(node.GetDiagnostics());
             else
-                Assert.That(node.GetDiagnostics(), Is.Not.Empty);
+                Assert.NotEmpty(node.GetDiagnostics());
         }
 
         internal struct DirectiveInfo
@@ -1014,7 +1014,7 @@ float bar;
         private void VerifyDirectives(SyntaxNode node, params SyntaxKind[] expected)
         {
             var directives = node.GetDirectives().ToList();
-            Assert.AreEqual(expected.Length, directives.Count);
+            Assert.Equal(expected.Length, directives.Count);
             if (expected.Length == 0)
             {
                 return;
@@ -1028,14 +1028,14 @@ float bar;
             foreach (var ek in expected)
             {
                 // Assert.True(actualKinds.Contains(kind)); // no order 
-                Assert.AreEqual(ek, actual[idx++]); // exact order
+                Assert.Equal(ek, actual[idx++]); // exact order
             }
         }
 
         private void VerifyDirectivesSpecial(SyntaxNode node, params DirectiveInfo[] expected)
         {
             var directives = node.GetDirectives().ToList();
-            Assert.AreEqual(expected.Length, directives.Count);
+            Assert.Equal(expected.Length, directives.Count);
 
             var actual = new List<SyntaxKind>();
             foreach (var dt in directives)
@@ -1046,7 +1046,7 @@ float bar;
             int idx = 0;
             foreach (var exp in expected)
             {
-                Assert.AreEqual(exp.Kind, actual[idx]); // exact order
+                Assert.Equal(exp.Kind, actual[idx]); // exact order
 
                 // need to know what to expected here
                 var dt = directives[idx++];
@@ -1082,12 +1082,12 @@ float bar;
                 {
                     case SyntaxKind.ObjectLikeDefineDirectiveTrivia:
                         if (null != exp.Text)
-                            Assert.AreEqual(exp.Text, ((ObjectLikeDefineDirectiveTriviaSyntax) dt).Name.Text); // Text
+                            Assert.Equal(exp.Text, ((ObjectLikeDefineDirectiveTriviaSyntax) dt).Name.Text); // Text
                         break;
 
                     case SyntaxKind.FunctionLikeDefineDirectiveTrivia:
                         if (null != exp.Text)
-                            Assert.AreEqual(exp.Text, ((FunctionLikeDefineDirectiveTriviaSyntax) dt).Name.Text); // Text
+                            Assert.Equal(exp.Text, ((FunctionLikeDefineDirectiveTriviaSyntax) dt).Name.Text); // Text
                         break;
 
                     case SyntaxKind.LineDirectiveTrivia:
@@ -1096,32 +1096,32 @@ float bar;
                         // default number = 0 - no number
                         if (exp.Number == -1)
                         {
-                            Assert.AreEqual(SyntaxKind.LineKeyword, ld.LineKeyword.Kind);
-                            Assert.AreEqual(SyntaxKind.DefaultKeyword, ld.Line.Kind);
+                            Assert.Equal(SyntaxKind.LineKeyword, ld.LineKeyword.Kind);
+                            Assert.Equal(SyntaxKind.DefaultKeyword, ld.Line.Kind);
                         }
                         else if (exp.Number == -2)
                         {
-                            Assert.AreEqual(SyntaxKind.LineKeyword, ld.LineKeyword.Kind);
-                            //Assert.AreEqual(SyntaxKind.HiddenKeyword, ld.Line.Kind);
+                            Assert.Equal(SyntaxKind.LineKeyword, ld.LineKeyword.Kind);
+                            //Assert.Equal(SyntaxKind.HiddenKeyword, ld.Line.Kind);
                         }
                         else if (exp.Number == 0)
                         {
-                            Assert.AreEqual(String.Empty, ld.Line.Text);
+                            Assert.Equal(String.Empty, ld.Line.Text);
                         }
                         else if (exp.Number > 0)
                         {
-                            Assert.AreEqual(exp.Number, ld.Line.Value); // Number
-                            Assert.AreEqual(exp.Number, Int32.Parse(ld.Line.Text));
+                            Assert.Equal(exp.Number, ld.Line.Value); // Number
+                            Assert.Equal(exp.Number, Int32.Parse(ld.Line.Text));
                         }
 
                         if (null == exp.Text)
                         {
-                            Assert.AreEqual(SyntaxKind.None, ld.File.Kind);
+                            Assert.Equal(SyntaxKind.None, ld.File.Kind);
                         }
                         else
                         {
-                            Assert.AreNotEqual(SyntaxKind.None, ld.File.Kind);
-                            Assert.AreEqual(exp.Text, ld.File.Value);
+                            Assert.NotEqual(SyntaxKind.None, ld.File.Kind);
+                            Assert.Equal(exp.Text, ld.File.Value);
                         }
 
                         break;
@@ -1135,13 +1135,13 @@ float bar;
         /// <param name="declarationInfo"></param>
         private void VerifyDeclarations(CompilationUnitSyntax node, params DeclarationInfo[] declarationInfo)
         {
-            Assert.AreEqual(declarationInfo.Length, node.Declarations.Count);
+            Assert.Equal(declarationInfo.Length, node.Declarations.Count);
             var actual = node.Declarations;
             int idx = 0;
             foreach (var exp in declarationInfo)
             {
                 var mem = actual[idx++];
-                Assert.AreEqual(exp.Kind, mem.Kind);
+                Assert.Equal(exp.Kind, mem.Kind);
             }
         }
 
@@ -1156,8 +1156,8 @@ float bar;
             }
 
             // Parser might give more errors than expected & that's fine
-            Assert.That(actual.Count, Is.GreaterThanOrEqualTo(expected.Length));
-            Assert.That(actual.Count, Is.LessThanOrEqualTo(int.MaxValue));
+            Assert.True(actual.Count >= expected.Length);
+            Assert.True(actual.Count <= int.MaxValue);
 
             // necessary?
             if (actual.Count < expected.Length)

@@ -2,30 +2,25 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using NUnit.Framework;
 using ShaderTools.Hlsl.Syntax;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Support
 {
     public static class ShaderTestUtility
     {
-        public static IEnumerable<TestCaseData> FindTestShaders(string rootFolder)
+        public static IEnumerable<object> FindTestShaders(string rootFolder)
         {
-            var testDirectory = TestContext.CurrentContext.TestDirectory;
-            return Directory.GetFiles(Path.Combine(testDirectory, rootFolder), "*.*", SearchOption.AllDirectories)
+            return Directory.GetFiles(rootFolder, "*.*", SearchOption.AllDirectories)
                 .Where(x =>
                 {
                     var ext = Path.GetExtension(x).ToLower();
                     return ext == ".hlsl" || ext == ".fx" || ext == ".vsh" || ext == ".psh";
                 })
-                .Select(x => x.Substring(testDirectory.Length + 1))
-                .Select(x => new TestCaseData(x)
-                {
-                    TestName = "{m}{a:1000}"
-                });
+                .Select(x => new object[] { x });
         }
 
-        internal static IEnumerable<TestCaseData> GetTestShaders()
+        internal static IEnumerable<object> GetTestShaders()
         {
             return FindTestShaders(@"Hlsl\Shaders");
         }
@@ -34,7 +29,7 @@ namespace ShaderTools.Tests.Hlsl.Support
         {
             foreach (var diagnostic in syntaxTree.GetDiagnostics())
                 Debug.WriteLine(diagnostic.ToString());
-            Assert.That(syntaxTree.GetDiagnostics().Count(), Is.EqualTo(0));
+            Assert.Empty(syntaxTree.GetDiagnostics());
         }
     }
 }

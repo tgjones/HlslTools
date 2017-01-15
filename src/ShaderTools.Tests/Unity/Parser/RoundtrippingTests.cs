@@ -1,18 +1,18 @@
 ﻿using System.IO;
-using NUnit.Framework;
 using ShaderTools.Core.Text;
 using ShaderTools.Tests.Unity.Support;
 using ShaderTools.Unity.Syntax;
+using Xunit;
 
 namespace ShaderTools.Tests.Unity.Parser
 {
-    [TestFixture]
     public class RoundtrippingTests
     {
-        [TestCaseSource(typeof(ShaderTestUtility), nameof(ShaderTestUtility.GetUnityTestShaders))]
+        [Theory]
+        [MemberData(nameof(ShaderTestUtility.GetUnityTestShaders), MemberType = typeof(ShaderTestUtility))]
         public void CanBuildUnitySyntaxTree(string testFile)
         {
-            var sourceCode = File.ReadAllText(Path.Combine(TestContext.CurrentContext.TestDirectory, testFile));
+            var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
             var syntaxTree = SyntaxFactory.ParseUnitySyntaxTree(
@@ -22,7 +22,7 @@ namespace ShaderTools.Tests.Unity.Parser
 
             // Check roundtripping.
             var roundtrippedText = syntaxTree.Root.ToFullString();
-            Assert.That(roundtrippedText, Is.EqualTo(sourceCode));
+            Assert.Equal(sourceCode, roundtrippedText);
         }
     }
 }

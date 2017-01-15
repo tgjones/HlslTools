@@ -1,23 +1,23 @@
 ﻿using System.Linq;
-using NUnit.Framework;
 using ShaderTools.Hlsl.Diagnostics;
 using ShaderTools.Hlsl.Syntax;
+using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Binding
 {
-    [TestFixture]
     public class BinaryExpressionTests
     {
-        [TestCase("|", "float", "int", "#inapplicable")]
-        [TestCase("|", "bool", "float", "#inapplicable")]
-        [TestCase("|", "bool", "int", "bool")]
-        [TestCase("|", "int", "bool", "bool")]
-        [TestCase("|", "int", "int", "int")]
-        [TestCase("*", "float", "int", "float")]
-        [TestCase("*", "int", "float", "float")]
-        [TestCase("*", "int2", "float2", "float2")]
-        [TestCase("*", "float2", "int2", "float2")]
-        [TestCase("<<", "int", "uint", "uint")]
+        [Theory]
+        [InlineData("|", "float", "int", "#inapplicable")]
+        [InlineData("|", "bool", "float", "#inapplicable")]
+        [InlineData("|", "bool", "int", "bool")]
+        [InlineData("|", "int", "bool", "bool")]
+        [InlineData("|", "int", "int", "int")]
+        [InlineData("*", "float", "int", "float")]
+        [InlineData("*", "int", "float", "float")]
+        [InlineData("*", "int2", "float2", "float2")]
+        [InlineData("*", "float2", "int2", "float2")]
+        [InlineData("<<", "int", "uint", "uint")]
         public void TestBinaryOperatorTypeConversions(string opText, string leftText, string rightText, string expectedResult)
         {
             var left = ExpressionTestUtility.GetValue(leftText);
@@ -25,20 +25,17 @@ namespace ShaderTools.Tests.Hlsl.Binding
             var source = $"{left} {opText} {right}";
             var syntaxTree = SyntaxFactory.ParseExpression(source);
             var syntaxTreeSource = syntaxTree.Root.ToString();
-            if (syntaxTreeSource != source)
-                Assert.Fail($"Source should have been {syntaxTreeSource} but is {source}");
+            Assert.Equal(source, syntaxTreeSource);
 
             var expression = (BinaryExpressionSyntax)syntaxTree.Root;
             var compilation = new ShaderTools.Hlsl.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
 
             var leftType = ExpressionTestUtility.GetExpressionTypeString(semanticModel.GetExpressionType(expression.Left));
-            if (leftText != leftType)
-                Assert.Fail($"Left should be of type '{leftText}' but has type '{leftType}'");
+            Assert.Equal(leftText, leftType);
 
             var rightType = ExpressionTestUtility.GetExpressionTypeString(semanticModel.GetExpressionType(expression.Right));
-            if (rightText != rightType)
-                Assert.Fail($"Right should be of type '{rightText}' but has type '{rightType}'");
+            Assert.Equal(rightText, rightType);
 
             var diagnostic = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).SingleOrDefault();
             var expressionType = semanticModel.GetExpressionType(expression);
@@ -46,7 +43,7 @@ namespace ShaderTools.Tests.Hlsl.Binding
                 ? ExpressionTestUtility.GetExpressionTypeString(expressionType)
                 : ExpressionTestUtility.GetErrorString((DiagnosticId) diagnostic.Descriptor.Code);
 
-            Assert.AreEqual(expectedResult, result, $"Expression {source} should have evaluated to '{expectedResult}' but was '{result}'");
+            Assert.Equal(expectedResult, result);
         }
     }
 }
