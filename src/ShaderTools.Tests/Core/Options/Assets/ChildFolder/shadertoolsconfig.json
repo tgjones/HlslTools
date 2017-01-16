@@ -1,0 +1,13 @@
+﻿{
+  "root": true,
+
+  "hlsl.preprocessorDefinitions": {
+    "MY_DEFINE": "1"
+  },
+
+  "hlsl.additionalIncludeDirectories": [
+    ".",
+    "..",
+    "Foo"
+  ]
+}

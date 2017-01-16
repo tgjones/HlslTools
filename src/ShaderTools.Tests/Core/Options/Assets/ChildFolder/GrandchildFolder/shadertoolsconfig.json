@@ -1,0 +1,10 @@
+﻿{
+  "hlsl.preprocessorDefinitions": {
+    "MY_OTHER_DEFINE": "2"
+  },
+
+  "hlsl.additionalIncludeDirectories": [
+    "../Bar",
+    "..\\Foo"
+  ]
+}
