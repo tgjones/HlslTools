@@ -8,11 +8,11 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Classification
 {
-    internal class SemanticTaggerTests : AsyncTaggerTestsBase<SemanticTagger, IClassificationTag>
+    public class SemanticTaggerTests : AsyncTaggerTestsBase
     {
-        private HlslClassificationService _hlslClassificationService;
+        private readonly HlslClassificationService _hlslClassificationService;
 
-        protected override void OnTestFixtureSetUp()
+        public SemanticTaggerTests()
         {
             _hlslClassificationService = Container.GetExportedValue<HlslClassificationService>();
         }
@@ -21,10 +21,10 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Classification
         [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
         public async Task CanDoTagging(string testFile)
         {
-            await RunTestAsync(testFile);
+            await RunTestAsync<SemanticTagger, IClassificationTag>(testFile, CreateTagger);
         }
 
-        protected override SemanticTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
+        private SemanticTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             return new SemanticTagger(_hlslClassificationService, backgroundParser);
         }

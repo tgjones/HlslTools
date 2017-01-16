@@ -12,11 +12,11 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
 {
-    internal abstract class AsyncTaggerTestsBase<TTagger, TTag> : MefTestsBase
-        where TTagger : AsyncTagger<TTag>
-        where TTag : ITag
+    public abstract class AsyncTaggerTestsBase : MefTestsBase
     {
-        protected async Task RunTestAsync(string testFile)
+        internal async Task RunTestAsync<TTagger, TTag>(string testFile, CreateTagger<TTagger, TTag> createTagger)
+            where TTagger : AsyncTagger<TTag>
+            where TTag : ITag
         {
             // Arrange.
             VisualStudioSourceTextFactory.Instance = Container.GetExportedValue<VisualStudioSourceTextFactory>();
@@ -24,7 +24,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
             var backgroundParser = new BackgroundParser(textBuffer);
             var snapshot = textBuffer.CurrentSnapshot;
-            var tagger = CreateTagger(backgroundParser, textBuffer);
+            var tagger = createTagger(backgroundParser, textBuffer);
 
             // Act.
             await tagger.InvalidateTags(snapshot, CancellationToken.None);
@@ -40,7 +40,9 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
             backgroundParser.Dispose();
         }
 
-        protected abstract TTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer);
+        internal delegate TTagger CreateTagger<TTagger, TTag>(BackgroundParser backgroundParser, ITextBuffer textBuffer)
+            where TTagger : AsyncTagger<TTag>
+            where TTag : ITag;
 
         protected virtual bool MustCreateTagSpans => true;
     }

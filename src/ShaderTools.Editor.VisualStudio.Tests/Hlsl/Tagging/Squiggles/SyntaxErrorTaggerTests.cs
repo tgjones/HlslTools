@@ -10,16 +10,16 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Squiggles
 {
-    internal class SyntaxErrorTaggerTests : AsyncTaggerTestsBase<SyntaxErrorTagger, IErrorTag>
+    public class SyntaxErrorTaggerTests : AsyncTaggerTestsBase
     {
         [Theory]
         [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
         public async Task CanDoTagging(string testFile)
         {
-            await RunTestAsync(testFile);
+            await RunTestAsync<SyntaxErrorTagger, IErrorTag>(testFile, CreateTagger);
         }
 
-        protected override SyntaxErrorTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
+        private SyntaxErrorTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             var textView = Substitute.For<ITextView>();
             textView.TextSnapshot.Returns(textBuffer.CurrentSnapshot);

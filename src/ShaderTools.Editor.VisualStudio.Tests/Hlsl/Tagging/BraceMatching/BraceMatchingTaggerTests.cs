@@ -10,16 +10,16 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.BraceMatching
 {
-    internal class BraceMatchingTaggerTests : AsyncTaggerTestsBase<BraceMatchingTagger, ITextMarkerTag>
+    public class BraceMatchingTaggerTests : AsyncTaggerTestsBase
     {
         [Theory]
         [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
         public async Task CanDoTagging(string testFile)
         {
-            await RunTestAsync(testFile);
+            await RunTestAsync<BraceMatchingTagger, ITextMarkerTag>(testFile, CreateTagger);
         }
 
-        protected override BraceMatchingTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
+        private BraceMatchingTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             var textView = Substitute.For<ITextView>();
             var snapshotPoint = new SnapshotPoint(textBuffer.CurrentSnapshot, 0);

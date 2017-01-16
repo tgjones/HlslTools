@@ -5,7 +5,7 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
 {
-    public class SmartIndentTests
+    public class SmartIndentTests : VisualStudioTestsBase
     {
         [Fact]
         public void TestIndent()

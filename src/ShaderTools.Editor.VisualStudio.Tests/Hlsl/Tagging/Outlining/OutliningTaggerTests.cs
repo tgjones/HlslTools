@@ -8,16 +8,16 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Outlining
 {
-    internal class OutliningTaggerTests : AsyncTaggerTestsBase<OutliningTagger, IOutliningRegionTag>
+    public class OutliningTaggerTests : AsyncTaggerTestsBase
     {
         [Theory]
         [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
         public async Task CanDoTagging(string testFile)
         {
-            await RunTestAsync(testFile);
+            await RunTestAsync<OutliningTagger, IOutliningRegionTag>(testFile, CreateTagger);
         }
 
-        protected override OutliningTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
+        private OutliningTagger CreateTagger(BackgroundParser backgroundParser, ITextBuffer textBuffer)
         {
             return new OutliningTagger(textBuffer, backgroundParser, new FakeOptionsService());
         }
