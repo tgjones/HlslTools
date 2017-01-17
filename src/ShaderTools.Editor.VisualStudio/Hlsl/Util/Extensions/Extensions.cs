@@ -14,6 +14,7 @@ using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Core.Options;
+using System.IO;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 {
@@ -42,7 +43,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
         public static ConfigFile GetConfigFile(this ITextBuffer textBuffer)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(ConfigFileKey,
-                () => ConfigFileLoader.LoadAndMergeConfigFile(textBuffer.GetTextDocument()?.FilePath));
+                () =>
+                {
+                    var filePath = textBuffer.GetTextDocument()?.FilePath;
+                    if (filePath != null)
+                        filePath = Path.GetDirectoryName(filePath);
+                    return ConfigFileLoader.LoadAndMergeConfigFile(filePath);
+                });
         }
 
         public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer)

@@ -33,7 +33,8 @@ namespace ShaderTools.Core.Options
                     if (Path.IsPathRooted(x))
                         return x;
                     return Path.Combine(folder, x.Replace("/", "\\"));
-                });
+                })
+                .Select(x => Path.GetFullPath(x)); // Expand . and ..
         }
     }
 }

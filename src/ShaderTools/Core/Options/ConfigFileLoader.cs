@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace ShaderTools.Core.Options
 {
@@ -12,13 +14,15 @@ namespace ShaderTools.Core.Options
             UseSimpleDictionaryFormat = true
         });
 
-        public static ConfigFile LoadAndMergeConfigFile(string filePath)
+        public static ConfigFile LoadAndMergeConfigFile(string directory)
         {
-            if (filePath == null)
+            if (directory == null)
                 return new ConfigFile();
 
-            var initialDirectory = Path.GetDirectoryName(filePath);
-            var configFiles = GetConfigFiles(initialDirectory);
+            if (!Path.IsPathRooted(directory))
+                throw new ArgumentException();
+
+            var configFiles = GetConfigFiles(directory);
 
             // We want closer config files to take precedence over further ones.
 
@@ -48,16 +52,25 @@ namespace ShaderTools.Core.Options
                 var configFilePath = Path.Combine(directoryInfo.FullName, "shadertoolsconfig.json");
                 if (File.Exists(configFilePath))
                 {
-                    // TODO: Error handling.
-                    ConfigFile configFile;
-                    using (var configFileStream = File.OpenRead(configFilePath))
-                        configFile = (ConfigFile) Serializer.ReadObject(configFileStream);
+                    try
+                    {
+                        ConfigFile configFile;
 
-                    configFile.FileName = configFilePath;
-                    result.Add(configFile);
+                        // Workaround for weird DataContractJsonSerializer issue when JSON file starts with BOM.
+                        var configFileText = File.ReadAllText(configFilePath);
+                        using (var configFileStream = new MemoryStream(Encoding.UTF8.GetBytes(configFileText)))
+                            configFile = (ConfigFile) Serializer.ReadObject(configFileStream);
 
-                    if (configFile.Root)
-                        break;
+                        configFile.FileName = configFilePath;
+                        result.Add(configFile);
+
+                        if (configFile.Root)
+                            break;
+                    }
+                    catch (Exception)
+                    {
+                        // TODO: Log exception somewhere user can see it.
+                    }
                 }
 
                 directoryInfo = directoryInfo.Parent;

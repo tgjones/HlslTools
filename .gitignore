@@ -16,6 +16,7 @@ Bin
 *.suo
 *.cache
 Thumbs.db
+.vs/
 
 # NuGet Packages Directory
 packages

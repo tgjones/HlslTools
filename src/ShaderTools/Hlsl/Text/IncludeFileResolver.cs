@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using ShaderTools.Core.Text;
 
 namespace ShaderTools.Hlsl.Text
@@ -16,6 +17,10 @@ namespace ShaderTools.Hlsl.Text
         public SourceText OpenInclude(string includeFilename, string currentFilename, string rootFilename, IEnumerable<string> additionalIncludeDirectories)
         {
             SourceText text;
+
+            // Check for invalid path chars.
+            if (includeFilename.Any(x => Path.GetInvalidPathChars().Contains(x)))
+                return null;
 
             // If path is rooted, open it directly.
             if (Path.IsPathRooted(includeFilename))

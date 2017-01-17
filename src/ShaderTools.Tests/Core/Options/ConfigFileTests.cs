@@ -10,7 +10,7 @@ namespace ShaderTools.Tests.Core.Options
         [Fact]
         public void CanLoadConfigFile()
         {
-            var configFile = ConfigFileLoader.LoadAndMergeConfigFile(@"ChildFolder\GrandchildFolder");
+            var configFile = ConfigFileLoader.LoadAndMergeConfigFile(Path.GetFullPath(@"Core\Options\Assets\ChildFolder\GrandchildFolder"));
 
             Assert.Equal(
                 new Dictionary<string, string>
@@ -20,28 +20,16 @@ namespace ShaderTools.Tests.Core.Options
                 }, 
                 configFile.HlslPreprocessorDefinitions);
 
-            Assert.Equal(
-                new string[]
-                {
-                    "../Bar",
-                    "..\\Foo",
-                    ".",
-                    "..",
-                    "Foo"
-                },
-                configFile.HlslAdditionalIncludeDirectories);
-
-            var workingDirectory = Path.GetFullPath(".");
+            var workingDirectory = Path.GetFullPath(@"Core\Options\Assets");
             Assert.Equal(
                 new string[]
                 {
                     Path.Combine(workingDirectory, "ChildFolder", "Bar"),
                     Path.Combine(workingDirectory, "ChildFolder", "Foo"),
                     Path.Combine(workingDirectory, "ChildFolder"),
-                    workingDirectory,
-                    Path.Combine(workingDirectory, "ChildFolder", "Foo"),
+                    workingDirectory
                 },
-                configFile.GetAbsoluteHlslAdditionalIncludeDirectories());
+                configFile.HlslAdditionalIncludeDirectories);
         }
     }
 }
