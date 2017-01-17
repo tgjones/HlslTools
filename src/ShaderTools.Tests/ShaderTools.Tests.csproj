@@ -81,6 +81,7 @@
     <Compile Include="Hlsl\Parser\StatementParsingTests.cs" />
     <Compile Include="Hlsl\Parser\ErrorRecoveryTests.cs" />
     <Compile Include="Hlsl\Parser\RoundtrippingTests.cs" />
+    <Compile Include="Hlsl\Syntax\SyntaxTreeTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Hlsl\Support\InMemoryFileSystem.cs" />
     <Compile Include="Hlsl\Support\ShaderTestUtility.cs" />

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
@@ -30,10 +31,17 @@ namespace ShaderTools.Hlsl.Syntax
 
         public SourceLocation MapRootFilePosition(int position)
         {
+            if (position < 0)
+                throw new ArgumentOutOfRangeException(nameof(position));
+
+            var lastRootFileSegment = _fileSegments.FindLast(x => x.Text.IsRoot);
+            if (position > lastRootFileSegment.Start + lastRootFileSegment.Length)
+                throw new ArgumentOutOfRangeException(nameof(position));
+
             var runningTotal = 0;
             foreach (var fileSegment in _fileSegments)
             {
-                if (fileSegment.Text.Filename == null && position < fileSegment.Start + fileSegment.Length)
+                if (fileSegment.Text.IsRoot && position < fileSegment.Start + fileSegment.Length)
                     return new SourceLocation(runningTotal + (position - fileSegment.Start));
                 runningTotal += fileSegment.Length;
             }
@@ -45,42 +53,30 @@ namespace ShaderTools.Hlsl.Syntax
             return new SourceRange(MapRootFilePosition(span.Start), span.Length);
         }
 
-        public FilePoint GetFilePoint(SourceLocation location)
-        {
-            // TODO: Move this validation to SourceLocation.
-            if (location.Position < 0)
-                throw new ArgumentOutOfRangeException(nameof(location));
-
-            var lastFileSegment = _fileSegments[_fileSegments.Count - 1];
-            if (location.Position > lastFileSegment.Start + lastFileSegment.Length)
-                throw new ArgumentOutOfRangeException(nameof(location));
-
-            foreach (var fileSegment in _fileSegments)
-                if (location.Position < fileSegment.Start + fileSegment.Length)
-                    return new FilePoint(fileSegment.Text, location.Position - fileSegment.Start);
-
-            throw new InvalidOperationException();
-        }
-
         /// <summary>
         /// If the specified <paramref name="range"/> can't be mapped to span in a single file,
-        /// returns a clipped range that fits into a single file.
+        /// returns a clipped range that fits into a single file (segment).
         /// </summary>
         public override TextSpan GetSourceTextSpan(SourceRange range)
         {
-            var lastFileSegment = _fileSegments[_fileSegments.Count - 1];
-            if (range.Start.Position > lastFileSegment.Start + lastFileSegment.Length)
+            if (range.Start.Position < 0)
                 throw new ArgumentOutOfRangeException(nameof(range));
 
+            var lastFileSegment = _fileSegments[_fileSegments.Count - 1];
+            if (range.Start.Position > _fileSegments.Sum(x => x.Length))
+                throw new ArgumentOutOfRangeException(nameof(range));
+
+            var runningTotal = 0;
             foreach (var fileSegment in _fileSegments)
             {
-                if (range.Start.Position < fileSegment.Start + fileSegment.Length)
+                if (range.Start.Position < runningTotal + fileSegment.Length || fileSegment == lastFileSegment)
                 {
-                    var length = (range.End.Position < fileSegment.Start + fileSegment.Length)
+                    var length = (range.End.Position < runningTotal + fileSegment.Length)
                         ? range.Length
-                        : fileSegment.Start + fileSegment.Length - range.Start.Position;
-                    return new TextSpan(fileSegment.Text, range.Start.Position - fileSegment.Start, length);
+                        : runningTotal + fileSegment.Length - range.Start.Position;
+                    return new TextSpan(fileSegment.Text, range.Start.Position - runningTotal + fileSegment.Start, length);
                 }
+                runningTotal += fileSegment.Length;
             }
 
             throw new InvalidOperationException();
