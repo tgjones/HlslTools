@@ -1119,8 +1119,8 @@ namespace ShaderTools.Hlsl.Formatting
 
             Indent();
 
-            foreach (var field in node.Fields)
-                Visit(field);
+            foreach (var member in node.Members)
+                Visit(member);
 
             Dedent();
 

@@ -386,15 +386,29 @@ namespace ShaderTools.Hlsl.Binding
             var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray());
             AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
 
-            var variables = new List<BoundMultipleVariableDeclarations>();
+            var members = new List<BoundNode>();
             var structBinder = new Binder(_sharedBinderState, this);
-            foreach (var variableDeclarationStatement in declaration.Fields)
-                variables.Add(structBinder.Bind(variableDeclarationStatement, x => structBinder.BindField(x, structSymbol)));
+
+            foreach (var memberSyntax in declaration.Members)
+            {
+                switch (memberSyntax.Kind)
+                {
+                    case SyntaxKind.VariableDeclarationStatement:
+                        members.Add(structBinder.Bind((VariableDeclarationStatementSyntax)memberSyntax, x => structBinder.BindField(x, structSymbol)));
+                        break;
+                    case SyntaxKind.FunctionDeclaration:
+                        members.Add(structBinder.Bind((FunctionDeclarationSyntax)memberSyntax, x => structBinder.BindFunctionDeclaration(x, structSymbol)));
+                        break;
+                    case SyntaxKind.FunctionDefinition:
+                        members.Add(structBinder.Bind((FunctionDefinitionSyntax)memberSyntax, x => structBinder.BindFunctionDefinition(x, structSymbol)));
+                        break;
+                }
+            }
 
             foreach (var member in structBinder.LocalSymbols.Values.SelectMany(x => x))
                 structSymbol.AddMember(member);
 
-            return new BoundStructType(structSymbol, variables.ToImmutableArray());
+            return new BoundStructType(structSymbol, members.ToImmutableArray());
         }
 
         private BoundMultipleVariableDeclarations BindField(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)

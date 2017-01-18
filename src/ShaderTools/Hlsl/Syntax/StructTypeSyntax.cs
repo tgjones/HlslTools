@@ -8,19 +8,19 @@ namespace ShaderTools.Hlsl.Syntax
         public readonly SyntaxToken Name;
         public readonly BaseListSyntax BaseList;
         public readonly SyntaxToken OpenBraceToken;
-        public readonly List<VariableDeclarationStatementSyntax> Fields;
+        public readonly List<SyntaxNode> Members;
         public readonly SyntaxToken CloseBraceToken;
 
         public override SyntaxToken NameToken => Name;
 
-        public StructTypeSyntax(SyntaxToken structKeyword, SyntaxToken name, BaseListSyntax baseList, SyntaxToken openBraceToken, List<VariableDeclarationStatementSyntax> fields, SyntaxToken closeBraceToken)
+        public StructTypeSyntax(SyntaxToken structKeyword, SyntaxToken name, BaseListSyntax baseList, SyntaxToken openBraceToken, List<SyntaxNode> members, SyntaxToken closeBraceToken)
             : base(SyntaxKind.StructType)
         {
             RegisterChildNode(out StructKeyword, structKeyword);
             RegisterChildNode(out Name, name);
             RegisterChildNode(out BaseList, baseList);
             RegisterChildNode(out OpenBraceToken, openBraceToken);
-            RegisterChildNodes(out Fields, fields);
+            RegisterChildNodes(out Members, members);
             RegisterChildNode(out CloseBraceToken, closeBraceToken);
         }
 

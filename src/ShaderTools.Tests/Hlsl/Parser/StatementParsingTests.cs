@@ -1130,8 +1130,8 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.Equal("S", cd.Name.Text);
             Assert.Equal(SyntaxKind.StructKeyword, cd.StructKeyword.Kind);
             Assert.NotNull(cd.OpenBraceToken);
-            Assert.Equal(1, cd.Fields.Count);
-            Assert.Equal("int a;", cd.Fields[0].ToString());
+            Assert.Equal(1, cd.Members.Count);
+            Assert.Equal("int a;", cd.Members[0].ToString());
             Assert.NotNull(cd.CloseBraceToken);
 
             Assert.NotNull(typeDeclarationStatement.SemicolonToken);

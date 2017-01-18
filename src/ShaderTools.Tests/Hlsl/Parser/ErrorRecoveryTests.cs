@@ -129,7 +129,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
             var sd = (StructTypeSyntax) typeDeclarationStatement.Type;
             Assert.False(sd.OpenBraceToken.IsMissing);
             Assert.True(sd.CloseBraceToken.IsMissing);
-            Assert.Empty(sd.Fields);
+            Assert.Empty(sd.Members);
             Assert.True(typeDeclarationStatement.SemicolonToken.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }

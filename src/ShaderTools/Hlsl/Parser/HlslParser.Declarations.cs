@@ -68,17 +68,17 @@ namespace ShaderTools.Hlsl.Parser
 
             var openBrace = Match(SyntaxKind.OpenBraceToken);
 
-            var fields = new List<VariableDeclarationStatementSyntax>();
+            var members = new List<SyntaxNode>();
             while (Current.Kind != SyntaxKind.CloseBraceToken)
             {
-                if (IsPossibleVariableDeclarationStatement())
+                if (IsPossibleClassMember())
                 {
-                    fields.Add(ParseVariableDeclarationStatement());
+                    members.Add(ParseClassMember());
                 }
                 else
                 {
                     var action = SkipBadTokens(
-                        p => !p.IsPossibleVariableDeclarationStatement(),
+                        p => !p.IsPossibleClassMember(),
                         p => p.IsTerminator(),
                         SyntaxKind.CloseBraceToken);
                     if (action == PostSkipAction.Abort)
@@ -88,7 +88,7 @@ namespace ShaderTools.Hlsl.Parser
 
             var closeBrace = Match(SyntaxKind.CloseBraceToken);
 
-            return new StructTypeSyntax(@struct, name, baseList, openBrace, fields, closeBrace);
+            return new StructTypeSyntax(@struct, name, baseList, openBrace, members, closeBrace);
         }
 
         private InterfaceTypeSyntax ParseInterfaceType()
