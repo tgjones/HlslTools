@@ -1240,6 +1240,7 @@ namespace ShaderTools.Hlsl.Syntax
                 case SyntaxKind.Float4x4Keyword:
                 case SyntaxKind.ForKeyword:
                 case SyntaxKind.GeometryShaderKeyword:
+                case SyntaxKind.GloballycoherentKeyword:
                 case SyntaxKind.GroupsharedKeyword:
                 case SyntaxKind.HalfKeyword:
                 case SyntaxKind.Half1Keyword:
@@ -1830,6 +1831,8 @@ namespace ShaderTools.Hlsl.Syntax
                     return SyntaxKind.Float4x4Keyword;
                 case "for":
                     return SyntaxKind.ForKeyword;
+                case "globallycoherent":
+                    return SyntaxKind.GloballycoherentKeyword;
                 case "groupshared":
                     return SyntaxKind.GroupsharedKeyword;
                 case "half":
@@ -2464,6 +2467,7 @@ namespace ShaderTools.Hlsl.Syntax
                 case SyntaxKind.InlineKeyword:
                 case SyntaxKind.PreciseKeyword:
                 case SyntaxKind.SharedKeyword:
+                case SyntaxKind.GloballycoherentKeyword:
                 case SyntaxKind.GroupsharedKeyword:
                 case SyntaxKind.StaticKeyword:
                 case SyntaxKind.UniformKeyword:
