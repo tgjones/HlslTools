@@ -20,14 +20,14 @@
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Editing.Commenting;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
+using ShaderTools.Editor.VisualStudio.Tests.Support;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.Commenting
 {
-    //[Apartment(System.Threading.ApartmentState.STA)]
-    internal class CommentingTests : MefTestsBase
+    public class CommentingTests : MefTestsBase
     {
-        [Fact]
+        [WpfFact]
         public void TestCommentCurrentLine()
         {
             var buffer = TextBufferUtility.CreateTextBuffer(Container, @"int i;
@@ -51,7 +51,7 @@ float f;",
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestUnCommentCurrentLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -75,7 +75,7 @@ float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestComment()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -95,7 +95,7 @@ float f;"));
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentEmptyLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -117,7 +117,7 @@ float f;"));
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentWhiteSpaceLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -139,7 +139,7 @@ float f;"));
                  view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentIndented()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -168,7 +168,7 @@ float f;"));
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentIndentedBlankLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -199,7 +199,7 @@ float f;"));
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentBlankLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -217,7 +217,7 @@ float f;",
              view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentIndentedWhiteSpaceLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -248,7 +248,7 @@ float f;",
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestUnCommentIndented()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -277,7 +277,7 @@ float f;",
                     view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestUnComment()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -297,7 +297,7 @@ float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentStartOfLastLine()
         {
             var view = TextViewUtility.CreateTextView(Container,
@@ -317,7 +317,7 @@ float f;",
                 view.TextBuffer.CurrentSnapshot.GetText());
         }
 
-        [Fact]
+        [WpfFact]
         public void TestCommentAfterCodeIsNotUncommented()
         {
             var view = TextViewUtility.CreateTextView(Container,

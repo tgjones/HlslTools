@@ -105,6 +105,9 @@
     <Compile Include="Hlsl\Tagging\Classification\SyntaxTaggerTests.cs" />
     <Compile Include="Hlsl\Tagging\Outlining\OutliningTaggerTests.cs" />
     <Compile Include="Hlsl\Tagging\Squiggles\SyntaxErrorTaggerTests.cs" />
+    <Compile Include="Support\WpfFactAttribute.cs" />
+    <Compile Include="Support\WpfFactDiscoverer.cs" />
+    <Compile Include="Support\WpfTestCase.cs" />
     <Compile Include="VisualStudioTestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
