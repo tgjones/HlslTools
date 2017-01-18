@@ -93,7 +93,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
         public override void VisitStructType(StructTypeSyntax node)
         {
             ProcessItem(node.Name, node.Name.Text, node.GetTextSpanSafe(), NavigateToItemKind.Structure, node.Parent, Glyph.Struct);
-            foreach (var member in node.Fields)
+            foreach (var member in node.Members)
                 Visit(member);
         }
 

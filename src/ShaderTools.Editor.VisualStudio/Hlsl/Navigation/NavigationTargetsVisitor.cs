@@ -101,7 +101,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
         public override IEnumerable<EditorNavigationTarget> VisitStructType(StructTypeSyntax node)
         {
-            yield return CreateTypeTarget(node.Name, node.GetTextSpanSafe(), Glyph.Struct, node.Fields);
+            yield return CreateTypeTarget(node.Name, node.GetTextSpanSafe(), Glyph.Struct, node.Members);
         }
 
         public override IEnumerable<EditorNavigationTarget> VisitFunctionDeclaration(FunctionDeclarationSyntax node)
