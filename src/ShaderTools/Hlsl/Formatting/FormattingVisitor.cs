@@ -5,7 +5,6 @@ using System.Linq;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Hlsl.Formatting
 {
@@ -142,7 +141,7 @@ namespace ShaderTools.Hlsl.Formatting
             }
             else
             {
-                FormatOpenBraceToken(node.OpenBraceToken, forceOpenBraceOnNewline || _options.NewLines.PlaceOpenBraceOnNewLineForArrayInitializers);
+                FormatOpenBraceToken(node.OpenBraceToken, forceOpenBraceOnNewline ? OpenBracesPosition.MoveToNewLine : _options.NewLines.OpenBracePositionForArrayInitializers);
 
                 Indent();
 
@@ -296,7 +295,7 @@ namespace ShaderTools.Hlsl.Formatting
                 switch (node.Parent.Kind)
                 {
                     case SyntaxKind.FunctionDefinition:
-                        FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForFunctions);
+                        FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForFunctions);
                         break;
 
                     case SyntaxKind.ForStatement:
@@ -304,11 +303,11 @@ namespace ShaderTools.Hlsl.Formatting
                     case SyntaxKind.ElseClause:
                     case SyntaxKind.WhileStatement:
                     case SyntaxKind.DoStatement:
-                        FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForControlBlocks);
+                        FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForControlBlocks);
                         break;
 
                     default:
-                        FormatOpenBraceToken(node.OpenBraceToken, true);
+                        FormatOpenBraceToken(node.OpenBraceToken, OpenBracesPosition.DoNotMove);
                         break;
                 }
             }
@@ -354,12 +353,12 @@ namespace ShaderTools.Hlsl.Formatting
         {
             FormatToken(node.ClassKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
 
-            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+            FormatToken(node.Name);
 
             if (node.BaseList != null)
                 Visit(node.BaseList);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTypes);
 
             Indent();
 
@@ -414,12 +413,15 @@ namespace ShaderTools.Hlsl.Formatting
         {
             FormatToken(node.ConstantBufferKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
 
-            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+            FormatToken(node.Name,
+                trailing: node.Register != null
+                    ? TrailingFormattingOperation.RemoveTrailingWhitespace
+                    : (TrailingFormattingOperation?) null);
 
             if (node.Register != null)
                 Visit(node.Register);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTypes);
 
             Indent();
 
@@ -573,7 +575,7 @@ namespace ShaderTools.Hlsl.Formatting
             if (node.Incrementor != null)
                 Visit(node.Incrementor);
 
-            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements);
+            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements, false);
 
             VisitStatement(node.Statement);
         }
@@ -710,7 +712,7 @@ namespace ShaderTools.Hlsl.Formatting
 
             Visit(node.Condition);
 
-            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements);
+            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements, false);
 
             VisitStatement(node.Statement);
 
@@ -727,9 +729,9 @@ namespace ShaderTools.Hlsl.Formatting
         {
             FormatToken(node.InterfaceKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
             
-            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+            FormatToken(node.Name);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTypes);
 
             Indent();
 
@@ -802,7 +804,7 @@ namespace ShaderTools.Hlsl.Formatting
 
             FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTypes);
 
             Indent();
 
@@ -875,7 +877,7 @@ namespace ShaderTools.Hlsl.Formatting
 
                 FormatCommaSeparatedSyntaxList(node.Parameters);
 
-                FormatToken(node.CloseParenToken, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+                FormatToken(node.CloseParenToken);
             }
             else
             {
@@ -889,7 +891,7 @@ namespace ShaderTools.Hlsl.Formatting
 
                 FormatCommaSeparatedSyntaxList(node.Parameters);
 
-                FormatCloseParenToken(node.CloseParenToken, _options.Spacing.FunctionDeclarationInsertSpaceWithinArgumentListParentheses);
+                FormatCloseParenToken(node.CloseParenToken, _options.Spacing.FunctionDeclarationInsertSpaceWithinArgumentListParentheses, false);
             }
         }
 
@@ -909,7 +911,7 @@ namespace ShaderTools.Hlsl.Formatting
             if (node.Name != null)
                 FormatToken(node.Name, trailing: TrailingFormattingOperation.EnsureTrailingWhitespace);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTechniquesAndPasses);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTechniquesAndPasses);
 
             Indent();
 
@@ -1058,7 +1060,7 @@ namespace ShaderTools.Hlsl.Formatting
 
         public override void VisitStateArrayInitializer(StateArrayInitializerSyntax node)
         {
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForStateBlocks);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForStateBlocks);
 
             Indent();
 
@@ -1072,7 +1074,7 @@ namespace ShaderTools.Hlsl.Formatting
 
         public override void VisitStateInitializer(StateInitializerSyntax node)
         {
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForStateBlocks);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForStateBlocks);
 
             Indent();
 
@@ -1113,9 +1115,9 @@ namespace ShaderTools.Hlsl.Formatting
         {
             FormatToken(node.StructKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
 
-            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+            FormatToken(node.Name);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTypes);
 
             Indent();
 
@@ -1156,9 +1158,9 @@ namespace ShaderTools.Hlsl.Formatting
 
             Visit(node.Expression);
 
-            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements);
+            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements, false);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForControlBlocks);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForControlBlocks);
 
             foreach (var section in node.Sections)
                 Visit(section);
@@ -1181,9 +1183,9 @@ namespace ShaderTools.Hlsl.Formatting
             FormatToken(node.TechniqueKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
 
             if (node.Name != null)
-                FormatToken(node.Name, trailing: TrailingFormattingOperation.EnsureTrailingWhitespace);
+                FormatToken(node.Name);
 
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTechniquesAndPasses);
+            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.OpenBracePositionForTechniquesAndPasses);
 
             Indent();
 
@@ -1233,7 +1235,11 @@ namespace ShaderTools.Hlsl.Formatting
 
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
-            FormatToken(node.Identifier, LeadingFormattingOperation.EnsureLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
+            FormatToken(node.Identifier, 
+                LeadingFormattingOperation.EnsureLeadingWhitespace,
+                !(node.Initializer is StateInitializerSyntax)
+                    ? TrailingFormattingOperation.RemoveTrailingWhitespace
+                    : (TrailingFormattingOperation?) null);
 
             foreach (var arrayRankSpecifier in node.ArrayRankSpecifiers)
                 Visit(arrayRankSpecifier);
@@ -1270,7 +1276,7 @@ namespace ShaderTools.Hlsl.Formatting
 
             Visit(node.Condition);
 
-            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements);
+            FormatCloseParenToken(node.CloseParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfControlFlowStatements, false);
 
             VisitStatement(node.Statement);
         }
@@ -1342,15 +1348,27 @@ namespace ShaderTools.Hlsl.Formatting
                     : TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        private void FormatOpenBraceToken(SyntaxToken openBraceToken, bool placeOpenBraceOnNewline)
+        private void FormatOpenBraceToken(SyntaxToken openBraceToken, OpenBracesPosition openBracePosition)
         {
             Debug.Assert(openBraceToken.Kind == SyntaxKind.OpenBraceToken);
 
-            FormatToken(openBraceToken,
-                placeOpenBraceOnNewline
-                    ? LeadingFormattingOperation.RemoveLeadingWhitespaceIncludingNewlinesAndEnsureLeadingNewline
-                    : LeadingFormattingOperation.RemoveLeadingWhitespaceIncludingNewlinesAndEnsureLeadingWhitespace,
-                TrailingFormattingOperation.RemoveTrailingWhitespace);
+            switch (openBracePosition)
+            {
+                case OpenBracesPosition.MoveToNewLine:
+                    FormatToken(openBraceToken,
+                        LeadingFormattingOperation.RemoveLeadingWhitespaceIncludingNewlinesAndEnsureLeadingNewline,
+                        TrailingFormattingOperation.RemoveTrailingWhitespace);
+                    break;
+                case OpenBracesPosition.KeepOnSameLineAndPrependSpace:
+                    FormatToken(openBraceToken,
+                        LeadingFormattingOperation.RemoveLeadingWhitespaceIncludingNewlinesAndEnsureLeadingWhitespace,
+                        TrailingFormattingOperation.RemoveTrailingWhitespace);
+                    break;
+                case OpenBracesPosition.DoNotMove:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(openBracePosition));
+            }
         }
 
         private void FormatCloseBraceToken(SyntaxToken closeBraceToken)
@@ -1371,7 +1389,7 @@ namespace ShaderTools.Hlsl.Formatting
                 : TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        private void FormatCloseParenToken(SyntaxToken closeParenToken, bool spaceBefore)
+        private void FormatCloseParenToken(SyntaxToken closeParenToken, bool spaceBefore, bool removeSpaceAfter = true)
         {
             Debug.Assert(closeParenToken.Kind == SyntaxKind.CloseParenToken);
 
@@ -1379,7 +1397,9 @@ namespace ShaderTools.Hlsl.Formatting
                 spaceBefore
                     ? LeadingFormattingOperation.EnsureLeadingWhitespace
                     : LeadingFormattingOperation.RemoveLeadingWhitespace,
-                TrailingFormattingOperation.RemoveTrailingWhitespace);
+                removeSpaceAfter
+                    ? TrailingFormattingOperation.RemoveTrailingWhitespace
+                    : (TrailingFormattingOperation?) null);
         }
 
         private void FormatSemicolonToken(SyntaxToken semiToken)

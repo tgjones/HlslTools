@@ -8,7 +8,7 @@ using Xunit;
 
 namespace ShaderTools.Tests.Hlsl.Formatting
 {
-    internal class FormatterTests
+    public class FormatterTests
     {
         [Fact]
         public void Annotations()
@@ -525,7 +525,7 @@ float4 position;
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForTypes = false
+                    OpenBracePositionForTypes = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -544,7 +544,7 @@ class C {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForTypes = true
+                    OpenBracePositionForTypes = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
@@ -555,6 +555,26 @@ struct S
 };
 
 class C
+{
+
+    float4 position;
+    float3 normal;
+};", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForTypes = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+struct S   {
+    float4 position;
+    float3 normal;
+};
+
+class C   
 {
 
     float4 position;
@@ -580,7 +600,7 @@ struct  S
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForTypes = false
+                    OpenBracePositionForTypes = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -596,13 +616,31 @@ struct S
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForTypes = true
+                    OpenBracePositionForTypes = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
 struct S
 
 // This is a comment.
+{
+    float4 position;
+    float3 normal;
+};", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForTypes = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+struct S
+
+// This is a comment.
+
+
 {
     float4 position;
     float3 normal;
@@ -624,7 +662,7 @@ struct S
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForTechniquesAndPasses = false
+                    OpenBracePositionForTechniquesAndPasses = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -639,7 +677,7 @@ technique T {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForTechniquesAndPasses = true
+                    OpenBracePositionForTechniquesAndPasses = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
@@ -651,13 +689,28 @@ technique T
         PixelShader = compile ps_2_0 PS();
     }
 }", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForTechniquesAndPasses = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+technique T  {  
+    pass P {  // A comment
+        VertexShader = compile vs_2_0 VS();
+        PixelShader = compile ps_2_0 PS();
+    }
+}", options: options);
         }
 
         [Fact]
         public void BraceOnNewLineForFunctions()
         {
             const string before = @"
-float4 main() {
+float4 main()  {
     return float4(1, 0, 0, 1);
 }";
 
@@ -665,7 +718,7 @@ float4 main() {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForFunctions = false
+                    OpenBracePositionForFunctions = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -677,12 +730,24 @@ float4 main() {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForFunctions = true
+                    OpenBracePositionForFunctions = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
 float4 main()
 {
+    return float4(1, 0, 0, 1);
+}", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForFunctions = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+float4 main()  {
     return float4(1, 0, 0, 1);
 }", options: options);
         }
@@ -692,7 +757,7 @@ float4 main()
         {
             const string before = @"
 float4 main() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++)  {
     }
 }";
 
@@ -700,7 +765,7 @@ float4 main() {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForControlBlocks = false
+                    OpenBracePositionForControlBlocks = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -714,7 +779,7 @@ float4 main()
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForControlBlocks = true
+                    OpenBracePositionForControlBlocks = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
@@ -724,13 +789,27 @@ float4 main()
     {
     }
 }", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForControlBlocks = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+float4 main()
+{
+    for (int i = 0; i < 10; i++)  {
+    }
+}", options: options);
         }
 
         [Fact]
         public void BraceOnNewLineForStateBlocks()
         {
             const string before = @"
-DepthStencilState DepthDisabling {
+DepthStencilState DepthDisabling  {
     DepthEnable = FALSE;
     DepthWriteMask = ZERO;
 };";
@@ -739,7 +818,7 @@ DepthStencilState DepthDisabling {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForStateBlocks = false
+                    OpenBracePositionForStateBlocks = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -752,12 +831,25 @@ DepthStencilState DepthDisabling {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForStateBlocks = true
+                    OpenBracePositionForStateBlocks = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
 DepthStencilState DepthDisabling
 {
+    DepthEnable = FALSE;
+    DepthWriteMask = ZERO;
+};", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForStateBlocks = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+DepthStencilState DepthDisabling  {
     DepthEnable = FALSE;
     DepthWriteMask = ZERO;
 };", options: options);
@@ -783,7 +875,7 @@ float3  wave [ 2 ]  =
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForArrayInitializers = false
+                    OpenBracePositionForArrayInitializers = OpenBracesPosition.KeepOnSameLineAndPrependSpace
                 }
             };
             AssertFormat(before, @"
@@ -803,12 +895,33 @@ float3 wave[2] = {
             {
                 NewLines =
                 {
-                    PlaceOpenBraceOnNewLineForArrayInitializers = true
+                    OpenBracePositionForArrayInitializers = OpenBracesPosition.MoveToNewLine
                 }
             };
             AssertFormat(before, @"
 int arrayVariable[2] =
 {
+    1, 2
+};
+
+float3 wave[2] =
+{
+    { 1.0, 1.0, 0.5 },
+    {
+        2.0, 0.5,
+        1.3
+    }
+};", options: options);
+
+            options = new FormattingOptions
+            {
+                NewLines =
+                {
+                    OpenBracePositionForArrayInitializers = OpenBracesPosition.DoNotMove
+                }
+            };
+            AssertFormat(before, @"
+int arrayVariable[2] = { 
     1, 2
 };
 
