@@ -69,8 +69,16 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             IVsWindowFrame docFrame;
             IVsTextView textView;
 
-            VsShellUtilities.OpenDocument(_serviceProvider, filename, VSConstants.LOGVIEWID_Code,
-              out hierarchy, out itemID, out docFrame, out textView);
+            try
+            {
+                VsShellUtilities.OpenDocument(_serviceProvider, filename, VSConstants.LOGVIEWID_Code,
+                  out hierarchy, out itemID, out docFrame, out textView);
+            }
+            catch
+            {
+                // File might not exist, etc.
+                return;
+            }
 
             if (asReadonly)
             {

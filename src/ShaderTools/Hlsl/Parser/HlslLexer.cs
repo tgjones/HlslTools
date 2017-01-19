@@ -69,10 +69,15 @@ namespace ShaderTools.Hlsl.Parser
             if (options != null)
                 foreach (var define in options.PreprocessorDefines)
                 {
-                    _directives = _directives.Add(new Directive(new ObjectLikeDefineDirectiveTriviaSyntax(
-                        null, null, SyntaxFactory.ParseToken(define.Key),
-                        SyntaxFactory.ParseAllTokens(SourceText.From(define.Value)).ToList(),
-                        null, true)));
+                    var lexer = new HlslLexer(
+                        SourceText.From($"#define {define.Key} {define.Value}", 
+                        "__ConfiguredPreprocessorDefinitions__.hlsl"));
+                    lexer._mode = LexerMode.Directive;
+                    lexer.ExpandMacros = false;
+
+                    var dp = new DirectiveParser(lexer, _directives);
+                    var directive = dp.ParseDirective(true, true, false);
+                    _directives = directive.ApplyDirectives(_directives);
                 }
 
             _options = options ?? new ParserOptions();

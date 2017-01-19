@@ -1,15 +1,25 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
+using ShaderTools.Hlsl.Parser;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Tests.Hlsl.Support;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ShaderTools.Tests.Hlsl.Syntax
 {
     public class SyntaxTreeTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public SyntaxTreeTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Theory]
         [InlineData(0, 0)]
         [InlineData(1, 1)]
@@ -88,6 +98,50 @@ namespace ShaderTools.Tests.Hlsl.Syntax
 
             // Act / Assert.
             Assert.Throws<ArgumentOutOfRangeException>(() => syntaxTree.GetSourceTextSpan(sourceRange));
+        }
+
+        [Fact]
+        public void CanParseWithConfiguredPreprocessorDefinition()
+        {
+            var code = @"
+#if FOO == 1
+float a;
+#else
+float b;
+#endif";
+            var options = new ParserOptions
+            {
+                PreprocessorDefines =
+                {
+                    { "FOO", "1" }
+                }
+            };
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code, "__Root__.hlsl"), options);
+
+            foreach (var diagnostic in syntaxTree.GetDiagnostics())
+                _output.WriteLine(diagnostic.ToString());
+            Assert.Empty(syntaxTree.GetDiagnostics());
+        }
+
+        [Fact]
+        public void CanParseWithInvalidConfiguredPreprocessorDefinition()
+        {
+            var code = @"
+#if FOO == 1
+float a;
+#else
+float b;
+#endif";
+            var options = new ParserOptions
+            {
+                PreprocessorDefines =
+                {
+                    { "FOO", "1 . % \\" }
+                }
+            };
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code, "__Root__.hlsl"), options);
+
+            Assert.Equal(1, syntaxTree.GetDiagnostics().Count());
         }
 
         private static SyntaxTree CreateSyntaxTree()
