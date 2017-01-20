@@ -50,12 +50,12 @@ namespace ShaderTools.Hlsl.Formatting
 
     public class NewLinesOptions
     {
-        public bool PlaceOpenBraceOnNewLineForTypes { get; set; } = true;
-        public bool PlaceOpenBraceOnNewLineForTechniquesAndPasses { get; set; } = true;
-        public bool PlaceOpenBraceOnNewLineForFunctions { get; set; } = true;
-        public bool PlaceOpenBraceOnNewLineForControlBlocks { get; set; } = true;
-        public bool PlaceOpenBraceOnNewLineForStateBlocks { get; set; } = true;
-        public bool PlaceOpenBraceOnNewLineForArrayInitializers { get; set; } = true;
+        public OpenBracesPosition OpenBracePositionForTypes { get; set; } = OpenBracesPosition.MoveToNewLine;
+        public OpenBracesPosition OpenBracePositionForTechniquesAndPasses { get; set; } = OpenBracesPosition.MoveToNewLine;
+        public OpenBracesPosition OpenBracePositionForFunctions { get; set; } = OpenBracesPosition.MoveToNewLine;
+        public OpenBracesPosition OpenBracePositionForControlBlocks { get; set; } = OpenBracesPosition.MoveToNewLine;
+        public OpenBracesPosition OpenBracePositionForStateBlocks { get; set; } = OpenBracesPosition.MoveToNewLine;
+        public OpenBracesPosition OpenBracePositionForArrayInitializers { get; set; } = OpenBracesPosition.MoveToNewLine;
 
         public bool PlaceElseOnNewLine { get; set; } = true;
     }

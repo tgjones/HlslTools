@@ -64,7 +64,7 @@
   
   <Symbols>
     <!-- This is the package guid. -->
-    <GuidSymbol name="guidHlslToolsPackage" value="{7def6c01-a05e-42e6-953d-3fdea1891737}" />
+    <GuidSymbol name="guidHlslToolsPackage" value="{0E01DDB3-F537-4C49-9B50-BDA9DCCE2172}" />
     
     <!-- This is the guid used to group the menu commands together -->
     <GuidSymbol name="guidHlslToolsPackageCmdSet" value="{1971badd-f315-45f6-b241-4813788988bf}">

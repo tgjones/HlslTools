@@ -148,6 +148,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Hlsl\Shaders\Internal\StructMethods.hlsl">
+    <Content Include="Hlsl\Shaders\Internal\ClassFieldAccess.hlsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Hlsl\Shaders\Internal\D3D12Features.hlsl">
@@ -684,6 +685,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Core\Options\Assets\shadertoolsconfig.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Core\Options\Assets\Folder2\shadertoolsconfig.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Hlsl\Shaders\Sdk\Direct3D10\ProceduralMaterials\ProceduralHelpers.fxh">

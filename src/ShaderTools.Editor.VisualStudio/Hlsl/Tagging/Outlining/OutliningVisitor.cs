@@ -6,7 +6,7 @@ using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
 {
-    internal sealed class OutliningVisitor : SyntaxVisitor
+    internal sealed class OutliningVisitor : SyntaxWalker
     {
         private readonly ITextSnapshot _snapshot;
         private readonly List<ITagSpan<IOutliningRegionTag>> _results;
@@ -19,39 +19,43 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
             _cancellationToken = cancellationToken;
         }
 
-        public override void Visit(SyntaxNode node)
+        protected override void DefaultVisit(SyntaxNode node)
         {
             _cancellationToken.ThrowIfCancellationRequested();
-            base.Visit(node);
+            base.DefaultVisit(node);
         }
 
-        public override void VisitCompilationUnit(CompilationUnitSyntax node)
+        public override void VisitNamespace(NamespaceSyntax node)
         {
-            foreach (var childNode in node.ChildNodes)
-                Visit((SyntaxNode) childNode);
+            CreateTag(node.Name, node.CloseBraceToken, false);
+            base.VisitNamespace(node);
         }
 
         public override void VisitTypeDeclarationStatement(TypeDeclarationStatementSyntax node)
         {
-            CreateTag(node.Type.NameToken, node.SemicolonToken);
+            CreateTag(node.Type.NameToken, node.SemicolonToken, false);
+            base.VisitTypeDeclarationStatement(node);
         }
 
         public override void VisitConstantBuffer(ConstantBufferSyntax node)
         {
-            CreateTag(node.Name, node.CloseBraceToken);
+            CreateTag(node.Name, node.CloseBraceToken, false);
+            base.VisitConstantBuffer(node);
         }
 
         public override void VisitFunctionDefinition(FunctionDefinitionSyntax node)
         {
-            CreateTag(node.ParameterList.CloseParenToken, node.Body.CloseBraceToken);
+            CreateTag(node.ParameterList.CloseParenToken, node.Body.CloseBraceToken, true);
+            base.VisitFunctionDefinition(node);
         }
 
         public override void VisitTechnique(TechniqueSyntax node)
         {
-            CreateTag(node.Name, node.CloseBraceToken);
+            CreateTag(node.Name, node.CloseBraceToken, false);
+            base.VisitTechnique(node);
         }
 
-        private void CreateTag(SyntaxToken startToken, SyntaxToken endToken)
+        private void CreateTag(SyntaxToken startToken, SyntaxToken endToken, bool isImplementation)
         {
             if (startToken == null || !startToken.Span.IsInRootFile
                 || endToken == null || !endToken.Span.IsInRootFile)
@@ -62,7 +66,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
                 return;
 
             var snapshotSpan = new SnapshotSpan(_snapshot, span);
-            var tag = new OutliningRegionTag("...", snapshotSpan.GetText());
+            var tag = new OutliningRegionTag(false, isImplementation, "...", snapshotSpan.GetText());
             var tagSpan = new TagSpan<IOutliningRegionTag>(snapshotSpan, tag);
 
             _results.Add(tagSpan);
