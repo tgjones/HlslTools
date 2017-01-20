@@ -360,7 +360,7 @@ namespace ShaderTools.Hlsl.Binding
                 switch (memberSyntax.Kind)
                 {
                     case SyntaxKind.VariableDeclarationStatement:
-                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, x => classBinder.BindVariableDeclarationStatement(x, classSymbol)));
+                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, x => classBinder.BindField(x, classSymbol)));
                         break;
                     case SyntaxKind.FunctionDeclaration:
                         members.Add(classBinder.Bind((FunctionDeclarationSyntax) memberSyntax, x => classBinder.BindFunctionDeclaration(x, classSymbol)));
