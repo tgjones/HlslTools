@@ -309,6 +309,10 @@ namespace ShaderTools.Hlsl.Symbols.Markup
                     markup.AppendName(SymbolMarkupKind.NamespaceName, symbol.Name);
                     markup.AppendPunctuation("::");
                     break;
+                case SymbolKind.Struct:
+                    markup.AppendName(SymbolMarkupKind.StructName, symbol.Name);
+                    markup.AppendPunctuation("::");
+                    break;
                 case SymbolKind.Class:
                     markup.AppendName(SymbolMarkupKind.ClassName, symbol.Name);
                     markup.AppendPunctuation("::");

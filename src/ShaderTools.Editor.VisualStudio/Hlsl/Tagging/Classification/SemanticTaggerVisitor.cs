@@ -71,7 +71,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name.GetUnqualifiedName().Name, symbol.Parent != null && symbol.Parent.Kind == SymbolKind.Class
+                CreateTag(node.Name.GetUnqualifiedName().Name, symbol.Parent != null && (symbol.Parent.Kind == SymbolKind.Class || symbol.Parent.Kind == SymbolKind.Struct)
                     ? _classificationService.MethodIdentifier
                     : _classificationService.FunctionIdentifier);
 

@@ -266,7 +266,7 @@ namespace ShaderTools.Hlsl.Binding
             if (declaration.Semantic != null)
                 Bind(declaration.Semantic, BindVariableQualifier);
 
-            var functionBinder = (functionOwner != null && functionOwner.Kind == SymbolKind.Class)
+            var functionBinder = (functionOwner != null && (functionOwner.Kind == SymbolKind.Class || functionOwner.Kind == SymbolKind.Struct))
                 ? new StructMethodBinder(_sharedBinderState, this, (StructSymbol) functionOwner)
                 : new Binder(_sharedBinderState, this);
 
@@ -321,7 +321,7 @@ namespace ShaderTools.Hlsl.Binding
             return new BoundConstantBuffer(constantBufferSymbol, variables.ToImmutableArray());
         }
 
-        private void BindBaseList(BaseListSyntax baseList, Symbol parent, out ClassOrStructSymbol baseType, out List<InterfaceSymbol> baseInterfaces)
+        private void BindBaseList(BaseListSyntax baseList, Symbol parent, out StructSymbol baseType, out List<InterfaceSymbol> baseInterfaces)
         {
             baseType = null;
             baseInterfaces = new List<InterfaceSymbol>();
@@ -333,7 +333,7 @@ namespace ShaderTools.Hlsl.Binding
                 {
                     case SymbolKind.Class:
                     case SymbolKind.Struct:
-                        baseType = (ClassOrStructSymbol) baseTypeTemp.TypeSymbol;
+                        baseType = (StructSymbol) baseTypeTemp.TypeSymbol;
                         break;
                     case SymbolKind.Interface:
                         baseInterfaces.Add((InterfaceSymbol) baseTypeTemp.TypeSymbol);
@@ -344,7 +344,7 @@ namespace ShaderTools.Hlsl.Binding
 
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration, Symbol parent)
         {
-            ClassOrStructSymbol baseType;
+            StructSymbol baseType;
             List<InterfaceSymbol> baseInterfaces;
             BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
 

@@ -15,7 +15,7 @@ namespace ShaderTools.Hlsl.Binding
 
         protected override IEnumerable<Binder> GetAdditionalParentBinders()
         {
-            var baseClass = (ClassOrStructSymbol) _structSymbol;
+            var baseClass = (StructSymbol) _structSymbol;
             while (baseClass != null)
             {
                 yield return baseClass.Binder;
