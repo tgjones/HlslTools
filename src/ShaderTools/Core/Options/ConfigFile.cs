@@ -20,6 +20,16 @@ namespace ShaderTools.Core.Options
         [DataMember(Name = "hlsl.additionalIncludeDirectories")]
         public List<string> HlslAdditionalIncludeDirectories { get; set; } = new List<string>();
 
+        [OnDeserialized]
+        private void OnDeserialized(StreamingContext c)
+        {
+            if (HlslPreprocessorDefinitions == null)
+                HlslPreprocessorDefinitions = new Dictionary<string, string>();
+
+            if (HlslAdditionalIncludeDirectories == null)
+                HlslAdditionalIncludeDirectories = new List<string>();
+        }
+
         /// <summary>
         /// Converts the (potentially) relative include directory paths to absolute directory paths.
         /// </summary>

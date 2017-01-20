@@ -31,5 +31,14 @@ namespace ShaderTools.Tests.Core.Options
                 },
                 configFile.HlslAdditionalIncludeDirectories);
         }
+
+        [Fact]
+        public void CanLoadConfigFileWithMissingSettings()
+        {
+            var configFile = ConfigFileLoader.LoadAndMergeConfigFile(Path.GetFullPath(@"Core\Options\Assets\Folder2"));
+
+            Assert.Empty(configFile.HlslPreprocessorDefinitions);
+            Assert.Empty(configFile.HlslAdditionalIncludeDirectories);
+        }
     }
 }
