@@ -3,19 +3,19 @@ using ShaderTools.Hlsl.Symbols;
 
 namespace ShaderTools.Hlsl.Binding
 {
-    internal sealed class ClassMethodBinder : Binder
+    internal sealed class StructMethodBinder : Binder
     {
-        private readonly ClassSymbol _classSymbol;
+        private readonly StructSymbol _structSymbol;
 
-        public ClassMethodBinder(SharedBinderState sharedBinderState, Binder parent, ClassSymbol classSymbol)
+        public StructMethodBinder(SharedBinderState sharedBinderState, Binder parent, StructSymbol classSymbol)
             : base(sharedBinderState, parent)
         {
-            _classSymbol = classSymbol;
+            _structSymbol = classSymbol;
         }
 
         protected override IEnumerable<Binder> GetAdditionalParentBinders()
         {
-            var baseClass = (ClassOrStructSymbol) _classSymbol;
+            var baseClass = (ClassOrStructSymbol) _structSymbol;
             while (baseClass != null)
             {
                 yield return baseClass.Binder;

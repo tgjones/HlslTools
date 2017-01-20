@@ -267,7 +267,7 @@ namespace ShaderTools.Hlsl.Binding
                 Bind(declaration.Semantic, BindVariableQualifier);
 
             var functionBinder = (functionOwner != null && functionOwner.Kind == SymbolKind.Class)
-                ? new ClassMethodBinder(_sharedBinderState, this, (ClassSymbol) functionOwner)
+                ? new StructMethodBinder(_sharedBinderState, this, (StructSymbol) functionOwner)
                 : new Binder(_sharedBinderState, this);
 
             if (isQualifiedName)
@@ -342,52 +342,17 @@ namespace ShaderTools.Hlsl.Binding
             }
         }
 
-        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration, Symbol parent)
-        {
-            ClassOrStructSymbol baseType;
-            List<InterfaceSymbol> baseInterfaces;
-            BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
-
-            var classBinder = new Binder(_sharedBinderState, this);
-
-            var classSymbol = new ClassSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), classBinder);
-            AddSymbol(classSymbol, declaration.Name.SourceRange);
-
-            var members = new List<BoundNode>();
-
-            foreach (var memberSyntax in declaration.Members)
-            {
-                switch (memberSyntax.Kind)
-                {
-                    case SyntaxKind.VariableDeclarationStatement:
-                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, x => classBinder.BindVariableDeclarationStatement(x, classSymbol)));
-                        break;
-                    case SyntaxKind.FunctionDeclaration:
-                        members.Add(classBinder.Bind((FunctionDeclarationSyntax) memberSyntax, x => classBinder.BindFunctionDeclaration(x, classSymbol)));
-                        break;
-                    case SyntaxKind.FunctionDefinition:
-                        members.Add(classBinder.Bind((FunctionDefinitionSyntax) memberSyntax, x => classBinder.BindFunctionDefinition(x, classSymbol)));
-                        break;
-                }
-            }
-
-            foreach (var member in classBinder.LocalSymbols.Values.SelectMany(x => x))
-                classSymbol.AddMember(member);
-
-            return new BoundClassType(classSymbol, members.ToImmutableArray());
-        }
-
         private BoundStructType BindStructDeclaration(StructTypeSyntax declaration, Symbol parent)
         {
             ClassOrStructSymbol baseType;
             List<InterfaceSymbol> baseInterfaces;
             BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
 
-            var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray());
+            var structBinder = new Binder(_sharedBinderState, this);
+            var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), structBinder);
             AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
 
             var members = new List<BoundNode>();
-            var structBinder = new Binder(_sharedBinderState, this);
 
             foreach (var memberSyntax in declaration.Members)
             {
@@ -443,7 +408,6 @@ namespace ShaderTools.Hlsl.Binding
             switch (syntax.Kind)
             {
                 case SyntaxKind.ClassType:
-                    return BindClassDeclaration((ClassTypeSyntax) syntax, parent);
                 case SyntaxKind.StructType:
                     return BindStructDeclaration((StructTypeSyntax) syntax, parent);
                 case SyntaxKind.InterfaceType:

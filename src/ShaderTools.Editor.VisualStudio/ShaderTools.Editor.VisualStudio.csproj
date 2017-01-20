@@ -305,7 +305,6 @@
     <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierDeclarationQuickInfoModelProvider.cs" />
     <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\IdentifierQuickInfoModelProvider.cs" />
     <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\IQuickInfoModelProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\ClassDefinitionQuickInfoModelProvider.cs" />
     <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\LiteralQuickInfoModelProvider.cs" />
     <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\MacroDefinitionQuickInfoModelProvider.cs" />
     <Compile Include="Hlsl\IntelliSense\QuickInfo\QuickInfoModelProviders\MacroReferenceQuickInfoModelProvider.cs" />

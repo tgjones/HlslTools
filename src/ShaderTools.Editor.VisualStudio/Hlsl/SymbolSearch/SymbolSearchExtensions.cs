@@ -51,13 +51,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
                     break;
                 }
                 case SyntaxKind.ClassType:
-                {
-                    var expression = (ClassTypeSyntax) node;
-                    var symbol = semanticModel.GetDeclaredSymbol(expression);
-                    if (symbol != null)
-                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.Span);
-                    break;
-                }
                 case SyntaxKind.StructType:
                 {
                     var expression = (StructTypeSyntax) node;

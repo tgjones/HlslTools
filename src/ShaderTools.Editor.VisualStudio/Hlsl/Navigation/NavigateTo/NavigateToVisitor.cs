@@ -69,13 +69,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
             Visit(node.Type);
         }
 
-        public override void VisitClassType(ClassTypeSyntax node)
-        {
-            ProcessItem(node.Name, node.Name.Text, node.GetTextSpanSafe(), NavigateToItemKind.Class, node.Parent, Glyph.Class);
-            foreach (var member in node.Members)
-                Visit(member);
-        }
-
         public override void VisitConstantBuffer(ConstantBufferSyntax node)
         {
             ProcessItem(node.Name, node.Name.Text, node.GetTextSpanSafe(), NavigateToItemKind.Structure, node.Parent, Glyph.ConstantBuffer);
@@ -92,7 +85,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
 
         public override void VisitStructType(StructTypeSyntax node)
         {
-            ProcessItem(node.Name, node.Name.Text, node.GetTextSpanSafe(), NavigateToItemKind.Structure, node.Parent, Glyph.Struct);
+            ProcessItem(node.Name, node.Name.Text, node.GetTextSpanSafe(), node.IsClass ? NavigateToItemKind.Class : NavigateToItemKind.Structure, node.Parent, node.IsClass ? Glyph.Class : Glyph.Struct);
             foreach (var member in node.Members)
                 Visit(member);
         }

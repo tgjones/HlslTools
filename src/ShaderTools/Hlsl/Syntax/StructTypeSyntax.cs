@@ -13,8 +13,10 @@ namespace ShaderTools.Hlsl.Syntax
 
         public override SyntaxToken NameToken => Name;
 
+        public bool IsClass => Kind == SyntaxKind.ClassKeyword;
+
         public StructTypeSyntax(SyntaxToken structKeyword, SyntaxToken name, BaseListSyntax baseList, SyntaxToken openBraceToken, List<SyntaxNode> members, SyntaxToken closeBraceToken)
-            : base(SyntaxKind.StructType)
+            : base(structKeyword.Kind)
         {
             RegisterChildNode(out StructKeyword, structKeyword);
             RegisterChildNode(out Name, name);

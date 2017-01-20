@@ -7,40 +7,6 @@ namespace ShaderTools.Hlsl.Parser
 {
     internal partial class HlslParser
     {
-        private ClassTypeSyntax ParseClassType()
-        {
-            var @class = Match(SyntaxKind.ClassKeyword);
-            var name = Match(SyntaxKind.IdentifierToken);
-
-            BaseListSyntax baseList = null;
-            if (Current.Kind == SyntaxKind.ColonToken)
-                baseList = ParseBaseList();
-
-            var openBrace = Match(SyntaxKind.OpenBraceToken);
-
-            var members = new List<SyntaxNode>();
-            while (Current.Kind != SyntaxKind.CloseBraceToken)
-            {
-                if (IsPossibleClassMember())
-                {
-                    members.Add(ParseClassMember());
-                }
-                else
-                {
-                    var action = SkipBadTokens(
-                        p => !p.IsPossibleClassMember(),
-                        p => p.IsTerminator(),
-                        SyntaxKind.CloseBraceToken);
-                    if (action == PostSkipAction.Abort)
-                        break;
-                }
-            }
-
-            var closeBrace = Match(SyntaxKind.CloseBraceToken);
-
-            return new ClassTypeSyntax(@class, name, baseList, openBrace, members, closeBrace);
-        }
-
         private BaseListSyntax ParseBaseList()
         {
             var colon = Match(SyntaxKind.ColonToken);
@@ -55,9 +21,9 @@ namespace ShaderTools.Hlsl.Parser
             return ParseDeclarationStatement();
         }
 
-        private StructTypeSyntax ParseStructType()
+        private StructTypeSyntax ParseStructType(SyntaxKind syntaxKind)
         {
-            var @struct = Match(SyntaxKind.StructKeyword);
+            var @struct = Match(syntaxKind);
 
             // Name is optional -  but if omitted, this *must* be part of a variable declaration.
             var name = NextTokenIf(SyntaxKind.IdentifierToken);

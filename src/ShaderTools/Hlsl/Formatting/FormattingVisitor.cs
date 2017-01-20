@@ -350,27 +350,6 @@ namespace ShaderTools.Hlsl.Formatting
             FormatToken(node.ColonToken, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        public override void VisitClassType(ClassTypeSyntax node)
-        {
-            FormatToken(node.ClassKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
-
-            FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
-
-            if (node.BaseList != null)
-                Visit(node.BaseList);
-
-            FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
-
-            Indent();
-
-            foreach (var member in node.Members)
-                Visit(member);
-
-            Dedent();
-
-            FormatCloseBraceToken(node.CloseBraceToken);
-        }
-
         public override void VisitCompilationUnit(CompilationUnitSyntax node)
         {
             foreach (var declaration in node.Declarations)
@@ -1114,6 +1093,9 @@ namespace ShaderTools.Hlsl.Formatting
             FormatToken(node.StructKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
 
             FormatToken(node.Name, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
+
+            if (node.BaseList != null)
+                Visit(node.BaseList);
 
             FormatOpenBraceToken(node.OpenBraceToken, _options.NewLines.PlaceOpenBraceOnNewLineForTypes);
 
