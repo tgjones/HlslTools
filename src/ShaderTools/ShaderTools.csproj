@@ -181,7 +181,7 @@
     <Compile Include="Hlsl\Parser\ParserOptions.cs" />
     <Compile Include="Hlsl\Symbols\ArraySymbol.cs" />
     <Compile Include="Hlsl\Symbols\AttributeSymbol.cs" />
-    <Compile Include="Hlsl\Symbols\ClassOrStructSymbol.cs" />
+    <Compile Include="Hlsl\Symbols\StructSymbol.cs" />
     <Compile Include="Hlsl\Symbols\ConstantBufferSymbol.cs" />
     <Compile Include="Hlsl\Symbols\ContainerSymbol.cs" />
     <Compile Include="Hlsl\Symbols\FunctionSymbol.cs" />
@@ -212,7 +212,6 @@
     <Compile Include="Hlsl\Symbols\SourceFieldSymbol.cs" />
     <Compile Include="Hlsl\Symbols\SourceFunctionSymbol.cs" />
     <Compile Include="Hlsl\Symbols\SourceParameterSymbol.cs" />
-    <Compile Include="Hlsl\Symbols\StructSymbol.cs" />
     <Compile Include="Hlsl\Symbols\VariadicParameterSymbol.cs" />
     <Compile Include="Hlsl\Syntax\AnnotationsSyntax.cs" />
     <Compile Include="Hlsl\Syntax\CompileExpressionSyntax.cs" />
