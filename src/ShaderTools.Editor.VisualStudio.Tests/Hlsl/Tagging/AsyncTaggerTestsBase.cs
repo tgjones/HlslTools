@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,26 +19,32 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
             where TTagger : AsyncTagger<TTag>
             where TTag : ITag
         {
-            // Arrange.
+            var tagSpans = await GetTagSpans(File.ReadAllText(testFile), createTagger);
+
+            // Assert.
+            if (MustCreateTagSpans)
+                Assert.NotEmpty(tagSpans);
+        }
+
+        internal async Task<List<ITagSpan<TTag>>> GetTagSpans<TTagger, TTag>(string sourceCode, CreateTagger<TTagger, TTag> createTagger)
+            where TTagger : AsyncTagger<TTag>
+            where TTag : ITag
+        {
             VisualStudioSourceTextFactory.Instance = Container.GetExportedValue<VisualStudioSourceTextFactory>();
-            var sourceCode = File.ReadAllText(testFile);
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
             var backgroundParser = new BackgroundParser(textBuffer);
             var snapshot = textBuffer.CurrentSnapshot;
             var tagger = createTagger(backgroundParser, textBuffer);
 
-            // Act.
             await tagger.InvalidateTags(snapshot, CancellationToken.None);
-            var tagSpans = tagger.GetTags(new NormalizedSnapshotSpanCollection(new[]
+            var tags = tagger.GetTags(new NormalizedSnapshotSpanCollection(new[]
             {
                 new SnapshotSpan(snapshot, 0, snapshot.Length)
             })).ToList();
 
-            // Assert.
-            if (MustCreateTagSpans)
-                Assert.NotEmpty(tagSpans);
-
             backgroundParser.Dispose();
+
+            return tags;
         }
 
         internal delegate TTagger CreateTagger<TTagger, TTag>(BackgroundParser backgroundParser, ITextBuffer textBuffer)
