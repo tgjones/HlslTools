@@ -95,6 +95,7 @@ namespace ShaderTools.Hlsl.Syntax
         Float4x4Keyword,
         ForKeyword,
         GeometryShaderKeyword,
+        GloballycoherentKeyword,
         GroupsharedKeyword,
         HalfKeyword,
         Half1Keyword,

@@ -324,7 +324,6 @@
     <Compile Include="Hlsl\Syntax\SemanticSyntax.cs" />
     <Compile Include="Hlsl\Syntax\SkippedTokensTriviaSyntax.cs" />
     <Compile Include="Hlsl\Syntax\StatementSyntax.cs" />
-    <Compile Include="Hlsl\Syntax\StorageFlags.cs" />
     <Compile Include="Hlsl\Syntax\StructuredTriviaSyntax.cs" />
     <Compile Include="Hlsl\Syntax\SyntaxNodeExtensions.cs" />
     <Compile Include="Hlsl\Syntax\SyntaxTree.cs" />
