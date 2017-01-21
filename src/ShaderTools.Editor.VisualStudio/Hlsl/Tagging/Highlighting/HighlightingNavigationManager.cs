@@ -10,9 +10,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
     internal sealed class HighlightingNavigationManager
     {
         private readonly ITextView _textView;
-        private readonly ITagAggregator<HighlightTag> _tagAggregator;
+        private readonly ITagAggregator<NavigableHighlightTag> _tagAggregator;
 
-        public HighlightingNavigationManager(ITextView textView, ITagAggregator<HighlightTag> tagAggregator)
+        public HighlightingNavigationManager(ITextView textView, ITagAggregator<NavigableHighlightTag> tagAggregator)
         {
             _textView = textView;
             _tagAggregator = tagAggregator;

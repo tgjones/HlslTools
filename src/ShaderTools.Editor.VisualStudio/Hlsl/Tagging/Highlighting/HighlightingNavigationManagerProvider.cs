@@ -14,7 +14,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
         {
             return textView.Properties.GetOrCreateSingletonProperty(() =>
             {
-                var tagAggregator = AggregatorFactoryService.CreateTagAggregator<HighlightTag>(textView);
+                var tagAggregator = AggregatorFactoryService.CreateTagAggregator<NavigableHighlightTag>(textView);
                 return new HighlightingNavigationManager(textView, tagAggregator);
             });
         }
