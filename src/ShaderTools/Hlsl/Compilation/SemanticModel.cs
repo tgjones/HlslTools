@@ -35,12 +35,6 @@ namespace ShaderTools.Hlsl.Compilation
             return result?.NamespaceSymbol;
         }
 
-        public ClassSymbol GetDeclaredSymbol(ClassTypeSyntax syntax)
-        {
-            var result = _bindingResult.GetBoundNode(syntax) as BoundClassType;
-            return result?.ClassSymbol;
-        }
-
         public InterfaceSymbol GetDeclaredSymbol(InterfaceTypeSyntax syntax)
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundInterfaceType;

@@ -132,11 +132,6 @@ namespace ShaderTools.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitClassType(ClassTypeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitInterfaceType(InterfaceTypeSyntax node)
         {
             DefaultVisit(node);
@@ -643,11 +638,6 @@ namespace ShaderTools.Hlsl.Syntax
         }
 
         public virtual T VisitStructType(StructTypeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitClassType(ClassTypeSyntax node)
         {
             return DefaultVisit(node);
         }

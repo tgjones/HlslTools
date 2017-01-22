@@ -266,8 +266,8 @@ namespace ShaderTools.Hlsl.Binding
             if (declaration.Semantic != null)
                 Bind(declaration.Semantic, BindVariableQualifier);
 
-            var functionBinder = (functionOwner != null && functionOwner.Kind == SymbolKind.Class)
-                ? new ClassMethodBinder(_sharedBinderState, this, (ClassSymbol) functionOwner)
+            var functionBinder = (functionOwner != null && (functionOwner.Kind == SymbolKind.Class || functionOwner.Kind == SymbolKind.Struct))
+                ? new StructMethodBinder(_sharedBinderState, this, (StructSymbol) functionOwner)
                 : new Binder(_sharedBinderState, this);
 
             if (isQualifiedName)
@@ -321,7 +321,7 @@ namespace ShaderTools.Hlsl.Binding
             return new BoundConstantBuffer(constantBufferSymbol, variables.ToImmutableArray());
         }
 
-        private void BindBaseList(BaseListSyntax baseList, Symbol parent, out ClassOrStructSymbol baseType, out List<InterfaceSymbol> baseInterfaces)
+        private void BindBaseList(BaseListSyntax baseList, Symbol parent, out StructSymbol baseType, out List<InterfaceSymbol> baseInterfaces)
         {
             baseType = null;
             baseInterfaces = new List<InterfaceSymbol>();
@@ -333,7 +333,7 @@ namespace ShaderTools.Hlsl.Binding
                 {
                     case SymbolKind.Class:
                     case SymbolKind.Struct:
-                        baseType = (ClassOrStructSymbol) baseTypeTemp.TypeSymbol;
+                        baseType = (StructSymbol) baseTypeTemp.TypeSymbol;
                         break;
                     case SymbolKind.Interface:
                         baseInterfaces.Add((InterfaceSymbol) baseTypeTemp.TypeSymbol);
@@ -342,16 +342,15 @@ namespace ShaderTools.Hlsl.Binding
             }
         }
 
-        private BoundClassType BindClassDeclaration(ClassTypeSyntax declaration, Symbol parent)
+        private BoundStructType BindStructDeclaration(StructTypeSyntax declaration, Symbol parent)
         {
-            ClassOrStructSymbol baseType;
+            StructSymbol baseType;
             List<InterfaceSymbol> baseInterfaces;
             BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
 
-            var classBinder = new Binder(_sharedBinderState, this);
-
-            var classSymbol = new ClassSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), classBinder);
-            AddSymbol(classSymbol, declaration.Name.SourceRange);
+            var structBinder = new Binder(_sharedBinderState, this);
+            var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), structBinder);
+            AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
 
             var members = new List<BoundNode>();
 
@@ -360,41 +359,21 @@ namespace ShaderTools.Hlsl.Binding
                 switch (memberSyntax.Kind)
                 {
                     case SyntaxKind.VariableDeclarationStatement:
-                        members.Add(classBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, x => classBinder.BindField(x, classSymbol)));
+                        members.Add(structBinder.Bind((VariableDeclarationStatementSyntax)memberSyntax, x => structBinder.BindField(x, structSymbol)));
                         break;
                     case SyntaxKind.FunctionDeclaration:
-                        members.Add(classBinder.Bind((FunctionDeclarationSyntax) memberSyntax, x => classBinder.BindFunctionDeclaration(x, classSymbol)));
+                        members.Add(structBinder.Bind((FunctionDeclarationSyntax)memberSyntax, x => structBinder.BindFunctionDeclaration(x, structSymbol)));
                         break;
                     case SyntaxKind.FunctionDefinition:
-                        members.Add(classBinder.Bind((FunctionDefinitionSyntax) memberSyntax, x => classBinder.BindFunctionDefinition(x, classSymbol)));
+                        members.Add(structBinder.Bind((FunctionDefinitionSyntax)memberSyntax, x => structBinder.BindFunctionDefinition(x, structSymbol)));
                         break;
                 }
             }
 
-            foreach (var member in classBinder.LocalSymbols.Values.SelectMany(x => x))
-                classSymbol.AddMember(member);
-
-            return new BoundClassType(classSymbol, members.ToImmutableArray());
-        }
-
-        private BoundStructType BindStructDeclaration(StructTypeSyntax declaration, Symbol parent)
-        {
-            ClassOrStructSymbol baseType;
-            List<InterfaceSymbol> baseInterfaces;
-            BindBaseList(declaration.BaseList, parent, out baseType, out baseInterfaces);
-
-            var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray());
-            AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
-
-            var variables = new List<BoundMultipleVariableDeclarations>();
-            var structBinder = new Binder(_sharedBinderState, this);
-            foreach (var variableDeclarationStatement in declaration.Fields)
-                variables.Add(structBinder.Bind(variableDeclarationStatement, x => structBinder.BindField(x, structSymbol)));
-
             foreach (var member in structBinder.LocalSymbols.Values.SelectMany(x => x))
                 structSymbol.AddMember(member);
 
-            return new BoundStructType(structSymbol, variables.ToImmutableArray());
+            return new BoundStructType(structSymbol, members.ToImmutableArray());
         }
 
         private BoundMultipleVariableDeclarations BindField(VariableDeclarationStatementSyntax variableDeclarationStatementSyntax, TypeSymbol parentType)
@@ -429,7 +408,6 @@ namespace ShaderTools.Hlsl.Binding
             switch (syntax.Kind)
             {
                 case SyntaxKind.ClassType:
-                    return BindClassDeclaration((ClassTypeSyntax) syntax, parent);
                 case SyntaxKind.StructType:
                     return BindStructDeclaration((StructTypeSyntax) syntax, parent);
                 case SyntaxKind.InterfaceType:

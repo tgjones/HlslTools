@@ -83,11 +83,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             return Visit(node.Type);
         }
 
-        public override IEnumerable<EditorNavigationTarget> VisitClassType(ClassTypeSyntax node)
-        {
-            yield return CreateTypeTarget(node.Name, node.GetTextSpanSafe(), Glyph.Class, node.Members);
-        }
-
         public override IEnumerable<EditorNavigationTarget> VisitConstantBuffer(ConstantBufferSyntax node)
         {
             yield return CreateTypeTarget(node.Name, node.GetTextSpanSafe(), Glyph.ConstantBuffer,
@@ -101,7 +96,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
         public override IEnumerable<EditorNavigationTarget> VisitStructType(StructTypeSyntax node)
         {
-            yield return CreateTypeTarget(node.Name, node.GetTextSpanSafe(), Glyph.Struct, node.Fields);
+            yield return CreateTypeTarget(node.Name, node.GetTextSpanSafe(), node.IsClass ? Glyph.Class : Glyph.Struct, node.Members);
         }
 
         public override IEnumerable<EditorNavigationTarget> VisitFunctionDeclaration(FunctionDeclarationSyntax node)

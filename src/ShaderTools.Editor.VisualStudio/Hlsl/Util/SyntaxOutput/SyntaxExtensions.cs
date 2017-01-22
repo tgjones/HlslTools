@@ -96,14 +96,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.SyntaxOutput
                         var constantBuffer = (ConstantBufferSyntax) parent;
                         fullName = constantBuffer.Name.Text + "::" + fullName;
                         break;
-                    case SyntaxKind.ClassType:
-                        var classType = (ClassTypeSyntax) parent;
-                        fullName = classType.Name.Text + "::" + fullName;
-                        break;
                     case SyntaxKind.InterfaceType:
                         var interfaceType = (InterfaceTypeSyntax) parent;
                         fullName = interfaceType.Name.Text + "::" + fullName;
                         break;
+                    case SyntaxKind.ClassType:
                     case SyntaxKind.StructType:
                         var structType = (StructTypeSyntax) parent;
                         fullName = structType.Name.Text + "::" + fullName;

@@ -71,7 +71,6 @@
     <Compile Include="Hlsl\Binding\BoundNodes\BoundCompoundExpression.cs" />
     <Compile Include="Hlsl\Binding\BoundNodes\BoundConversionExpression.cs" />
     <Compile Include="Hlsl\Binding\BoundNodes\BoundErrorExpression.cs" />
-    <Compile Include="Hlsl\Binding\BoundNodes\BoundClassType.cs" />
     <Compile Include="Hlsl\Binding\BoundNodes\BoundCompilationUnit.cs" />
     <Compile Include="Hlsl\Binding\BoundNodes\BoundConstantBuffer.cs" />
     <Compile Include="Hlsl\Binding\BoundNodes\BoundEqualsValue.cs" />
@@ -143,7 +142,7 @@
     <Compile Include="Hlsl\Binding\BoundTreeWalker.cs" />
     <Compile Include="Hlsl\Binding\BoundTreeWalker.Statements.cs" />
     <Compile Include="Hlsl\Binding\BoundTreeWalker.Expressions.cs" />
-    <Compile Include="Hlsl\Binding\ClassMethodBinder.cs" />
+    <Compile Include="Hlsl\Binding\StructMethodBinder.cs" />
     <Compile Include="Hlsl\Binding\FunctionImplementationChecker.cs" />
     <Compile Include="Hlsl\Binding\IntrinsicBinder.cs" />
     <Compile Include="Hlsl\Binding\ContainedFunctionBinder.cs" />
@@ -181,8 +180,7 @@
     <Compile Include="Hlsl\Parser\ParserOptions.cs" />
     <Compile Include="Hlsl\Symbols\ArraySymbol.cs" />
     <Compile Include="Hlsl\Symbols\AttributeSymbol.cs" />
-    <Compile Include="Hlsl\Symbols\ClassOrStructSymbol.cs" />
-    <Compile Include="Hlsl\Symbols\ClassSymbol.cs" />
+    <Compile Include="Hlsl\Symbols\StructSymbol.cs" />
     <Compile Include="Hlsl\Symbols\ConstantBufferSymbol.cs" />
     <Compile Include="Hlsl\Symbols\ContainerSymbol.cs" />
     <Compile Include="Hlsl\Symbols\FunctionSymbol.cs" />
@@ -213,7 +211,6 @@
     <Compile Include="Hlsl\Symbols\SourceFieldSymbol.cs" />
     <Compile Include="Hlsl\Symbols\SourceFunctionSymbol.cs" />
     <Compile Include="Hlsl\Symbols\SourceParameterSymbol.cs" />
-    <Compile Include="Hlsl\Symbols\StructSymbol.cs" />
     <Compile Include="Hlsl\Symbols\VariadicParameterSymbol.cs" />
     <Compile Include="Hlsl\Syntax\AnnotationsSyntax.cs" />
     <Compile Include="Hlsl\Syntax\CompileExpressionSyntax.cs" />
@@ -286,7 +283,6 @@
     <Compile Include="Hlsl\Syntax\BlockSyntax.cs" />
     <Compile Include="Hlsl\Syntax\BreakStatementSyntax.cs" />
     <Compile Include="Hlsl\Syntax\CaseSwitchLabelSyntax.cs" />
-    <Compile Include="Hlsl\Syntax\ClassTypeSyntax.cs" />
     <Compile Include="Hlsl\Syntax\CompilationUnitSyntax.cs" />
     <Compile Include="Hlsl\Syntax\ConditionalExpressionSyntax.cs" />
     <Compile Include="Hlsl\Syntax\ConstantBufferSyntax.cs" />

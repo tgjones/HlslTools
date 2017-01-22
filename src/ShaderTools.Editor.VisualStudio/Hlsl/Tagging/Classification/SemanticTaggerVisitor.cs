@@ -42,15 +42,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
             base.VisitAttribute(node);
         }
 
-        public override void VisitClassType(ClassTypeSyntax node)
-        {
-            var symbol = _semanticModel.GetDeclaredSymbol(node);
-            if (symbol != null)
-                CreateTag(node.Name, _classificationService.ClassIdentifier);
-
-            base.VisitClassType(node);
-        }
-
         public override void VisitInterfaceType(InterfaceTypeSyntax node)
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
@@ -64,7 +55,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name, _classificationService.StructIdentifier);
+                CreateTag(node.Name, node.IsClass ? _classificationService.ClassIdentifier : _classificationService.StructIdentifier);
 
             base.VisitStructType(node);
         }
@@ -80,7 +71,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);
             if (symbol != null)
-                CreateTag(node.Name.GetUnqualifiedName().Name, symbol.Parent != null && symbol.Parent.Kind == SymbolKind.Class
+                CreateTag(node.Name.GetUnqualifiedName().Name, symbol.Parent != null && (symbol.Parent.Kind == SymbolKind.Class || symbol.Parent.Kind == SymbolKind.Struct)
                     ? _classificationService.MethodIdentifier
                     : _classificationService.FunctionIdentifier);
 

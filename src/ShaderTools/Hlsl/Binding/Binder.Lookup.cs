@@ -126,7 +126,7 @@ namespace ShaderTools.Hlsl.Binding
         {
             return LookupSymbols<NamespaceSymbol>(name)
                 .Cast<ContainerSymbol>()
-                .Union(LookupSymbols<ClassSymbol>(name));
+                .Union(LookupSymbols<StructSymbol>(name));
         }
 
         private ContainerSymbol LookupContainer(NameSyntax name)
@@ -166,7 +166,7 @@ namespace ShaderTools.Hlsl.Binding
 
             var members = container.LookupMembers<NamespaceSymbol>(name.Text)
                 .Cast<ContainerSymbol>()
-                .Union(container.LookupMembers<ClassSymbol>(name.Text))
+                .Union(container.LookupMembers<StructSymbol>(name.Text))
                 .ToImmutableArray();
 
             if (members.Length == 0)

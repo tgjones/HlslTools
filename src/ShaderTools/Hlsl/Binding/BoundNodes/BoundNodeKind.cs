@@ -9,7 +9,6 @@ namespace ShaderTools.Hlsl.Binding.BoundNodes
         Name,
         TypeDeclaration,
         StructType,
-        ClassType,
         InterfaceType,
         IntrinsicMatrixType,
         IntrinsicGenericMatrixType,

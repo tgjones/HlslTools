@@ -1043,10 +1043,10 @@ namespace ShaderTools.Tests.Hlsl.Parser
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax) statement;
             Assert.Equal(SyntaxKind.ClassType, typeDeclarationStatement.Type.Kind);
 
-            var cd = (ClassTypeSyntax)typeDeclarationStatement.Type;
-            Assert.NotNull(cd.ClassKeyword);
+            var cd = (StructTypeSyntax)typeDeclarationStatement.Type;
+            Assert.NotNull(cd.StructKeyword);
             Assert.Equal("C", cd.Name.Text);
-            Assert.Equal(SyntaxKind.ClassKeyword, cd.ClassKeyword.Kind);
+            Assert.Equal(SyntaxKind.ClassKeyword, cd.StructKeyword.Kind);
             Assert.Null(cd.BaseList);
             Assert.NotNull(cd.OpenBraceToken);
             Assert.Equal(1, cd.Members.Count);
@@ -1070,10 +1070,10 @@ namespace ShaderTools.Tests.Hlsl.Parser
             var typeDeclarationStatement = (TypeDeclarationStatementSyntax)statement;
             Assert.Equal(SyntaxKind.ClassType, typeDeclarationStatement.Type.Kind);
 
-            var cd = (ClassTypeSyntax)typeDeclarationStatement.Type;
-            Assert.NotNull(cd.ClassKeyword);
+            var cd = (StructTypeSyntax)typeDeclarationStatement.Type;
+            Assert.NotNull(cd.StructKeyword);
             Assert.Equal("C", cd.Name.Text);
-            Assert.Equal(SyntaxKind.ClassKeyword, cd.ClassKeyword.Kind);
+            Assert.Equal(SyntaxKind.ClassKeyword, cd.StructKeyword.Kind);
             Assert.NotNull(cd.BaseList);
             Assert.NotNull(cd.BaseList.ColonToken);
             Assert.Equal("B", cd.BaseList.BaseType.ToString());
@@ -1130,8 +1130,8 @@ namespace ShaderTools.Tests.Hlsl.Parser
             Assert.Equal("S", cd.Name.Text);
             Assert.Equal(SyntaxKind.StructKeyword, cd.StructKeyword.Kind);
             Assert.NotNull(cd.OpenBraceToken);
-            Assert.Equal(1, cd.Fields.Count);
-            Assert.Equal("int a;", cd.Fields[0].ToString());
+            Assert.Equal(1, cd.Members.Count);
+            Assert.Equal("int a;", cd.Members[0].ToString());
             Assert.NotNull(cd.CloseBraceToken);
 
             Assert.NotNull(typeDeclarationStatement.SemicolonToken);

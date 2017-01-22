@@ -408,15 +408,9 @@ namespace ShaderTools.Hlsl.Parser
                 lastTokenOfType = NextToken();
                 result = ScanTypeFlags.MustBeType;
             }
-            else if (Current.Kind == SyntaxKind.StructKeyword)
+            else if (Current.Kind == SyntaxKind.StructKeyword || Current.Kind == SyntaxKind.ClassKeyword)
             {
-                var unused = ParseStructType();
-                lastTokenOfType = unused.CloseBraceToken;
-                result = ScanTypeFlags.MustBeType;
-            }
-            else if (Current.Kind == SyntaxKind.ClassKeyword)
-            {
-                var unused = ParseClassType();
+                var unused = ParseStructType(Current.Kind);
                 lastTokenOfType = unused.CloseBraceToken;
                 result = ScanTypeFlags.MustBeType;
             }
@@ -474,9 +468,9 @@ namespace ShaderTools.Hlsl.Parser
                 case SyntaxKind.IdentifierToken:
                     return ParseName();
                 case SyntaxKind.StructKeyword:
-                    return ParseStructType();
+                    return ParseStructType(SyntaxKind.StructKeyword);
                 case SyntaxKind.ClassKeyword:
-                    return ParseClassType();
+                    return ParseStructType(SyntaxKind.ClassKeyword);
                 case SyntaxKind.InterfaceKeyword:
                     return ParseInterfaceType();
                 default:

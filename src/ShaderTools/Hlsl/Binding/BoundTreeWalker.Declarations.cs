@@ -131,9 +131,6 @@ namespace ShaderTools.Hlsl.Binding
                 case BoundNodeKind.StructType:
                     VisitStructType((BoundStructType) node);
                     break;
-                case BoundNodeKind.ClassType:
-                    VisitClassType((BoundClassType) node);
-                    break;
                 case BoundNodeKind.InterfaceType:
                     VisitInterfaceType((BoundInterfaceType) node);
                     break;
@@ -144,24 +141,18 @@ namespace ShaderTools.Hlsl.Binding
 
         protected virtual void VisitStructType(BoundStructType node)
         {
-            foreach (var declaration in node.Variables)
-                VisitMultipleVariableDeclarations(declaration);
-        }
-
-        protected virtual void VisitClassType(BoundClassType node)
-        {
             foreach (var member in node.Members)
             {
                 switch (member.Kind)
                 {
                     case BoundNodeKind.MultipleVariableDeclarations:
-                        VisitMultipleVariableDeclarations((BoundMultipleVariableDeclarations) member);
+                        VisitMultipleVariableDeclarations((BoundMultipleVariableDeclarations)member);
                         break;
                     case BoundNodeKind.FunctionDeclaration:
-                        VisitFunctionDeclaration((BoundFunctionDeclaration) member);
+                        VisitFunctionDeclaration((BoundFunctionDeclaration)member);
                         break;
                     case BoundNodeKind.FunctionDefinition:
-                        VisitFunctionDefinition((BoundFunctionDefinition) member);
+                        VisitFunctionDefinition((BoundFunctionDefinition)member);
                         break;
                 }
             }
