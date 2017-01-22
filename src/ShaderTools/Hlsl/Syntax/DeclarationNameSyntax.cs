@@ -10,11 +10,6 @@ namespace ShaderTools.Hlsl.Syntax
 
         }
 
-        public string GetName()
-        {
-            return ToString(true).Replace(Environment.NewLine, string.Empty);
-        }
-
         public abstract IdentifierDeclarationNameSyntax GetUnqualifiedName();
     }
 }

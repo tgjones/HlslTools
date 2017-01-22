@@ -7,13 +7,13 @@ namespace ShaderTools.Hlsl.Symbols
     public sealed class SourceFunctionSymbol : FunctionSymbol
     {
         internal SourceFunctionSymbol(FunctionDeclarationSyntax syntax, Symbol parent, TypeSymbol returnType, Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameters = null)
-            : base(syntax.Name.GetName(), string.Empty, parent, returnType, lazyParameters)
+            : base(syntax.Name.GetUnqualifiedName().Name.Text, string.Empty, parent, returnType, lazyParameters)
         {
             DeclarationSyntaxes = new List<FunctionDeclarationSyntax> { syntax };
         }
 
         internal SourceFunctionSymbol(FunctionDefinitionSyntax syntax, Symbol parent, TypeSymbol returnType, Func<InvocableSymbol, IEnumerable<ParameterSymbol>> lazyParameters = null)
-            : base(syntax.Name.GetName(), string.Empty, parent, returnType, lazyParameters)
+            : base(syntax.Name.GetUnqualifiedName().Name.Text, string.Empty, parent, returnType, lazyParameters)
         {
             DeclarationSyntaxes = new List<FunctionDeclarationSyntax>();
             DefinitionSyntax = syntax;

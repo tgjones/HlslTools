@@ -51,5 +51,20 @@ void main()
 }";
             AssertDiagnostics(code, DiagnosticId.FunctionMissingImplementation);
         }
+
+        [Fact]
+        public void AllowsFunctionDeclaredInMacro()
+        {
+            var code = @"
+#define DECLARE_FUNC(name) float name() {}
+DECLARE_FUNC(myfunc)
+
+void main()
+{
+	myfunc();
+}
+";
+            AssertNoDiagnostics(code);
+        }
     }
 }

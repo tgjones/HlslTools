@@ -51,7 +51,7 @@ void main()
 
             var expression = (FunctionInvocationExpressionSyntax) syntaxTree.Root.ChildNodes
                 .OfType<FunctionDefinitionSyntax>()
-                .Where(x => x.Name.GetName() == "main")
+                .Where(x => x.Name.GetUnqualifiedName().Name.Text == "main")
                 .Select(x => ((ExpressionStatementSyntax) x.Body.Statements[0]).Expression)
                 .First();
 
@@ -123,7 +123,7 @@ void main()
 
             var expression = (FunctionInvocationExpressionSyntax) syntaxTree.Root.ChildNodes
                 .OfType<FunctionDefinitionSyntax>()
-                .Where(x => x.Name.GetName() == "main")
+                .Where(x => x.Name.GetUnqualifiedName().Name.Text == "main")
                 .Select(x => ((ExpressionStatementSyntax) x.Body.Statements[0]).Expression)
                 .First();
 
