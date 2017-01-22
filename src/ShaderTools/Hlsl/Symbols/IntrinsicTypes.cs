@@ -2035,21 +2035,21 @@ namespace ShaderTools.Hlsl.Symbols
                 case PredefinedObjectType.Texture1D:
                 case PredefinedObjectType.RWTexture1D:
                 case PredefinedObjectType.RasterizerOrderedTexture1D:
-                    return Int;
+                    return Uint;
                 case PredefinedObjectType.Texture1DArray:
                 case PredefinedObjectType.RWTexture1DArray:
                 case PredefinedObjectType.RasterizerOrderedTexture1DArray:
                 case PredefinedObjectType.Texture2D:
                 case PredefinedObjectType.RWTexture2D:
                 case PredefinedObjectType.RasterizerOrderedTexture2D:
-                    return Int2;
+                    return Uint2;
                 case PredefinedObjectType.Texture2DArray:
                 case PredefinedObjectType.RWTexture2DArray:
                 case PredefinedObjectType.RasterizerOrderedTexture2DArray:
                 case PredefinedObjectType.Texture3D:
                 case PredefinedObjectType.RWTexture3D:
                 case PredefinedObjectType.RasterizerOrderedTexture3D:
-                    return Int3;
+                    return Uint3;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -2061,6 +2061,12 @@ namespace ShaderTools.Hlsl.Symbols
 
             if (offsetType != null)
             {
+                yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
+                    GetVectorType(scalarType, 4), m => new[]
+                    {
+                        new ParameterSymbol("samplerState", "A sampler state.", m, SamplerState),
+                        new ParameterSymbol("location", "The texture coordinates.", m, locationType)
+                    });
                 yield return new FunctionSymbol($"Gather{componentName}", $"Samples a texture and returns the {componentNameLower} component.", parent,
                     GetVectorType(scalarType, 4), m => new[]
                     {
@@ -2216,12 +2222,20 @@ namespace ShaderTools.Hlsl.Symbols
                         case PredefinedObjectType.Texture3D:
                         case PredefinedObjectType.TextureCube:
                         case PredefinedObjectType.TextureCubeArray:
+                        case PredefinedObjectType.RWTexture2D:
+                        case PredefinedObjectType.RWTexture2DArray:
+                        case PredefinedObjectType.RWTexture3D:
+                        case PredefinedObjectType.RasterizerOrderedTexture2D:
+                        case PredefinedObjectType.RasterizerOrderedTexture2DArray:
+                        case PredefinedObjectType.RasterizerOrderedTexture3D:
                             result.Add(new ParameterSymbol("height", "The texture height, in texels.", m, parameterType, ParameterDirection.Out));
                             break;
                     }
                     switch (textureType)
                     {
                         case PredefinedObjectType.Texture3D:
+                        case PredefinedObjectType.RWTexture3D:
+                        case PredefinedObjectType.RasterizerOrderedTexture3D:
                             result.Add(new ParameterSymbol("depth", "The texture depth, in texels.", m, parameterType, ParameterDirection.Out));
                             break;
                     }
@@ -2230,6 +2244,10 @@ namespace ShaderTools.Hlsl.Symbols
                         case PredefinedObjectType.Texture1DArray:
                         case PredefinedObjectType.Texture2DArray:
                         case PredefinedObjectType.TextureCubeArray:
+                        case PredefinedObjectType.RWTexture1DArray:
+                        case PredefinedObjectType.RWTexture2DArray:
+                        case PredefinedObjectType.RasterizerOrderedTexture1DArray:
+                        case PredefinedObjectType.RasterizerOrderedTexture2DArray:
                             result.Add(new ParameterSymbol("elements", "The number of elements in an array.", m, parameterType, ParameterDirection.Out));
                             break;
                     }
