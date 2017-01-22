@@ -64,7 +64,9 @@
   <ItemGroup>
     <Compile Include="Core\Options\ConfigFileTests.cs" />
     <Compile Include="Hlsl\Binding\BinaryExpressionTests.cs" />
+    <Compile Include="Hlsl\Binding\BindingTestsBase.cs" />
     <Compile Include="Hlsl\Binding\ExpressionTestUtility.cs" />
+    <Compile Include="Hlsl\Binding\FieldExpressionTests.cs" />
     <Compile Include="Hlsl\Binding\FunctionDeclarationTests.cs" />
     <Compile Include="Hlsl\Binding\FunctionInvocationExpressionTests.cs" />
     <Compile Include="Hlsl\Binding\GlobalDeclarationTests.cs" />

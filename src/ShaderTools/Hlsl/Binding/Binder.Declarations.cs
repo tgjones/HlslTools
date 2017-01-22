@@ -354,24 +354,40 @@ namespace ShaderTools.Hlsl.Binding
 
             var members = new List<BoundNode>();
 
+            // Bit of a hack - need to add member symbols to structSymbol as we go, otherwise (for example)
+            // static methods defined inline in a struct won't be able to see struct members.
+            var alreadyAddedMemberSymbols = new List<Symbol>();
+            void addMemberSymbols()
+            {
+                var newMemberSymbols = structBinder.LocalSymbols.Values
+                    .SelectMany(x => x)
+                    .Except(alreadyAddedMemberSymbols)
+                    .ToList();
+                foreach (var member in newMemberSymbols)
+                {
+                    structSymbol.AddMember(member);
+                    alreadyAddedMemberSymbols.Add(member);
+                }
+            }
+
             foreach (var memberSyntax in declaration.Members)
             {
                 switch (memberSyntax.Kind)
                 {
                     case SyntaxKind.VariableDeclarationStatement:
-                        members.Add(structBinder.Bind((VariableDeclarationStatementSyntax)memberSyntax, x => structBinder.BindField(x, structSymbol)));
+                        members.Add(structBinder.Bind((VariableDeclarationStatementSyntax) memberSyntax, x => structBinder.BindField(x, structSymbol)));
+                        addMemberSymbols();
                         break;
                     case SyntaxKind.FunctionDeclaration:
-                        members.Add(structBinder.Bind((FunctionDeclarationSyntax)memberSyntax, x => structBinder.BindFunctionDeclaration(x, structSymbol)));
+                        members.Add(structBinder.Bind((FunctionDeclarationSyntax) memberSyntax, x => structBinder.BindFunctionDeclaration(x, structSymbol)));
+                        addMemberSymbols();
                         break;
                     case SyntaxKind.FunctionDefinition:
-                        members.Add(structBinder.Bind((FunctionDefinitionSyntax)memberSyntax, x => structBinder.BindFunctionDefinition(x, structSymbol)));
+                        members.Add(structBinder.Bind((FunctionDefinitionSyntax) memberSyntax, x => structBinder.BindFunctionDefinition(x, structSymbol)));
+                        addMemberSymbols();
                         break;
                 }
             }
-
-            foreach (var member in structBinder.LocalSymbols.Values.SelectMany(x => x))
-                structSymbol.AddMember(member);
 
             return new BoundStructType(structSymbol, members.ToImmutableArray());
         }
