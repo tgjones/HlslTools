@@ -3,7 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ShaderTools.Core.Text;
-using ShaderTools.Tests.Unity.Support;
+using ShaderTools.Testing.TestResources.ShaderLab;
 using ShaderTools.Unity.Syntax;
 using Xunit;
 
@@ -12,7 +12,7 @@ namespace ShaderTools.Tests.Unity.Parser
     public class UnityLexerTests
     {
         [Theory]
-        [MemberData(nameof(ShaderTestUtility.GetUnityTestShaders), MemberType = typeof(ShaderTestUtility))]
+        [ShaderLabTestSuiteData]
         public void CanLexUnityShader(string testFile)
         {
             // Unity includes some headers by default. And built-in headers are available without a path prefix.

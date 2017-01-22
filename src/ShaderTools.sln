@@ -23,6 +23,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{17E0A545
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxGenerator", "SyntaxGenerator\SyntaxGenerator.csproj", "{258A2D6D-2A88-4938-B45E-37D73F3A400A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Testing.TestResources", "ShaderTools.Testing.TestResources\ShaderTools.Testing.TestResources.csproj", "{D0502A3E-C681-4731-B389-1B5DD007C837}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Testing", "ShaderTools.Testing\ShaderTools.Testing.csproj", "{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +57,14 @@ Global
 		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{258A2D6D-2A88-4938-B45E-37D73F3A400A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0502A3E-C681-4731-B389-1B5DD007C837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0502A3E-C681-4731-B389-1B5DD007C837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0502A3E-C681-4731-B389-1B5DD007C837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0502A3E-C681-4731-B389-1B5DD007C837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,5 +76,7 @@ Global
 		{32C92578-68E5-46DE-836D-DA7DDDB78819} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
 		{25E90301-9E25-4A25-BE0A-94A9D626369A} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
 		{258A2D6D-2A88-4938-B45E-37D73F3A400A} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
+		{D0502A3E-C681-4731-B389-1B5DD007C837} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
+		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
 	EndGlobalSection
 EndGlobal

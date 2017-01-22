@@ -97,7 +97,6 @@
     <Compile Include="Hlsl\Support\OptionsUtility.cs" />
     <Compile Include="Hlsl\Support\TextViewUtility.cs" />
     <Compile Include="Hlsl\Support\UndoExportProvider.cs" />
-    <Compile Include="Hlsl\Support\VsShaderTestUtility.cs" />
     <Compile Include="Hlsl\Support\TextBufferUtility.cs" />
     <Compile Include="Hlsl\Tagging\AsyncTaggerTestsBase.cs" />
     <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingTaggerTests.cs" />
@@ -120,6 +119,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.Testing.TestResources\ShaderTools.Testing.TestResources.csproj">
+      <Project>{D0502A3E-C681-4731-B389-1B5DD007C837}</Project>
+      <Name>ShaderTools.Testing.TestResources</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.Tests\ShaderTools.Tests.csproj">
       <Project>{fb35bdc4-ab42-416a-b4ee-9bd62e3e1777}</Project>
       <Name>ShaderTools.Tests</Name>

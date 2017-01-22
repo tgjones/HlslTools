@@ -1,9 +1,12 @@
-﻿using ShaderTools.Core.Text;
+﻿using System.Collections.Generic;
+using ShaderTools.Core.Diagnostics;
+using ShaderTools.Core.Text;
 
 namespace ShaderTools.Core.Syntax
 {
     public abstract class SyntaxTreeBase
     {
         public abstract TextSpan GetSourceTextSpan(SourceRange range);
+        public abstract IEnumerable<Diagnostic> GetDiagnostics();
     }
 }

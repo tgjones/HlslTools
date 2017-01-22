@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.Testing;
 using ShaderTools.Tests.Hlsl.Support;
 using Xunit;
 
@@ -1766,7 +1767,7 @@ float f3;
 
             // Assert.
             if (!allowSyntaxErrors)
-                ShaderTestUtility.CheckForParseErrors(parse(formattedCode));
+                SyntaxTreeUtility.CheckForParseErrors(parse(formattedCode));
             Assert.Equal(expectedNewText, formattedCode);
         }
 

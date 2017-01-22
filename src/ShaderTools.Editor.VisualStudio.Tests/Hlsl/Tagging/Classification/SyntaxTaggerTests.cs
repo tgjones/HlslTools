@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
-using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
+using ShaderTools.Testing.TestResources.Hlsl;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Classification
@@ -18,7 +18,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Classification
         }
 
         [Theory]
-        [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
+        [HlslTestSuiteData]
         public async Task CanDoTagging(string testFile)
         {
             await RunTestAsync<SyntaxTagger, IClassificationTag>(testFile, CreateTagger);

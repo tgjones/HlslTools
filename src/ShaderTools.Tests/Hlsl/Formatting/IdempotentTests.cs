@@ -2,6 +2,8 @@
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Formatting;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.Testing;
+using ShaderTools.Testing.TestResources.Hlsl;
 using ShaderTools.Tests.Hlsl.Support;
 using Xunit;
 
@@ -10,7 +12,7 @@ namespace ShaderTools.Tests.Hlsl.Formatting
     public class IdempotentTests
     {
         [Theory]
-        [MemberData(nameof(ShaderTestUtility.GetTestShaders), MemberType = typeof(ShaderTestUtility))]
+        [HlslTestSuiteData]
         public void CanFormatAndReformat(string testFile)
         {
             // Arrange.
@@ -20,12 +22,12 @@ namespace ShaderTools.Tests.Hlsl.Formatting
             // Format.
             var formattedCode1 = FormatCode(sourceCode, syntaxTree1);
             var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode1, testFile), fileSystem: new TestFileSystem());
-            ShaderTestUtility.CheckForParseErrors(syntaxTree2);
+            SyntaxTreeUtility.CheckForParseErrors(syntaxTree2);
 
             // Format again.
             var formattedCode2 = FormatCode(formattedCode1, syntaxTree2);
             var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode2, testFile), fileSystem: new TestFileSystem());
-            ShaderTestUtility.CheckForParseErrors(syntaxTree3);
+            SyntaxTreeUtility.CheckForParseErrors(syntaxTree3);
 
             Assert.Equal(formattedCode1, formattedCode2);
         }

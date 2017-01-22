@@ -6,6 +6,7 @@ using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
+using ShaderTools.Testing.TestResources.Hlsl;
 using ShaderTools.Tests.Hlsl.Support;
 using Xunit;
 
@@ -99,7 +100,7 @@ namespace ShaderTools.Tests.Hlsl.Parser
         }
 
         [Theory]
-        [MemberData(nameof(ShaderTestUtility.GetTestShaders), MemberType = typeof(ShaderTestUtility))]
+        [HlslTestSuiteData]
         public void CanLexShader(string testFile)
         {
             // Act.

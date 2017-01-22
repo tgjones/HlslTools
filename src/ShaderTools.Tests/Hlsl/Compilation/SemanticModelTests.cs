@@ -5,6 +5,8 @@ using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
+using ShaderTools.Testing;
+using ShaderTools.Testing.TestResources.Hlsl;
 using ShaderTools.Tests.Hlsl.Support;
 using Xunit;
 
@@ -13,14 +15,14 @@ namespace ShaderTools.Tests.Hlsl.Compilation
     public class SemanticModelTests
     {
         [Theory]
-        [MemberData(nameof(ShaderTestUtility.GetTestShaders), MemberType = typeof(ShaderTestUtility))]
+        [HlslTestSuiteData]
         public void CanGetSemanticModel(string testFile)
         {
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode, testFile), fileSystem: new TestFileSystem());
-            ShaderTestUtility.CheckForParseErrors(syntaxTree);
+            SyntaxTreeUtility.CheckForParseErrors(syntaxTree);
 
             // Get semantic model.
             var compilation = new ShaderTools.Hlsl.Compilation.Compilation(syntaxTree);

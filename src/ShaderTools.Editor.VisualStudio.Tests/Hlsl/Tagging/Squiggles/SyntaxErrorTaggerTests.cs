@@ -6,6 +6,7 @@ using NSubstitute;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
+using ShaderTools.Testing.TestResources.Hlsl;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Squiggles
@@ -13,7 +14,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Squiggles
     public class SyntaxErrorTaggerTests : AsyncTaggerTestsBase
     {
         [Theory]
-        [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
+        [HlslTestSuiteData]
         public async Task CanDoTagging(string testFile)
         {
             await RunTestAsync<SyntaxErrorTagger, IErrorTag>(testFile, CreateTagger);

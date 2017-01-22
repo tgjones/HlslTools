@@ -5,7 +5,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 using NSubstitute;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.BraceMatching;
-using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
+using ShaderTools.Testing.TestResources.Hlsl;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.BraceMatching
@@ -13,7 +13,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.BraceMatching
     public class BraceMatchingTaggerTests : AsyncTaggerTestsBase
     {
         [Theory]
-        [MemberData(nameof(VsShaderTestUtility.GetTestShaders), MemberType = typeof(VsShaderTestUtility))]
+        [HlslTestSuiteData]
         public async Task CanDoTagging(string testFile)
         {
             await RunTestAsync<BraceMatchingTagger, ITextMarkerTag>(testFile, CreateTagger);

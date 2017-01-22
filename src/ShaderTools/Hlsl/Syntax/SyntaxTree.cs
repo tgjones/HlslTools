@@ -24,7 +24,7 @@ namespace ShaderTools.Hlsl.Syntax
             _fileSegments = parsed.Item2;
         }
 
-        public IEnumerable<Diagnostic> GetDiagnostics()
+        public override IEnumerable<Diagnostic> GetDiagnostics()
         {
             return Root.GetDiagnostics();
         }

@@ -17,7 +17,7 @@ namespace ShaderTools.Unity.Syntax
             Root = parseFunc(this);
         }
 
-        public IEnumerable<Diagnostic> GetDiagnostics()
+        public override IEnumerable<Diagnostic> GetDiagnostics()
         {
             return Root.GetDiagnostics();
         }
