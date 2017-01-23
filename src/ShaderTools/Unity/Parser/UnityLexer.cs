@@ -601,7 +601,6 @@ namespace ShaderTools.Unity.Parser
             var hasExponentialModifier = false;
             var hasDotModifier = false;
             var hasFloatSuffix = false;
-            var hasIntegerSuffix = false;
             var hasHexModifier = false;
 
             while (true)
@@ -649,7 +648,6 @@ namespace ShaderTools.Unity.Parser
                     case 'l':
                     case 'U':
                     case 'u':
-                        hasIntegerSuffix = true;
                         var currentSuffix = _charReader.Current;
                         NextChar();
                         if ((currentSuffix == 'U' || currentSuffix == 'u')

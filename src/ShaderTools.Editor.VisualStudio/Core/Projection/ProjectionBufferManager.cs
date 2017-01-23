@@ -15,7 +15,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
         private const string _inertContentTypeName = "inert";
 
         private readonly IContentTypeRegistryService _contentTypeRegistryService;
-        private int? _savedCaretPosition;
 
         public ProjectionBufferManager(ITextBuffer diskBuffer,
                                        IProjectionBufferFactoryService projectionBufferFactoryService,
@@ -94,7 +93,9 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
         public IProjectionBuffer ViewBuffer { get; }
         public ITextBuffer DiskBuffer { get; }
 
+#pragma warning disable CS0067
         public event EventHandler MappingsChanged;
+#pragma warning restore CS0067
 
         public void Dispose()
         {

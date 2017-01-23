@@ -911,7 +911,6 @@ namespace ShaderTools.Hlsl.Parser
             var hasExponentialModifier = false;
             var hasDotModifier = false;
             var hasFloatSuffix = false;
-            var hasIntegerSuffix = false;
             var hasHexModifier = false;
             var isPreprocessingNumber = false;
 
@@ -960,7 +959,6 @@ namespace ShaderTools.Hlsl.Parser
                     case 'l':
                     case 'U':
                     case 'u':
-                        hasIntegerSuffix = true;
                         var currentSuffix = _charReader.Current;
                         NextChar();
                         if ((currentSuffix == 'U' || currentSuffix == 'u')

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
@@ -13,8 +12,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
     [ContentType(ShaderLabConstants.ContentTypeName)]
     internal sealed class SyntaxTaggerProvider : ITaggerProvider
     {
-        private static bool _languagePackageLoaded;
-
         [Import]
         public ShaderLabClassificationService ClassificationService { get; set; }
 
