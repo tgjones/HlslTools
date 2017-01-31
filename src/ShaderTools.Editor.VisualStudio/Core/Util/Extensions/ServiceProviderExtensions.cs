@@ -15,6 +15,12 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
             return (TServiceInterface)sp.GetService(typeof(TServiceClass));
         }
 
+        public static T GetMefService<T>(this IServiceProvider serviceProvider) where T : class
+        {
+            var componentModel = (IComponentModel) serviceProvider.GetService(typeof(SComponentModel));
+            return componentModel.GetService<T>();
+        }
+
         public static IComponentModel GetComponentModel(this SVsServiceProvider serviceProvider)
         {
             return serviceProvider.GetService<SComponentModel, IComponentModel>();

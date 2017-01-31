@@ -6,12 +6,14 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
+using ShaderTools.Editor.VisualStudio.Core.Util;
 
 namespace ShaderTools.Editor.VisualStudio.Core
 {
     internal abstract class LanguagePackageBase : Package
     {
         private readonly Dictionary<IVsCodeWindow, CodeWindowManagerBase> _codeWindowManagers = new Dictionary<IVsCodeWindow, CodeWindowManagerBase>();
+        private IComEventSink _languagePreferencesEventsSink;
 
         internal CodeWindowManagerBase GetOrCreateCodeWindowManager(IVsCodeWindow window)
         {
@@ -43,11 +45,7 @@ namespace ShaderTools.Editor.VisualStudio.Core
             ErrorHandler.ThrowOnFailure(textMgr.GetUserPreferences(null, null, langPrefs, null));
             LanguagePreferences = new LanguagePreferences(this, langPrefs[0]);
 
-            var textManagerEvents2Guid = typeof(IVsTextManagerEvents2).GUID;
-            IConnectionPoint textManagerEvents2ConnectionPoint;
-            ((IConnectionPointContainer)textMgr).FindConnectionPoint(ref textManagerEvents2Guid, out textManagerEvents2ConnectionPoint);
-            uint cookie;
-            textManagerEvents2ConnectionPoint.Advise(LanguagePreferences, out cookie);
+            _languagePreferencesEventsSink = ComEventSink.Advise<IVsTextManagerEvents2>(textMgr, LanguagePreferences);
 
             RegisterEditorFactory(CreateEditorFactory());
         }
@@ -68,6 +66,8 @@ namespace ShaderTools.Editor.VisualStudio.Core
 
         protected override void Dispose(bool disposing)
         {
+            _languagePreferencesEventsSink?.Unadvise();
+
             foreach (var window in _codeWindowManagers.Values)
                 window.RemoveAdornments();
             _codeWindowManagers.Clear();

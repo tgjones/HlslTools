@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
+using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using IOleServiceProvider = Microsoft.VisualStudio.OLE.Interop.IServiceProvider;
 
@@ -174,8 +175,7 @@ namespace ShaderTools.Editor.VisualStudio.Core
         {
             private readonly EditorFactoryBase _editorFactory;
             private readonly IVsTextLines _textLines;
-            private readonly uint _cookie;
-            private readonly IConnectionPoint _cp;
+            private readonly IComEventSink _textLinesEventsSink;
             private readonly IComponentModel _compModel;
             private readonly IVsTextManager _textMgr;
             private readonly IVsCodeWindow _window;
@@ -188,10 +188,7 @@ namespace ShaderTools.Editor.VisualStudio.Core
                 _textMgr = textMgr;
                 _window = window;
 
-                var cpc = textLines as IConnectionPointContainer;
-                var bufferEventsGuid = typeof(IVsTextBufferDataEvents).GUID;
-                cpc.FindConnectionPoint(ref bufferEventsGuid, out _cp);
-                _cp.Advise(this, out _cookie);
+                _textLinesEventsSink = ComEventSink.Advise<IVsTextBufferDataEvents>(textLines, this);
             }
 
             #region IVsTextBufferDataEvents
@@ -202,7 +199,7 @@ namespace ShaderTools.Editor.VisualStudio.Core
 
             public int OnLoadCompleted(int fReload)
             {
-                _cp.Unadvise(_cookie);
+                _textLinesEventsSink.Unadvise();
 
                 Guid langSvcGuid = _editorFactory.GetLanguageInfoType().GUID;
                 _textLines.SetLanguageServiceID(ref langSvcGuid);
