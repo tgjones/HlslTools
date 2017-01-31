@@ -273,4 +273,10 @@
   <data name="IncludeUnexpectedError" xml:space="preserve">
     <value>Unexpected error opening source file '{0}': {1}.</value>
   </data>
+  <data name="FunctionOverloadResolutionFailure" xml:space="preserve">
+    <value>No overload for '{0}' takes {1} arguments.</value>
+  </data>
+  <data name="MethodOverloadResolutionFailure" xml:space="preserve">
+    <value>No overload for method '{0}' takes {1} arguments.</value>
+  </data>
 </root>

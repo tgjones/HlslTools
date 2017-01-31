@@ -27,7 +27,7 @@ namespace ShaderTools.Tests.Hlsl.Binding
         [InlineData("float3x3", "float3x3")]
         [InlineData("half2x3", "#ambiguous")]
         [InlineData("int2x2", "int")]
-        [InlineData("MyStruct", "#undeclared")]
+        [InlineData("MyStruct", "#novalidoverload")]
         public void TestFunctionOverloadResolution1Arg(string type, string expectedMatchType)
         {
             var code = $@"

@@ -223,6 +223,15 @@ namespace ShaderTools.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No overload for &apos;{0}&apos; takes {1} arguments..
+        /// </summary>
+        internal static string FunctionOverloadResolutionFailure {
+            get {
+                return ResourceManager.GetString("FunctionOverloadResolutionFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid character in input &apos;{0}&apos;..
         /// </summary>
         internal static string IllegalInputCharacter {
@@ -327,6 +336,15 @@ namespace ShaderTools.Properties {
         internal static string LoopControlVariableConflict {
             get {
                 return ResourceManager.GetString("LoopControlVariableConflict", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No overload for method &apos;{0}&apos; takes {1} arguments..
+        /// </summary>
+        internal static string MethodOverloadResolutionFailure {
+            get {
+                return ResourceManager.GetString("MethodOverloadResolutionFailure", resourceCulture);
             }
         }
         

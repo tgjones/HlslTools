@@ -2,7 +2,6 @@ using System.Linq;
 using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch;
 using ShaderTools.Core.Syntax;
 

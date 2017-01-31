@@ -40,6 +40,12 @@ namespace ShaderTools.Hlsl.Binding
                 ? selected
                 : null;
 
+            // If there are no candidates, but we do have possible signatures, then add them as candidates
+            // to indicate to calling code that overload resolution failed.
+            // TODO: We should be more explicit about what failed.
+            if (candidates.Count == 0)
+                candidates.AddRange(signatures.Select(x => new OverloadResolutionCandidate<T>(x, Enumerable.Empty<Conversion>(), ulong.MaxValue)));
+
             return new OverloadResolutionResult<T>(best, selected, candidates);
         }
 

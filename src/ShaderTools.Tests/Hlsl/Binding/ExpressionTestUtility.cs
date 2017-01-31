@@ -31,6 +31,9 @@ namespace ShaderTools.Tests.Hlsl.Binding
                     return "#undeclared";
                 case DiagnosticId.CannotConvert:
                     return "#cannotconvert";
+                case DiagnosticId.FunctionOverloadResolutionFailure:
+                case DiagnosticId.MethodOverloadResolutionFailure:
+                    return "#novalidoverload";
                 default:
                     throw new ArgumentOutOfRangeException(nameof(diagnosticId));
             }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using ShaderTools.Hlsl.Binding.Signatures;
 using ShaderTools.Hlsl.Symbols;
 using ShaderTools.Hlsl.Syntax;
@@ -19,7 +20,7 @@ namespace ShaderTools.Hlsl.Binding.BoundNodes
 
         public override TypeSymbol Type => Symbol == null ? TypeFacts.Unknown : Symbol.ReturnType;
 
-        public FunctionSymbol Symbol => Result.Selected?.Signature.Symbol;
+        public FunctionSymbol Symbol => Result.Selected?.Signature.Symbol ?? Result.Candidates.FirstOrDefault()?.Signature.Symbol;
 
         public MethodInvocationExpressionSyntax Syntax { get; }
         public BoundExpression Target { get; }

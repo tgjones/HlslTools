@@ -53,6 +53,33 @@ void main()
         }
 
         [Fact]
+        public void DetectsAmbiguousFunctionInvocation()
+        {
+            var code = @"
+void foo(int i) {}
+void foo(uint i) {}
+
+void main()
+{
+    foo(1.0);
+}";
+            AssertDiagnostics(code, DiagnosticId.AmbiguousInvocation);
+        }
+
+        [Fact]
+        public void DetectsOverloadResolutionFailure()
+        {
+            var code = @"
+void foo(int i) {}
+
+void main()
+{
+    foo();
+}";
+            AssertDiagnostics(code, DiagnosticId.FunctionOverloadResolutionFailure);
+        }
+
+        [Fact]
         public void AllowsFunctionDeclaredInMacro()
         {
             var code = @"

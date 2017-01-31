@@ -58,6 +58,8 @@
         ImplicitTruncation,
         UndeclaredNamespaceOrType,
         AmbiguousNamespaceOrType,
-        UndeclaredFunctionInNamespaceOrClass
+        UndeclaredFunctionInNamespaceOrClass,
+        FunctionOverloadResolutionFailure,
+        MethodOverloadResolutionFailure
     }
 }
