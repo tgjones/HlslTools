@@ -408,13 +408,22 @@ namespace ShaderTools.Hlsl.Binding
             {
                 if (result.Selected == null)
                 {
-                    Diagnostics.ReportUndeclaredNumericConstructor(syntax, argumentTypes);
-                    return new BoundErrorExpression();
+                    if (result.Candidates.IsEmpty)
+                    {
+                        Diagnostics.ReportUndeclaredNumericConstructor(syntax, argumentTypes);
+                        return new BoundErrorExpression();
+                    }
+                    else
+                    {
+                        Diagnostics.ReportOverloadResolutionFailure(syntax, boundArguments.Length);
+                    }
                 }
-
-                var symbol1 = result.Selected.Signature.Symbol;
-                var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
-                Diagnostics.ReportAmbiguousInvocation(syntax.SourceRange, symbol1, symbol2, argumentTypes);
+                else
+                {
+                    var symbol1 = result.Selected.Signature.Symbol;
+                    var symbol2 = result.Candidates.First(c => !c.Signature.Symbol.Equals(symbol1)).Signature.Symbol;
+                    Diagnostics.ReportAmbiguousInvocation(syntax.SourceRange, symbol1, symbol2, argumentTypes);
+                }
             }
 
             var convertedArguments = boundArguments.Select((a, i) => BindArgument(a, result, i, syntax.ArgumentList.Arguments[i].SourceRange)).ToImmutableArray();

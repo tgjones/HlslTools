@@ -252,7 +252,7 @@ namespace ShaderTools.Hlsl.Binding
 
             var resolutionResult = OverloadResolution.Perform(signatures, argumentTypes);
 
-            if (type.Kind == SymbolKind.IntrinsicMatrixType && !resolutionResult.Candidates.Any())
+            if (type.Kind == SymbolKind.IntrinsicMatrixType && resolutionResult.Selected == null)
             {
                 // If no existing signatures for matrix constructor, then as long as we have the correct arguments, create a new function symbol on-the-fly.
                 // This is to handle the MANY overloads of matrix constructor functions, which are too many to create and store statically.

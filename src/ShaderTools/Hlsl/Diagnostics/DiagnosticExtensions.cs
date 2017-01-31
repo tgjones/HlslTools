@@ -164,6 +164,12 @@ namespace ShaderTools.Hlsl.Diagnostics
             diagnostics.Report(node.SourceRange, DiagnosticId.MethodOverloadResolutionFailure, name, argumentCount);
         }
 
+        public static void ReportOverloadResolutionFailure(this ICollection<Diagnostic> diagnostics, NumericConstructorInvocationExpressionSyntax node, int argumentCount)
+        {
+            var name = node.Type.ToStringIgnoringMacroReferences();
+            diagnostics.Report(node.SourceRange, DiagnosticId.FunctionOverloadResolutionFailure, name, argumentCount);
+        }
+
         public static void ReportAmbiguousField(this ICollection<Diagnostic> diagnostics, SyntaxToken name)
         {
             diagnostics.Report(name.SourceRange, DiagnosticId.AmbiguousField, name.ValueText);

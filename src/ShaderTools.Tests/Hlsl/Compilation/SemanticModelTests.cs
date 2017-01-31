@@ -9,11 +9,19 @@ using ShaderTools.Testing;
 using ShaderTools.Testing.TestResources.Hlsl;
 using ShaderTools.Tests.Hlsl.Support;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace ShaderTools.Tests.Hlsl.Compilation
 {
     public class SemanticModelTests
     {
+        private readonly ITestOutputHelper _output;
+
+        public SemanticModelTests(ITestOutputHelper output)
+        {
+            _output = output;
+        }
+
         [Theory]
         [HlslTestSuiteData]
         public void CanGetSemanticModel(string testFile)
@@ -30,7 +38,7 @@ namespace ShaderTools.Tests.Hlsl.Compilation
             Assert.NotNull(semanticModel);
 
             foreach (var diagnostic in semanticModel.GetDiagnostics())
-                Debug.WriteLine(diagnostic);
+                _output.WriteLine(diagnostic.ToString());
 
             Assert.Equal(0, semanticModel.GetDiagnostics().Count(x => x.Severity == DiagnosticSeverity.Error));
         }
