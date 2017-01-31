@@ -13,5 +13,7 @@ namespace ShaderTools.Hlsl.Symbols
         public ParameterSyntax Syntax { get; }
 
         public override bool HasDefaultValue => Syntax.Declarator.Initializer != null;
+
+        public override string DefaultValueText => Syntax.Declarator.Initializer?.ToString();
     }
 }

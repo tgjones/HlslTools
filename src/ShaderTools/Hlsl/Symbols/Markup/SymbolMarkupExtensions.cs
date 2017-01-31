@@ -122,6 +122,12 @@ namespace ShaderTools.Hlsl.Symbols.Markup
             markup.AppendType(symbol.ValueType, false);
             markup.AppendSpace();
             markup.AppendParameterName(symbol.Name);
+
+            if (symbol.HasDefaultValue)
+            {
+                markup.AppendSpace();
+                markup.AppendPlainText(symbol.DefaultValueText);
+            }
         }
 
         private static void AppendFieldSymbolInfo(this ICollection<SymbolMarkupToken> markup, FieldSymbol symbol)

@@ -38,5 +38,8 @@ namespace ShaderTools.Hlsl.Symbols
         }
 
         public virtual bool HasDefaultValue => false;
+
+        // TODO: We are not yet binding default values, so we can't expose the proper bound symbols.
+        public virtual string DefaultValueText => null;
     }
 }

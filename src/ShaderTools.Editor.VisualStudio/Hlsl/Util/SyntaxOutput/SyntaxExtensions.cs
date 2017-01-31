@@ -51,6 +51,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.SyntaxOutput
             {
                 result.Append(" ");
                 result.Append(parameter.Declarator.Identifier.GetFullyQualifiedName());
+
+                if (parameter.Declarator.Initializer != null)
+                {
+                    result.Append(" ");
+                    result.Append(parameter.Declarator.Initializer.ToStringIgnoringMacroReferences());
+                }
             }
 
             return result.ToString().Replace(Environment.NewLine, string.Empty);
