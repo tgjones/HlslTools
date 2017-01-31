@@ -38,11 +38,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         {
             var navigationTargets = new List<EditorTypeNavigationTarget>();
 
-            var navigationTargetsVisitor = new NavigationTargetsVisitor(snapshot, _glyphService, cancellationToken);
-
             await Task.Run(() =>
             {
                 var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+                var navigationTargetsVisitor = new NavigationTargetsVisitor(snapshot, syntaxTree, _glyphService, cancellationToken);
                 navigationTargets.AddRange(navigationTargetsVisitor.GetTargets((CompilationUnitSyntax) syntaxTree.Root));
             }, cancellationToken);
 

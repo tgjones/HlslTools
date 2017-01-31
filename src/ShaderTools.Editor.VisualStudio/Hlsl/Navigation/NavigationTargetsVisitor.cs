@@ -6,17 +6,20 @@ using ShaderTools.Core.Text;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.SyntaxOutput;
+using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {
     internal sealed class NavigationTargetsVisitor : SyntaxVisitor<IEnumerable<EditorNavigationTarget>>
     {
+        private readonly SyntaxTree _syntaxTree;
         private readonly DispatcherGlyphService _glyphService;
         private readonly CancellationToken _cancellationToken;
         private readonly ITextSnapshot _snapshot;
 
-        public NavigationTargetsVisitor(ITextSnapshot snapshot, DispatcherGlyphService glyphService, CancellationToken cancellationToken)
+        public NavigationTargetsVisitor(ITextSnapshot snapshot, SyntaxTree syntaxTree, DispatcherGlyphService glyphService, CancellationToken cancellationToken)
         {
+            _syntaxTree = syntaxTree;
             _glyphService = glyphService;
             _cancellationToken = cancellationToken;
             _snapshot = snapshot;
@@ -121,6 +124,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
         public override IEnumerable<EditorNavigationTarget> VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
+            var declarationSpan = _syntaxTree.GetSourceTextSpan(node.Declaration.SourceRange);
+            if (!declarationSpan.IsInRootFile)
+                yield break;
+
             // The first declarator span includes the initial declaration.
             // The last declarator span includes the semicolon.
 
@@ -129,22 +136,19 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             var lastDeclarator = variables.Last();
             var firstDeclarator = variables.First();
 
-            if (!node.GetFirstToken().Span.IsInRootFile)
-                yield break;
+            var firstDeclaratorTextSpanEnd = (firstDeclarator == lastDeclarator)
+                ? node.SourceRange.End
+                : firstDeclarator.SourceRange.End;
 
-            var declarationRootSpan = node.Declaration.GetTextSpanRoot();
-            var firstDeclaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, declarationRootSpan.Start, firstDeclarator.GetTextSpanRoot().End);
-
-            if (firstDeclarator == lastDeclarator)
-                firstDeclaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, firstDeclaratorTextSpan.Start, node.GetTextSpanRoot().End);
+            var firstDeclaratorTextSpan = _syntaxTree.GetSourceTextSpan(SourceRange.FromBounds(node.Declaration.SourceRange.Start, firstDeclaratorTextSpanEnd));
 
             yield return CreateTarget(firstDeclarator.Identifier, firstDeclarator.Identifier.Text, firstDeclaratorTextSpan, Glyph.Variable);
 
             foreach (var declarator in variables.Skip(1))
             {
-                var declaratorTextSpan = declarator.GetTextSpanRoot();
+                var declaratorTextSpan = _syntaxTree.GetSourceTextSpan(declarator.SourceRange);
                 if (declarator == lastDeclarator)
-                    declaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, declaratorTextSpan.Start, node.GetTextSpanRoot().End);
+                    declaratorTextSpan = _syntaxTree.GetSourceTextSpan(SourceRange.FromBounds(declarator.SourceRange.Start, node.SourceRange.End));
                 yield return CreateTarget(declarator.Identifier, declarator.Identifier.Text, declaratorTextSpan, Glyph.Variable);
             }
         }
@@ -152,6 +156,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         private EditorNavigationTarget CreateTypeTarget(SyntaxToken name, TextSpan nodeSpan, Glyph icon, IEnumerable<SyntaxNode> childNodes)
         {
             if (!nodeSpan.IsInRootFile)
+                return null;
+
+            if (nodeSpan == TextSpan.None)
                 return null;
 
             if (name == null)
@@ -167,6 +174,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         private EditorNavigationTarget CreateTarget(SyntaxToken name, string description, TextSpan nodeSpan, Glyph icon)
         {
             if (!nodeSpan.IsInRootFile)
+                return null;
+
+            if (nodeSpan == TextSpan.None)
                 return null;
 
             if (name == null)
