@@ -357,7 +357,7 @@ namespace ShaderTools.Hlsl.Binding
             // Bit of a hack - need to add member symbols to structSymbol as we go, otherwise (for example)
             // static methods defined inline in a struct won't be able to see struct members.
             var alreadyAddedMemberSymbols = new List<Symbol>();
-            void addMemberSymbols()
+            Action addMemberSymbols = () =>
             {
                 var newMemberSymbols = structBinder.LocalSymbols.Values
                     .SelectMany(x => x)
@@ -368,7 +368,7 @@ namespace ShaderTools.Hlsl.Binding
                     structSymbol.AddMember(member);
                     alreadyAddedMemberSymbols.Add(member);
                 }
-            }
+            };
 
             foreach (var memberSyntax in declaration.Members)
             {

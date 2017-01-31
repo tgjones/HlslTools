@@ -18,7 +18,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
             object key,
             Func<TTextView, ITextBuffer, TProperty> valueCreator) where TTextView : class, ITextView
         {
-            GetOrCreatePerSubjectBufferProperty(textView, subjectBuffer, key, valueCreator, out var value);
+            TProperty value;
+            GetOrCreatePerSubjectBufferProperty(textView, subjectBuffer, key, valueCreator, out value);
 
             return value;
         }

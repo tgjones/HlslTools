@@ -70,7 +70,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
 
             public static void RemoveValue(TTextView textView, ITextBuffer subjectBuffer, object key)
             {
-                if (textView.Properties.TryGetProperty(typeof(PerSubjectBufferProperty<TProperty, TTextView>), out PerSubjectBufferProperty<TProperty, TTextView> properties))
+                PerSubjectBufferProperty<TProperty, TTextView> properties;
+                if (textView.Properties.TryGetProperty(typeof(PerSubjectBufferProperty<TProperty, TTextView>), out properties))
                 {
                     properties.Remove(subjectBuffer, key);
                 }
@@ -97,7 +98,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
             {
                 foreach (var buffer in e.RemovedBuffers)
                 {
-                    if (_subjectBufferMap.TryGetValue(buffer, out var value))
+                    Dictionary<object, TProperty> value;
+                    if (_subjectBufferMap.TryGetValue(buffer, out value))
                     {
                         _subjectBufferMap.Remove(buffer);
                         _buffersRemovedFromTextViewBufferGraph.Add(buffer, value);
@@ -106,7 +108,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
 
                 foreach (var buffer in e.AddedBuffers)
                 {
-                    if (_buffersRemovedFromTextViewBufferGraph.TryGetValue(buffer, out var value))
+                    Dictionary<object, TProperty> value;
+                    if (_buffersRemovedFromTextViewBufferGraph.TryGetValue(buffer, out value))
                     {
                         _subjectBufferMap[buffer] = value;
                         _buffersRemovedFromTextViewBufferGraph.Remove(buffer);
@@ -116,7 +119,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
 
             public bool TryGetValue(ITextBuffer subjectBuffer, object key, out TProperty value)
             {
-                if (_subjectBufferMap.TryGetValue(subjectBuffer, out var bufferMap))
+                Dictionary<object, TProperty> bufferMap;
+                if (_subjectBufferMap.TryGetValue(subjectBuffer, out bufferMap))
                 {
                     return bufferMap.TryGetValue(key, out value);
                 }
@@ -138,7 +142,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
 
             public void Remove(ITextBuffer subjectBuffer, object key)
             {
-                if (_subjectBufferMap.TryGetValue(subjectBuffer, out var bufferMap))
+                Dictionary<object, TProperty> bufferMap;
+                if (_subjectBufferMap.TryGetValue(subjectBuffer, out bufferMap))
                 {
                     bufferMap.Remove(key);
                     if (!bufferMap.Any())

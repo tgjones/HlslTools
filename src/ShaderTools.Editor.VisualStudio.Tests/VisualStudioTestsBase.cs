@@ -20,7 +20,8 @@ namespace ShaderTools.Editor.VisualStudio.Tests
 
         protected VisualStudioTestsBase()
         {
-            if (!TryGetInstallDirectory(out var installationDirectory))
+            string installationDirectory;
+            if (!TryGetInstallDirectory(out installationDirectory))
                 throw new Exception("Unable to calculate the version of Visual Studio installed on the machine");
             VisualStudioInstallationDirectory = installationDirectory;
 
@@ -94,7 +95,8 @@ namespace ShaderTools.Editor.VisualStudio.Tests
             catch (COMException ex) when (ex.HResult == REGDB_E_CLASSNOTREG)
             {
                 // Try to get the class object using app-local call. 
-                var result = GetSetupConfiguration(out var query, IntPtr.Zero);
+                ISetupConfiguration query;
+                var result = GetSetupConfiguration(out query, IntPtr.Zero);
 
                 if (result < 0)
                 {

@@ -20,13 +20,15 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util
                 throw new ArgumentException("Not an IConnectionPointContainer", nameof(obj));
             }
 
-            connectionPointContainer.FindConnectionPoint(typeof(T).GUID, out var connectionPoint);
+            IConnectionPoint connectionPoint;
+            connectionPointContainer.FindConnectionPoint(typeof(T).GUID, out connectionPoint);
             if (connectionPoint == null)
             {
                 throw new InvalidOperationException("Could not find connection point for " + typeof(T).FullName);
             }
 
-            connectionPoint.Advise(sink, out var cookie);
+            uint cookie;
+            connectionPoint.Advise(sink, out cookie);
 
             return new ComEventSinkImpl(connectionPoint, cookie);
         }

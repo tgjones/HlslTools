@@ -15,7 +15,8 @@ namespace ShaderTools.Tests.Hlsl.Support
 
         public bool TryGetFile(string path, out SourceText text)
         {
-            if (_includes.TryGetValue(path, out string include))
+            string include;
+            if (_includes.TryGetValue(path, out include))
             {
                 text = new StringText(include, path, false);
                 return true;
