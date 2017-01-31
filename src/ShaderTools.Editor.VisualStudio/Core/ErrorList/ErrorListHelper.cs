@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Windows;
+using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Core.Diagnostics;
@@ -10,7 +12,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 {
     internal sealed class ErrorListHelper : IErrorListHelper
     {
-        private readonly object _lockObject = new object();
         private readonly ErrorListProvider _errorListProvider;
         private readonly IServiceProvider _serviceProvider;
         private readonly ITextDocument _textDocument;
@@ -25,7 +26,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 
         public void AddError(Diagnostic diagnostic, TextSpan span)
         {
-            lock (_lockObject)
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 if (_disposed)
                     return;
@@ -52,7 +53,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
                 task.Navigate += OnTaskNavigate;
 
                 _errorListProvider.Tasks.Add(task);
-            }
+            }, DispatcherPriority.Background);
         }
 
         private void OnTaskNavigate(object sender, EventArgs e)
@@ -63,17 +64,17 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 
         public void Clear()
         {
-            lock (_lockObject)
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 if (_disposed)
                     return;
                 _errorListProvider.Tasks.Clear();
-            }
+            }, DispatcherPriority.Background);
         }
 
         void IDisposable.Dispose()
         {
-            lock (_lockObject)
+            Application.Current.Dispatcher.Invoke(() =>
             {
                 if (_errorListProvider != null)
                 {
@@ -81,7 +82,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
                     _errorListProvider.Dispose();
                 }
                 _disposed = true;
-            }
+            }, DispatcherPriority.Background);
         }
     }
 }
