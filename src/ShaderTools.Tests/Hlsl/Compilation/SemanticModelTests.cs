@@ -92,22 +92,27 @@ void MyFunc()
         {
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(@"
 typedef float2 Point;
-Point p;"));
+
+void main() {
+    Point p;
+    p.x = 1;
+}"));
             var compilation = new ShaderTools.Hlsl.Compilation.Compilation(syntaxTree);
             var semanticModel = compilation.GetSemanticModel();
 
             foreach (var diagnostic in semanticModel.GetDiagnostics())
-                Debug.WriteLine(diagnostic);
+                _output.WriteLine(diagnostic.ToString());
 
             Assert.Equal(0, semanticModel.GetDiagnostics().Count(x => x.Severity == DiagnosticSeverity.Error));
 
             var typedefStatement = (TypedefStatementSyntax) syntaxTree.Root.ChildNodes[0];
-            var variableDeclaration = (VariableDeclarationStatementSyntax) syntaxTree.Root.ChildNodes[1];
+            var functionDefinition = (FunctionDefinitionSyntax) syntaxTree.Root.ChildNodes[1];
 
             var typeAliasSymbol = semanticModel.GetDeclaredSymbol(typedefStatement.Declarators[0]);
             Assert.NotNull(typeAliasSymbol);
             Assert.Equal("Point", typeAliasSymbol.Name);
 
+            var variableDeclaration = (VariableDeclarationStatementSyntax) functionDefinition.Body.Statements[0];
             var variableSymbol = semanticModel.GetDeclaredSymbol(variableDeclaration.Declaration.Variables[0]);
             Assert.NotNull(variableSymbol);
             Assert.Equal("p", variableSymbol.Name);

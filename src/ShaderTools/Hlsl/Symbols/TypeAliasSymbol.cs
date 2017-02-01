@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using ShaderTools.Core.Symbols;
 using ShaderTools.Hlsl.Syntax;
 
@@ -12,5 +13,10 @@ namespace ShaderTools.Hlsl.Symbols
         }
 
         public TypeSymbol ValueType { get; }
+
+        public override IEnumerable<T> LookupMembers<T>(string name)
+        {
+            return ValueType.LookupMembers<T>(name);
+        }
     }
 }
