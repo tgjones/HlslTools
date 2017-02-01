@@ -43,6 +43,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Glyphs
                     return StandardGlyphGroup.GlyphGroupMacro;
                 case Glyph.CompletionWarning:
                     return StandardGlyphGroup.GlyphCompletionWarning;
+                case Glyph.TypeAlias:
+                    return StandardGlyphGroup.GlyphGroupTypedef;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(glyph), glyph, null);
             }
@@ -98,6 +100,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Glyphs
                     return Glyph.Function;
                 case SymbolKind.ConstantBuffer:
                     return Glyph.ConstantBuffer;
+                case SymbolKind.TypeAlias:
+                    return Glyph.TypeAlias;
                 default:
                     throw new ArgumentOutOfRangeException();
             }

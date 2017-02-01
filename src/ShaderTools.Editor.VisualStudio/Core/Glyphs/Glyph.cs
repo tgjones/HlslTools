@@ -18,6 +18,7 @@
         Method,
         Intrinsic,
         Macro,
-        CompletionWarning
+        CompletionWarning,
+        TypeAlias
     }
 }
