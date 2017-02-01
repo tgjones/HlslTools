@@ -49,7 +49,7 @@ namespace ShaderTools.Hlsl.Parser
         {
             _cancellationToken.ThrowIfCancellationRequested();
 
-            if (_tokens.Any() && _tokens.Last().Kind == SyntaxKind.EndOfFileToken && tokenIndex == _tokens.Count - 1)
+            if (_tokens.Count > 0 && _tokens.Last().Kind == SyntaxKind.EndOfFileToken && tokenIndex == _tokens.Count - 1)
                 return _tokens.Count - 1;
 
             List<SyntaxToken> badTokens = null;
