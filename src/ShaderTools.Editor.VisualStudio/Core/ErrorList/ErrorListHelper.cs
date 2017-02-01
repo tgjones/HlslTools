@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Threading;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
@@ -26,14 +27,14 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 
         public void AddError(Diagnostic diagnostic, TextSpan span)
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
                 if (_disposed)
-                    return;
+                    return TplExtensions.CompletedTask;
 
                 var sourceText = span.SourceText as VisualStudioSourceText;
                 if (sourceText == null)
-                    return;
+                    return TplExtensions.CompletedTask;
 
                 var line = sourceText.Snapshot.GetLineFromPosition(span.Start);
 
@@ -53,7 +54,9 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
                 task.Navigate += OnTaskNavigate;
 
                 _errorListProvider.Tasks.Add(task);
-            }, DispatcherPriority.Background);
+
+                return TplExtensions.CompletedTask;
+            });
         }
 
         private void OnTaskNavigate(object sender, EventArgs e)
@@ -64,17 +67,18 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 
         public void Clear()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
                 if (_disposed)
-                    return;
+                    return TplExtensions.CompletedTask;
                 _errorListProvider.Tasks.Clear();
-            }, DispatcherPriority.Background);
+                return TplExtensions.CompletedTask;
+            });
         }
 
         void IDisposable.Dispose()
         {
-            Application.Current.Dispatcher.Invoke(() =>
+            ThreadHelper.JoinableTaskFactory.Run(() =>
             {
                 if (_errorListProvider != null)
                 {
@@ -82,7 +86,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
                     _errorListProvider.Dispose();
                 }
                 _disposed = true;
-            }, DispatcherPriority.Background);
+                return TplExtensions.CompletedTask;
+            });
         }
     }
 }
