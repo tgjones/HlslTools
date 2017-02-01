@@ -1157,7 +1157,11 @@ namespace ShaderTools.Hlsl.Formatting
 
         public override void VisitSyntaxTrivia(SyntaxTrivia node)
         {
-            
+            if (node.Kind == SyntaxKind.EmptyExpandedMacroTrivia)
+            {
+                var locatedNodeIndex = FindIndex(node);
+                ReplacePreceedingWhitespace(locatedNodeIndex, " ");
+            }
         }
 
         public override void VisitTechnique(TechniqueSyntax node)

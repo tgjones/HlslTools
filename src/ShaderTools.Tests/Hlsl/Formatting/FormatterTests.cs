@@ -1745,6 +1745,20 @@ float f3;
 ", allowSyntaxErrors: true);
         }
 
+        [Fact]
+        public void DoesNotMergeEmptyExpandedMacroWithPreceedingToken()
+        {
+            const string before = @"
+#define _ 
+RWBuffer<uint> BoundingBox _: register(u2);
+";
+
+            AssertFormat(before, @"
+#define _ 
+RWBuffer<uint> BoundingBox _ : register(u2);
+");
+        }
+
         private static void AssertFormat(string unformattedText, string expectedNewText, 
             TextSpan? textSpan = null, FormattingOptions options = null,
             Dictionary<string, string> includes = null,
