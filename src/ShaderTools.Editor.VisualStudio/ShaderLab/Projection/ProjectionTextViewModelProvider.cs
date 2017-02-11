@@ -7,7 +7,7 @@ using ShaderTools.Editor.VisualStudio.Core.Projection;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Projection
 {
-    [Export(typeof(ITextViewModelProvider))]
+    //[Export(typeof(ITextViewModelProvider))]
     [ContentType(ShaderLabConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal class ProjectionTextViewModelProvider : ITextViewModelProvider

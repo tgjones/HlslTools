@@ -8,7 +8,7 @@ using ShaderTools.Editor.VisualStudio.ShaderLab.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.ErrorList
 {
-    [Export(typeof(IWpfTextViewCreationListener))]
+    //[Export(typeof(IWpfTextViewCreationListener))]
     [ContentType(ShaderLabConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class ErrorManagerProvider : IWpfTextViewCreationListener

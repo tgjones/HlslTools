@@ -7,7 +7,7 @@ using ShaderTools.Editor.VisualStudio.ShaderLab.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
 {
-    [Export(typeof(ITaggerProvider))]
+    //[Export(typeof(ITaggerProvider))]
     [TagType(typeof(IClassificationTag))]
     [ContentType(ShaderLabConstants.ContentTypeName)]
     internal sealed class SyntaxTaggerProvider : ITaggerProvider
