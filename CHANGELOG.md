@@ -25,13 +25,13 @@ These are the changes to each version that has been released on the official Vis
 - [x] Fix error when casting array with const variable size (#41)
 - [x] Implement struct inheritance (#40)
 - [x] Remove unwanted completions when typing keywords
-- [x] Add support for matrix types in StructuredBuffer template declarations ([@mrvux](/mrvux)) (#45)
-- [x] Add support for min16float, min10float, min16int, min12int, min16uint types ([@UpwindSpring01](/UpwindSpring01)) (#48)
+- [x] Add support for matrix types in StructuredBuffer template declarations ([@mrvux](https://github.com/mrvux)) (#45)
+- [x] Add support for min16float, min10float, min16int, min12int, min16uint types ([@UpwindSpring01](https://github.com/UpwindSpring01)) (#48)
 - [x] Implement config files that can add preprocessor definitions and additional include directories (#8)
 - [x] Implement tri-state (move to new line, keep on same line with leading space, don't move) open-brace formatting options (#51)
-- [x] Fix class field binding ([@OndrejPetrzilka](/OndrejPetrzilka)) (#55)
-- [x] Add support for globallycoherent keyword ([@OndrejPetrzilka](/OndrejPetrzilka)) (#54)
-- [x] Add support for struct methods ([@OndrejPetrzilka](/OndrejPetrzilka)) (#57)
+- [x] Fix class field binding ([@OndrejPetrzilka](https://github.com/OndrejPetrzilka)) (#55)
+- [x] Add support for globallycoherent keyword ([@OndrejPetrzilka](https://github.com/OndrejPetrzilka)) (#54)
+- [x] Add support for struct methods ([@OndrejPetrzilka](https://github.com/OndrejPetrzilka)) (#57)
 - [x] Make "Go to definition" work when overload resolution fails (#71)
 - [x] Add default argument values to IntelliSense display and navigation bar (#70)
 
