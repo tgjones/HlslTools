@@ -83,7 +83,9 @@
     <Compile Include="MessageProtocol\Serializers\JsonRpcMessageSerializer.cs" />
     <Compile Include="MessageProtocol\Serializers\V8MessageSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\HlslLanguageServer.cs" />
     <Compile Include="Server\LanguageServerBase.cs" />
+    <Compile Include="Server\ShaderLabLanguageServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

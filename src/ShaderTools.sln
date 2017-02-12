@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Testing", "Shad
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Protocol", "ShaderTools.EditorServices.Protocol\ShaderTools.EditorServices.Protocol.csproj", "{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Host", "ShaderTools.EditorServices.Host\ShaderTools.EditorServices.Host.csproj", "{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,5 +91,6 @@ Global
 		{D0502A3E-C681-4731-B389-1B5DD007C837} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
 		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
 		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
+		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
 	EndGlobalSection
 EndGlobal
