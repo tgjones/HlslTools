@@ -2,7 +2,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -99,7 +98,7 @@ namespace ShaderTools.EditorServices.Utility
         /// complete.</param>
         public AsyncLazy(Func<CancellationToken, Task<T>> asynchronousComputeFunction, Func<CancellationToken, T> synchronousComputeFunction, bool cacheResult)
         {
-            Contract.Requires(asynchronousComputeFunction != null);
+            Validate.IsNotNull(nameof(asynchronousComputeFunction), asynchronousComputeFunction);
             _asynchronousComputeFunction = asynchronousComputeFunction;
             _synchronousComputeFunction = synchronousComputeFunction;
             _cacheResult = cacheResult;
@@ -137,25 +136,25 @@ namespace ShaderTools.EditorServices.Utility
         {
             // Invariant #1: thou shalt never have an asynchronous computation running without it
             // being considered a computation
-            Contract.Requires(!(_asynchronousComputationCancellationSource != null &&
-                                 !_computationActive));
+            Validate.IsFalse(_asynchronousComputationCancellationSource != null &&
+                                 !_computationActive);
 
             // Invariant #2: thou shalt never waste memory holding onto empty HashSets
-            Contract.Requires(!(_requests != null &&
-                                 _requests.Count == 0));
+            Validate.IsFalse(_requests != null &&
+                                 _requests.Count == 0);
 
             // Invariant #3: thou shalt never have an request if there is not
             // something trying to compute it
-            Contract.Requires(!(_requests != null &&
-                                 !_computationActive));
+            Validate.IsFalse(_requests != null &&
+                                 !_computationActive);
 
             // Invariant #4: thou shalt never have a cached value and any computation function
-            Contract.Requires(!(_cachedResult != null &&
-                                 (_synchronousComputeFunction != null || _asynchronousComputeFunction != null)));
+            Validate.IsFalse(_cachedResult != null &&
+                                 (_synchronousComputeFunction != null || _asynchronousComputeFunction != null));
 
             // Invariant #5: thou shalt never have a synchronous computation function but not an
             // asynchronous one
-            Contract.Requires(!(_asynchronousComputeFunction == null && _synchronousComputeFunction != null));
+            Validate.IsFalse(_asynchronousComputeFunction == null && _synchronousComputeFunction != null);
         }
 
         #endregion
@@ -335,7 +334,7 @@ namespace ShaderTools.EditorServices.Utility
 
         private AsynchronousComputationToStart RegisterAsynchronousComputation_NoLock()
         {
-            Contract.Requires(!_computationActive);
+            Validate.IsFalse(_computationActive);
 
             _asynchronousComputationCancellationSource = new CancellationTokenSource();
             _computationActive = true;

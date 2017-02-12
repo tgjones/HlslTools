@@ -16,6 +16,7 @@ namespace ShaderTools.EditorServices.Workspace
         public Document(SourceText sourceText, Func<SourceText, CancellationToken, SyntaxTreeBase> compileFunc)
         {
             _sourceText = sourceText;
+            _compileFunc = compileFunc;
 
             _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() => compileFunc(sourceText, ct), ct), true);
         }
