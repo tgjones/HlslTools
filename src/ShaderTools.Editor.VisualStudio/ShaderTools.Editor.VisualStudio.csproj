@@ -599,9 +599,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ShaderTools.Editor\ShaderTools.Editor.csproj">
+    <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj">
       <Project>{25E90301-9E25-4A25-BE0A-94A9D626369A}</Project>
-      <Name>ShaderTools.Editor</Name>
+      <Name>ShaderTools.EditorServices</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
       <Project>{2361a2c2-d048-4694-9000-25b4ea846cba}</Project>

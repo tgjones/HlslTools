@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26127.0
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools", "ShaderTools\ShaderTools.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
 EndProject
@@ -11,11 +11,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualSt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualStudio.Tests", "ShaderTools.Editor.VisualStudio.Tests\ShaderTools.Editor.VisualStudio.Tests.csproj", "{32C92578-68E5-46DE-836D-DA7DDDB78819}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor", "ShaderTools.Editor\ShaderTools.Editor.csproj", "{25E90301-9E25-4A25-BE0A-94A9D626369A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices", "ShaderTools.EditorServices\ShaderTools.EditorServices.csproj", "{25E90301-9E25-4A25-BE0A-94A9D626369A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools", "ShaderTools", "{A9A1351A-112B-4BD2-B832-87F187D2E83F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.Editor", "ShaderTools.Editor", "{5FEC3B8F-290F-4AEF-976B-E93BC040B903}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.EditorServices", "ShaderTools.EditorServices", "{5FEC3B8F-290F-4AEF-976B-E93BC040B903}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ShaderTools.Editor.VisualStudio", "ShaderTools.Editor.VisualStudio", "{DB21B39B-9123-42FD-82D7-B0CA0CD95498}"
 EndProject

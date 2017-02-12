@@ -7,8 +7,8 @@
     <ProjectGuid>{25E90301-9E25-4A25-BE0A-94A9D626369A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>ShaderTools.Editor</RootNamespace>
-    <AssemblyName>ShaderTools.Editor</AssemblyName>
+    <RootNamespace>ShaderTools.EditorServices</RootNamespace>
+    <AssemblyName>ShaderTools.EditorServices</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
