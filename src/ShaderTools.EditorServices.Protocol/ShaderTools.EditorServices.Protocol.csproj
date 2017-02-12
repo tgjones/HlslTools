@@ -43,6 +43,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LanguageServer\ClientCapabilities.cs" />
+    <Compile Include="LanguageServer\CodeAction.cs" />
+    <Compile Include="LanguageServer\Completion.cs" />
+    <Compile Include="LanguageServer\Configuration.cs" />
+    <Compile Include="LanguageServer\Definition.cs" />
+    <Compile Include="LanguageServer\Diagnostics.cs" />
+    <Compile Include="LanguageServer\DocumentHighlight.cs" />
+    <Compile Include="LanguageServer\EditorCommands.cs" />
+    <Compile Include="LanguageServer\Hover.cs" />
+    <Compile Include="LanguageServer\Initialize.cs" />
+    <Compile Include="LanguageServer\References.cs" />
+    <Compile Include="LanguageServer\ServerCapabilities.cs" />
+    <Compile Include="LanguageServer\Shutdown.cs" />
+    <Compile Include="LanguageServer\SignatureHelp.cs" />
+    <Compile Include="LanguageServer\TextDocument.cs" />
+    <Compile Include="LanguageServer\WorkspaceSymbols.cs" />
     <Compile Include="MessageProtocol\Channel\ChannelBase.cs" />
     <Compile Include="MessageProtocol\Channel\NamedPipeClientChannel.cs" />
     <Compile Include="MessageProtocol\Channel\NamedPipeServerChannel.cs" />
@@ -67,6 +83,7 @@
     <Compile Include="MessageProtocol\Serializers\JsonRpcMessageSerializer.cs" />
     <Compile Include="MessageProtocol\Serializers\V8MessageSerializer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Server\LanguageServerBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
