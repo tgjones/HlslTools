@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
@@ -7,28 +6,52 @@ using ShaderTools.EditorServices.Utility;
 
 namespace ShaderTools.EditorServices.Workspace
 {
-    public sealed class Document
+    /// <summary>
+    /// Contains the details and contents of an open document.
+    /// </summary>
+    public abstract class Document
     {
-        private readonly SourceText _sourceText;
-        private readonly Func<SourceText, CancellationToken, SyntaxTreeBase> _compileFunc;
         private readonly AsyncLazy<SyntaxTreeBase> _lazySyntaxTree;
 
-        public Document(SourceText sourceText, Func<SourceText, CancellationToken, SyntaxTreeBase> compileFunc)
-        {
-            _sourceText = sourceText;
-            _compileFunc = compileFunc;
+        public SourceText SourceText { get; }
 
-            _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() => compileFunc(sourceText, ct), ct), true);
+        /// <summary>
+        /// Gets a unique string that identifies this file.  At this time,
+        /// this property returns a normalized version of the value stored
+        /// in the FilePath property.
+        /// </summary>
+        public string Id => FilePath.ToLower();
+
+        /// <summary>
+        /// Gets the path at which this file resides.
+        /// </summary>
+        public string FilePath => SourceText.Filename;
+
+        /// <summary>
+        /// Gets the path which the editor client uses to identify this file.
+        /// </summary>
+        public string ClientFilePath { get; }
+
+        /// <summary>
+        /// Gets a boolean that determines whether this file is
+        /// in-memory or not (either unsaved or non-file content).
+        /// </summary>
+        public bool IsInMemory { get; }
+
+        public Document(SourceText sourceText, string clientFilePath)
+        {
+            SourceText = sourceText;
+            ClientFilePath = clientFilePath;
+            IsInMemory = Workspace.IsPathInMemory(sourceText.Filename);
+
+            _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() => Compile(sourceText, ct), ct), true);
         }
+
+        protected abstract SyntaxTreeBase Compile(SourceText sourceText, CancellationToken cancellationToken);
 
         public Task<SyntaxTreeBase> GetSyntaxTreeAsync(CancellationToken cancellationToken)
         {
             return _lazySyntaxTree.GetValueAsync(cancellationToken);
-        }
-
-        public Document WithSourceText(SourceText sourceText)
-        {
-            return new Document(sourceText, _compileFunc);
         }
     }
 }

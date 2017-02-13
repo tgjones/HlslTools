@@ -38,6 +38,10 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
@@ -53,11 +57,16 @@
     <Compile Include="Utility\ThreadSynchronizationContext.cs" />
     <Compile Include="Utility\Validate.cs" />
     <Compile Include="Workspace\Document.cs" />
+    <Compile Include="Workspace\Hlsl\HlslDocument.cs" />
+    <Compile Include="Workspace\Hlsl\HlslWorkspace.cs" />
+    <Compile Include="Workspace\Workspace.cs" />
+    <Compile Include="Workspace\Hlsl\WorkspaceFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
