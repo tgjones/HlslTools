@@ -1,7 +1,10 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Threading;
+using ShaderTools.Core.Compilation;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
+using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Hlsl.Parser;
 using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Hlsl.Text;
@@ -33,6 +36,17 @@ namespace ShaderTools.EditorServices.Workspace.Hlsl
             options.AdditionalIncludeDirectories.AddRange(configFile.HlslAdditionalIncludeDirectories);
 
             return SyntaxFactory.ParseSyntaxTree(sourceText, options, _fileSystem, cancellationToken);
+        }
+
+        protected override SemanticModelBase CreateSemanticModel(SyntaxTreeBase syntaxTree, CancellationToken cancellationToken)
+        {
+            var compilation = new Compilation((SyntaxTree) syntaxTree);
+            return compilation.GetSemanticModel(cancellationToken);
+        }
+
+        public override Document WithSourceText(SourceText sourceText)
+        {
+            return new HlslDocument(sourceText, ClientFilePath, _fileSystem, _workspace);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
             Length = Snapshot.Length;
             Filename = filename;
             IsRoot = isRoot;
+
+            Lines = new VisualStudioTextLineCollection(this, snapshot);
         }
 
         public override string GetText(TextSpan textSpan)
@@ -24,6 +26,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
         public override char this[int index] => Snapshot[index];
 
         public override int Length { get; }
+
+        public override TextLineCollection Lines { get; }
 
         public override string Filename { get; }
 

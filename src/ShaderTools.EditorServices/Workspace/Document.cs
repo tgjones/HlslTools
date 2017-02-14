@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using ShaderTools.Core.Compilation;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.EditorServices.Utility;
@@ -12,6 +13,7 @@ namespace ShaderTools.EditorServices.Workspace
     public abstract class Document
     {
         private readonly AsyncLazy<SyntaxTreeBase> _lazySyntaxTree;
+        private readonly AsyncLazy<SemanticModelBase> _lazySemanticModel;
 
         public SourceText SourceText { get; }
 
@@ -45,13 +47,26 @@ namespace ShaderTools.EditorServices.Workspace
             IsInMemory = Workspace.IsPathInMemory(sourceText.Filename);
 
             _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() => Compile(sourceText, ct), ct), true);
+            _lazySemanticModel = new AsyncLazy<SemanticModelBase>(ct => Task.Run(async () =>
+            {
+                var syntaxTree = await GetSyntaxTreeAsync(ct);
+                return CreateSemanticModel(syntaxTree, ct);
+            }, ct), true);
         }
 
         protected abstract SyntaxTreeBase Compile(SourceText sourceText, CancellationToken cancellationToken);
+        protected abstract SemanticModelBase CreateSemanticModel(SyntaxTreeBase syntaxTree, CancellationToken cancellationToken);
 
         public Task<SyntaxTreeBase> GetSyntaxTreeAsync(CancellationToken cancellationToken)
         {
             return _lazySyntaxTree.GetValueAsync(cancellationToken);
         }
+
+        public Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
+        {
+            return _lazySemanticModel.GetValueAsync(cancellationToken);
+        }
+
+        public abstract Document WithSourceText(SourceText sourceText);
     }
 }

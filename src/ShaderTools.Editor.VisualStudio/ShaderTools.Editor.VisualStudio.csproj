@@ -238,6 +238,7 @@
     <Compile Include="Core\Projection\IProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
+    <Compile Include="Core\Text\VisualStudioTextLineCollection.cs" />
     <Compile Include="Core\Util\ComEventSink.cs" />
     <Compile Include="Core\Util\Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.cs" />

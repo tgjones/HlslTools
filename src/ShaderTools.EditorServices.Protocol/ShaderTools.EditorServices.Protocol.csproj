@@ -95,6 +95,10 @@
       <Project>{25e90301-9e25-4a25-be0a-94a9d626369a}</Project>
       <Name>ShaderTools.EditorServices</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
+      <Project>{2361A2C2-D048-4694-9000-25B4EA846CBA}</Project>
+      <Name>ShaderTools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

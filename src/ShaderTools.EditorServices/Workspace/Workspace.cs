@@ -121,6 +121,11 @@ namespace ShaderTools.EditorServices.Workspace
             _workspaceFiles = _workspaceFiles.Remove(document.Id);
         }
 
+        public void UpdateFile(Document oldDocument, Document newDocument)
+        {
+            _workspaceFiles = _workspaceFiles.SetItem(newDocument.Id, newDocument);
+        }
+
         private string ResolveFilePath(string filePath)
         {
             if (!IsPathInMemory(filePath))
