@@ -13,18 +13,10 @@ Features that have a checkmark are complete and available for download in the
 
 These are the changes to each version that has been released on the official Visual Studio extension gallery.
 
-## 1.1.0
+## 1.1.184
 
-**Not yet released**
+**2017-02-14**
 
-- [x] Fix namespace member parsing (#38)
-- [x] Implement integer suffixes, octal prefix, floating point specials (#43)
-- [x] Allow lineadj as parameter modifier (#39)
-- [x] Implement typedef support (#42)
-- [x] Implement snorm and unorm modifiers (#35)
-- [x] Fix error when casting array with const variable size (#41)
-- [x] Implement struct inheritance (#40)
-- [x] Remove unwanted completions when typing keywords
 - [x] Add support for matrix types in StructuredBuffer template declarations ([@mrvux](https://github.com/mrvux)) (#45)
 - [x] Add support for min16float, min10float, min16int, min12int, min16uint types ([@UpwindSpring01](https://github.com/UpwindSpring01)) (#48)
 - [x] Implement config files that can add preprocessor definitions and additional include directories (#8)
@@ -34,6 +26,19 @@ These are the changes to each version that has been released on the official Vis
 - [x] Add support for struct methods ([@OndrejPetrzilka](https://github.com/OndrejPetrzilka)) (#57)
 - [x] Make "Go to definition" work when overload resolution fails (#71)
 - [x] Add default argument values to IntelliSense display and navigation bar (#70)
+
+## 1.0.119
+
+**2016-11-25**
+
+- [x] Fix namespace member parsing (#38)
+- [x] Implement integer suffixes, octal prefix, floating point specials (#43)
+- [x] Allow lineadj as parameter modifier (#39)
+- [x] Implement typedef support (#42)
+- [x] Implement snorm and unorm modifiers (#35)
+- [x] Fix error when casting array with const variable size (#41)
+- [x] Implement struct inheritance (#40)
+- [x] Remove unwanted completions when typing keywords
 
 ## 1.0.94
 
