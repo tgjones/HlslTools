@@ -6,7 +6,7 @@ namespace ShaderTools.Core.Text
     internal sealed class StringText : SourceText
     {
         private readonly string _text;
-        private readonly StringTextLineCollection _lines;
+        private readonly TextLineCollection _lines;
 
         public StringText(string text, string filename = null, bool isRoot = true)
         {
@@ -79,6 +79,11 @@ namespace ShaderTools.Core.Text
         public override int Length => _text.Length;
         public override char this[int index] => _text[index];
         public override string Filename { get; }
+
+        public override TextLineCollection Lines
+        {
+            get { return _lines; }
+        }
 
         public override int GetLineNumberFromPosition(int position)
         {

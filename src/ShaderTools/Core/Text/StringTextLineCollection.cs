@@ -1,9 +1,8 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ShaderTools.Core.Text
 {
-    internal sealed class StringTextLineCollection : IReadOnlyList<TextLine>
+    internal sealed class StringTextLineCollection : TextLineCollection
     {
         private readonly IReadOnlyList<TextLine> _lines;
 
@@ -12,18 +11,19 @@ namespace ShaderTools.Core.Text
             _lines = lines;
         }
 
-        public IEnumerator<TextLine> GetEnumerator()
+        public override IEnumerator<TextLine> GetEnumerator()
         {
             return _lines.GetEnumerator();
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        public override int Count
         {
-            return GetEnumerator();
+            get { return _lines.Count; }
         }
 
-        public int Count => _lines.Count;
-
-        public TextLine this[int index] => _lines[index];
+        public override TextLine this[int index]
+        {
+            get { return _lines[index]; }
+        }
     }
 }

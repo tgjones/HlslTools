@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\Compilation\SemanticModelBase.cs" />
     <Compile Include="Core\Diagnostics\Diagnostic.cs" />
     <Compile Include="Core\Diagnostics\DiagnosticDescriptor.cs" />
     <Compile Include="Core\Diagnostics\MessageProvider.cs" />
@@ -61,6 +62,9 @@
     <Compile Include="Core\Syntax\SyntaxNodeBase.cs" />
     <Compile Include="Core\Syntax\SyntaxTreeBase.cs" />
     <Compile Include="Core\Text\FilePoint.cs" />
+    <Compile Include="Core\Text\TextChange.cs" />
+    <Compile Include="Core\Text\TextLineCollection.cs" />
+    <Compile Include="Core\Text\TextLocation.cs" />
     <Compile Include="Hlsl\Binding\Binder.cs" />
     <Compile Include="Hlsl\Binding\Binder.Types.cs" />
     <Compile Include="Hlsl\Binding\Binder.Lookup.cs" />

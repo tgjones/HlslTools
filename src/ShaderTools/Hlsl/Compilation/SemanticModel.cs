@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using ShaderTools.Core.Compilation;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Hlsl.Binding;
@@ -9,7 +10,7 @@ using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.Hlsl.Compilation
 {
-    public sealed class SemanticModel
+    public sealed class SemanticModel : SemanticModelBase
     {
         private readonly BindingResult _bindingResult;
 
@@ -182,7 +183,7 @@ namespace ShaderTools.Hlsl.Compilation
             return _bindingResult.GetBoundNode(expression) as BoundExpression;
         }
 
-        public IEnumerable<Diagnostic> GetDiagnostics()
+        public override IEnumerable<Diagnostic> GetDiagnostics()
         {
             return _bindingResult.Diagnostics;
         }

@@ -8,7 +8,7 @@ namespace ShaderTools.Unity.Syntax
 {
     public sealed class SyntaxTree : SyntaxTreeBase
     {
-        public SourceText Text { get; }
+        public override SourceText Text { get; }
         public SyntaxNode Root { get; }
 
         internal SyntaxTree(SourceText text, Func<SyntaxTree, SyntaxNode> parseFunc)

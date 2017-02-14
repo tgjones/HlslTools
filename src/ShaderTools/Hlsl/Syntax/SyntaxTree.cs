@@ -12,7 +12,7 @@ namespace ShaderTools.Hlsl.Syntax
     {
         private readonly List<FileSegment> _fileSegments;
 
-        public SourceText Text { get; }
+        public override SourceText Text { get; }
         public SyntaxNode Root { get; }
 
         internal SyntaxTree(SourceText text, Func<SyntaxTree, Tuple<SyntaxNode, List<FileSegment>>> parseFunc)
