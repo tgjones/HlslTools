@@ -17,6 +17,8 @@ These are the changes to each version that has been released on the official Vis
 
 **2017-02-14**
 
+Note: v1.1.185 supports both VS2015 and VS2017. VS2013 is no longer supported.
+
 - [x] Add support for matrix types in StructuredBuffer template declarations ([@mrvux](https://github.com/mrvux)) (#45)
 - [x] Add support for min16float, min10float, min16int, min12int, min16uint types ([@UpwindSpring01](https://github.com/UpwindSpring01)) (#48)
 - [x] Implement config files that can add preprocessor definitions and additional include directories (#8)
