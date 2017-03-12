@@ -256,6 +256,8 @@ namespace ShaderTools.EditorServices.Utility
         {
             try
             {
+                System.Diagnostics.Debug.WriteLine("logFilePath = " + logFilePath);
+
                 // Make sure the log directory exists
                 Directory.CreateDirectory(
                     Path.GetDirectoryName(

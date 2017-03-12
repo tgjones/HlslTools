@@ -15,7 +15,8 @@ namespace ShaderTools.EditorServices.Workspace.Hlsl
 
         public bool TryGetFile(string path, out SourceText text)
         {
-            if (_workspace.TryGetDocument(path, out var document))
+            Document document;
+            if (_workspace.TryGetDocument(path, out document))
             {
                 text = document.SourceText;
                 return true;

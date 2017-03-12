@@ -1,4 +1,9 @@
-﻿using System;
+//
+// Copyright (c) Microsoft. All rights reserved.
+// Licensed under the MIT license. See LICENSE file in the project root for full license information.
+//
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -9,27 +14,47 @@ using ShaderTools.EditorServices.Protocol.MessageProtocol;
 using ShaderTools.EditorServices.Protocol.MessageProtocol.Channel;
 using ShaderTools.EditorServices.Utility;
 using ShaderTools.EditorServices.Workspace;
-using ShaderTools.EditorServices.Workspace.Hlsl;
 
 namespace ShaderTools.EditorServices.Protocol.Server
 {
-    public sealed class HlslLanguageServer : LanguageServerBase
+    public abstract class LanguageServerBase : ProtocolEndpoint
     {
         private readonly static string DiagnosticSourceName = "ShaderToolsEditorServices";
 
+        private readonly ChannelBase serverChannel;
+        private readonly Workspace.Workspace _workspace;
+
         private static CancellationTokenSource existingRequestCancellation;
-        private readonly HlslWorkspace _workspace;
 
-        //private Dictionary<string, Dictionary<string, Diagnostic>> codeActionsPerFile =
-        //    new Dictionary<string, Dictionary<string, MarkerCorrection>>();
-
-        public HlslLanguageServer(ChannelBase serverChannel)
-            : base(serverChannel)
+        public LanguageServerBase(ChannelBase serverChannel, Workspace.Workspace workspace)
+            :  base(serverChannel, MessageProtocolType.LanguageServer)
         {
-            _workspace = new HlslWorkspace();
+            this.serverChannel = serverChannel;
+            _workspace = workspace;
         }
 
-        protected override void Initialize()
+        protected override Task OnStart()
+        {
+            // Register handlers for server lifetime messages
+            this.SetRequestHandler(ShutdownRequest.Type, this.HandleShutdownRequest);
+            this.SetEventHandler(ExitNotification.Type, this.HandleExitNotification);
+
+            // Initialize the implementation class
+            this.Initialize();
+
+            return Task.FromResult(true);
+        }
+
+        protected override async Task OnStop()
+        {
+            await this.Shutdown();
+        }
+
+        /// <summary>
+        /// Overridden by the subclass to provide initialization
+        /// logic after the server channel is started.
+        /// </summary>
+        protected void Initialize()
         {
             this.SetRequestHandler(InitializeRequest.Type, this.HandleInitializeRequest);
 
@@ -38,7 +63,12 @@ namespace ShaderTools.EditorServices.Protocol.Server
             this.SetEventHandler(DidChangeTextDocumentNotification.Type, this.HandleDidChangeTextDocumentNotification);
         }
 
-        protected override Task Shutdown()
+        /// <summary>
+        /// Can be overridden by the subclass to provide shutdown
+        /// logic before the server exits.  Subclasses do not need
+        /// to invoke or return the value of the base implementation.
+        /// </summary>
+        protected Task Shutdown()
         {
             Logger.Write(LogLevel.Normal, "Language service is shutting down...");
 
@@ -338,5 +368,24 @@ namespace ShaderTools.EditorServices.Protocol.Server
                     return DiagnosticSeverity.Error;
             }
         }
+
+        private async Task HandleShutdownRequest(
+            object shutdownParams,
+            RequestContext<object> requestContext)
+        {
+            // Allow the implementor to shut down gracefully
+            await this.Shutdown();
+
+            await requestContext.SendResult(new object());
+        }
+
+        private async Task HandleExitNotification(
+            object exitParams,
+            EventContext eventContext)
+        {
+            // Stop the server channel
+            await this.Stop();
+        }
     }
 }
+

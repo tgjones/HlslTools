@@ -23,10 +23,11 @@ namespace ShaderTools.EditorServices.Host
     /// Provides a simplified interface for hosting the language and debug services
     /// over the named pipe server protocol.
     /// </summary>
-    public class EditorServicesHost
+    public sealed class EditorServicesHost
     {
         #region Private Fields
 
+        private readonly Func<ChannelBase, LanguageServerBase> _createLanguageServer;
         private LanguageServerBase languageServer;
 
         #endregion
@@ -46,9 +47,10 @@ namespace ShaderTools.EditorServices.Host
         /// the debugger to attach if waitForDebugger is true.
         /// </summary>
         /// <param name="waitForDebugger">If true, causes the host to wait for the debugger to attach before proceeding.</param>
-        public EditorServicesHost(
-            bool waitForDebugger)
+        public EditorServicesHost(Func<ChannelBase, LanguageServerBase> createLanguageServer, bool waitForDebugger)
         {
+            _createLanguageServer = createLanguageServer;
+
 #if DEBUG
             int waitsRemaining = 10;
             if (waitForDebugger)
@@ -117,9 +119,9 @@ namespace ShaderTools.EditorServices.Host
         /// Starts the language service with the specified TCP socket port.
         /// </summary>
         /// <param name="languageServicePort">The port number for the language service.</param>
-        public void StartLanguageService(Func<TcpSocketServerChannel, LanguageServerBase> createLanguageServer, int languageServicePort)
+        public void StartLanguageService(int languageServicePort)
         {
-            this.languageServer = createLanguageServer(new TcpSocketServerChannel(languageServicePort));
+            this.languageServer = _createLanguageServer(new TcpSocketServerChannel(languageServicePort));
 
             this.languageServer.Start().Wait();
 
