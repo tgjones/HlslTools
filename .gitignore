@@ -20,6 +20,15 @@ Thumbs.db
 
 # NuGet Packages Directory
 packages
+
+# Build related
+
+tools/Cake/
+tools/NUnit.Runners/
+tools/NUnit.Console/
+tools/NUnit.ConsoleRunner/
+tools/nuget.exe
+tools/packages.config.md5sum
  
 # Other useful stuff
 *.bak
