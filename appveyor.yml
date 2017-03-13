@@ -1,5 +1,5 @@
 version: 1.1.{build}
-os: Visual Studio 2017 RC
+os: Visual Studio 2017
 
 install:
   - ps: (new-object Net.WebClient).DownloadString("https://raw.github.com/madskristensen/ExtensionScripts/master/AppVeyor/vsix.ps1") | iex
@@ -7,11 +7,10 @@ install:
 before_build:
   - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
   - ps: Vsix-TokenReplacement src\ShaderTools.Editor.VisualStudio\Hlsl\HlslPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
-  - ps: Vsix-TokenReplacement src\ShaderTools\Hlsl\Parser\HlslParser.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
   - ps: nuget restore src/ShaderTools.sln -Verbosity quiet
 
 build_script:
-  - msbuild src/ShaderTools.sln /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - msbuild src/ShaderTools.sln /p:Version={version} /p:FileVersion={version} /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
   - '%xunit20%\xunit.console.x86 src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll -appveyor'

@@ -13,9 +13,6 @@ namespace ShaderTools.Hlsl.Parser
 {
     internal partial class HlslParser
     {
-        // Updated by build process.
-        public const string Version = "1.0.0";
-
         private readonly ILexer _lexer;
         private readonly List<SyntaxToken> _tokens = new List<SyntaxToken>();
         private int _tokenIndex;
