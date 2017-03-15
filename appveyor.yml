@@ -10,7 +10,7 @@ before_build:
   - ps: msbuild src/ShaderTools.sln /t:restore
 
 build_script:
-  - msbuild src/ShaderTools.sln /p:Version={version} /p:FileVersion={version} /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
+  - ps: msbuild src/ShaderTools.sln /p:Version={version} /p:FileVersion={version} /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
   - '%xunit20%\xunit.console.x86 src/ShaderTools.Tests/bin/Release/ShaderTools.Tests.dll -appveyor'
