@@ -11,6 +11,11 @@ they should reciprocate that respect in addressing your issue or assessing
 patches and features.
 
 
+## Note about the Xbox One XDK
+
+Note that information contained within the Xbox One XDK remains under NDA. If typos/errors in the documentation of the Xbox-specific intrinsics are found, you may file an issue on the Issues page. However, do not publicly request exposure of additional intrinsics or functionality not already outlined on this repo as they remain under NDA. XDK licensees can use the private GDNP Forums for this purpose.
+
+
 ## Using the issue tracker
 
 The issue tracker is the preferred channel for [bug reports](#bug-reports),

@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ShaderTools.Hlsl.Symbols
 {
-    internal static class IntrinsicFunctions
+    internal static partial class IntrinsicFunctions
     {
         public static readonly IEnumerable<FunctionSymbol> AllFunctions;
 
@@ -60,14 +60,14 @@ namespace ShaderTools.Hlsl.Symbols
                 new [] { IntrinsicTypes.Uint },
                 "lowbits", "The low 32-bit pattern of the input value.",
                 "highbits", "The high 32-bit pattern of the input value.",
-                IntrinsicTypes.Double));
+                new[] { IntrinsicTypes.Double }));
             allFunctions.AddRange(Create2(
                 "asdouble",
                 "Reinterprets a cast value (two 32-bit values) into a double.",
                 new[] { IntrinsicTypes.Uint2 },
                 "lowbits", "The low 32-bit pattern of the input values.",
                 "highbits", "The high 32-bit pattern of the input values.",
-                IntrinsicTypes.Double2));
+                new[] { IntrinsicTypes.Double2 }));
 
             allFunctions.AddRange(Create1(
                 "asfloat",
@@ -96,9 +96,9 @@ namespace ShaderTools.Hlsl.Symbols
                 "value", "The input value.",
                 "lowbits", "The low 32-bit pattern of the input value.",
                 "highbits", "The high 32-bit pattern of the input value.",
-                IntrinsicTypes.Void,
-                overrideParameterType2: IntrinsicTypes.Uint,
-                overrideParameterType3: IntrinsicTypes.Uint,
+                new[] { IntrinsicTypes.Void },
+                overrideParameterTypes2: new[] { IntrinsicTypes.Uint },
+                overrideParameterTypes3: new[] { IntrinsicTypes.Uint },
                 overrideParameterDirection2: ParameterDirection.Out,
                 overrideParameterDirection3: ParameterDirection.Out));
 
@@ -246,7 +246,7 @@ namespace ShaderTools.Hlsl.Symbols
                 IntrinsicTypes.AllFloatVectorTypes,
                 "x", "The first floating-point vector to compare.",
                 "y", "The second floating-point vector to compare.",
-                IntrinsicTypes.Float));
+                new[] { IntrinsicTypes.Float }));
 
             allFunctions.AddRange(Create2(
                "dot",
@@ -254,14 +254,14 @@ namespace ShaderTools.Hlsl.Symbols
                IntrinsicTypes.AllFloatVectorTypes,
                "x", "The first vector.",
                "y", "The second vector.",
-               IntrinsicTypes.Float));
+               new[] { IntrinsicTypes.Float }));
             allFunctions.AddRange(Create2(
                "dot",
                "Returns the dot product of two vectors.",
                IntrinsicTypes.AllIntVectorTypes,
                "x", "The first vector.",
                "y", "The second vector.",
-               IntrinsicTypes.Int));
+               new[] { IntrinsicTypes.Int }));
 
             allFunctions.AddRange(Create2(
                "dst",
@@ -413,7 +413,7 @@ namespace ShaderTools.Hlsl.Symbols
                 new[] { IntrinsicTypes.Int, IntrinsicTypes.Uint },
                 "dest", "The destination address.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                new[] { IntrinsicTypes.Void }));
             allFunctions.AddRange(Create3(
                 "InterlockedAdd",
                 "Performs a guaranteed atomic add of value to the dest resource variable.",
@@ -421,7 +421,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create2(
@@ -430,7 +430,7 @@ namespace ShaderTools.Hlsl.Symbols
                 new[] { IntrinsicTypes.Int, IntrinsicTypes.Uint },
                 "dest", "The destination address.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                new[] { IntrinsicTypes.Void }));
             allFunctions.AddRange(Create3(
                 "InterlockedAnd",
                 "Performs a guaranteed atomic and.",
@@ -438,7 +438,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create4(
@@ -459,7 +459,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "compareValue", "The comparison value.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                overrideReturnTypes: new[] { IntrinsicTypes.Void }));
 
             allFunctions.AddRange(Create3(
                 "InterlockedExchange",
@@ -468,7 +468,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create2(
@@ -477,7 +477,7 @@ namespace ShaderTools.Hlsl.Symbols
                 new[] { IntrinsicTypes.Int, IntrinsicTypes.Uint },
                 "dest", "The destination address.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                new[] { IntrinsicTypes.Void }));
             allFunctions.AddRange(Create3(
                 "InterlockedMax",
                 "Performs a guaranteed atomic max.",
@@ -485,7 +485,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create2(
@@ -494,7 +494,7 @@ namespace ShaderTools.Hlsl.Symbols
                 new[] { IntrinsicTypes.Int, IntrinsicTypes.Uint },
                 "dest", "The destination address.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                new[] { IntrinsicTypes.Void }));
             allFunctions.AddRange(Create3(
                 "InterlockedMin",
                 "Performs a guaranteed atomic min.",
@@ -502,7 +502,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create2(
@@ -511,7 +511,7 @@ namespace ShaderTools.Hlsl.Symbols
                 new[] { IntrinsicTypes.Int, IntrinsicTypes.Uint },
                 "dest", "The destination address.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                new[] { IntrinsicTypes.Void }));
             allFunctions.AddRange(Create3(
                 "InterlockedOr",
                 "Performs a guaranteed atomic or.",
@@ -519,7 +519,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create2(
@@ -528,7 +528,7 @@ namespace ShaderTools.Hlsl.Symbols
                 new[] { IntrinsicTypes.Int, IntrinsicTypes.Uint },
                 "dest", "The destination address.",
                 "value", "The input value.",
-                IntrinsicTypes.Void));
+                new[] { IntrinsicTypes.Void }));
             allFunctions.AddRange(Create3(
                 "InterlockedXor",
                 "Performs a guaranteed atomic xor.",
@@ -536,7 +536,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "dest", "The destination address.",
                 "value", "The input value.",
                 "originalValue", "The original input value.",
-                IntrinsicTypes.Void,
+                overrideReturnTypes: new[] { IntrinsicTypes.Void },
                 overrideParameterDirection3: ParameterDirection.Out));
 
             allFunctions.AddRange(Create1(
@@ -589,7 +589,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "nDotL", "The dot product of the normalized surface normal and the light vector.",
                 "nDotH", "The dot product of the half-angle vector and the surface normal.",
                 "m", "A specular exponent.",
-                IntrinsicTypes.Float4));
+                overrideReturnTypes: new[] { IntrinsicTypes.Float4 }));
 
             allFunctions.AddRange(Create1(
                 "log",
@@ -646,9 +646,9 @@ namespace ShaderTools.Hlsl.Symbols
                 "reference", "The reference array of 4 bytes in one uint value.",
                 "source", "The source array of 8 bytes in two uint2 values.",
                 "accum", "A vector of 4 values. msad4 adds this vector to the masked sum of absolute differences of the different byte alignments between the reference value and the source value.",
-                IntrinsicTypes.Uint4,
-                overrideParameterType2: IntrinsicTypes.Uint2,
-                overrideParameterType3: IntrinsicTypes.Uint4));
+                overrideReturnTypes: new[] { IntrinsicTypes.Uint4 },
+                overrideParameterTypes2: new[] { IntrinsicTypes.Uint2 },
+                overrideParameterTypes3: new[] { IntrinsicTypes.Uint4 }));
 
             // mul overloads from https://msdn.microsoft.com/en-us/library/windows/desktop/bb509628(v=vs.85).aspx
             // overload 1:
@@ -710,14 +710,14 @@ namespace ShaderTools.Hlsl.Symbols
                 IntrinsicTypes.AllFloatVectorTypes,
                 "x", "The x input value. If x is a vector, it treated as a row vector.",
                 "y", "The y input value. If y is a vector, it treated as a column vector.",
-                IntrinsicTypes.Float));
+                new[] { IntrinsicTypes.Float }));
             allFunctions.AddRange(Create2(
                 "mul",
                 "Multiplies x and y using matrix math. The inner dimension x-columns and y-rows must be equal.",
                 IntrinsicTypes.AllIntVectorTypes,
                 "x", "The x input value. If x is a vector, it treated as a row vector.",
                 "y", "The y input value. If y is a vector, it treated as a column vector.",
-                IntrinsicTypes.Int));
+                new[] { IntrinsicTypes.Int }));
             // overload 6
             var overload6Parameter1 = new[]
             {
@@ -844,7 +844,7 @@ namespace ShaderTools.Hlsl.Symbols
                 IntrinsicTypes.AllFloatMatrixTypes,
                 "x", "The x input value. If x is a vector, it treated as a row vector.",
                 "y", "The y input value. If y is a vector, it treated as a column vector.",
-                IntrinsicTypes.Float,
+                new[] { IntrinsicTypes.Float },
                 overrideParameterType2: IntrinsicTypes.Float));
             allFunctions.AddRange(Create2(
                 "mul",
@@ -852,7 +852,7 @@ namespace ShaderTools.Hlsl.Symbols
                 IntrinsicTypes.AllIntMatrixTypes,
                 "x", "The x input value. If x is a vector, it treated as a row vector.",
                 "y", "The y input value. If y is a vector, it treated as a column vector.",
-                IntrinsicTypes.Int,
+                new[] { IntrinsicTypes.Int },
                 overrideParameterType2: IntrinsicTypes.Int));
             // overload 8
             var overload8Parameter1 = new[]
@@ -1567,7 +1567,7 @@ namespace ShaderTools.Hlsl.Symbols
                 "i", "A floating-point, ray direction vector.",
                 "n", "A floating-point, surface normal vector.",
                 "η", "A floating-point, refraction index scalar.",
-                overrideParameterType3: IntrinsicTypes.Float));
+                overrideParameterTypes3: new[] { IntrinsicTypes.Float }));
 
             allFunctions.AddRange(Create1(
                 "reversebits",
@@ -1613,7 +1613,7 @@ namespace ShaderTools.Hlsl.Symbols
                "value", "The specified value, in radians.",
                "s", "Returns the sine of x.",
                "c", "Returns the cosine of x.",
-               IntrinsicTypes.Void,
+               overrideReturnTypes: new[] { IntrinsicTypes.Void },
                overrideParameterDirection2: ParameterDirection.Out,
                overrideParameterDirection3: ParameterDirection.Out));
 
@@ -2002,10 +2002,7 @@ namespace ShaderTools.Hlsl.Symbols
             string parameterName, string parameterDocumentation, 
             params TypeSymbol[] overrideReturnTypes)
         {
-            if (overrideReturnTypes.Length == 0)
-                overrideReturnTypes = null;
-            else if (overrideReturnTypes.Length == 1)
-                overrideReturnTypes = Enumerable.Repeat(overrideReturnTypes[0], types.Length).ToArray();
+            overrideReturnTypes = GetPossiblyExpandedArray(types, overrideReturnTypes);
 
             return types.Select((type, i) => new FunctionSymbol(
                 name, documentation, null, overrideReturnTypes?[i] ?? type,
@@ -2019,13 +2016,15 @@ namespace ShaderTools.Hlsl.Symbols
             string name, string documentation, TypeSymbol[] types, 
             string parameterName1, string parameterDocumentation1, 
             string parameterName2, string parameterDocumentation2,
-            TypeSymbol overrideReturnType = null,
+            TypeSymbol[] overrideReturnTypes = null,
             TypeSymbol overrideParameterType1 = null,
             TypeSymbol overrideParameterType2 = null,
             ParameterDirection overrideParameterDirection2 = ParameterDirection.In)
         {
-            return types.Select(type => new FunctionSymbol(
-                name, documentation, null, overrideReturnType ?? type,
+            overrideReturnTypes = GetPossiblyExpandedArray(types, overrideReturnTypes);
+
+            return types.Select((type, i) => new FunctionSymbol(
+                name, documentation, null, overrideReturnTypes?[i] ?? type,
                 f => new[]
                 {
                     new ParameterSymbol(parameterName1, parameterDocumentation1, f, overrideParameterType1 ?? type),
@@ -2038,19 +2037,25 @@ namespace ShaderTools.Hlsl.Symbols
             string parameterName1, string parameterDocumentation1,
             string parameterName2, string parameterDocumentation2,
             string parameterName3, string parameterDocumentation3,
-            TypeSymbol overrideReturnType = null,
-            TypeSymbol overrideParameterType2 = null,
-            TypeSymbol overrideParameterType3 = null,
+            TypeSymbol[] overrideReturnTypes = null,
+            TypeSymbol[] overrideParameterTypes1 = null,
+            TypeSymbol[] overrideParameterTypes2 = null,
+            TypeSymbol[] overrideParameterTypes3 = null,
             ParameterDirection overrideParameterDirection2 = ParameterDirection.In,
             ParameterDirection overrideParameterDirection3 = ParameterDirection.In)
         {
-            return types.Select(type => new FunctionSymbol(
-                name, documentation, null, overrideReturnType ?? type,
+            overrideReturnTypes = GetPossiblyExpandedArray(types, overrideReturnTypes);
+            overrideParameterTypes1 = GetPossiblyExpandedArray(types, overrideParameterTypes1);
+            overrideParameterTypes2 = GetPossiblyExpandedArray(types, overrideParameterTypes2);
+            overrideParameterTypes3 = GetPossiblyExpandedArray(types, overrideParameterTypes3);
+
+            return types.Select((type, i) => new FunctionSymbol(
+                name, documentation, null, overrideReturnTypes?[i] ?? type,
                 f => new[]
                 {
-                    new ParameterSymbol(parameterName1, parameterDocumentation1, f, type),
-                    new ParameterSymbol(parameterName2, parameterDocumentation2, f, overrideParameterType2 ?? type, overrideParameterDirection2),
-                    new ParameterSymbol(parameterName3, parameterDocumentation3, f, overrideParameterType3 ?? type, overrideParameterDirection3)
+                    new ParameterSymbol(parameterName1, parameterDocumentation1, f, overrideParameterTypes1?[i] ?? type),
+                    new ParameterSymbol(parameterName2, parameterDocumentation2, f, overrideParameterTypes2?[i] ?? type, overrideParameterDirection2),
+                    new ParameterSymbol(parameterName3, parameterDocumentation3, f, overrideParameterTypes3?[i] ?? type, overrideParameterDirection3)
                 }));
         }
 
@@ -2072,6 +2077,16 @@ namespace ShaderTools.Hlsl.Symbols
                     new ParameterSymbol(parameterName3, parameterDocumentation3, f, type),
                     new ParameterSymbol(parameterName4, parameterDocumentation4, f, type, overrideParameterDirection4)
                 }));
+        }
+
+        private static TypeSymbol[] GetPossiblyExpandedArray(TypeSymbol[] types, TypeSymbol[] overrideTypes)
+        {
+            if (overrideTypes != null && overrideTypes.Length == 0)
+                return null;
+            else if (overrideTypes != null && overrideTypes.Length == 1)
+                return Enumerable.Repeat(overrideTypes[0], types.Length).ToArray();
+            else
+                return overrideTypes;
         }
     }
 }
