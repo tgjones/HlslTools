@@ -119,6 +119,18 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
             base.VisitPackOffsetLocation(node);
         }
 
+        public override void VisitTypedefStatement(TypedefStatementSyntax node)
+        {
+            var symbol = _semanticModel.GetSymbol(node.Type);
+            if (symbol != null)
+            {
+                var classificationType = GetClassificationType(symbol);
+                foreach (var declarator in node.Declarators)
+                    CreateTag(declarator.Identifier, classificationType);
+            }
+            base.VisitTypedefStatement(node);
+        }
+
         public override void VisitIdentifierName(IdentifierNameSyntax node)
         {
             var symbol = _semanticModel.GetSymbol(node);
@@ -179,9 +191,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
                             ? _classificationService.ConstantBufferVariableIdentifier
                             : _classificationService.LocalVariableIdentifier;
                 case SymbolKind.Class:
-                case SymbolKind.Struct:
-                case SymbolKind.Interface:
                     return _classificationService.ClassIdentifier;
+                case SymbolKind.Struct:
+                    return _classificationService.StructIdentifier;
+                case SymbolKind.Interface:
+                    return _classificationService.InterfaceIdentifier;
+                case SymbolKind.TypeAlias:
+                    return GetClassificationType(((TypeAliasSymbol) symbol).ValueType);
                 case SymbolKind.Function:
                     return _classificationService.FunctionIdentifier;
                 default:

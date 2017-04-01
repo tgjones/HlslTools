@@ -1468,6 +1468,7 @@ namespace ShaderTools.Hlsl.Syntax
                 case SyntaxKind.TriangleAdjKeyword:
                 case SyntaxKind.TriangleStreamKeyword:
                 case SyntaxKind.TrueKeyword:
+                case SyntaxKind.TypedefKeyword:
                 case SyntaxKind.UniformKeyword:
                 case SyntaxKind.UNormKeyword:
                 case SyntaxKind.UintKeyword:
