@@ -1204,6 +1204,21 @@ namespace ShaderTools.Hlsl.Formatting
             FormatSemicolonToken(node.SemicolonToken);
         }
 
+        public override void VisitTypedefStatement(TypedefStatementSyntax node)
+        {
+            FormatToken(node.TypedefKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
+
+            foreach (var modifier in node.Modifiers)
+                FormatToken(modifier, trailing: TrailingFormattingOperation.EnsureTrailingWhitespace);
+
+            Visit(node.Type);
+
+            foreach (var declarator in node.Declarators)
+                FormatToken(declarator.Identifier, LeadingFormattingOperation.EnsureLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
+
+            FormatSemicolonToken(node.SemicolonToken);
+        }
+
         public override void VisitUndefDirectiveTrivia(UndefDirectiveTriviaSyntax node)
         {
             AlignDirective(node);
