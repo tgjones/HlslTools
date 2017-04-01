@@ -101,7 +101,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
             if (IsInPreprocessorDirective(token) && (token.Kind == SyntaxKind.HashToken || token.ContextualKind.IsPreprocessorKeyword()))
                 return _classificationService.PreprocessorKeyword;
 
-            if (token.Kind.IsKeyword())
+            if (token.Kind.IsKeyword() || token.ContextualKind.IsKeyword())
                 return _classificationService.Keyword;
 
             if (token.Kind.IsPunctuation())

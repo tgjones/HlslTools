@@ -2453,9 +2453,9 @@ namespace ShaderTools.Hlsl.Syntax
             }
         }
 
-        public static bool IsDeclarationModifier(SyntaxKind kind)
+        public static bool IsDeclarationModifier(SyntaxToken token)
         {
-            switch (kind)
+            switch (token.Kind)
             {
                 case SyntaxKind.ConstKeyword:
                 case SyntaxKind.RowMajorKeyword:
@@ -2482,17 +2482,23 @@ namespace ShaderTools.Hlsl.Syntax
                 case SyntaxKind.CentroidKeyword:
                 case SyntaxKind.NointerpolationKeyword:
                 case SyntaxKind.NoperspectiveKeyword:
-                case SyntaxKind.SampleKeyword:
                     return true;
 
                 default:
-                    return false;
+                    switch (token.ContextualKind)
+                    {
+                        case SyntaxKind.SampleKeyword:
+                            return true;
+
+                        default:
+                            return false;
+                    }
             }
         }
 
         public static bool IsParameterModifier(SyntaxToken token)
         {
-            if (IsDeclarationModifier(token.Kind))
+            if (IsDeclarationModifier(token))
                 return true;
 
             switch (token.Kind)

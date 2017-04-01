@@ -33,7 +33,7 @@ namespace ShaderTools.Hlsl.Parser
 
         private void ParseDeclarationModifiers(List<SyntaxToken> list)
         {
-            while (SyntaxFacts.IsDeclarationModifier(Current.Kind))
+            while (SyntaxFacts.IsDeclarationModifier(Current))
                 list.Add(NextToken());
         }
 

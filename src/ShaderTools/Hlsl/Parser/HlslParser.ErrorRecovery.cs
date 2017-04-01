@@ -250,7 +250,7 @@ namespace ShaderTools.Hlsl.Parser
                 case SyntaxKind.IdentifierToken:
                     return true;
                 default:
-                    return SyntaxFacts.IsDeclarationModifier(tk)
+                    return SyntaxFacts.IsDeclarationModifier(Current)
                            || SyntaxFacts.IsPredefinedType(Current)
                            || IsPossibleExpression();
             }
