@@ -168,7 +168,7 @@ namespace ShaderTools.Hlsl.Symbols
 
             allFunctions.AddRange(Create3(
                 "__XB_Cube_SC",
-                "Performs cubemap S coordination determination. Translates to GCN's v_cubesc_f32.",
+                "Performs cubemap S coordinate determination. Translates to GCN's v_cubesc_f32.",
                 new[] { IntrinsicTypes.Float },
                 "x", "X component of the 3D vector.",
                 "y", "Y component of the 3D vector.",
@@ -176,7 +176,7 @@ namespace ShaderTools.Hlsl.Symbols
 
             allFunctions.AddRange(Create3(
                 "__XB_Cube_TC",
-                "Performs cubemap T coordination determination. Translates to GCN's v_cubetc_f32.",
+                "Performs cubemap T coordinate determination. Translates to GCN's v_cubetc_f32.",
                 new[] { IntrinsicTypes.Float },
                 "x", "X component of the 3D vector.",
                 "y", "Y component of the 3D vector.",
