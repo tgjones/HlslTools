@@ -611,11 +611,11 @@ namespace ShaderTools.Hlsl.Symbols
 
             allFunctions.AddRange(Create3(
                 "mad",
-                "Performs an arithmetic multiply/add operation on three values.",
+                "Performs an arithmetic multiply/add operation on three values. Returns the result of x * y + a.",
                 IntrinsicTypes.AllNumericTypes,
-                "m", "The multiplication value.",
-                "a", "The first addition value.",
-                "b", "The second addition value."));
+                "x", "The first multiplication value.",
+                "y", "The second multiplication value.",
+                "a", "The addition value."));
 
             allFunctions.AddRange(Create2(
                 "max",
