@@ -113,17 +113,37 @@ namespace ShaderTools.EditorServices.Workspace
         /// <summary>
         /// Closes a currently open <see cref="Document"/>.
         /// </summary>
-        /// <param name="document">The <see cref="Document"/> to close.</param>
-        public void CloseFile(Document document)
+        /// <param name="filePath">The file path of the document to close.</param>
+        public void CloseDocument(string filePath)
         {
-            Validate.IsNotNull(nameof(document), document);
+            Validate.IsNotNullOrEmptyString(nameof(filePath), filePath);
 
-            _workspaceFiles = _workspaceFiles.Remove(document.Id);
+            // Resolve the full file path 
+            string resolvedFilePath = this.ResolveFilePath(filePath);
+            string keyName = resolvedFilePath.ToLower();
+
+            _workspaceFiles = _workspaceFiles.Remove(keyName);
         }
 
         public void UpdateFile(Document oldDocument, Document newDocument)
         {
             _workspaceFiles = _workspaceFiles.SetItem(newDocument.Id, newDocument);
+        }
+
+        public void RenameDocument(string oldFilePath, string newFilePath)
+        {
+            string resolvedFilePath = this.ResolveFilePath(oldFilePath);
+            string keyName = resolvedFilePath.ToLower();
+
+            if (!_workspaceFiles.TryGetValue(keyName, out var document))
+                return;
+
+            var newResolvedFilePath = this.ResolveFilePath(newFilePath);
+            var newKeyName = newResolvedFilePath.ToLower();
+
+            _workspaceFiles = _workspaceFiles
+                .Remove(document.Id)
+                .Add(newKeyName, document.WithSourceText(document.SourceText.WithFilename(newResolvedFilePath)));
         }
 
         private string ResolveFilePath(string filePath)

@@ -245,6 +245,8 @@
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
     <Compile Include="Core\Util\IComEventSink.cs" />
+    <Compile Include="Hlsl\HlslWorkspaceListener.cs" />
+    <Compile Include="Hlsl\HlslWorkspaceManager.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\DefinitionHighlightTag.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\NavigableHighlightTag.cs" />

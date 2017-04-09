@@ -110,6 +110,11 @@ namespace ShaderTools.Core.Text
         }
 
         public override bool IsRoot { get; }
+
+        public override SourceText WithFilename(string newFilename)
+        {
+            return new StringText(_text, newFilename, IsRoot);
+        }
     }
 
     public struct TextLine : IEquatable<TextLine>

@@ -99,7 +99,7 @@ namespace ShaderTools.Core.Text
             if (!hasChanges)
                 return this;
 
-            var newText = From(sb.ToString());
+            var newText = From(sb.ToString(), Filename);
 
             return newText;
             //return new ChangedSourceText(this, newText, persistedChanges);
@@ -126,5 +126,7 @@ namespace ShaderTools.Core.Text
 
             return false;
         }
+
+        public abstract SourceText WithFilename(string newFilename);
     }
 }

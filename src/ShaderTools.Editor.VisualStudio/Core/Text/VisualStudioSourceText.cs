@@ -40,5 +40,10 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
         }
 
         public override bool IsRoot { get; }
+
+        public override SourceText WithFilename(string newFilename)
+        {
+            return new VisualStudioSourceText(Snapshot, newFilename, IsRoot);
+        }
     }
 }

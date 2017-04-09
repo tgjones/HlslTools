@@ -134,7 +134,7 @@ namespace ShaderTools.EditorServices.Protocol.Server
 
             if (fileToClose != null)
             {
-                _workspace.CloseFile(fileToClose);
+                _workspace.CloseDocument(fileToClose.FilePath);
                 await ClearMarkers(fileToClose, eventContext);
             }
 
