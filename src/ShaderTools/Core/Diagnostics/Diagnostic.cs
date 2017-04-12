@@ -16,7 +16,7 @@ namespace ShaderTools.Core.Diagnostics
 
         public DiagnosticSeverity Severity => Descriptor.Severity;
 
-        private Diagnostic(DiagnosticDescriptor descriptor, SourceRange sourceRange, string message)
+        internal Diagnostic(DiagnosticDescriptor descriptor, SourceRange sourceRange, string message)
         {
             Descriptor = descriptor;
             SourceRange = sourceRange;
@@ -30,7 +30,7 @@ namespace ShaderTools.Core.Diagnostics
             return new Diagnostic(descriptor, sourceRange, message);
         }
 
-        private static DiagnosticDescriptor GetOrCreateDescriptor(int errorCode, MessageProvider messageProvider)
+        internal static DiagnosticDescriptor GetOrCreateDescriptor(int errorCode, MessageProvider messageProvider)
         {
             return ImmutableInterlocked.GetOrAdd(ref ErrorCodeToDescriptorMap, errorCode, code => CreateDescriptor(code, messageProvider));
         }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ShaderTools.Core.Diagnostics;
 using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
+using ShaderTools.Core.Parser;
 
 namespace ShaderTools.Unity.Syntax
 {
@@ -54,6 +54,63 @@ namespace ShaderTools.Unity.Syntax
                   Enumerable.Empty<Diagnostic>())
         {
             
+        }
+
+        internal SyntaxToken(PretokenizedSyntaxToken pretokenizedToken, SourceLocation position)
+            : base((SyntaxKind) pretokenizedToken.RawKind, ConvertDiagnostics(pretokenizedToken.Diagnostics, position))
+        {
+            ContextualKind = (SyntaxKind) pretokenizedToken.RawContextualKind;
+
+            Text = pretokenizedToken.Text;
+            Value = pretokenizedToken.Value;
+
+            SourceRange = new SourceRange(position + pretokenizedToken.LeadingTriviaWidth, pretokenizedToken.Width);
+            FullSourceRange = new SourceRange(position, pretokenizedToken.FullWidth);
+
+            var triviaPosition = position;
+            var convertedLeadingTrivia = new List<SyntaxNode>();
+            foreach (var trivia in pretokenizedToken.LeadingTrivia)
+            {
+                convertedLeadingTrivia.Add(new SyntaxTrivia(
+                    (SyntaxKind) trivia.RawKind,
+                    trivia.Text,
+                    new SourceRange(triviaPosition, trivia.FullWidth),
+                    ConvertDiagnostics(trivia.Diagnostics, triviaPosition)));
+                triviaPosition += trivia.FullWidth;
+            }
+            LeadingTrivia = convertedLeadingTrivia.ToImmutableArray();
+
+            triviaPosition = SourceRange.End;
+            var convertedTrailingTrivia = new List<SyntaxNode>();
+            foreach (var trivia in pretokenizedToken.TrailingTrivia)
+            {
+                convertedTrailingTrivia.Add(new SyntaxTrivia(
+                    (SyntaxKind) trivia.RawKind,
+                    trivia.Text,
+                    new SourceRange(triviaPosition, trivia.FullWidth),
+                    ConvertDiagnostics(trivia.Diagnostics, triviaPosition)));
+                triviaPosition += trivia.FullWidth;
+            }
+            TrailingTrivia = convertedTrailingTrivia.ToImmutableArray();
+
+            ContainsDiagnostics = Diagnostics.Any()
+                || LeadingTrivia.Any(x => x.ContainsDiagnostics)
+                || TrailingTrivia.Any(x => x.ContainsDiagnostics);
+        }
+
+        private static ImmutableArray<Diagnostic> ConvertDiagnostics(ImmutableArray<PretokenizedDiagnostic> diagnostics, SourceLocation startPosition)
+        {
+            var result = new List<Diagnostic>();
+
+            foreach (var diagnostic in diagnostics)
+            {
+                result.Add(new Diagnostic(
+                    diagnostic.Descriptor,
+                    new SourceRange(startPosition + diagnostic.Offset, diagnostic.Width),
+                    diagnostic.Message));
+            }
+
+            return result.ToImmutableArray();
         }
 
         private static SourceRange ComputeFullSpan(SourceRange span, ImmutableArray<SyntaxNode> leadingTrivia, ImmutableArray<SyntaxNode> trailingTrivia)

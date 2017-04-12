@@ -1,6 +1,6 @@
 ﻿namespace ShaderTools.Unity.Syntax
 {
-    public enum SyntaxKind
+    public enum SyntaxKind : ushort
     {
         None,
 

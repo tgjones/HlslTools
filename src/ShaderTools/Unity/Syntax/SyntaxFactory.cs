@@ -18,7 +18,10 @@ namespace ShaderTools.Unity.Syntax
 
         private static SyntaxTree Parse(SourceText sourceText, Func<UnityParser, SyntaxNode> parseFunc)
         {
-            var lexer = new UnityLexer(sourceText);
+            var pretokenizer = new UnityPretokenizer(sourceText);
+            var pretokenizedTokens = pretokenizer.GetTokens();
+
+            var lexer = new UnityLexer(pretokenizedTokens);
             var parser = new UnityParser(lexer);
 
             var result = new SyntaxTree(sourceText,
@@ -33,7 +36,10 @@ namespace ShaderTools.Unity.Syntax
         {
             var tokens = new List<SyntaxToken>();
 
-            var lexer = new UnityLexer(sourceText);
+            var pretokenizer = new UnityPretokenizer(sourceText);
+            var pretokenizedTokens = pretokenizer.GetTokens();
+
+            var lexer = new UnityLexer(pretokenizedTokens);
             SyntaxToken token;
             do
             {
