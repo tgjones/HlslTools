@@ -23,12 +23,6 @@ namespace ShaderTools.EditorServices.Protocol.MessageProtocol.Channel
 
         protected override void Initialize(IMessageSerializer messageSerializer)
         {
-#if !CoreCLR
-            // Ensure that the console is using UTF-8 encoding
-            System.Console.InputEncoding = Encoding.UTF8;
-            System.Console.OutputEncoding = Encoding.UTF8;
-#endif
-
             // Open the standard input/output streams
             this.inputStream = System.Console.OpenStandardInput();
             this.outputStream = System.Console.OpenStandardOutput();

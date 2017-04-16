@@ -21,27 +21,7 @@ namespace ShaderTools.EditorServices.Protocol.MessageProtocol.Channel
 
         public override async Task WaitForConnection()
         {
-#if CoreCLR
             await this.pipeClient.ConnectAsync();
-#else
-            this.IsConnected = false;
-
-            while (!this.IsConnected)
-            {
-                try
-                {
-                    // Wait for 500 milliseconds so that we don't tie up the thread
-                    this.pipeClient.Connect(500);
-                    this.IsConnected = this.pipeClient.IsConnected;
-                }
-                catch (TimeoutException)
-                {
-                    // Connect timed out, wait and try again
-                    await Task.Delay(1000);
-                    continue;
-                }
-            }
-#endif
 
             // If we've reached this point, we're connected
             this.IsConnected = true;

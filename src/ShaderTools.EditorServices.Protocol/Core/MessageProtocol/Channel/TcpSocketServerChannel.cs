@@ -60,11 +60,7 @@ namespace ShaderTools.EditorServices.Protocol.MessageProtocol.Channel
 
             if (this.tcpClient != null)
             {
-#if CoreCLR
                 this.tcpClient.Dispose();
-#else
-                this.tcpClient.Close();
-#endif
                 this.tcpClient = null;
 
                 Logger.Write(LogLevel.Verbose, "TCP client has been closed");
