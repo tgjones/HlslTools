@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 
 namespace ShaderTools.Core.Syntax
@@ -40,19 +39,16 @@ namespace ShaderTools.Core.Syntax
         /// </summary>
         /// <param name="index">The index.</param>
         /// <returns></returns>
-        [Pure]
         public SyntaxNodeBase GetSeparator(int index)
         {
             return _list[(index << 1) + 1];
         }
 
-        [Pure]
         public IList<SyntaxNodeBase> GetWithSeparators()
         {
             return _list;
         }
 
-        [Pure]
         public IEnumerable<SyntaxNodeBase> GetSeparators()
         {
             return _list.Where((item, index) => index % 2 != 0);
