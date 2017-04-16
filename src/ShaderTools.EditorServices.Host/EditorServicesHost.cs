@@ -6,6 +6,8 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using ShaderTools.EditorServices.Utility;
 using ShaderTools.EditorServices.Protocol.MessageProtocol.Channel;
 using ShaderTools.EditorServices.Protocol.Server;
@@ -62,11 +64,6 @@ namespace ShaderTools.EditorServices.Host
                 }
             }
 #endif
-
-            // Catch unhandled exceptions for logging purposes
-#if !CoreCLR
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-#endif
         }
 
         #endregion
@@ -82,21 +79,13 @@ namespace ShaderTools.EditorServices.Host
         {
             Logger.Initialize(logFilePath, logLevel);
 
-#if CoreCLR
             FileVersionInfo fileVersionInfo =
                 FileVersionInfo.GetVersionInfo(this.GetType().GetTypeInfo().Assembly.Location);
 
             // TODO #278: Need the correct dependency package for this to work correctly
-            //string osVersionString = RuntimeInformation.OSDescription;
-            //string processArchitecture = RuntimeInformation.ProcessArchitecture == Architecture.X64 ? "64-bit" : "32-bit";
-            //string osArchitecture = RuntimeInformation.OSArchitecture == Architecture.X64 ? "64-bit" : "32-bit";
-#else
-            FileVersionInfo fileVersionInfo =
-                FileVersionInfo.GetVersionInfo(this.GetType().Assembly.Location);
-            string osVersionString = Environment.OSVersion.VersionString;
-            string processArchitecture = Environment.Is64BitProcess ? "64-bit" : "32-bit";
-            string osArchitecture = Environment.Is64BitOperatingSystem ? "64-bit" : "32-bit";
-#endif
+            string osVersionString = RuntimeInformation.OSDescription;
+            string processArchitecture = RuntimeInformation.ProcessArchitecture == Architecture.X64 ? "64-bit" : "32-bit";
+            string osArchitecture = RuntimeInformation.OSArchitecture == Architecture.X64 ? "64-bit" : "32-bit";
 
             string newLine = Environment.NewLine;
 
@@ -105,14 +94,10 @@ namespace ShaderTools.EditorServices.Host
                 string.Format(
                     $"ShaderTools Editor Services Host v{fileVersionInfo.FileVersion} starting (pid {Process.GetCurrentProcess().Id})..." + newLine + newLine +
                      "  Host application details:" + newLine + newLine +
-#if !CoreCLR
                     $"    Arch:      {processArchitecture}" + newLine + newLine +
                      "  Operating system details:" + newLine + newLine +
                     $"    Version: {osVersionString}" + newLine +
                     $"    Arch:    {osArchitecture}"));
-#else
-                    ""));
-#endif
         }
 
         /// <summary>
@@ -154,24 +139,6 @@ namespace ShaderTools.EditorServices.Host
                 this.languageServer.WaitForExit();
             }
         }
-
-        #endregion
-
-        #region Private Methods
-
-#if !CoreCLR
-        static void CurrentDomain_UnhandledException(
-            object sender,
-            UnhandledExceptionEventArgs e)
-        {
-            // Log the exception
-            Logger.Write(
-                LogLevel.Error,
-                string.Format(
-                    "FATAL UNHANDLED EXCEPTION:\r\n\r\n{0}",
-                    e.ExceptionObject.ToString()));
-        }
-#endif
 
         #endregion
     }
