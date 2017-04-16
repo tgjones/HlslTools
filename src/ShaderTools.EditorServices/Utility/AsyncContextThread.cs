@@ -58,9 +58,6 @@ namespace ShaderTools.EditorServices.Utility
                 Task.Factory.StartNew(
                     () =>
                     {
-                        // Set the thread's name to help with debugging
-                        Thread.CurrentThread.Name = "AsyncContextThread: " + this.threadName;
-
                         // Set up an AsyncContext to run the task
                         AsyncContext.Start(taskReturningFunc);
                     },

@@ -185,11 +185,7 @@ namespace ShaderTools.EditorServices.Utility
             {
                 logFilePath =
                     Path.Combine(
-#if CoreCLR
                         AppContext.BaseDirectory,
-#else
-                        AppDomain.CurrentDomain.BaseDirectory,
-#endif
                         logFilePath);
             }
 
@@ -199,11 +195,7 @@ namespace ShaderTools.EditorServices.Utility
                 // try opening it in a more reliable path
                 this.TryOpenLogFile(
                     Path.Combine(
-#if CoreCLR
                         Environment.GetEnvironmentVariable("TEMP"),
-#else
-                        Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-#endif
                         Path.GetFileName(logFilePath)),
                     deleteExisting);
             }
