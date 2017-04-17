@@ -190,7 +190,8 @@ namespace ShaderTools.EditorServices.Workspace
             // throw when any unsupported file URI scheme is encountered.
         }
 
-        internal ConfigFile LoadConfigFile(string directory)
+        // TODO: Refactor this.
+        public ConfigFile LoadConfigFile(string directory)
         {
             return ImmutableInterlocked.GetOrAdd(
                 ref _configFiles, 

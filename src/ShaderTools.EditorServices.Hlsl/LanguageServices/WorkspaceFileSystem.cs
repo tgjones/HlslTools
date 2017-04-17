@@ -1,14 +1,14 @@
 ﻿using System.IO;
 using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Text;
+using ShaderTools.EditorServices.Workspace;
 
-namespace ShaderTools.EditorServices.Workspace.Hlsl
+namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 {
-    internal sealed class WorkspaceFileSystem : IIncludeFileSystem
+    internal sealed class WorkspaceFileSystem : IWorkspaceIncludeFileSystem
     {
-        private readonly Workspace _workspace;
+        private readonly Workspace.Workspace _workspace;
 
-        public WorkspaceFileSystem(Workspace workspace)
+        public WorkspaceFileSystem(Workspace.Workspace workspace)
         {
             _workspace = workspace;
         }
