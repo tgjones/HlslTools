@@ -7,7 +7,7 @@ namespace ShaderTools.EditorServices.Workspace.Hlsl
         private readonly WorkspaceFileSystem _fileSystem;
 
         public HlslWorkspace()
-            : base()
+            : base(null)
         {
             _fileSystem = new WorkspaceFileSystem(this);
         }

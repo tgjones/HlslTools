@@ -11,11 +11,14 @@ using System.Text;
 using ShaderTools.Core.Options;
 using ShaderTools.Core.Text;
 using ShaderTools.EditorServices.Utility;
+using ShaderTools.EditorServices.Workspace.Host;
 
 namespace ShaderTools.EditorServices.Workspace
 {
     public abstract class Workspace
     {
+        private readonly HostWorkspaceServices _services;
+
         private ImmutableDictionary<string, Document> _workspaceFiles = ImmutableDictionary<string, Document>.Empty;
         private ImmutableDictionary<string, ConfigFile> _configFiles = ImmutableDictionary<string, ConfigFile>.Empty;
 
@@ -23,6 +26,11 @@ namespace ShaderTools.EditorServices.Workspace
         /// Gets or sets the root path of the workspace.
         /// </summary>
         public string WorkspacePath { get; set; }
+
+        protected Workspace(HostServices host)
+        {
+            _services = host.CreateWorkspaceServices(this);
+        }
 
         /// <summary>
         /// Gets an open file in the workspace.  If the file isn't open but

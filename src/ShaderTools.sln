@@ -31,6 +31,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Host", "ShaderTools.EditorServices.Host\ShaderTools.EditorServices.Host.csproj", "{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Hlsl", "ShaderTools.EditorServices.Hlsl\ShaderTools.EditorServices.Hlsl.csproj", "{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Desktop", "ShaderTools.EditorServices.Desktop\ShaderTools.EditorServices.Desktop.csproj", "{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Utilities", "ShaderTools.Utilities\ShaderTools.Utilities.csproj", "{485596DC-EDC9-4C95-9807-229355F4A941}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +83,18 @@ Global
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{485596DC-EDC9-4C95-9807-229355F4A941}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{485596DC-EDC9-4C95-9807-229355F4A941}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{485596DC-EDC9-4C95-9807-229355F4A941}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{485596DC-EDC9-4C95-9807-229355F4A941}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -92,5 +110,8 @@ Global
 		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
 		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
+		{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
+		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
+		{485596DC-EDC9-4C95-9807-229355F4A941} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
 	EndGlobalSection
 EndGlobal

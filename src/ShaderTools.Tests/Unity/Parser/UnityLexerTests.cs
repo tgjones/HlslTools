@@ -31,6 +31,23 @@ namespace ShaderTools.Tests.Unity.Parser
             Assert.False(tokens.Any(t => t.ContainsDiagnostics));
         }
 
+        [Fact]
+        public void CanIncrementallyLexShader()
+        {
+            const string originalShader = @"
+Shader ""MyShader"" {
+    Properties {
+        _Color(""Main Color"", Color) = (1, 1, 1, 1)
+    }
+}";
+
+            var originalTokens = LexAllTokens(SourceText.From(originalShader));
+
+            // TODO: Store PretokenizedText as lazily-computed property of SourceText.
+            // TODO: Add SourceText constructor that takes a previous PretokenizedText
+            //       and a list of TextChange objects.
+        }
+
         #region Test helpers
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(SourceText text)
