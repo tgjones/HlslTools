@@ -4,10 +4,12 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using ShaderTools.Core.Options;
 using ShaderTools.Core.Text;
 using ShaderTools.EditorServices.Utility;
@@ -18,176 +20,165 @@ namespace ShaderTools.EditorServices.Workspace
     public abstract class Workspace
     {
         private readonly HostWorkspaceServices _services;
+        //private readonly HostLanguageServices _languageServices;
 
-        private ImmutableDictionary<string, Document> _workspaceFiles = ImmutableDictionary<string, Document>.Empty;
+        private readonly SemaphoreSlim _serializationLock = new SemaphoreSlim(initialCount: 1);
+
+        private ImmutableDictionary<DocumentId, Document> _openDocuments = ImmutableDictionary<DocumentId, Document>.Empty;
         private ImmutableDictionary<string, ConfigFile> _configFiles = ImmutableDictionary<string, ConfigFile>.Empty;
-
-        /// <summary>
-        /// Gets or sets the root path of the workspace.
-        /// </summary>
-        public string WorkspacePath { get; set; }
 
         protected Workspace(HostServices host)
         {
             _services = host.CreateWorkspaceServices(this);
+
+            _openDocuments = ImmutableDictionary<DocumentId, Document>.Empty;
         }
 
-        /// <summary>
-        /// Gets an open file in the workspace.  If the file isn't open but
-        /// exists on the filesystem, load and return it.
-        /// </summary>
-        /// <param name="filePath">The file path at which the script resides.</param>
-        /// <exception cref="FileNotFoundException">
-        /// <paramref name="filePath"/> is not found.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        /// <paramref name="filePath"/> contains a null or empty string.
-        /// </exception>
-        public Document GetFile(string filePath)
+        public IEnumerable<Document> OpenDocuments
         {
-            Validate.IsNotNullOrEmptyString(nameof(filePath), filePath);
-
-            // Resolve the full file path 
-            string resolvedFilePath = this.ResolveFilePath(filePath);
-            string keyName = resolvedFilePath.ToLower();
-
-            // Make sure the file isn't already loaded into the workspace
-            Document scriptFile = null;
-            if (!_workspaceFiles.TryGetValue(keyName, out scriptFile))
+            get
             {
-                // This method allows FileNotFoundException to bubble up 
-                // if the file isn't found.
-                using (FileStream fileStream = new FileStream(resolvedFilePath, FileMode.Open, FileAccess.Read))
-                using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8))
-                {
-                    var text = SourceText.From(streamReader.ReadToEnd(), resolvedFilePath);
-                    scriptFile = CreateDocument(text, filePath);
-
-                    _workspaceFiles = _workspaceFiles.Add(keyName, scriptFile);
-                }
-
-                Logger.Write(LogLevel.Verbose, "Opened file on disk: " + resolvedFilePath);
+                var latestDocuments = Volatile.Read(ref _openDocuments);
+                return latestDocuments.Values;
             }
-
-            return scriptFile;
         }
 
-        public bool TryGetDocument(string filePath, out Document document)
+        public Document GetDocument(DocumentId documentId)
         {
-            var keyName = ResolveFilePath(filePath).ToLower();
-            return _workspaceFiles.TryGetValue(keyName, out document);
+            var latestDocuments = Volatile.Read(ref _openDocuments);
+            if (latestDocuments.TryGetValue(documentId, out var document))
+                return document;
+            return null;
         }
 
-        protected abstract Document CreateDocument(SourceText sourceText, string clientFilePath);
-
-        /// <summary>
-        /// Gets a new <see cref="Document"/> instance which is identified by the given file
-        /// path and initially contains the given buffer contents.
-        /// </summary>
-        /// <param name="filePath">The file path for which a buffer will be retrieved.</param>
-        /// <param name="initialBuffer">The initial buffer contents if there is not an existing ScriptFile for this path.</param>
-        /// <returns>A ScriptFile instance for the specified path.</returns>
-        public Document GetFileBuffer(string filePath, string initialBuffer)
+        protected Document CreateDocument(DocumentId documentId, string languageName, SourceText sourceText)
         {
-            Validate.IsNotNullOrEmptyString(nameof(filePath), filePath);
-
-            // Resolve the full file path 
-            string resolvedFilePath = this.ResolveFilePath(filePath);
-            string keyName = resolvedFilePath.ToLower();
-
-            // Make sure the file isn't already loaded into the workspace
-            Document scriptFile = null;
-            if (!_workspaceFiles.TryGetValue(keyName, out scriptFile) && initialBuffer != null)
-            {
-                scriptFile = CreateDocument(SourceText.From(initialBuffer, resolvedFilePath), filePath);
-
-                _workspaceFiles = _workspaceFiles.Add(keyName, scriptFile);
-
-                Logger.Write(LogLevel.Verbose, "Opened file as in-memory buffer: " + resolvedFilePath);
-            }
-
-            return scriptFile;
+            var languageServices = _services.GetLanguageServices(languageName);
+            return new Document(languageServices, documentId, sourceText);
         }
 
-        /// <summary>
-        /// Gets an array of all opened <see cref="Document"/>s in the workspace.
-        /// </summary>
-        /// <returns>An array of all opened <see cref="Document"/>s in the workspace.</returns>
-        public Document[] GetOpenedFiles()
+        //protected ImmutableDictionary<DocumentId, Document> SetCurrentDocuments(ImmutableDictionary<DocumentId, Document> documents)
+        //{
+        //    var currentDocuments = Volatile.Read(ref _latestDocuments);
+        //    if (documents == currentDocuments)
+        //    {
+        //        // No change
+        //        return documents;
+        //    }
+
+        //    while (true)
+        //    {
+        //        var newDocuments = documents.WithNewWorkspace(this, currentDocuments.WorkspaceVersion + 1);
+        //        var replacedDocuments = ImmutableInterlocked.InterlockedExchange(ref _latestDocuments, newDocuments, currentDocuments);
+        //        if (replacedDocuments == currentDocuments)
+        //        {
+        //            return newDocuments;
+        //        }
+
+        //        currentDocuments = replacedDocuments;
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Gets an open file in the workspace.  If the file isn't open but
+        ///// exists on the filesystem, load and return it.
+        ///// </summary>
+        ///// <param name="filePath">The file path at which the script resides.</param>
+        ///// <exception cref="FileNotFoundException">
+        ///// <paramref name="filePath"/> is not found.
+        ///// </exception>
+        ///// <exception cref="ArgumentException">
+        ///// <paramref name="filePath"/> contains a null or empty string.
+        ///// </exception>
+        //public Document GetFile(string filePath)
+        //{
+        //    Validate.IsNotNullOrEmptyString(nameof(filePath), filePath);
+
+        //    // Resolve the full file path 
+        //    string resolvedFilePath = this.ResolveFilePath(filePath);
+        //    string keyName = resolvedFilePath.ToLower();
+
+        //    // Make sure the file isn't already loaded into the workspace
+        //    Document scriptFile = null;
+        //    if (!_workspaceFiles.TryGetValue(keyName, out scriptFile))
+        //    {
+        //        // This method allows FileNotFoundException to bubble up 
+        //        // if the file isn't found.
+        //        using (FileStream fileStream = new FileStream(resolvedFilePath, FileMode.Open, FileAccess.Read))
+        //        using (StreamReader streamReader = new StreamReader(fileStream, Encoding.UTF8))
+        //        {
+        //            var text = SourceText.From(streamReader.ReadToEnd(), resolvedFilePath);
+        //            scriptFile = CreateDocument(text, filePath);
+
+        //            _workspaceFiles = _workspaceFiles.Add(keyName, scriptFile);
+        //        }
+
+        //        Logger.Write(LogLevel.Verbose, "Opened file on disk: " + resolvedFilePath);
+        //    }
+
+        //    return scriptFile;
+        //}
+
+        //public bool TryGetDocument(string filePath, out Document document)
+        //{
+        //    var keyName = ResolveFilePath(filePath).ToLower();
+        //    return _workspaceFiles.TryGetValue(keyName, out document);
+        //}
+
+        ///// <summary>
+        ///// Gets a new <see cref="Document"/> instance which is identified by the given file
+        ///// path and initially contains the given buffer contents.
+        ///// </summary>
+        ///// <param name="filePath">The file path for which a buffer will be retrieved.</param>
+        ///// <param name="initialBuffer">The initial buffer contents if there is not an existing ScriptFile for this path.</param>
+        ///// <returns>A ScriptFile instance for the specified path.</returns>
+        //public Document GetFileBuffer(string filePath, string initialBuffer)
+        //{
+        //    Validate.IsNotNullOrEmptyString(nameof(filePath), filePath);
+
+        //    // Resolve the full file path 
+        //    string resolvedFilePath = this.ResolveFilePath(filePath);
+        //    string keyName = resolvedFilePath.ToLower();
+
+        //    // Make sure the file isn't already loaded into the workspace
+        //    Document scriptFile = null;
+        //    if (!_workspaceFiles.TryGetValue(keyName, out scriptFile) && initialBuffer != null)
+        //    {
+        //        scriptFile = CreateDocument(SourceText.From(initialBuffer, resolvedFilePath), filePath);
+
+        //        _workspaceFiles = _workspaceFiles.Add(keyName, scriptFile);
+
+        //        Logger.Write(LogLevel.Verbose, "Opened file as in-memory buffer: " + resolvedFilePath);
+        //    }
+
+        //    return scriptFile;
+        //}
+
+        protected void OnDocumentOpened(Document document)
         {
-            return _workspaceFiles.Values.ToArray();
+            ImmutableInterlocked.AddOrUpdate(ref _openDocuments, document.Id, document, (k, v) => document);
         }
 
-        /// <summary>
-        /// Closes a currently open <see cref="Document"/>.
-        /// </summary>
-        /// <param name="filePath">The file path of the document to close.</param>
-        public void CloseDocument(string filePath)
+        protected void OnDocumentClosed(DocumentId documentId)
         {
-            Validate.IsNotNullOrEmptyString(nameof(filePath), filePath);
-
-            // Resolve the full file path 
-            string resolvedFilePath = this.ResolveFilePath(filePath);
-            string keyName = resolvedFilePath.ToLower();
-
-            _workspaceFiles = _workspaceFiles.Remove(keyName);
+            ImmutableInterlocked.TryRemove(ref _openDocuments, documentId, out var _);
         }
 
-        public void UpdateFile(Document oldDocument, Document newDocument)
+        protected void OnDocumentRenamed(DocumentId oldDocumentId, DocumentId newDocumentId)
         {
-            _workspaceFiles = _workspaceFiles.SetItem(newDocument.Id, newDocument);
-        }
-
-        public void RenameDocument(string oldFilePath, string newFilePath)
-        {
-            string resolvedFilePath = this.ResolveFilePath(oldFilePath);
-            string keyName = resolvedFilePath.ToLower();
-
-            if (!_workspaceFiles.TryGetValue(keyName, out var document))
+            if (!ImmutableInterlocked.TryRemove(ref _openDocuments, oldDocumentId, out var oldDocument))
                 return;
 
-            var newResolvedFilePath = this.ResolveFilePath(newFilePath);
-            var newKeyName = newResolvedFilePath.ToLower();
-
-            _workspaceFiles = _workspaceFiles
-                .Remove(document.Id)
-                .Add(newKeyName, document.WithSourceText(document.SourceText.WithFilename(newResolvedFilePath)));
+            ImmutableInterlocked.TryAdd(ref _openDocuments, newDocumentId, oldDocument.WithId(newDocumentId));
         }
 
-        private string ResolveFilePath(string filePath)
+        protected Document OnDocumentTextChanged(Document document, SourceText newText)
         {
-            if (!IsPathInMemory(filePath))
-            {
-                if (filePath.StartsWith(@"file://"))
-                {
-                    // Client sent the path in URI format, extract the local path
-                    Uri fileUri = new Uri(Uri.UnescapeDataString(filePath));
-                    filePath = fileUri.LocalPath;
-                }
-
-                // Get the absolute file path
-                filePath = Path.GetFullPath(filePath);
-            }
-
-            Logger.Write(LogLevel.Verbose, "Resolved path: " + filePath);
-
-            return filePath;
-        }
-
-        internal static bool IsPathInMemory(string filePath)
-        {
-            // When viewing PowerShell files in the Git diff viewer, VS Code
-            // sends the contents of the file at HEAD with a URI that starts
-            // with 'inmemory'.  Untitled files which have been marked of
-            // type PowerShell have a path starting with 'untitled'.
-            return
-                filePath.StartsWith("inmemory") ||
-                filePath.StartsWith("untitled") ||
-                filePath.StartsWith("private") ||
-                filePath.StartsWith("git");
-
-            // TODO #342: Remove 'private' and 'git' and then add logic to
-            // throw when any unsupported file URI scheme is encountered.
+            return ImmutableInterlocked.AddOrUpdate(
+                ref _openDocuments,
+                document.Id,
+                k => document.WithText(newText),
+                (k, v) => v.WithText(newText));
         }
 
         // TODO: Refactor this.

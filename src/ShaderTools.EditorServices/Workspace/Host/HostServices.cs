@@ -7,7 +7,6 @@ namespace ShaderTools.EditorServices.Workspace.Host
     /// </summary>
     public abstract class HostServices
     {
-
         /// <summary>
         /// Creates a new workspace service. 
         /// </summary>

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ShaderTools.EditorServices.Workspace
@@ -11,30 +10,22 @@ namespace ShaderTools.EditorServices.Workspace
     [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
     public sealed class DocumentId
     {
-        public Guid Id { get; }
-
-        private readonly string _debugName;
-
-        internal string DebugName => _debugName;
-
-        private DocumentId(Guid guid, string debugName)
-        {
-            Id = guid;
-            _debugName = debugName;
-        }
-
         /// <summary>
-        /// Creates a new <see cref="DocumentId"/> instance.
+        /// Canonical form of the document file path.
         /// </summary>
-        /// <param name="debugName">An optional name to make this id easier to recognize while debugging.</param>
-        public static DocumentId CreateNewId(string debugName = null)
+        public string Id { get; }
+
+        internal string OriginalFilePath { get; }
+
+        public DocumentId(string filePath)
         {
-            return new DocumentId(Guid.NewGuid(), debugName);
+            Id = filePath.ToLowerInvariant();
+            OriginalFilePath = filePath;
         }
 
         internal string GetDebuggerDisplay()
         {
-            return string.Format("({0}, #{1} - {2})", GetType().Name, Id, _debugName);
+            return string.Format("({0}, #{1} - {2})", GetType().Name, Id, OriginalFilePath);
         }
 
         public override string ToString()

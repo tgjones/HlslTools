@@ -20,7 +20,7 @@ namespace ShaderTools.EditorServices.Hlsl.LanguageServices
             _fileSystem = fileSystem;
         }
 
-        public SyntaxTreeBase ParseSyntaxTree(string filePath, SourceText text, CancellationToken cancellationToken)
+        public SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken)
         {
             var configFile = _workspace.LoadConfigFile(Path.GetDirectoryName(text.Filename));
 

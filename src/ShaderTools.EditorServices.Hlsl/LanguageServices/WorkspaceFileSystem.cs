@@ -15,13 +15,15 @@ namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 
         public bool TryGetFile(string path, out SourceText text)
         {
-            Document document;
-            if (_workspace.TryGetDocument(path, out document))
+            // Is file open in workspace?
+            var document = _workspace.GetDocument(new DocumentId(path));
+            if (document != null)
             {
                 text = document.SourceText;
                 return true;
             }
 
+            // TODO: Don't open directly; open through workspace, so that it is pretokenized and cached.
             if (File.Exists(path))
             {
                 text = SourceText.From(File.ReadAllText(path), path);

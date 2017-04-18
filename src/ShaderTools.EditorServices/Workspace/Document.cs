@@ -4,58 +4,56 @@ using ShaderTools.Core.Compilation;
 using ShaderTools.Core.Syntax;
 using ShaderTools.Core.Text;
 using ShaderTools.EditorServices.Utility;
+using ShaderTools.EditorServices.Workspace.Host;
 
 namespace ShaderTools.EditorServices.Workspace
 {
     /// <summary>
     /// Contains the details and contents of an open document.
     /// </summary>
-    public abstract class Document
+    public sealed class Document
     {
+        private readonly HostLanguageServices _languageServices;
         private readonly AsyncLazy<SyntaxTreeBase> _lazySyntaxTree;
         private readonly AsyncLazy<SemanticModelBase> _lazySemanticModel;
-
-        public SourceText SourceText { get; }
 
         /// <summary>
         /// Gets a unique string that identifies this file.  At this time,
         /// this property returns a normalized version of the value stored
         /// in the FilePath property.
         /// </summary>
-        public string Id => FilePath.ToLower();
+        public DocumentId Id { get; }
+
+        public SourceText SourceText { get; }
 
         /// <summary>
         /// Gets the path at which this file resides.
         /// </summary>
-        public string FilePath => SourceText.Filename;
+        public string FilePath => Id.OriginalFilePath;
 
-        /// <summary>
-        /// Gets the path which the editor client uses to identify this file.
-        /// </summary>
-        public string ClientFilePath { get; }
-
-        /// <summary>
-        /// Gets a boolean that determines whether this file is
-        /// in-memory or not (either unsaved or non-file content).
-        /// </summary>
-        public bool IsInMemory { get; }
-
-        public Document(SourceText sourceText, string clientFilePath)
+        internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText)
         {
-            SourceText = sourceText;
-            ClientFilePath = clientFilePath;
-            IsInMemory = Workspace.IsPathInMemory(sourceText.Filename);
+            _languageServices = languageServices;
 
-            _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() => Compile(sourceText, ct), ct), true);
+            Id = documentId;
+            SourceText = sourceText;
+
+            _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() =>
+            {
+                var syntaxTreeFactory = languageServices.GetRequiredService<ISyntaxTreeFactoryService>();
+
+                return syntaxTreeFactory.ParseSyntaxTree(sourceText, ct);
+            }, ct), true);
+
             _lazySemanticModel = new AsyncLazy<SemanticModelBase>(ct => Task.Run(async () =>
             {
-                var syntaxTree = await GetSyntaxTreeAsync(ct);
-                return CreateSemanticModel(syntaxTree, ct);
+                var syntaxTree = await GetSyntaxTreeAsync(ct).ConfigureAwait(false);
+
+                var compilationFactory = languageServices.GetRequiredService<ICompilationFactoryService>();
+
+                return compilationFactory.CreateCompilation(syntaxTree).GetSemanticModelBase(ct);
             }, ct), true);
         }
-
-        protected abstract SyntaxTreeBase Compile(SourceText sourceText, CancellationToken cancellationToken);
-        protected abstract SemanticModelBase CreateSemanticModel(SyntaxTreeBase syntaxTree, CancellationToken cancellationToken);
 
         public Task<SyntaxTreeBase> GetSyntaxTreeAsync(CancellationToken cancellationToken)
         {
@@ -67,6 +65,14 @@ namespace ShaderTools.EditorServices.Workspace
             return _lazySemanticModel.GetValueAsync(cancellationToken);
         }
 
-        public abstract Document WithSourceText(SourceText sourceText);
+        public Document WithId(DocumentId documentId)
+        {
+            return new Document(_languageServices, documentId, SourceText);
+        }
+
+        public Document WithText(SourceText newText)
+        {
+            return new Document(_languageServices, Id, newText);
+        }
     }
 }

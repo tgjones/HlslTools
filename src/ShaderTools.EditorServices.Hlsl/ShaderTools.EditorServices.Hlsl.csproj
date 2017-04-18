@@ -2,7 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
+    <SignAssembly>True</SignAssembly>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\Key.snk" Link="Key.snk" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj" />

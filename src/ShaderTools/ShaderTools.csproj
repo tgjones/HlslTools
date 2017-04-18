@@ -14,6 +14,7 @@
     <None Include="..\Key.snk">
       <Link>Key.snk</Link>
     </None>
+    <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj" />
     <Compile Update="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -14,6 +14,7 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
 using ShaderTools.EditorServices.Utility;
 using ShaderTools.EditorServices.Workspace;
+using System.IO;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
@@ -22,11 +23,13 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         private readonly static string DiagnosticSourceName = "ShaderToolsEditorServices";
 
         private readonly ChannelBase serverChannel;
-        private readonly Workspace _workspace;
+        private readonly LanguageServerWorkspace _workspace;
+
+        private string _workspacePath;
 
         private static CancellationTokenSource existingRequestCancellation;
 
-        public LanguageServerBase(ChannelBase serverChannel, Workspace workspace)
+        public LanguageServerBase(ChannelBase serverChannel, LanguageServerWorkspace workspace)
             :  base(serverChannel, MessageProtocolType.LanguageServer)
         {
             this.serverChannel = serverChannel;
@@ -80,7 +83,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             RequestContext<InitializeResult> requestContext)
         {
             // Grab the workspace path from the parameters
-            _workspace.WorkspacePath = initializeParams.RootPath;
+            _workspacePath = initializeParams.RootPath;
 
             await requestContext.SendResult(
                 new InitializeResult
@@ -112,13 +115,12 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             DidOpenTextDocumentNotification openParams,
             EventContext eventContext)
         {
-            var openedFile =
-                _workspace.GetFileBuffer(
-                    openParams.Uri,
-                    openParams.Text);
+            var openedDocument = _workspace.OpenDocument(
+                CreateDocumentId(openParams.Uri),
+                SourceText.From(openParams.Text, openParams.Uri));
 
             // TODO: Get all recently edited files in the workspace
-            this.RunScriptDiagnostics(new Document[] { openedFile });
+            this.RunScriptDiagnostics(new Document[] { openedDocument });
 
             Logger.Write(LogLevel.Verbose, "Finished opening document.");
 
@@ -130,11 +132,11 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             EventContext eventContext)
         {
             // Find and close the file in the current session
-            var fileToClose = _workspace.GetFile(closeParams.Uri);
+            var fileToClose = _workspace.GetDocument(CreateDocumentId(closeParams.Uri));
 
             if (fileToClose != null)
             {
-                _workspace.CloseDocument(fileToClose.FilePath);
+                _workspace.CloseDocument(fileToClose.Id);
                 await ClearMarkers(fileToClose, eventContext);
             }
 
@@ -150,16 +152,15 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             // A text change notification can batch multiple change requests
             foreach (var textChange in textChangeParams.ContentChanges)
             {
-                var fileToChange = _workspace.GetFile(textChangeParams.Uri);
+                var fileToChange = _workspace.GetDocument(CreateDocumentId(textChangeParams.Uri));
+                if (fileToChange == null)
+                    continue;
 
-                var changedFile = fileToChange.WithSourceText(
-                    fileToChange.SourceText.WithChanges(
-                        GetFileChangeDetails(
-                            fileToChange,
-                            textChange.Range.Value,
-                            textChange.Text)));
-
-                _workspace.UpdateFile(fileToChange, changedFile);
+                var changedFile = _workspace.UpdateDocument(fileToChange,
+                    GetFileChangeDetails(
+                        fileToChange,
+                        textChange.Range.Value,
+                        textChange.Text));
 
                 changedFiles.Add(changedFile);
             }
@@ -172,7 +173,6 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         private static TextChange GetFileChangeDetails(Document document, Range changeRange, string insertString)
         {
-            // The protocol's positions are zero-based so add 1 to all offsets
             var startPosition = document.SourceText.GetPosition(new TextLocation(changeRange.Start.Line, changeRange.Start.Character));
             var endPosition = document.SourceText.GetPosition(new TextLocation(changeRange.End.Line, changeRange.End.Character));
 
@@ -321,7 +321,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                 PublishDiagnosticsNotification.Type,
                 new PublishDiagnosticsNotification
                 {
-                    Uri = scriptFile.ClientFilePath,
+                    Uri = scriptFile.FilePath,
                     Diagnostics = diagnostics.ToArray()
                 });
         }
@@ -385,6 +385,52 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         {
             // Stop the server channel
             await this.Stop();
+        }
+
+        private static bool IsPathInMemory(string filePath)
+        {
+            // When viewing PowerShell files in the Git diff viewer, VS Code
+            // sends the contents of the file at HEAD with a URI that starts
+            // with 'inmemory'.  Untitled files which have been marked of
+            // type PowerShell have a path starting with 'untitled'.
+            return
+                filePath.StartsWith("inmemory") ||
+                filePath.StartsWith("untitled") ||
+                filePath.StartsWith("private") ||
+                filePath.StartsWith("git");
+
+            // TODO #342: Remove 'private' and 'git' and then add logic to
+            // throw when any unsupported file URI scheme is encountered.
+        }
+
+        private string ResolveFilePath(string filePath)
+        {
+            if (!IsPathInMemory(filePath))
+            {
+                if (filePath.StartsWith(@"file://"))
+                {
+                    // Client sent the path in URI format, extract the local path
+                    Uri fileUri = new Uri(Uri.UnescapeDataString(filePath));
+                    filePath = fileUri.LocalPath;
+                }
+
+                if (!Path.IsPathRooted(filePath))
+                {
+                    filePath = Path.Combine(_workspacePath, filePath);
+                }
+
+                // Get the absolute file path
+                filePath = Path.GetFullPath(filePath);
+            }
+
+            Logger.Write(LogLevel.Verbose, "Resolved path: " + filePath);
+
+            return filePath;
+        }
+
+        private DocumentId CreateDocumentId(string filePath)
+        {
+            return new DocumentId(ResolveFilePath(filePath));
         }
     }
 }

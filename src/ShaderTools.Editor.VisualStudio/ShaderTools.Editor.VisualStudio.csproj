@@ -245,8 +245,8 @@
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
     <Compile Include="Core\Util\IComEventSink.cs" />
+    <Compile Include="Core\VisualStudioWorkspace.cs" />
     <Compile Include="Hlsl\HlslWorkspaceListener.cs" />
-    <Compile Include="Hlsl\HlslWorkspaceManager.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\DefinitionHighlightTag.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\NavigableHighlightTag.cs" />
@@ -602,6 +602,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.EditorServices.Desktop\ShaderTools.EditorServices.Desktop.csproj">
+      <Project>{db952aff-c727-4048-a8cf-a35ce67ffaf5}</Project>
+      <Name>ShaderTools.EditorServices.Desktop</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj">
       <Project>{25E90301-9E25-4A25-BE0A-94A9D626369A}</Project>
       <Name>ShaderTools.EditorServices</Name>

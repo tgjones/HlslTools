@@ -4,8 +4,8 @@ using ShaderTools.Core.Text;
 
 namespace ShaderTools.EditorServices.Workspace.Host
 {
-    public interface ISyntaxTreeFactoryService : ILanguageService
+    internal interface ISyntaxTreeFactoryService : ILanguageService
     {
-        SyntaxTreeBase ParseSyntaxTree(string filePath, SourceText text, CancellationToken cancellationToken);
+        SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken);
     }
 }
