@@ -225,7 +225,9 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Core\ContentTypeNames.cs" />
     <Compile Include="Core\EditorFactoryBase.cs" />
+    <Compile Include="Core\ContentTypeDefinitions.cs" />
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="Core\Options\IOptionsService.cs" />
@@ -245,12 +247,15 @@
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
     <Compile Include="Core\Util\IComEventSink.cs" />
-    <Compile Include="Core\VisualStudioWorkspace.cs" />
+    <Compile Include="Core\Workspace\DocumentListener.cs" />
+    <Compile Include="Core\Workspace\VisualStudioWorkspace.cs" />
+    <Compile Include="Hlsl\ContentTypeDefinitions.cs" />
     <Compile Include="Hlsl\HlslWorkspaceListener.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\DefinitionHighlightTag.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\NavigableHighlightTag.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\ReferenceHighlightTag.cs" />
+    <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
     <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
