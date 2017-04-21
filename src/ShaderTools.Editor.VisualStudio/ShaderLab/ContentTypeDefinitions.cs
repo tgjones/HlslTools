@@ -7,9 +7,9 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
     internal static class ContentTypeDefinitions
     {
         /// <summary>
-        /// Definition of the primary HLSL content type.
+        /// Definition of the primary ShaderLab content type.
         /// </summary>
-        [Export]
+        //[Export]
         [Name(ContentTypeNames.ShaderLabContentType)]
         [BaseDefinition(ContentTypeNames.ShaderToolsContentType)]
         public static readonly ContentTypeDefinition ShaderLabContentTypeDefinition;
