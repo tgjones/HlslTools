@@ -10,7 +10,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
     {
         protected override QuickInfoModel CreateModel(SemanticModel semanticModel, SourceLocation position, StructTypeSyntax node)
         {
-            if (!node.Name.SourceRange.ContainsOrTouches(position))
+            if (node.Name == null || !node.Name.SourceRange.ContainsOrTouches(position))
                 return null;
 
             if (!node.Name.Span.IsInRootFile)
