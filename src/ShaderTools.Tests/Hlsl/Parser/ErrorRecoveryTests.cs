@@ -270,6 +270,63 @@ namespace ShaderTools.Tests.Hlsl.Parser
         }
 
         [Fact]
+        public void HandlesFunctionDeclarationWithInvalidStructParameter()
+        {
+            var ast = BuildSyntaxTree("void main(int a, StructA StructB b, int c);");
+
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
+            var sd = (FunctionDeclarationSyntax) ast.ChildNodes[0];
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.NotEmpty(sd.ParameterList.Parameters);
+            Assert.Equal(3, sd.ParameterList.Parameters.Count);
+            Assert.False(sd.ParameterList.Parameters[0].ContainsDiagnostics);
+            Assert.False(sd.ParameterList.Parameters.GetSeparator(0).ContainsDiagnostics);
+            Assert.False(sd.ParameterList.Parameters[1].ContainsDiagnostics);
+            Assert.True(sd.ParameterList.Parameters.GetSeparator(1).ContainsDiagnostics);
+            Assert.Equal(1, ((SyntaxToken) sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.SkippedTokensTrivia, ((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0].Kind);
+            Assert.Equal(1, ((SkippedTokensTriviaSyntax)((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens.Count);
+            Assert.Equal(SyntaxKind.IdentifierToken, ((SkippedTokensTriviaSyntax)((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens[0].Kind);
+            Assert.Equal("b", ((SkippedTokensTriviaSyntax) ((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens[0].Text);
+            Assert.False(sd.ParameterList.Parameters[2].ContainsDiagnostics);
+            Assert.False(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.False(sd.SemicolonToken.IsMissing);
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
+        }
+
+        [Fact]
+        public void HandlesFunctionDeclarationWithInvalidIntrinsicParameter()
+        {
+            var ast = BuildSyntaxTree("void main(int a, int int b, int c);");
+
+            Assert.NotNull(ast);
+            Assert.Equal(2, ast.ChildNodes.Count);
+            AssertNodeKind(ast.ChildNodes[0], SyntaxKind.FunctionDeclaration);
+            var sd = (FunctionDeclarationSyntax)ast.ChildNodes[0];
+            Assert.Equal("void", sd.ReturnType.ToString());
+            Assert.Equal("main", sd.Name.ToString());
+            Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
+            Assert.NotEmpty(sd.ParameterList.Parameters);
+            Assert.Equal(3, sd.ParameterList.Parameters.Count);
+            Assert.False(sd.ParameterList.Parameters[0].ContainsDiagnostics);
+            Assert.False(sd.ParameterList.Parameters.GetSeparator(0).ContainsDiagnostics);
+            Assert.True(sd.ParameterList.Parameters[1].ContainsDiagnostics);
+            Assert.False(sd.ParameterList.Parameters[1].Type.ContainsDiagnostics);
+            Assert.Equal(1, sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia.Length);
+            Assert.Equal(SyntaxKind.SkippedTokensTrivia, sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia[0].Kind);
+            Assert.Equal(SyntaxKind.IntKeyword, ((SkippedTokensTriviaSyntax) sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia[0]).Tokens[0].Kind);
+            Assert.False(sd.ParameterList.Parameters.GetSeparator(1).ContainsDiagnostics);
+            Assert.False(sd.ParameterList.Parameters[2].ContainsDiagnostics);
+            Assert.False(sd.ParameterList.CloseParenToken.IsMissing);
+            Assert.False(sd.SemicolonToken.IsMissing);
+            AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
+        }
+
+        [Fact]
         public void HandlesInvalidArrayDeclaration()
         {
             var ast = BuildSyntaxTree(@"h []");

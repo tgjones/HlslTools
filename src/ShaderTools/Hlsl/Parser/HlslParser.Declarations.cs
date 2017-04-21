@@ -133,18 +133,16 @@ namespace ShaderTools.Hlsl.Parser
                     parameters.Add(ParseParameter());
                     if (Current.Kind != SyntaxKind.CloseParenToken)
                     {
+                        var action = SkipBadTokens(
+                            p => p.Current.Kind != SyntaxKind.CommaToken,
+                            p => p.IsTerminator() || p.Current.Kind == SyntaxKind.OpenParenToken,
+                            SyntaxKind.CommaToken);
+                        if (action == PostSkipAction.Abort)
+                            break;
+
                         if (Current.Kind == SyntaxKind.CommaToken)
                         {
                             parameters.Add(Match(SyntaxKind.CommaToken));
-                        }
-                        else
-                        {
-                            var action = SkipBadTokens(
-                                p => p.Current.Kind != SyntaxKind.CommaToken,
-                                p => p.IsTerminator() || p.Current.Kind == SyntaxKind.OpenParenToken,
-                                SyntaxKind.CommaToken);
-                            if (action == PostSkipAction.Abort)
-                                break;
                         }
                     }
                 }
@@ -187,7 +185,46 @@ namespace ShaderTools.Hlsl.Parser
 
         private bool IsPossibleParameter()
         {
-            return SyntaxFacts.IsParameterModifier(Current) || IsPossibleVariableDeclarationStatement();
+            return SyntaxFacts.IsParameterModifier(Current) || IsPossibleParameterDeclaration();
+        }
+
+        private bool IsPossibleParameterDeclaration()
+        {
+            var tk = Current.Kind;
+
+            // Although "<identifier> <literal>" is invalid, it's common enough that we try to parse it anyway, and report on the error.
+            if (tk == SyntaxKind.IdentifierToken && (Lookahead.Kind == SyntaxKind.IdentifierToken || Lookahead.Kind.IsLiteral()))
+                return true;
+
+            switch (Current.Kind)
+            {
+                case SyntaxKind.ClassKeyword:
+                case SyntaxKind.StructKeyword:
+                case SyntaxKind.InterfaceKeyword:
+                case SyntaxKind.TypedefKeyword:
+                    return true;
+            }
+
+            var resetPoint = GetResetPoint();
+            try
+            {
+                var modifiers = new List<SyntaxToken>();
+                ParseDeclarationModifiers(modifiers);
+
+                var st = ScanType();
+
+                if (st == ScanTypeFlags.NotType)
+                    return false;
+
+                if (Lookahead.Kind == SyntaxKind.OpenParenToken)
+                    return false;
+
+                return true;
+            }
+            finally
+            {
+                Reset(ref resetPoint);
+            }
         }
 
         private ParameterSyntax ParseParameter()
