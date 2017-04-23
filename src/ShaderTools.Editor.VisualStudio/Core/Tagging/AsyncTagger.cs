@@ -12,8 +12,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging
         where TTag : ITag
     {
         // Sorted based on line number.
-        private SortedList<int, LineBasedTagSpan> _tags = new SortedList<int, LineBasedTagSpan>();
-        private readonly object _lockObject = new object();
+        private List<LineBasedTagSpan> _tags = new List<LineBasedTagSpan>();
+        private readonly ReaderWriterLockSlim _tagLock = new ReaderWriterLockSlim();
 
         public virtual async Task InvalidateTags(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
@@ -25,24 +25,32 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging
                     {
                         var tagsResult = GetTags(snapshot, cancellationToken);
 
+                        // This implicitly assumes that tags are already sorted by start index in text buffer.
+
                         // TODO: Really inefficient to create a new list every time.
                         // But at least it's thread-safe, and better not to potentially block the UI thread
                         // for the entire duration of updating the existing _tags.
-                        var newTags = new SortedList<int, LineBasedTagSpan>(DuplicateKeyComparer<int>.Instance);
+                        var newTags = new List<LineBasedTagSpan>();
                         foreach (var tagSpan in tagsResult.Item2)
                         {
-                            var newTag = new LineBasedTagSpan
+                            newTags.Add(new LineBasedTagSpan
                             {
                                 StartLine = tagSpan.Span.Start.GetContainingLine().LineNumber,
                                 EndLine = tagSpan.Span.End.GetContainingLine().LineNumber,
                                 Span = tagSpan.Span,
                                 Tag = tagSpan.Tag
-                            };
-                            newTags.Add(newTag.EndLine, newTag);
+                            });
                         }
 
-                        lock (_lockObject)
+                        _tagLock.EnterWriteLock();
+                        try
+                        {
                             _tags = newTags;
+                        }
+                        finally
+                        {
+                            _tagLock.ExitWriteLock();
+                        }
 
                         var snapshotSpan = new SnapshotSpan(tagsResult.Item1, 0, tagsResult.Item1.Length);
                         OnTagsChanged(new SnapshotSpanEventArgs(snapshotSpan));
@@ -63,29 +71,38 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging
 
         public IEnumerable<ITagSpan<TTag>> GetTags(NormalizedSnapshotSpanCollection spans)
         {
-            lock (_lockObject)
-            {
-                if (_tags.Count == 0)
-                    yield break;
+            _tagLock.EnterReadLock();
 
-                foreach (var span in spans)
-                foreach (var tag in GetTags(span))
-                    yield return tag;
+            List<LineBasedTagSpan> tags;
+            try
+            {
+                tags = _tags;
             }
+            finally
+            {
+                _tagLock.ExitReadLock();
+            }
+
+            if (tags.Count == 0)
+                yield break;
+
+            foreach (var span in spans)
+            foreach (var tag in GetTags(tags, span))
+                yield return tag;
         }
 
-        private IEnumerable<ITagSpan<TTag>> GetTags(SnapshotSpan targetSnapshotSpan)
+        private static IEnumerable<ITagSpan<TTag>> GetTags(IReadOnlyList<LineBasedTagSpan> tags, SnapshotSpan targetSnapshotSpan)
         {
             var spanStartLine = targetSnapshotSpan.Start.GetContainingLine().LineNumber;
             var spanEndLine = targetSnapshotSpan.End.GetContainingLine().LineNumber;
 
             // Get start index.
-            var startIndex = BinarySearch(_tags.Keys, spanStartLine);
-            var endIndex = _tags.Count;
+            var startIndex = BinarySearch(tags, spanStartLine);
+            var endIndex = tags.Count;
 
             for (var i = startIndex; i < endIndex; i++)
             {
-                var tag = _tags.Values[i];
+                var tag = tags[i];
 
                 if (tag.StartLine > spanEndLine)
                     break;
@@ -98,39 +115,17 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging
         }
 
         // From http://stackoverflow.com/a/594528
-        private static int BinarySearch<T>(IList<T> list, T value)
+        private static int BinarySearch(IReadOnlyList<LineBasedTagSpan> list, int value)
         {
-            var comp = Comparer<T>.Default;
             int lo = 0, hi = list.Count - 1;
             while (lo < hi)
             {
-                int m = (hi + lo) / 2;  // this might overflow; be careful.
-                if (comp.Compare(list[m], value) < 0) lo = m + 1;
+                var m = (hi + lo) / 2;  // this might overflow; be careful.
+                if (list[m].EndLine < value) lo = m + 1;
                 else hi = m - 1;
             }
-            if (comp.Compare(list[lo], value) < 0) lo++;
+            if (list[lo].EndLine < value) lo++;
             return lo;
-        }
-
-        /// <summary>
-        /// Comparer for comparing two keys, handling equality as beeing greater
-        /// Use this Comparer e.g. with SortedLists or SortedDictionaries, that don't allow duplicate keys
-        /// From http://stackoverflow.com/a/21886340
-        /// </summary>
-        /// <typeparam name="TKey"></typeparam>
-        private sealed class DuplicateKeyComparer<TKey> : IComparer<TKey> where TKey : IComparable
-        {
-            public static IComparer<TKey> Instance { get; } = new DuplicateKeyComparer<TKey>();
-
-            public int Compare(TKey x, TKey y)
-            {
-                int result = x.CompareTo(y);
-
-                if (result == 0)
-                    return 1;   // Handle equality as beeing greater
-                else
-                    return result;
-            }
         }
 
         private void OnTagsChanged(SnapshotSpanEventArgs e)
