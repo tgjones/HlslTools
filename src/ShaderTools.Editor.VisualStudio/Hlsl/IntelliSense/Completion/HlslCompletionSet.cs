@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion

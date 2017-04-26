@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Text
 {

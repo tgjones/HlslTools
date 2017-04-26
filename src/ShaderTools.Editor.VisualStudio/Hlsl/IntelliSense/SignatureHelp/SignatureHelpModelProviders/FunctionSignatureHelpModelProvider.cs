@@ -1,10 +1,10 @@
 ﻿using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Linq;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Symbols;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp.SignatureHelpModelProviders
 {

@@ -6,7 +6,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
 using ShaderTools.Editor.VisualStudio.Core.Tagging;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;

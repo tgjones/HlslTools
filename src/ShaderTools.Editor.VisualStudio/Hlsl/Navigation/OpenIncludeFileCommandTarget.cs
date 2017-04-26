@@ -3,13 +3,12 @@ using System.Threading;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {

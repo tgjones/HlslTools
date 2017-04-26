@@ -4,15 +4,15 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Hlsl.Compilation;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
 using ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 using System;
-using ShaderTools.Core.Syntax;
+using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles
 {

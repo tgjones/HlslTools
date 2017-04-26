@@ -1,9 +1,10 @@
-﻿using ShaderTools.Core.Compilation;
-using ShaderTools.Core.Syntax;
+﻿using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.EditorServices.Workspace.Host;
 using ShaderTools.EditorServices.Workspace.Host.Mef;
-using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Syntax;
 
 namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 {

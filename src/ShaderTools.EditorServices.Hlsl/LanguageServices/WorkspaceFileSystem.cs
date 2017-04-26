@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.EditorServices.Workspace;
 
 namespace ShaderTools.EditorServices.Hlsl.LanguageServices

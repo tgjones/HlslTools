@@ -14,7 +14,7 @@ using ShaderTools.Editor.VisualStudio.Hlsl.Formatting;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
-using TextSpan = ShaderTools.Core.Text.TextSpan;
+using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 {

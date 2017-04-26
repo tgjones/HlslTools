@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-using ShaderTools.Core.Symbols.Markup;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Symbols;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Symbols.Markup;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
 {

@@ -10,13 +10,12 @@ using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
-using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
 {

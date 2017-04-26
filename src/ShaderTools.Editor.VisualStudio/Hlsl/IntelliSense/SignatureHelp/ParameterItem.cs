@@ -1,6 +1,5 @@
 ﻿using System;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Text;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
 {

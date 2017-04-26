@@ -48,8 +48,6 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderTools.Editor.VisualStudio</RootNamespace>
     <AssemblyName>ShaderTools.Editor.VisualStudio</AssemblyName>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -568,9 +566,6 @@
     <Resource Include="source.extension.ico">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Resource>
-    <None Include="..\Key.snk">
-      <Link>Key.snk</Link>
-    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
@@ -611,6 +606,14 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj">
+      <Project>{dbcc4d3a-b2e3-4df5-9378-d1321e619ebd}</Project>
+      <Name>ShaderTools.CodeAnalysis.Hlsl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab\ShaderTools.CodeAnalysis.ShaderLab.csproj">
+      <Project>{22d67387-5c90-40a8-9c6a-55de2e5a9a0e}</Project>
+      <Name>ShaderTools.CodeAnalysis.ShaderLab</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.EditorServices.Desktop\ShaderTools.EditorServices.Desktop.csproj">
       <Project>{db952aff-c727-4048-a8cf-a35ce67ffaf5}</Project>
       <Name>ShaderTools.EditorServices.Desktop</Name>
@@ -619,7 +622,7 @@
       <Project>{25E90301-9E25-4A25-BE0A-94A9D626369A}</Project>
       <Name>ShaderTools.EditorServices</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ShaderTools\ShaderTools.csproj">
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj">
       <Project>{2361a2c2-d048-4694-9000-25b4ea846cba}</Project>
       <Name>ShaderTools</Name>
     </ProjectReference>

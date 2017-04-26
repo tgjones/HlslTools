@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using ShaderTools.Core.Syntax;
+using ShaderTools.CodeAnalysis.Syntax;
 using Xunit;
 
 namespace ShaderTools.Testing

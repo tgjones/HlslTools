@@ -1,8 +1,8 @@
 ﻿using System;
 using Microsoft.VisualStudio.ComponentModelHost;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Formatting;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Formatting;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Options.ViewModels;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Options.ViewModels

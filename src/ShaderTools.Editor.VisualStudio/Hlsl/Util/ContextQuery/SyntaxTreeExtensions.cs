@@ -1,5 +1,5 @@
-﻿using ShaderTools.Core.Syntax;
-using ShaderTools.Hlsl.Syntax;
+﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.ContextQuery
 {

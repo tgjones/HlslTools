@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
 {

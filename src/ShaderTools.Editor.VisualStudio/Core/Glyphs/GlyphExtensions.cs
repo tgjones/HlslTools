@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Language.Intellisense;
-using ShaderTools.Core.Symbols;
+using ShaderTools.CodeAnalysis.Symbols;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Glyphs
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.Unity.Syntax;
+using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Projection
 {

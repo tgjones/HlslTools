@@ -3,18 +3,18 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Parser;
-using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
-using ShaderTools.Core.Options;
 using System.IO;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Parser;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Text;
+using ShaderTools.CodeAnalysis.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 {

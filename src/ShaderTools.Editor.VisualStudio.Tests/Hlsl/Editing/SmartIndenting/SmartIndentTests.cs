@@ -1,5 +1,5 @@
-﻿using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Syntax;
+﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting;
 using Xunit;
 

@@ -1,5 +1,5 @@
-﻿using ShaderTools.Core.Compilation;
-using ShaderTools.Core.Syntax;
+﻿using ShaderTools.CodeAnalysis.Compilation;
+using ShaderTools.CodeAnalysis.Syntax;
 
 namespace ShaderTools.EditorServices.Workspace.Host
 {

@@ -5,15 +5,15 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.ErrorList;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
-using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.ErrorList
 {

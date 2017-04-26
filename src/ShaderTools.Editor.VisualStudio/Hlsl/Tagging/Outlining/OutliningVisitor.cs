@@ -2,7 +2,7 @@
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
 {

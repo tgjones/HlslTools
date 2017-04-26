@@ -1,4 +1,4 @@
-﻿using ShaderTools.Core.Text;
+﻿using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.EditorServices.Workspace;
 using ShaderTools.EditorServices.Workspace.Host.Mef;
 

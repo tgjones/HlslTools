@@ -5,9 +5,9 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles

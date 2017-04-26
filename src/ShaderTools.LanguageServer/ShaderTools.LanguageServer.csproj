@@ -12,10 +12,4 @@
     <ProjectReference Include="..\ShaderTools.LanguageServer.Protocol\ShaderTools.LanguageServer.Protocol.csproj" />
     <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
 </Project>

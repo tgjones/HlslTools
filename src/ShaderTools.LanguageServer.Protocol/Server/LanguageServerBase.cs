@@ -8,13 +8,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.Core.Text;
 using ShaderTools.LanguageServer.Protocol.LanguageServer;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
 using ShaderTools.EditorServices.Utility;
 using ShaderTools.EditorServices.Workspace;
 using System.IO;
+using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
@@ -184,13 +185,13 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             // send empty diagnostic markers to clear any markers associated with the given file
             await PublishScriptDiagnostics(
                     scriptFile,
-                    new Core.Diagnostics.Diagnostic[0],
+                    new CodeAnalysis.Diagnostics.Diagnostic[0],
                     eventContext);
         }
 
         private static async Task PublishScriptDiagnostics(
             Document scriptFile,
-            Core.Diagnostics.Diagnostic[] markers,
+            CodeAnalysis.Diagnostics.Diagnostic[] markers,
             EventContext eventContext)
         {
             await PublishScriptDiagnostics(
@@ -301,8 +302,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         }
 
         private static async Task PublishScriptDiagnostics(
-            Document scriptFile, Func<Core.Syntax.SyntaxTreeBase> syntaxTree,
-            Core.Diagnostics.Diagnostic[] markers,
+            Document scriptFile, Func<SyntaxTreeBase> syntaxTree,
+            CodeAnalysis.Diagnostics.Diagnostic[] markers,
             Func<EventType<PublishDiagnosticsNotification>, PublishDiagnosticsNotification, Task> eventSender)
         {
             List<Diagnostic> diagnostics = new List<Diagnostic>();
@@ -326,7 +327,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                 });
         }
 
-        private static Diagnostic GetDiagnosticFromMarker(Core.Syntax.SyntaxTreeBase syntaxTree, Core.Diagnostics.Diagnostic diagnostic)
+        private static Diagnostic GetDiagnosticFromMarker(SyntaxTreeBase syntaxTree, CodeAnalysis.Diagnostics.Diagnostic diagnostic)
         {
             var sourceTextSpan = syntaxTree.GetSourceTextSpan(diagnostic.SourceRange);
             var startLocation = syntaxTree.Text.GetTextLocation(sourceTextSpan.Start);
@@ -354,14 +355,14 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             };
         }
 
-        private static DiagnosticSeverity MapDiagnosticSeverity(Core.Diagnostics.DiagnosticSeverity severity)
+        private static DiagnosticSeverity MapDiagnosticSeverity(CodeAnalysis.Diagnostics.DiagnosticSeverity severity)
         {
             switch (severity)
             {
-                case Core.Diagnostics.DiagnosticSeverity.Error:
+                case CodeAnalysis.Diagnostics.DiagnosticSeverity.Error:
                     return DiagnosticSeverity.Error;
 
-                case Core.Diagnostics.DiagnosticSeverity.Warning:
+                case CodeAnalysis.Diagnostics.DiagnosticSeverity.Warning:
                     return DiagnosticSeverity.Warning;
 
                 default:

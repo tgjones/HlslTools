@@ -1,8 +1,8 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.Core.Compilation;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Compilation;
+using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.EditorServices.Utility;
 using ShaderTools.EditorServices.Workspace.Host;
 

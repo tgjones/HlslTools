@@ -1,7 +1,7 @@
 ﻿using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Unity.Syntax;
+using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.ShaderLab.Parsing;

@@ -4,8 +4,8 @@ using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Threading;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Text;
 

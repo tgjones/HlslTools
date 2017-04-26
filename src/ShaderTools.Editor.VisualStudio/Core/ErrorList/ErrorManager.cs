@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Core.Syntax;
+using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Core.ErrorList

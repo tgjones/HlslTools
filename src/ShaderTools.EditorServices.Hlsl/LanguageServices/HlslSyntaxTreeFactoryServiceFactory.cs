@@ -1,4 +1,5 @@
-﻿using ShaderTools.EditorServices.Workspace.Host;
+﻿using ShaderTools.CodeAnalysis;
+using ShaderTools.EditorServices.Workspace.Host;
 using ShaderTools.EditorServices.Workspace.Host.Mef;
 
 namespace ShaderTools.EditorServices.Hlsl.LanguageServices

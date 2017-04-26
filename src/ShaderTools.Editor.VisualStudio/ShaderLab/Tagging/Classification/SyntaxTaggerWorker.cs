@@ -4,8 +4,8 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Core.Text;
-using ShaderTools.Unity.Syntax;
+using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
 using ShaderTools.Editor.VisualStudio.Core.Util;

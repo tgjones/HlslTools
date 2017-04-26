@@ -1,5 +1,5 @@
 using System.ComponentModel.Composition;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders
 {

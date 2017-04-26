@@ -7,12 +7,12 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
-using TextSpan = ShaderTools.Core.Text.TextSpan;
+using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 

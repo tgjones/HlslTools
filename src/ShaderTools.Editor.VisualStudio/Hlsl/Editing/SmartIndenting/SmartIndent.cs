@@ -2,10 +2,10 @@
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 using System.Linq;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
 {

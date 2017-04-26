@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
-using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch;
-using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting.Highlighters
 {

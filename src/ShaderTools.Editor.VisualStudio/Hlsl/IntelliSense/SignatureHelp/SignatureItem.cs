@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
-using ShaderTools.Hlsl.Symbols;
+using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
 {

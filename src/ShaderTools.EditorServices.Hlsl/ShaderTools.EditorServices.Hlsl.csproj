@@ -1,17 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <SignAssembly>True</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\Key.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
   <ItemGroup>
-    <None Include="..\Key.snk" Link="Key.snk" />
-  </ItemGroup>
-
-  <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj" />
     <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj" />
   </ItemGroup>
-
 </Project>

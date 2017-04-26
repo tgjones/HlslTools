@@ -1,9 +1,8 @@
 using System.Linq;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch;
-using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders
 {

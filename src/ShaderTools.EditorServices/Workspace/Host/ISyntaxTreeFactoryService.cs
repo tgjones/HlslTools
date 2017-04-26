@@ -1,6 +1,6 @@
 ﻿using System.Threading;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.EditorServices.Workspace.Host
 {

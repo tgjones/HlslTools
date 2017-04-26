@@ -2,11 +2,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.SyntaxOutput;
-using ShaderTools.Core.Syntax;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {

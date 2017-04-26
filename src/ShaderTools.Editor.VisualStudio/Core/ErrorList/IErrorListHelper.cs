@@ -1,6 +1,6 @@
 ﻿using System;
-using ShaderTools.Core.Diagnostics;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 {

@@ -1,8 +1,6 @@
 ﻿using System;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Symbols;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
 {

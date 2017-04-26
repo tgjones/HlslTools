@@ -1,4 +1,5 @@
-﻿using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
+﻿using ShaderTools.CodeAnalysis;
+using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
 using ShaderTools.LanguageServer.Protocol.Server;
 
 namespace ShaderTools.LanguageServer.Protocol.Hlsl.Server

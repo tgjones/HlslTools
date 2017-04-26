@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell;
-using ShaderTools.Hlsl.Formatting;
+using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.Editor.VisualStudio.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Options

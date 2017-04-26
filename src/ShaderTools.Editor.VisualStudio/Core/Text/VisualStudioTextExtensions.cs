@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Text

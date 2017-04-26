@@ -1,8 +1,8 @@
-﻿using ShaderTools.Core.Symbols.Markup;
-using ShaderTools.Core.Text;
-using ShaderTools.Hlsl.Compilation;
-using ShaderTools.Hlsl.Symbols;
-using ShaderTools.Hlsl.Syntax;
+﻿using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Symbols;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Symbols.Markup;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo

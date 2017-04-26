@@ -1,11 +1,11 @@
 ﻿using System.IO;
 using System.Threading;
-using ShaderTools.Core.Syntax;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Hlsl.Parser;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Hlsl.Text;
+using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.EditorServices.Workspace.Host;
-using ShaderTools.Hlsl.Parser;
-using ShaderTools.Hlsl.Syntax;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 {

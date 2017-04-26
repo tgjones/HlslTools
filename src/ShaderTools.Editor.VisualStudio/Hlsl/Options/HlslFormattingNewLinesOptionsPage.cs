@@ -1,5 +1,5 @@
 ﻿using System;
-using ShaderTools.Hlsl.Formatting;
+using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.Editor.VisualStudio.Core.Options.Views;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options.ViewModels;
 

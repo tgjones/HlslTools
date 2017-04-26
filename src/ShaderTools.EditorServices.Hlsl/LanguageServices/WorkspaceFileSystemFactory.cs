@@ -1,6 +1,5 @@
 ﻿using ShaderTools.EditorServices.Workspace.Host;
 using ShaderTools.EditorServices.Workspace.Host.Mef;
-using ShaderTools.Hlsl.Text;
 
 namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 {

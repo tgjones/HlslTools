@@ -7,8 +7,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
-using ShaderTools.Core.Options;
-using ShaderTools.Core.Text;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.EditorServices.Workspace.Host;
 
 namespace ShaderTools.EditorServices.Workspace

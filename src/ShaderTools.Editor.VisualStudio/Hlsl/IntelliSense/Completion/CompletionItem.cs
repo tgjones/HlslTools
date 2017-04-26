@@ -1,4 +1,4 @@
-﻿using ShaderTools.Hlsl.Symbols;
+﻿using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion
