@@ -12,13 +12,12 @@
     <Reference Include="WindowsBase" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj" />
     <ProjectReference Include="..\ShaderTools.Editor.VisualStudio\ShaderTools.Editor.VisualStudio.csproj" />
-    <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="15.0.26109-RC3" />
-    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.3.269-rc" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="15.0.26109-RC3" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="15.0.26109-RC3" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.UI" Version="15.0.26109-RC3" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="15.0.26109-RC3" />
-    <PackageReference Include="NSubstitute" Version="1.10.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop" Version="1.8.24" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="15.0.26201" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="15.0.26201" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.UI" Version="15.0.26201" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="15.0.26201" />
+    <PackageReference Include="NSubstitute" Version="2.0.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="xunit" Version="2.2.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
