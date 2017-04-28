@@ -16,6 +16,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderTools.Editor.VisualStudio</RootNamespace>
     <AssemblyName>ShaderTools.Editor.VisualStudio</AssemblyName>
+    <TargetFramework>net46</TargetFramework>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
