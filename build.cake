@@ -4,8 +4,9 @@ var configuration = Argument("configuration", "Release");
 Task("Build")
   .Does(() =>
 {
-  MSBuild("./src/ShaderTools.EditorServices.sln", settings =>
-    settings.SetConfiguration(configuration));
+  // TODO
+  //MSBuild("./src/ShaderTools.EditorServices.sln", settings =>
+  //  settings.SetConfiguration(configuration));
 });
 
 Task("Default")

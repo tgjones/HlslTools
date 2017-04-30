@@ -79,7 +79,7 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.NavigateTo.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\RoslynDependencies.Microsoft.VisualStudio.Language.NavigateTo.Interfaces.14.3.25407\lib\net46\Microsoft.VisualStudio.Language.NavigateTo.Interfaces.dll</HintPath>
-      <Private>True</Private>
+      <Private>false</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.StandardClassification, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Language.StandardClassification.14.3.25407\lib\net45\Microsoft.VisualStudio.Language.StandardClassification.dll</HintPath>
