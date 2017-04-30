@@ -7,7 +7,7 @@ install:
 before_build:
   - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
   - ps: Vsix-TokenReplacement src\ShaderTools.Editor.VisualStudio\Hlsl\HlslPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
-  - ps: ./build.ps1 -Target "AppVeyor"
+  - ps: ./build.ps1
   - ps: dotnet restore src/ShaderTools.sln
   - ps: ./tools/nuget restore -PackagesDirectory src/packages src/ShaderTools.Editor.VisualStudio/ShaderTools.Editor.VisualStudio.csproj
 
