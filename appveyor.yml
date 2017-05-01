@@ -7,14 +7,16 @@ install:
 before_build:
   - ps: Vsix-IncrementVsixVersion | Vsix-UpdateBuildVersion
   - ps: Vsix-TokenReplacement src\ShaderTools.Editor.VisualStudio\Hlsl\HlslPackage.cs 'Version = "([0-9\\.]+)"' 'Version = "{version}"'
-  - ps: nuget restore src/ShaderTools.sln
+  - ps: nuget restore -Verbosity Quiet src/ShaderTools.sln
 
 build_script:
   - ps: msbuild src/ShaderTools.sln /p:Version=$env:APPVEYOR_BUILD_VERSION /p:FileVersion=$env:APPVEYOR_BUILD_VERSION /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
-  - '%xunit20%\xunit.console.x86 src/ShaderTools.Tests/bin/Release/net46/ShaderTools.Tests.dll -appveyor'
-  - '%xunit20%\xunit.console.x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/net46/ShaderTools.Editor.VisualStudio.Tests.dll -appveyor'
+  - '%xunit20%\xunit.console.x86 src/ShaderTools.CodeAnalysis.Tests/bin/Release/netcoreapp1.1/ShaderTools.CodeAnalysis.Tests.dll -appveyor'
+  - '%xunit20%\xunit.console.x86 src/ShaderTools.CodeAnalysis.Hlsl.Tests/bin/Release/netcoreapp1.1/ShaderTools.CodeAnalysis.Hlsl.Tests.dll -appveyor'
+  - '%xunit20%\xunit.console.x86 src/ShaderTools.CodeAnalysis.ShaderLab.Tests/bin/Release/netcoreapp1.1/ShaderTools.CodeAnalysis.ShaderLab.Tests.dll -appveyor'
+  - '%xunit20%\xunit.console.x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll -appveyor'
 
 after_test:
   - ps: Vsix-PushArtifacts | Vsix-PublishToGallery
