@@ -13,9 +13,9 @@ build_script:
   - ps: msbuild src/ShaderTools.sln /p:Version=$env:APPVEYOR_BUILD_VERSION /p:FileVersion=$env:APPVEYOR_BUILD_VERSION /p:configuration=Release /p:DeployExtension=false /p:ZipPackageCompressionLevel=normal /v:m
 
 test_script:
-  - '%xunit20%\xunit.console.x86 src/ShaderTools.CodeAnalysis.Tests/bin/Release/netcoreapp1.1/ShaderTools.CodeAnalysis.Tests.dll -appveyor'
-  - '%xunit20%\xunit.console.x86 src/ShaderTools.CodeAnalysis.Hlsl.Tests/bin/Release/netcoreapp1.1/ShaderTools.CodeAnalysis.Hlsl.Tests.dll -appveyor'
-  - '%xunit20%\xunit.console.x86 src/ShaderTools.CodeAnalysis.ShaderLab.Tests/bin/Release/netcoreapp1.1/ShaderTools.CodeAnalysis.ShaderLab.Tests.dll -appveyor'
+  - dotnet test .\src\ShaderTools.CodeAnalysis.Tests\ShaderTools.CodeAnalysis.Tests.csproj
+  - dotnet test .\src\ShaderTools.CodeAnalysis.Hlsl.Tests\ShaderTools.CodeAnalysis.Hlsl.Tests.csproj
+  - dotnet test .\src\ShaderTools.CodeAnalysis.ShaderLab.Tests\ShaderTools.CodeAnalysis.ShaderLab.Tests.csproj
   - '%xunit20%\xunit.console.x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll -appveyor'
 
 after_test:
