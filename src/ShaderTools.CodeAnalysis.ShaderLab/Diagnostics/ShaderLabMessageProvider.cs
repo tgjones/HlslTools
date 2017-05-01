@@ -1,5 +1,5 @@
 ﻿using ShaderTools.CodeAnalysis.Diagnostics;
-using ShaderTools.CodeAnalysis.Properties;
+using ShaderTools.CodeAnalysis.ShaderLab.Properties;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Diagnostics
 {
