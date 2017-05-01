@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "ShaderTools.Editor.VisualStudio": {
+      "commandName": "Executable",
+      "executablePath": "$(DevEnvDir)devenv.exe",
+      "commandLineArgs": "/rootsuffix Exp"
+    }
+  }
+}
