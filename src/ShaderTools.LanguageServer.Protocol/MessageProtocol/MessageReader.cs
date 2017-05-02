@@ -3,14 +3,15 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-using ShaderTools.EditorServices.Utility;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using ShaderTools.EditorServices.Utility;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using ShaderTools.Utilities;
 
 namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 {

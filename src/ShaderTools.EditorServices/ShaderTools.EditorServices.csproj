@@ -6,6 +6,7 @@
     <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
     <PackageReference Include="System.Composition" Version="1.0.31" />
     <PackageReference Include="System.Diagnostics.Contracts" Version="4.3.0" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj" />
     <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj" />
   </ItemGroup>

@@ -3,10 +3,11 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.EditorServices.Workspace.Host.TaskScheduling;
+using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.Utilities.Threading;
 
-namespace ShaderTools.EditorServices.Workspace
+namespace ShaderTools.EditorServices.Host
 {
     internal class BackgroundParser
     {

@@ -1,20 +1,21 @@
 ﻿using System.IO;
 using System.Threading;
+using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Parser;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
+using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.EditorServices.Workspace.Host;
 
 namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 {
     internal sealed class HlslSyntaxTreeFactoryService : ISyntaxTreeFactoryService
     {
-        private readonly Workspace.Workspace _workspace;
+        private readonly Workspace _workspace;
         private readonly IIncludeFileSystem _fileSystem;
 
-        public HlslSyntaxTreeFactoryService(Workspace.Workspace workspace, IIncludeFileSystem fileSystem)
+        public HlslSyntaxTreeFactoryService(Workspace workspace, IIncludeFileSystem fileSystem)
         {
             _workspace = workspace;
             _fileSystem = fileSystem;

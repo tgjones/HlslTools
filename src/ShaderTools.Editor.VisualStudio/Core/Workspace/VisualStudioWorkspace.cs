@@ -4,13 +4,14 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.EditorServices.Workspace;
-using ShaderTools.EditorServices.Workspace.Host.Mef;
+using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.EditorServices.Host;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Workspace
 {
     [Export(typeof(VisualStudioWorkspace))]
-    internal sealed class VisualStudioWorkspace : EditorServices.Workspace.Workspace
+    internal sealed class VisualStudioWorkspace : CodeAnalysis.Workspace
     {
         private readonly Dictionary<ITextBuffer, List<IWpfTextView>> _bufferToViewMap;
         private readonly BackgroundParser _backgroundParser;

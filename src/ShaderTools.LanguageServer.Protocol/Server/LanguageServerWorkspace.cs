@@ -1,6 +1,6 @@
-﻿using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.EditorServices.Workspace;
-using ShaderTools.EditorServices.Workspace.Host.Mef;
+﻿using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {

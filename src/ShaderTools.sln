@@ -29,7 +29,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.LanguageServer"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Hlsl", "ShaderTools.EditorServices.Hlsl\ShaderTools.EditorServices.Hlsl.csproj", "{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.EditorServices.Desktop", "ShaderTools.EditorServices.Desktop\ShaderTools.EditorServices.Desktop.csproj", "{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Workspaces.Desktop", "ShaderTools.CodeAnalysis.Workspaces.Desktop\ShaderTools.CodeAnalysis.Workspaces.Desktop.csproj", "{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Utilities", "ShaderTools.Utilities\ShaderTools.Utilities.csproj", "{485596DC-EDC9-4C95-9807-229355F4A941}"
 EndProject
@@ -48,6 +48,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab.Tests", "ShaderTools.CodeAnalysis.ShaderLab.Tests\ShaderTools.CodeAnalysis.ShaderLab.Tests.csproj", "{97779AA2-D9D1-43CD-8D0C-4123A877D868}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualStudio.Tests", "ShaderTools.Editor.VisualStudio.Tests\ShaderTools.Editor.VisualStudio.Tests.csproj", "{53A8BEF4-417A-4447-94AF-D4A85B66D244}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workspaces", "Workspaces", "{AA1A8DD5-D463-4426-B9DE-39DB7AE04A86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Workspaces", "ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj", "{E098DC48-574C-45AB-9F46-E47D977B45D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -123,6 +127,10 @@ Global
 		{53A8BEF4-417A-4447-94AF-D4A85B66D244}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{53A8BEF4-417A-4447-94AF-D4A85B66D244}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{53A8BEF4-417A-4447-94AF-D4A85B66D244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E098DC48-574C-45AB-9F46-E47D977B45D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E098DC48-574C-45AB-9F46-E47D977B45D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E098DC48-574C-45AB-9F46-E47D977B45D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E098DC48-574C-45AB-9F46-E47D977B45D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,7 +145,7 @@ Global
 		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33} = {D16755AD-CE41-4622-8623-27F7ACEDB49B}
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E} = {D16755AD-CE41-4622-8623-27F7ACEDB49B}
 		{038DEA9E-7BDF-4E3C-A297-AE15E90E13AF} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
-		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5} = {5FEC3B8F-290F-4AEF-976B-E93BC040B903}
+		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5} = {AA1A8DD5-D463-4426-B9DE-39DB7AE04A86}
 		{485596DC-EDC9-4C95-9807-229355F4A941} = {CBE3B59C-B75F-422F-BB24-D964581A6BB1}
 		{9F1BD701-24BE-4801-9962-99447239BF2E} = {D16755AD-CE41-4622-8623-27F7ACEDB49B}
 		{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
@@ -145,5 +153,6 @@ Global
 		{461A10F9-4EC8-4E72-A7F5-983D38AEF575} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
 		{97779AA2-D9D1-43CD-8D0C-4123A877D868} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
 		{53A8BEF4-417A-4447-94AF-D4A85B66D244} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
+		{E098DC48-574C-45AB-9F46-E47D977B45D5} = {AA1A8DD5-D463-4426-B9DE-39DB7AE04A86}
 	EndGlobalSection
 EndGlobal

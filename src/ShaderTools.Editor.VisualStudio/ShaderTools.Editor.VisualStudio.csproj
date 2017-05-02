@@ -205,8 +205,13 @@
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab\ShaderTools.CodeAnalysis.ShaderLab.csproj">
       <Name>ShaderTools.CodeAnalysis.ShaderLab</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ShaderTools.EditorServices.Desktop\ShaderTools.EditorServices.Desktop.csproj">
-      <Name>ShaderTools.EditorServices.Desktop</Name>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces.Desktop\ShaderTools.CodeAnalysis.Workspaces.Desktop.csproj">
+      <Project>{db952aff-c727-4048-a8cf-a35ce67ffaf5}</Project>
+      <Name>ShaderTools.CodeAnalysis.Workspaces.Desktop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj">
+      <Project>{e098dc48-574c-45ab-9f46-e47d977b45d5}</Project>
+      <Name>ShaderTools.CodeAnalysis.Workspaces</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj">
       <Name>ShaderTools.EditorServices</Name>
