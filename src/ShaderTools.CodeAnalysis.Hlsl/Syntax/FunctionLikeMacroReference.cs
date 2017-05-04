@@ -23,7 +23,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         public override DefineDirectiveTriviaSyntax DefineDirective => Directive;
         public override SyntaxToken NameToken => OriginalToken;
-        public override TextSpan Span => TextSpan.FromBounds(OriginalToken.Span.SourceText, OriginalToken.Span.Start, ArgumentList.CloseParenToken.Span.End);
+        public override SourceFileSpan Span => new SourceFileSpan(OriginalToken.Span.File, TextSpan.FromBounds(OriginalToken.Span.Span.Start, ArgumentList.CloseParenToken.Span.Span.End));
 
         public override IEnumerable<SyntaxNode> OriginalNodes
         {

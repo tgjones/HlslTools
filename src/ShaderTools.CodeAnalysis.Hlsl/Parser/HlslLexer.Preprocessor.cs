@@ -74,13 +74,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
             var end = _charReader.Position;
             var kind = _kind;
-            var span = TextSpan.FromBounds(Text, _start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(_start, end);
+            var text = File.Text.GetSubText(span).ToString();
+            var fileSpan = new SourceFileSpan(File, span);
             var diagnostics = _diagnostics.ToImmutableArray();
 
             LexDirectiveTrailingTrivia(trailingTrivia, kind, isEndOfLine);
 
-            var token = new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), span, text, _value, 
+            var token = new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), fileSpan, text, _value, 
                 ImmutableArray<SyntaxNode>.Empty, trailingTrivia.ToImmutableArray(),
                 diagnostics, null, false);
 

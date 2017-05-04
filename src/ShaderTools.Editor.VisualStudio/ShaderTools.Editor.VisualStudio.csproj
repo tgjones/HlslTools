@@ -38,6 +38,10 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj">
+      <Project>{485596dc-edc9-4c95-9807-229355f4a941}</Project>
+      <Name>ShaderTools.Utilities</Name>
+    </ProjectReference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -199,6 +203,10 @@
     <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
     </Reference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj">
+      <Project>{2ad2617f-db08-4ac7-8c8a-f6f1325df2ef}</Project>
+      <Name>ShaderTools.CodeAnalysis.EditorFeatures.Text</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj">
       <Name>ShaderTools.CodeAnalysis.Hlsl</Name>
     </ProjectReference>
@@ -236,7 +244,6 @@
     <Compile Include="Core\Projection\IProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
-    <Compile Include="Core\Text\VisualStudioTextLineCollection.cs" />
     <Compile Include="Core\Util\ComEventSink.cs" />
     <Compile Include="Core\Util\Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.cs" />
@@ -255,7 +262,6 @@
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
     <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
     <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
-    <Compile Include="Core\Text\VisualStudioSourceTextFactoryBase.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionExtensions.cs" />
@@ -439,7 +445,6 @@
     <Compile Include="ShaderLab\Tagging\Classification\SyntaxTagger.cs" />
     <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerProvider.cs" />
     <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerWorker.cs" />
-    <Compile Include="ShaderLab\Text\VisualStudioSourceTextFactory.cs" />
     <Compile Include="ShaderLab\Util\Extensions\Extensions.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
@@ -486,9 +491,7 @@
     <Compile Include="Hlsl\Tagging\Squiggles\SyntaxErrorTagger.cs" />
     <Compile Include="Hlsl\Tagging\Squiggles\SyntaxErrorTaggerProvider.cs" />
     <Compile Include="Hlsl\Text\VisualStudioFileSystem.cs" />
-    <Compile Include="Hlsl\Text\VisualStudioSourceTextFactory.cs" />
     <Compile Include="Core\Text\VisualStudioTextExtensions.cs" />
-    <Compile Include="Core\Text\VisualStudioSourceText.cs" />
     <Compile Include="Hlsl\Parsing\BackgroundParser.cs" />
     <Compile Include="Core\Util\CommandTargetBase.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />

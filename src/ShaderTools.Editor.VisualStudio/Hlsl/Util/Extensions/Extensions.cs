@@ -34,10 +34,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
                 () => new VisualStudioSourceTextContainer(textBuffer));
         }
 
-        public static IIncludeFileSystem GetIncludeFileSystem(this ITextBuffer textBuffer, VisualStudioSourceTextFactory sourceTextFactory)
+        public static IIncludeFileSystem GetIncludeFileSystem(this ITextBuffer textBuffer)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(IncludeFileSystemKey,
-                () => new VisualStudioFileSystem(textBuffer.GetTextContainer(), sourceTextFactory));
+                () => new VisualStudioFileSystem());
         }
 
         public static ConfigFile GetConfigFile(this ITextBuffer textBuffer)
@@ -79,8 +79,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 
                 options.AdditionalIncludeDirectories.AddRange(configFile.HlslAdditionalIncludeDirectories);
 
-                var sourceTextFactory = VisualStudioSourceTextFactory.Instance ?? HlslPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
-                var fileSystem = (VisualStudioFileSystem) key.TextBuffer.GetIncludeFileSystem(sourceTextFactory);
+                var fileSystem = (VisualStudioFileSystem) key.TextBuffer.GetIncludeFileSystem();
 
                 return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
             });

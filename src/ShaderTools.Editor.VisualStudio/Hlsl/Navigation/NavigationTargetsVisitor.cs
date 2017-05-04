@@ -123,8 +123,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
         public override IEnumerable<EditorNavigationTarget> VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
-            var declarationSpan = _syntaxTree.GetSourceTextSpan(node.Declaration.SourceRange);
-            if (!declarationSpan.IsInRootFile)
+            var declarationSpan = _syntaxTree.GetSourceFileSpan(node.Declaration.SourceRange);
+            if (!declarationSpan.File.IsRootFile)
                 yield break;
 
             // The first declarator span includes the initial declaration.
@@ -139,43 +139,45 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
                 ? node.SourceRange.End
                 : firstDeclarator.SourceRange.End;
 
-            var firstDeclaratorTextSpan = _syntaxTree.GetSourceTextSpan(SourceRange.FromBounds(node.Declaration.SourceRange.Start, firstDeclaratorTextSpanEnd));
+            var firstDeclaratorTextSpan = _syntaxTree.GetSourceFileSpan(SourceRange.FromBounds(node.Declaration.SourceRange.Start, firstDeclaratorTextSpanEnd));
 
             yield return CreateTarget(firstDeclarator.Identifier, firstDeclarator.Identifier.Text, firstDeclaratorTextSpan, Glyph.Variable);
 
             foreach (var declarator in variables.Skip(1))
             {
-                var declaratorTextSpan = _syntaxTree.GetSourceTextSpan(declarator.SourceRange);
+                var declaratorTextSpan = _syntaxTree.GetSourceFileSpan(declarator.SourceRange);
                 if (declarator == lastDeclarator)
-                    declaratorTextSpan = _syntaxTree.GetSourceTextSpan(SourceRange.FromBounds(declarator.SourceRange.Start, node.SourceRange.End));
+                    declaratorTextSpan = _syntaxTree.GetSourceFileSpan(SourceRange.FromBounds(declarator.SourceRange.Start, node.SourceRange.End));
                 yield return CreateTarget(declarator.Identifier, declarator.Identifier.Text, declaratorTextSpan, Glyph.Variable);
             }
         }
 
-        private EditorNavigationTarget CreateTypeTarget(SyntaxToken name, TextSpan nodeSpan, Glyph icon, IEnumerable<SyntaxNode> childNodes)
+        private EditorNavigationTarget CreateTypeTarget(SyntaxToken name, SourceFileSpan? nodeSpan, Glyph icon, IEnumerable<SyntaxNode> childNodes)
         {
-            if (!nodeSpan.IsInRootFile)
+            if (nodeSpan == null)
                 return null;
 
-            if (nodeSpan == TextSpan.None)
+            // TODO: Show targets not in source file, grayed out like C# does with partial classes.
+            if (!nodeSpan.Value.File.IsRootFile)
                 return null;
 
             if (name == null)
                 return null;
 
             return new EditorTypeNavigationTarget(name.GetFullyQualifiedName(),
-                new SnapshotSpan(_snapshot, nodeSpan.Start, nodeSpan.Length),
-                new SnapshotSpan(_snapshot, name.Span.Start, 0),
+                new SnapshotSpan(_snapshot, nodeSpan.Value.Span.Start, nodeSpan.Value.Span.Length),
+                new SnapshotSpan(_snapshot, name.Span.Span.Start, 0),
                 icon, icon.GetImageSource(_glyphService),
                 childNodes.SelectMany(Visit).ToList());
         }
 
-        private EditorNavigationTarget CreateTarget(SyntaxToken name, string description, TextSpan nodeSpan, Glyph icon)
+        private EditorNavigationTarget CreateTarget(SyntaxToken name, string description, SourceFileSpan? nodeSpan, Glyph icon)
         {
-            if (!nodeSpan.IsInRootFile)
+            if (nodeSpan == null)
                 return null;
 
-            if (nodeSpan == TextSpan.None)
+            // TODO: Show targets not in source file, grayed out like C# does with partial classes.
+            if (!nodeSpan.Value.File.IsRootFile)
                 return null;
 
             if (name == null)
@@ -185,8 +187,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
                 description = "?";
 
             return new EditorNavigationTarget(description,
-                new SnapshotSpan(_snapshot, nodeSpan.Start, nodeSpan.Length),
-                new SnapshotSpan(_snapshot, name.Span.Start, 0),
+                new SnapshotSpan(_snapshot, nodeSpan.Value.Span.Start, nodeSpan.Value.Span.Length),
+                new SnapshotSpan(_snapshot, name.Span.Span.Start, 0),
                 icon, icon.GetImageSource(_glyphService));
         }
     }

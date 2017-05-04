@@ -12,12 +12,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
     {
         private readonly List<FileSegment> _fileSegments;
 
+        // TODO: Don't need both File and Text. And it should be renamed to RootFile.
+        public SourceFile File { get; }
         public override SourceText Text { get; }
         public SyntaxNode Root { get; }
 
-        internal SyntaxTree(SourceText text, Func<SyntaxTree, Tuple<SyntaxNode, List<FileSegment>>> parseFunc)
+        internal SyntaxTree(SourceFile file, Func<SyntaxTree, Tuple<SyntaxNode, List<FileSegment>>> parseFunc)
         {
-            Text = text;
+            File = file;
+            Text = file.Text;
 
             var parsed = parseFunc(this);
             Root = parsed.Item1;
@@ -34,14 +37,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (position < 0)
                 throw new ArgumentOutOfRangeException(nameof(position));
 
-            var lastRootFileSegment = _fileSegments.FindLast(x => x.Text.IsRoot);
+            var lastRootFileSegment = _fileSegments.FindLast(x => x.File.IsRootFile);
             if (position > lastRootFileSegment.Start + lastRootFileSegment.Length)
                 throw new ArgumentOutOfRangeException(nameof(position));
 
             var runningTotal = 0;
             foreach (var fileSegment in _fileSegments)
             {
-                if (fileSegment.Text.IsRoot && position < fileSegment.Start + fileSegment.Length)
+                if (fileSegment.File.IsRootFile && position < fileSegment.Start + fileSegment.Length)
                     return new SourceLocation(runningTotal + (position - fileSegment.Start));
                 runningTotal += fileSegment.Length;
             }
@@ -57,7 +60,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         /// If the specified <paramref name="range"/> can't be mapped to span in a single file,
         /// returns a clipped range that fits into a single file (segment).
         /// </summary>
-        public override TextSpan GetSourceTextSpan(SourceRange range)
+        public override SourceFileSpan GetSourceFileSpan(SourceRange range)
         {
             if (range.Start.Position < 0)
                 throw new ArgumentOutOfRangeException(nameof(range));
@@ -74,7 +77,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     var length = (range.End.Position < runningTotal + fileSegment.Length)
                         ? range.Length
                         : runningTotal + fileSegment.Length - range.Start.Position;
-                    return new TextSpan(fileSegment.Text, range.Start.Position - runningTotal + fileSegment.Start, length);
+
+                    return new SourceFileSpan(
+                        fileSegment.File, 
+                        new TextSpan(
+                            range.Start.Position - runningTotal + fileSegment.Start, 
+                            length));
                 }
                 runningTotal += fileSegment.Length;
             }

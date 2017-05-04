@@ -75,8 +75,8 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.Tagging.Classification
 
             if (node.SourceRange.Length > 0)
             {
-                var textSpan = syntaxTree.GetSourceTextSpan(node.SourceRange);
-                _results.Add(CreateClassificationTagSpan(textSpan, node, classificationType));
+                var textSpan = syntaxTree.GetSourceFileSpan(node.SourceRange);
+                _results.Add(CreateClassificationTagSpan(textSpan.Span, node, classificationType));
             }
         }
 

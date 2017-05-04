@@ -88,7 +88,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
 
         private void FormatSpan(int start, int length)
         {
-            _textView.TextBuffer.Format(new TextSpan(_textView.TextSnapshot.ToSourceText(), start, length), _optionsService);
+            _textView.TextBuffer.Format(new TextSpan(start, length), _optionsService);
         }
 
         private int Paste(ref Guid pguidCmdGroup, uint nCmdID, uint nCmdexecopt, IntPtr pvaIn, IntPtr pvaOut)

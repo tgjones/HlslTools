@@ -23,7 +23,7 @@ namespace ShaderTools.EditorServices.Hlsl.LanguageServices
 
         public SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken)
         {
-            var configFile = _workspace.LoadConfigFile(Path.GetDirectoryName(text.Filename));
+            var configFile = _workspace.LoadConfigFile(Path.GetDirectoryName(text.FilePath));
 
             var options = new ParserOptions();
             options.PreprocessorDefines.Add("__INTELLISENSE__", "1");

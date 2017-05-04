@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
+using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
@@ -29,9 +30,15 @@ namespace ShaderTools.CodeAnalysis
 
         public HostWorkspaceServices Services => _services;
 
+        private readonly IWorkspaceTaskScheduler _taskQueue;
+
         protected Workspace(HostServices host)
         {
             _services = host.CreateWorkspaceServices(this);
+
+            // queue used for sending events
+            var workspaceTaskSchedulerFactory = _services.GetRequiredService<IWorkspaceTaskSchedulerFactory>();
+            _taskQueue = workspaceTaskSchedulerFactory.CreateEventingTaskQueue();
 
             _openDocuments = ImmutableDictionary<DocumentId, Document>.Empty;
         }
@@ -130,6 +137,14 @@ namespace ShaderTools.CodeAnalysis
                 ref _configFiles, 
                 directory.ToLower(), 
                 x => ConfigFileLoader.LoadAndMergeConfigFile(x));
+        }
+
+        /// <summary>
+        /// Executes an action as a background task, as part of a sequential queue of tasks.
+        /// </summary>
+        protected internal Task ScheduleTask(Action action, string taskName = "Workspace.Task")
+        {
+            return _taskQueue.ScheduleTask(action, taskName);
         }
     }
 }

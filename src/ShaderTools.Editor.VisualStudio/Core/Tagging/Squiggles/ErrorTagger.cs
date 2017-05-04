@@ -64,9 +64,9 @@ namespace ShaderTools.Editor.VisualStudio.Core.Tagging.Squiggles
 
             var diagnostics = GetDiagnostics(snapshot, cancellationToken);
             var tagSpans = diagnostics.Item2
-                .Select(x => new { Diagnostic = x, Span = diagnostics.Item1.GetSourceTextSpan(x.SourceRange) })
+                .Select(x => new { Diagnostic = x, Span = diagnostics.Item1.GetSourceFileSpan(x.SourceRange) })
                 .Where(x => x.Span.IsInRootFile)
-                .Select(d => CreateTagSpan(snapshot, d.Span, d.Diagnostic, _squigglesEnabled))
+                .Select(d => CreateTagSpan(snapshot, d.Span.Span, d.Diagnostic, _squigglesEnabled))
                 .Where(x => x != null)
                 .ToList();
             return Tuple.Create(snapshot, tagSpans);

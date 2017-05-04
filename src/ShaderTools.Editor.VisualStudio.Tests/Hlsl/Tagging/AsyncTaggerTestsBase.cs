@@ -30,7 +30,6 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
             where TTagger : AsyncTagger<TTag>
             where TTag : ITag
         {
-            VisualStudioSourceTextFactory.Instance = Container.GetExportedValue<VisualStudioSourceTextFactory>();
             var textBuffer = TextBufferUtility.CreateTextBuffer(Container, sourceCode);
             var backgroundParser = new BackgroundParser(textBuffer);
             var snapshot = textBuffer.CurrentSnapshot;

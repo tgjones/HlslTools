@@ -8,7 +8,7 @@ namespace ShaderTools.CodeAnalysis.Syntax
     {
         public abstract SourceText Text { get; }
 
-        public abstract TextSpan GetSourceTextSpan(SourceRange range);
+        public abstract SourceFileSpan GetSourceFileSpan(SourceRange range);
         public abstract IEnumerable<Diagnostic> GetDiagnostics();
     }
 }

@@ -61,7 +61,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
                 || endToken == null || !endToken.Span.IsInRootFile)
                 return;
 
-            var span = new Span(startToken.Span.End, endToken.Span.End - startToken.Span.End);
+            var span = new Span(startToken.Span.Span.End, endToken.Span.Span.End - startToken.Span.Span.End);
             if (_snapshot.GetLineNumberFromPosition(span.Start) == _snapshot.GetLineNumberFromPosition(span.End))
                 return;
 

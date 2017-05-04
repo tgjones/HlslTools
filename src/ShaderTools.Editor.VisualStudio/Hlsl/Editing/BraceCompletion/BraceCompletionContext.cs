@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.Text.BraceCompletion;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Formatting;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
@@ -131,7 +130,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             }
 
             session.SubjectBuffer.Format(
-                TextSpan.FromBounds(snapshot.ToSourceText(), Math.Max(startPosition, 0), endPosition),
+                TextSpan.FromBounds(Math.Max(startPosition, 0), endPosition),
                 _optionsService);
         }
 

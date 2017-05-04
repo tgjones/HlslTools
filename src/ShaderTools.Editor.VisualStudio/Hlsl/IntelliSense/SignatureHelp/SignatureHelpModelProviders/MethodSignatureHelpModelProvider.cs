@@ -25,9 +25,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp.Signat
                 return null;
 
             var span = node.GetTextSpanRoot();
+            if (span == null)
+                return null;
+
             var parameterIndex = node.ArgumentList.GetParameterIndex(position);
 
-            return new SignatureHelpModel(span, signatures,
+            return new SignatureHelpModel(span.Value.Span, signatures,
                 GetSelected(semanticModel.GetSymbol(node), signatures, parameterIndex),
                 parameterIndex);
         }

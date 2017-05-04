@@ -78,12 +78,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Syntax
             var sourceRange = new SourceRange(new SourceLocation(start), length);
 
             // Act.
-            var textSpan = syntaxTree.GetSourceTextSpan(sourceRange);
+            var textSpan = syntaxTree.GetSourceFileSpan(sourceRange);
 
             // Assert.
-            Assert.Equal(expectedStart, textSpan.Start);
-            Assert.Equal(expectedLength, textSpan.Length);
-            Assert.Equal(expectedIsRoot, textSpan.IsInRootFile);
+            Assert.Equal(expectedStart, textSpan.Span.Start);
+            Assert.Equal(expectedLength, textSpan.Span.Length);
+            Assert.Equal(expectedIsRoot, textSpan.File.IsRootFile);
         }
 
         [Theory]
@@ -96,7 +96,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Syntax
             var sourceRange = new SourceRange(new SourceLocation(start), length);
 
             // Act / Assert.
-            Assert.Throws<ArgumentOutOfRangeException>(() => syntaxTree.GetSourceTextSpan(sourceRange));
+            Assert.Throws<ArgumentOutOfRangeException>(() => syntaxTree.GetSourceFileSpan(sourceRange));
         }
 
         [Fact]

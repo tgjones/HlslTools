@@ -19,7 +19,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override bool IsMissing { get; }
 
         internal SyntaxToken(SyntaxKind kind, SyntaxKind contextualKind, 
-            bool isMissing, SourceRange sourceRange, TextSpan span, string text, object value,
+            bool isMissing, SourceRange sourceRange, SourceFileSpan span, string text, object value,
             IEnumerable<SyntaxNode> leadingTrivia, IEnumerable<SyntaxNode> trailingTrivia, 
             IEnumerable<Diagnostic> diagnostics,
             MacroReference macroReference, bool isFirstTokenInMacroExpansion)
@@ -53,7 +53,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             IsFirstTokenInMacroExpansion = isFirstTokenInMacroExpansion;
         }
 
-        internal SyntaxToken(SyntaxKind kind, bool isMissing, SourceRange sourceRange, TextSpan span)
+        internal SyntaxToken(SyntaxKind kind, bool isMissing, SourceRange sourceRange, SourceFileSpan span)
             : this(kind, SyntaxKind.BadToken, isMissing, sourceRange, span, string.Empty, null, 
                   Enumerable.Empty<SyntaxNode>(),
                   Enumerable.Empty<SyntaxNode>(),
@@ -127,7 +127,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return new SyntaxToken(Kind, kind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
-        public SyntaxToken WithSpan(SourceRange sourceRange, TextSpan span)
+        public SyntaxToken WithSpan(SourceRange sourceRange, SourceFileSpan span)
         {
             return new SyntaxToken(Kind, ContextualKind, IsMissing, sourceRange, span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
@@ -159,7 +159,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             {
                 MacroReference.WriteTo(sb, leading, trailing, includeNonRootFile, ignoreMacroReferences);
             }
-            else if (Span.IsInRootFile || includeNonRootFile)
+            else if (Span.File.IsRootFile || includeNonRootFile)
             {
                 sb.Append(Text);
             }

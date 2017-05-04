@@ -23,15 +23,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         [Import]
         public SVsServiceProvider ServiceProvider { get; set; }
 
-        [Import]
-        public VisualStudioSourceTextFactory SourceTextFactory { get; set; }
-
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
             var textView = EditorAdaptersFactoryService.GetWpfTextView(textViewAdapter);
 
             textView.Properties.GetOrCreateSingletonProperty(() => new GoToDefinitionCommandTarget(textViewAdapter, textView, GoToDefinitionProviderService, ServiceProvider));
-            textView.Properties.GetOrCreateSingletonProperty(() => new OpenIncludeFileCommandTarget(textViewAdapter, textView, ServiceProvider, SourceTextFactory));
+            textView.Properties.GetOrCreateSingletonProperty(() => new OpenIncludeFileCommandTarget(textViewAdapter, textView, ServiceProvider));
         }
     }
 }

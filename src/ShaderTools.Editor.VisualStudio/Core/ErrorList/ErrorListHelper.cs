@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Windows;
-using System.Windows.Threading;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Threading;
 using ShaderTools.CodeAnalysis.Diagnostics;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
-using ShaderTools.Editor.VisualStudio.Core.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 {
@@ -25,30 +23,31 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
             _textDocument = textDocument;
         }
 
-        public void AddError(Diagnostic diagnostic, TextSpan span)
+        public void AddError(SyntaxTreeBase syntaxTree, Diagnostic diagnostic)
         {
             ThreadHelper.JoinableTaskFactory.Run(() =>
             {
                 if (_disposed)
                     return TplExtensions.CompletedTask;
 
-                var sourceText = span.SourceText as VisualStudioSourceText;
-                if (sourceText == null)
+                var snapshot = syntaxTree.Text.FindCorrespondingEditorTextSnapshot();
+                if (snapshot == null)
                     return TplExtensions.CompletedTask;
 
-                var line = sourceText.Snapshot.GetLineFromPosition(span.Start);
+                var span = syntaxTree.GetSourceFileSpan(diagnostic.SourceRange);
+                var line = snapshot.GetLineFromPosition(span.Span.Start);
 
                 var task = new ErrorTask
                 {
                     Text = diagnostic.Message,
                     Line = line.LineNumber,
-                    Column = span.Start - line.Start.Position,
+                    Column = span.Span.Start - line.Start.Position,
                     Category = TaskCategory.CodeSense,
                     ErrorCategory = (diagnostic.Severity == DiagnosticSeverity.Error)
                         ? TaskErrorCategory.Error
                         : TaskErrorCategory.Warning,
                     Priority = TaskPriority.Normal,
-                    Document = span.Filename ?? _textDocument.FilePath
+                    Document = span.File.FilePath ?? _textDocument.FilePath
                 };
 
                 task.Navigate += OnTaskNavigate;

@@ -28,10 +28,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
             // Get span of node containing this token.
             var span = token.Parent.GetTextSpanRoot();
-            if (span == TextSpan.None)
+            if (span == null)
                 return new List<Edit>();
 
-            return GetEdits(syntaxTree, span, options);
+            return GetEdits(syntaxTree, span.Value.Span, options);
         }
 
         public static string ApplyEdits(string code, IList<Edit> edits)

@@ -94,7 +94,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             for (var i = 0; i < expandedTokens.Count; i++)
                 if (expandedTokens[i].Kind == SyntaxKind.IdentifierToken)
                 {
-                    var relexedToken = new HlslLexer(new StringText(expandedTokens[i].Text)).Lex(LexerMode.Syntax);
+                    var relexedToken = new HlslLexer(new SourceFile(SourceText.From(expandedTokens[i].Text), null)).Lex(LexerMode.Syntax);
                     expandedTokens[i] = expandedTokens[i].WithKind(relexedToken.Kind).WithContextualKind(relexedToken.ContextualKind);
                 }
 
@@ -168,7 +168,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         pastedText += textRight;
                         i += 2;
                     }
-                    result.AddRange(SyntaxFactory.ParseAllTokens(new StringText(pastedText)).TakeWhile(t => t.Kind != SyntaxKind.EndOfFileToken));
+                    result.AddRange(SyntaxFactory.ParseAllTokens(new StringText(pastedText, null)).TakeWhile(t => t.Kind != SyntaxKind.EndOfFileToken));
                     continue;
                 }
 
@@ -244,7 +244,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 _lexer = lexer;
             }
 
-            public SourceText Text => _lexer.Text;
+            //public SourceText Text => _lexer.Text;
 
             public SyntaxToken Lex(LexerMode mode) => _lexer.Lex(mode);
 

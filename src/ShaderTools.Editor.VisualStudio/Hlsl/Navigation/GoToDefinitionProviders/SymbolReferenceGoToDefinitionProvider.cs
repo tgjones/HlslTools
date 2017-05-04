@@ -9,7 +9,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
     internal abstract class SymbolReferenceGoToDefinitionProvider<T> : GoToDefinitionProvider<T>
         where T : ExpressionSyntax
     {
-        protected override TextSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, T node)
+        protected override SourceFileSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, T node)
         {
             var nameToken = GetNameToken(node);
 

@@ -75,8 +75,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
             ReadToken();
             var end = _charReader.Position;
             var kind = _kind;
-            var span = TextSpan.FromBounds(Text, _start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(_start, end);
+            var text = Text.GetSubText(span).ToString();
             var diagnostics = GetErrors(leadingTriviaWidth: GetFullWidth(leadingTrivia));
 
             _trailingTrivia.Clear();
@@ -274,8 +274,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
         {
             var start = _start;
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text, start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(start, end);
+            var text = Text.GetSubText(span).ToString();
             var diagnostics = GetErrors(leadingTriviaWidth: 0);
             var trivia = new PretokenizedSyntaxTrivia((ushort) kind, text, diagnostics);
             target.Add(trivia);
@@ -955,8 +955,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
             }
 
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text, start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(start, end);
+            var text = Text.GetSubText(span).ToString();
 
             _kind = SyntaxFacts.GetUnityKeywordKind(text);
 

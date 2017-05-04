@@ -12,7 +12,6 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
@@ -239,7 +238,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
             if (!_isNavigatingFromTreeToSource && _activeSyntaxTree != null)
             {
                 _isNavigatingFromSourceToTree = true;
-                var sourceRange = _activeSyntaxTree.MapRootFileRange(new TextSpan(snapshotSpan.Snapshot.ToSourceText(), snapshotSpan.Span.Start, snapshotSpan.Span.Length));
+                var sourceRange = _activeSyntaxTree.MapRootFileRange(new TextSpan(snapshotSpan.Span.Start, snapshotSpan.Span.Length));
                 NavigateToBestMatch((TreeViewItem) TreeView.Items[0], sourceRange);
                 _isNavigatingFromSourceToTree = false;
             }
@@ -304,11 +303,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
             _isNavigatingFromTreeToSource = false;
         }
 
-        private void NavigateToSource(TextSpan span)
+        private void NavigateToSource(SourceFileSpan? fileSpan)
         {
-            if (!IsVisible || _activeWpfTextView == null || !span.IsInRootFile || span == TextSpan.None)
+            if (!IsVisible || _activeWpfTextView == null || fileSpan == null || !fileSpan.Value.File.IsRootFile)
                 return;
-            SnapshotSpan snapshotSpan = new SnapshotSpan(_activeWpfTextView.TextBuffer.CurrentSnapshot, span.Start, span.Length);
+
+            SnapshotSpan snapshotSpan = new SnapshotSpan(_activeWpfTextView.TextBuffer.CurrentSnapshot, fileSpan.Value.Span.Start, fileSpan.Value.Span.Length);
             _activeWpfTextView.Selection.Select(snapshotSpan, false);
             _activeWpfTextView.ViewScroller.EnsureSpanVisible(snapshotSpan);
         }

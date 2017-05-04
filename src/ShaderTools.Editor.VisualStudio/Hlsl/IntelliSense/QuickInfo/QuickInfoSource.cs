@@ -49,7 +49,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
 
             var model = quickInfoManager.Model;
             var textSpan = model.Span;
-            var span = new Span(textSpan.Start, textSpan.Length);
+            var span = new Span(textSpan.Span.Start, textSpan.Span.Length);
             var currentSnapshot = session.TextView.TextBuffer.CurrentSnapshot;
             var content = GetContent(model);
             if (content == null)

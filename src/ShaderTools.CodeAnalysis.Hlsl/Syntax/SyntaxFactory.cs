@@ -32,10 +32,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         private static SyntaxTree Parse(SourceText sourceText, ParserOptions options, IIncludeFileSystem fileSystem, Func<HlslParser, SyntaxNode> parseFunc)
         {
-            var lexer = new HlslLexer(sourceText, options, fileSystem);
+            var sourceFile = new SourceFile(sourceText, null);
+
+            var lexer = new HlslLexer(sourceFile, options, fileSystem);
             var parser = new HlslParser(lexer);
 
-            var result = new SyntaxTree(sourceText,
+            var result = new SyntaxTree(sourceFile,
                 syntaxTree => new Tuple<SyntaxNode, List<FileSegment>>(
                     parseFunc(parser),
                     lexer.FileSegments));
@@ -47,14 +49,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         public static SyntaxToken ParseToken(string text)
         {
-            return new HlslLexer(SourceText.From(text)).Lex(LexerMode.Syntax);
+            return new HlslLexer(new SourceFile(SourceText.From(text), null)).Lex(LexerMode.Syntax);
         }
 
         public static IReadOnlyList<SyntaxToken> ParseAllTokens(SourceText sourceText, IIncludeFileSystem fileSystem = null)
         {
             var tokens = new List<SyntaxToken>();
 
-            var lexer = new HlslLexer(sourceText, includeFileSystem: fileSystem);
+            var lexer = new HlslLexer(new SourceFile(sourceText, null), includeFileSystem: fileSystem);
             SyntaxToken token;
             do
             {

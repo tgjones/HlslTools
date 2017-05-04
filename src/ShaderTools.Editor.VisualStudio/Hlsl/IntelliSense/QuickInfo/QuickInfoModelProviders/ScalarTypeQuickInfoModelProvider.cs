@@ -22,7 +22,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
                 return null;
 
             var textSpan = (node.TypeTokens.Count > 1)
-                ? TextSpan.Union(node.TypeTokens[0].Span, node.TypeTokens[1].Span)
+                ? new SourceFileSpan(node.TypeTokens[0].Span.File, TextSpan.FromBounds(node.TypeTokens[0].Span.Span.Start, node.TypeTokens[1].Span.Span.End))
                 : node.TypeTokens[0].Span;
 
             return QuickInfoModel.ForSymbol(semanticModel, textSpan, symbol);

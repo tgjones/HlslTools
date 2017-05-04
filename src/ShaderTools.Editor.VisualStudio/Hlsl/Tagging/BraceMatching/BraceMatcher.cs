@@ -51,13 +51,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.BraceMatching
             if (isLeft)
             {
                 var left = token.Span;
-                TextSpan right;
+                SourceFileSpan right;
                 if (FindMatchingBrace(position, 1, token.Parent, rightKind, out right))
                     return MapResultToFile(left, right);
             }
             else if (isRight)
             {
-                TextSpan left;
+                SourceFileSpan left;
                 var right = token.Span;
                 if (FindMatchingBrace(position, -1, token.Parent, leftKind, out left))
                     return MapResultToFile(left, right);
@@ -66,15 +66,15 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.BraceMatching
             return BraceMatchingResult.None;
         }
 
-        private static BraceMatchingResult MapResultToFile(TextSpan left, TextSpan right)
+        private static BraceMatchingResult MapResultToFile(SourceFileSpan left, SourceFileSpan right)
         {
-            if (!left.IsInRootFile || !right.IsInRootFile)
+            if (!left.File.IsRootFile || !right.File.IsRootFile)
                 return BraceMatchingResult.None;
 
-            return new BraceMatchingResult(left, right);
+            return new BraceMatchingResult(left.Span, right.Span);
         }
 
-        private static bool FindMatchingBrace(SourceLocation position, int direction, SyntaxNode parent, SyntaxKind syntaxKind, out TextSpan right)
+        private static bool FindMatchingBrace(SourceLocation position, int direction, SyntaxNode parent, SyntaxKind syntaxKind, out SourceFileSpan right)
         {
             var tokens = parent.ChildNodes.Where(t => t.IsKind(syntaxKind));
             var relevantTokens = (direction < 0)
@@ -85,7 +85,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.BraceMatching
                     where position < t.SourceRange.Start
                     select t;
 
-            right = new TextSpan();
+            right = default(SourceFileSpan);
             var found = false;
 
             foreach (var token in relevantTokens.Cast<SyntaxToken>())

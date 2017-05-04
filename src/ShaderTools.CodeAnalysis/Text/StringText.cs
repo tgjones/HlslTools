@@ -1,181 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Threading;
 
 namespace ShaderTools.CodeAnalysis.Text
 {
+    /// <summary>
+    /// Implementation of SourceText based on a <see cref="String"/> input
+    /// </summary>
     internal sealed class StringText : SourceText
     {
-        private readonly string _text;
-        private readonly TextLineCollection _lines;
+        private readonly string _source;
 
-        public StringText(string text, string filename = null, bool isRoot = true)
+        internal StringText(
+            string source,
+            string filePath)
+            : base()
         {
-            _text = text;
-            Filename = filename;
-            _lines = Parse(this, text);
-            IsRoot = isRoot;
+            Debug.Assert(source != null);
+
+            _source = source;
+            FilePath = filePath;
         }
 
-        private static StringTextLineCollection Parse(SourceText sourceText, string text)
-        {
-            var textLines = new List<TextLine>();
-            var position = 0;
-            var lineStart = 0;
+        /// <summary>
+        /// Underlying string which is the source of this <see cref="StringText"/>instance
+        /// </summary>
+        public string Source => _source;
 
-            while (position < text.Length)
+        /// <summary>
+        /// The length of the text represented by <see cref="StringText"/>.
+        /// </summary>
+        public override int Length => _source.Length;
+
+        public override string FilePath { get; }
+
+        /// <summary>
+        /// Returns a character at given position.
+        /// </summary>
+        /// <param name="position">The position to get the character from.</param>
+        /// <returns>The character.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">When position is negative or 
+        /// greater than <see cref="Length"/>.</exception>
+        public override char this[int position]
+        {
+            get
             {
-                var lineBreakWidth = GetLineBreakWidth(text, position);
+                // NOTE: we are not validating position here as that would not 
+                //       add any value to the range check that string accessor performs anyways.
 
-                if (lineBreakWidth == 0)
-                {
-                    position++;
-                }
-                else
-                {
-                    AddLine(sourceText, textLines, lineStart, position);
-
-                    position += lineBreakWidth;
-                    lineStart = position;
-                }
-            }
-
-            if (lineStart <= position)
-                AddLine(sourceText, textLines, lineStart, text.Length);
-
-            return new StringTextLineCollection(textLines);
-        }
-
-        private static void AddLine(SourceText sourceText, List<TextLine> textLines, int lineStart, int lineEnd)
-        {
-            var lineLength = lineEnd - lineStart;
-            var textLine = new TextLine(sourceText, lineStart, lineLength);
-            textLines.Add(textLine);
-        }
-
-        private static int GetLineBreakWidth(string text, int position)
-        {
-            const char eof = '\0';
-            const char cr = '\r';
-            const char lf = '\n';
-
-            var n = position + 1;
-            var c = text[position];
-            var l = n < text.Length ? text[n] : eof;
-
-            if (c == cr && l == lf)
-                return 2;
-
-            if (c == cr || c == lf)
-                return 1;
-
-            return 0;
-        }
-
-        public override string GetText(TextSpan textSpan)
-        {
-            return _text.Substring(textSpan.Start, textSpan.Length);
-        }
-
-        public override int Length => _text.Length;
-        public override char this[int index] => _text[index];
-        public override string Filename { get; }
-
-        public override TextLineCollection Lines
-        {
-            get { return _lines; }
-        }
-
-        public override int GetLineNumberFromPosition(int position)
-        {
-            if (position < 0 || position > Length)
-                throw new ArgumentOutOfRangeException(nameof(position));
-
-            var lower = 0;
-            var upper = _lines.Count - 1;
-            while (lower <= upper)
-            {
-                var index = lower + ((upper - lower) >> 1);
-                var current = _lines[index];
-                var start = current.Span.Start;
-                if (start == position)
-                    return index;
-
-                if (start > position)
-                    upper = index - 1;
-                else
-                    lower = index + 1;
-            }
-
-            return lower - 1;
-        }
-
-        public override bool IsRoot { get; }
-
-        public override SourceText WithFilename(string newFilename)
-        {
-            return new StringText(_text, newFilename, IsRoot);
-        }
-    }
-
-    public struct TextLine : IEquatable<TextLine>
-    {
-        private readonly SourceText _text;
-        private readonly int _start;
-        private readonly int _length;
-
-        public TextLine(SourceText text, int start, int length)
-        {
-            _text = text;
-            _start = start;
-            _length = length;
-        }
-
-        public SourceText Text
-        {
-            get { return _text; }
-        }
-
-        public TextSpan Span => new TextSpan(_text, _start, _length);
-
-        public int LineNumber => _text.GetLineNumberFromPosition(_start);
-
-        public string GetText()
-        {
-            return _text.GetText(_start, _length);
-        }
-
-        public bool Equals(TextLine other)
-        {
-            return _text == other._text &&
-                   _start == other._start &&
-                   _length == other._length;
-        }
-
-        public override bool Equals(object obj)
-        {
-            var other = obj as TextLine?;
-            return other != null && Equals(other.Value);
-        }
-
-        public override int GetHashCode()
-        {
-            unchecked
-            {
-                var hashCode = (_text != null ? _text.GetHashCode() : 0);
-                hashCode = (hashCode * 397) ^ _start;
-                hashCode = (hashCode * 397) ^ _length;
-                return hashCode;
+                return _source[position];
             }
         }
 
-        public static bool operator ==(TextLine left, TextLine right)
+        /// <summary>
+        /// Provides a string representation of the StringText located within given span.
+        /// </summary>
+        /// <exception cref="ArgumentOutOfRangeException">When given span is outside of the text range.</exception>
+        public override string ToString(TextSpan span)
         {
-            return left.Equals(right);
+            if (span.End > this.Source.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(span));
+            }
+
+            if (span.Start == 0 && span.Length == this.Length)
+            {
+                return this.Source;
+            }
+
+            return this.Source.Substring(span.Start, span.Length);
         }
 
-        public static bool operator !=(TextLine left, TextLine right)
+        public override void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count)
         {
-            return !left.Equals(right);
+            this.Source.CopyTo(sourceIndex, destination, destinationIndex, count);
+        }
+
+        public override void Write(TextWriter textWriter, TextSpan span, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            if (span.Start == 0 && span.End == this.Length)
+            {
+                textWriter.Write(this.Source);
+            }
+            else
+            {
+                base.Write(textWriter, span, cancellationToken);
+            }
         }
     }
 }

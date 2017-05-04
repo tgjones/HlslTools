@@ -83,7 +83,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp
                 else if (isSeparator || isRightParenthesis)
                 {
                     var end = sb.Length;
-                    var span = TextSpan.FromBounds(null, parameterStart, end);
+                    var span = TextSpan.FromBounds(parameterStart, end);
                     parameterSpans.Add(span);
                     nextNonWhitespaceStartsParameter = true;
                 }

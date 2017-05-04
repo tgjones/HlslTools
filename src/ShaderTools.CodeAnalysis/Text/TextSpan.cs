@@ -1,110 +1,257 @@
-﻿using System;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+
+using System;
+using ShaderTools.CodeAnalysis.Properties;
+using ShaderTools.Utilities;
 
 namespace ShaderTools.CodeAnalysis.Text
 {
-    public struct TextSpan : IEquatable<TextSpan>
+    /// <summary>
+    /// Immutable abstract representation of a span of text.  For example, in an error diagnostic that reports a
+    /// location, it could come from a parsed string, text from a tool editor buffer, etc.
+    /// </summary>
+    public struct TextSpan : IEquatable<TextSpan>, IComparable<TextSpan>
     {
-        public static readonly TextSpan None = new TextSpan(SourceText.From(string.Empty), -1, 0);
-
-        public TextSpan(SourceText sourceText, int start, int length)
+        /// <summary>
+        /// Creates a TextSpan instance beginning with the position Start and having the Length
+        /// specified with <paramref name="length" />.
+        /// </summary>
+        public TextSpan(int start, int length)
         {
-            SourceText = sourceText;
-            IsInRootFile = sourceText != null && sourceText.IsRoot;
-            Filename = sourceText?.Filename;
+            if (start < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(start));
+            }
+
+            if (start + length < start)
+            {
+                throw new ArgumentOutOfRangeException(nameof(length));
+            }
+
             Start = start;
-            End = Start + length;
             Length = length;
         }
 
-        public readonly SourceText SourceText;
-        public readonly bool IsInRootFile;
-        public readonly string Filename;
-        public readonly int Start;
-        public readonly int End;
-        public readonly int Length;
+        /// <summary>
+        /// Start point of the span.
+        /// </summary>
+        public int Start { get; }
 
-        public static TextSpan Union(TextSpan value1, TextSpan value2)
-        {
-            if (value1.Start == 0 && value1.Length == 0)
-                return value2;
+        /// <summary>
+        /// End of the span.
+        /// </summary>
+        public int End => Start + Length;
 
-            var startValue = (value1.Start < value2.Start) ? value1.Start : value2.Start;
-            var endValue = (value1.End > value2.End) ? value1.End : value2.End;
-            return FromBounds(value1.SourceText, startValue, endValue);
-        }
+        /// <summary>
+        /// Length of the span.
+        /// </summary>
+        public int Length { get; }
 
-        public static TextSpan FromBounds(SourceText sourceText, int start, int end)
-        {
-            if (end < start)
-                throw new ArgumentOutOfRangeException();
-            var length = end - start;
-            return new TextSpan(sourceText, start, length);
-        }
+        /// <summary>
+        /// Determines whether or not the span is empty.
+        /// </summary>
+        public bool IsEmpty => this.Length == 0;
 
+        /// <summary>
+        /// Determines whether the position lies within the span.
+        /// </summary>
+        /// <param name="position">
+        /// The position to check.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the position is greater than or equal to Start and strictly less 
+        /// than End, otherwise <c>false</c>.
+        /// </returns>
         public bool Contains(int position)
         {
-            return Start <= position && position < End;
+            return unchecked((uint)(position - Start) < (uint)Length);
         }
 
-        public bool ContainsOrTouches(int position)
+        /// <summary>
+        /// Determines whether <paramref name="span"/> falls completely within this span.
+        /// </summary>
+        /// <param name="span">
+        /// The span to check.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the specified span falls completely within this span, otherwise <c>false</c>.
+        /// </returns>
+        public bool Contains(TextSpan span)
         {
-            return Contains(position) || position == End;
+            return span.Start >= Start && span.End <= this.End;
         }
 
-        public bool Contains(TextSpan textSpan)
-        {
-            return Start <= textSpan.Start && textSpan.End <= End;
-        }
-
+        /// <summary>
+        /// Determines whether <paramref name="span"/> overlaps this span. Two spans are considered to overlap 
+        /// if they have positions in common and neither is empty. Empty spans do not overlap with any 
+        /// other span.
+        /// </summary>
+        /// <param name="span">
+        /// The span to check.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the spans overlap, otherwise <c>false</c>.
+        /// </returns>
         public bool OverlapsWith(TextSpan span)
         {
-            var maxStart = Math.Max(Start, span.Start);
-            var minEnd = Math.Min(End, span.End);
-            return maxStart < minEnd;
+            int overlapStart = Math.Max(Start, span.Start);
+            int overlapEnd = Math.Min(this.End, span.End);
+
+            return overlapStart < overlapEnd;
         }
 
+        /// <summary>
+        /// Returns the overlap with the given span, or null if there is no overlap.
+        /// </summary>
+        /// <param name="span">
+        /// The span to check.
+        /// </param>
+        /// <returns>
+        /// The overlap of the spans, or null if the overlap is empty.
+        /// </returns>
+        public TextSpan? Overlap(TextSpan span)
+        {
+            int overlapStart = Math.Max(Start, span.Start);
+            int overlapEnd = Math.Min(this.End, span.End);
+
+            return overlapStart < overlapEnd
+                ? TextSpan.FromBounds(overlapStart, overlapEnd)
+                : (TextSpan?)null;
+        }
+
+        /// <summary>
+        /// Determines whether <paramref name="span"/> intersects this span. Two spans are considered to 
+        /// intersect if they have positions in common or the end of one span 
+        /// coincides with the start of the other span.
+        /// </summary>
+        /// <param name="span">
+        /// The span to check.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the spans intersect, otherwise <c>false</c>.
+        /// </returns>
         public bool IntersectsWith(TextSpan span)
         {
-            return span.Start <= End && span.End >= Start;
+            return span.Start <= this.End && span.End >= Start;
         }
 
-        public bool Equals(TextSpan other)
+        /// <summary>
+        /// Determines whether <paramref name="position"/> intersects this span. 
+        /// A position is considered to intersect if it is between the start and
+        /// end positions (inclusive) of this span.
+        /// </summary>
+        /// <param name="position">
+        /// The position to check.
+        /// </param>
+        /// <returns>
+        /// <c>true</c> if the position intersects, otherwise <c>false</c>.
+        /// </returns>
+        public bool IntersectsWith(int position)
         {
-            return Start == other.Start &&
-                   Length == other.Length;
+            return unchecked((uint)(position - Start) <= (uint)Length);
         }
 
-        public override bool Equals(object obj)
+        /// <summary>
+        /// Returns the intersection with the given span, or null if there is no intersection.
+        /// </summary>
+        /// <param name="span">
+        /// The span to check.
+        /// </param>
+        /// <returns>
+        /// The intersection of the spans, or null if the intersection is empty.
+        /// </returns>
+        public TextSpan? Intersection(TextSpan span)
         {
-            var other = obj as TextSpan?;
-            return other != null && Equals(other.Value);
+            int intersectStart = Math.Max(Start, span.Start);
+            int intersectEnd = Math.Min(this.End, span.End);
+
+            return intersectStart <= intersectEnd
+                ? TextSpan.FromBounds(intersectStart, intersectEnd)
+                : (TextSpan?)null;
         }
 
-        public override int GetHashCode()
+        /// <summary>
+        /// Creates a new <see cref="TextSpan"/> from <paramref name="start" /> and <paramref
+        /// name="end"/> positions as opposed to a position and length.
+        /// 
+        /// The returned TextSpan contains the range with <paramref name="start"/> inclusive, 
+        /// and <paramref name="end"/> exclusive.
+        /// </summary>
+        public static TextSpan FromBounds(int start, int end)
         {
-            unchecked
+            if (start < 0)
             {
-                return (Start * 397) ^ Length;
+                throw new ArgumentOutOfRangeException(nameof(start), CodeAnalysisResources.StartMustNotBeNegative);
             }
+
+            if (end < start)
+            {
+                throw new ArgumentOutOfRangeException(nameof(end), CodeAnalysisResources.EndMustNotBeLessThanStart);
+            }
+
+            return new TextSpan(start, end - start);
         }
 
+        /// <summary>
+        /// Determines if two instances of <see cref="TextSpan"/> are the same.
+        /// </summary>
         public static bool operator ==(TextSpan left, TextSpan right)
         {
             return left.Equals(right);
         }
 
+        /// <summary>
+        /// Determines if two instances of <see cref="TextSpan"/> are different.
+        /// </summary>
         public static bool operator !=(TextSpan left, TextSpan right)
         {
             return !left.Equals(right);
         }
 
+        /// <summary>
+        /// Determines if current instance of <see cref="TextSpan"/> is equal to another.
+        /// </summary>
+        public bool Equals(TextSpan other)
+        {
+            return Start == other.Start && Length == other.Length;
+        }
+
+        /// <summary>
+        /// Determines if current instance of <see cref="TextSpan"/> is equal to another.
+        /// </summary>
+        public override bool Equals(object obj)
+        {
+            return obj is TextSpan && Equals((TextSpan)obj);
+        }
+
+        /// <summary>
+        /// Produces a hash code for <see cref="TextSpan"/>.
+        /// </summary>
+        public override int GetHashCode()
+        {
+            return Hash.Combine(Start, Length);
+        }
+
+        /// <summary>
+        /// Provides a string representation for <see cref="TextSpan"/>.
+        /// </summary>
         public override string ToString()
         {
-            var result = Filename;
-            if (!string.IsNullOrEmpty(result))
-                result += " ";
-            result += $"[{Start},{End})";
-            return result;
+            return $"[{Start}..{End})";
+        }
+
+        /// <summary>
+        /// Compares current instance of <see cref="TextSpan"/> with another.
+        /// </summary>
+        public int CompareTo(TextSpan other)
+        {
+            var diff = Start - other.Start;
+            if (diff != 0)
+            {
+                return diff;
+            }
+
+            return Length - other.Length;
         }
     }
 }

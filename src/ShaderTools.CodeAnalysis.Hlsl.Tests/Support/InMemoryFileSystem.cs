@@ -18,7 +18,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
             string include;
             if (_includes.TryGetValue(path, out include))
             {
-                text = new StringText(include, path, false);
+                text = new StringText(include, path);
                 return true;
             }
             text = null;

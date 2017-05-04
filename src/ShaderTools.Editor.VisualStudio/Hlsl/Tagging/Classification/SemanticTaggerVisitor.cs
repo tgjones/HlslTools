@@ -210,7 +210,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
             if (token == null || !token.Span.IsInRootFile || token.MacroReference != null || classificationType == null)
                 return;
 
-            var snapshotSpan = new SnapshotSpan(_snapshot, token.Span.Start, token.Span.Length);
+            var snapshotSpan = new SnapshotSpan(_snapshot, token.Span.Span.Start, token.Span.Span.Length);
             var tag = new ClassificationTag(classificationType);
             var tagSpan = new TagSpan<IClassificationTag>(snapshotSpan, tag);
 

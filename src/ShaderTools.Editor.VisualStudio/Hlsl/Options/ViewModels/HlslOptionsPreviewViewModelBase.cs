@@ -22,7 +22,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Options.ViewModels
         {
             var sourceText = SourceText.From(text);
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(sourceText);
-            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(sourceText, 0, text.Length), _optionsService.FormattingOptions);
+            var edits = Formatter.GetEdits(syntaxTree, new TextSpan(0, text.Length), _optionsService.FormattingOptions);
             return Formatter.ApplyEdits(text, edits);
         }
     }

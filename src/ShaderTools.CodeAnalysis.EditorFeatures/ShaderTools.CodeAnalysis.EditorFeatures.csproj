@@ -1,0 +1,8 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.3</TargetFramework>
+    <RootNamespace>ShaderTools.CodeAnalysis.Editor</RootNamespace>
+  </PropertyGroup>
+
+</Project>

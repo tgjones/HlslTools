@@ -16,7 +16,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
             {
                 result.AddRange(highlighter
                     .GetHighlights(semanticModel, position)
-                    .Where(x => x.Span.IsInRootFile));
+                    .Where(x => x.Span.File.IsRootFile));
             }
 
             return result;

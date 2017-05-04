@@ -18,7 +18,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
             var syntaxTree = semanticModel.SyntaxTree;
             return syntaxTree.Root.FindNodes(position)
                 .SelectMany(n => GetSymbolSpans(semanticModel, n))
-                .Where(s => s.Span.IsInRootFile && s.SourceRange.ContainsOrTouches(position))
+                .Where(s => s.Span.File.IsRootFile && s.SourceRange.ContainsOrTouches(position))
                 .Select(s => s).Cast<SymbolSpan?>().FirstOrDefault();
         }
 

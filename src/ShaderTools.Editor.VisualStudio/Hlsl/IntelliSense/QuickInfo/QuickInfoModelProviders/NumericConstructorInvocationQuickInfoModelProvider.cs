@@ -13,14 +13,19 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
             if (!node.Type.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            if (!node.Type.GetTextSpanSafe().IsInRootFile)
+            var sourceFileSpan = node.Type.GetTextSpanSafe();
+            if (sourceFileSpan == null || !sourceFileSpan.Value.File.IsRootFile)
                 return null;
 
             var symbol = semanticModel.GetSymbol(node);
             if (symbol == null)
                 return null;
 
-            return QuickInfoModel.ForSymbol(semanticModel, node.Type.GetTextSpanRoot(), symbol);
+            var nodeRootSpan = node.Type.GetTextSpanRoot();
+            if (nodeRootSpan == null)
+                return null;
+
+            return QuickInfoModel.ForSymbol(semanticModel, nodeRootSpan.Value, symbol);
         }
     }
 }

@@ -37,19 +37,19 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         private object _value;
         private int _start;
 
-        private readonly SourceText _rootText;
+        private readonly SourceFile _rootFile;
         private readonly Stack<IncludeContext> _includeStack;
         private CharReader _charReader;
 
         private class IncludeContext
         {
             public readonly CharReader CharReader;
-            public readonly SourceText Text;
+            public readonly SourceFile File;
 
-            public IncludeContext(SourceText text)
+            public IncludeContext(SourceFile file)
             {
-                CharReader = new CharReader(text);
-                Text = text;
+                CharReader = new CharReader(file.Text);
+                File = file;
             }
         }
 
@@ -59,17 +59,18 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         // - {main.hlsl, 101, 200}
         internal List<FileSegment> FileSegments { get; }
 
-        public HlslLexer(SourceText text, ParserOptions options = null, IIncludeFileSystem includeFileSystem = null)
+        public HlslLexer(SourceFile file, ParserOptions options = null, IIncludeFileSystem includeFileSystem = null)
         {
+            _rootFile = file;
             _includeFileResolver = new IncludeFileResolver(includeFileSystem ?? new DummyFileSystem());
             _directives = DirectiveStack.Empty;
 
             if (options != null)
                 foreach (var define in options.PreprocessorDefines)
                 {
-                    var lexer = new HlslLexer(
-                        SourceText.From($"#define {define.Key} {define.Value}", 
-                        "__ConfiguredPreprocessorDefinitions__.hlsl"));
+                    var lexer = new HlslLexer(new SourceFile(
+                        SourceText.From($"#define {define.Key} {define.Value}", "__ConfiguredPreprocessorDefinitions__.hlsl"),
+                        null));
                     lexer._mode = LexerMode.Directive;
                     lexer.ExpandMacros = false;
 
@@ -82,14 +83,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
             ExpandMacros = true;
 
-            _rootText = text;
-
             FileSegments = new List<FileSegment>();
             _includeStack = new Stack<IncludeContext>();
-            PushIncludeContext(text);
+            PushIncludeContext(file);
         }
 
-        public SourceText Text => _includeStack.Peek().Text;
+        public SourceFile File => _includeStack.Peek().File;
+
+        internal SourceFileSpan CreateSourceFileSpan(TextSpan span) => new SourceFileSpan(File, span);
 
         public SyntaxToken Lex(LexerMode mode)
         {
@@ -197,8 +198,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             ReadToken();
             var end = _charReader.Position;
             var kind = _kind;
-            var span = TextSpan.FromBounds(Text, _start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(_start, end);
+            var text = File.Text.GetSubText(span).ToString();
             var diagnostics = _diagnostics.ToImmutableArray();
 
             _trailingTrivia.Clear();
@@ -207,7 +208,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             ReadTrivia(_trailingTrivia, isTrailing: true);
             var trailingTrivia = _trailingTrivia.ToImmutableArray();
 
-            return new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), span, text, _value, leadingTrivia, trailingTrivia, diagnostics, null, false);
+            return new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), CreateSourceFileSpan(span), text, _value, leadingTrivia, trailingTrivia, diagnostics, null, false);
         }
 
         private SourceRange MakeAbsolute(TextSpan span)
@@ -215,9 +216,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return new SourceRange(new SourceLocation(_currentFileSegmentAbsolutePosition + span.Start - FileSegments.Last().Start), span.Length);
         }
 
-        private SourceRange CurrentSpan => MakeAbsolute(TextSpan.FromBounds(Text, _start, _charReader.Position));
+        private SourceRange CurrentSpan => MakeAbsolute(TextSpan.FromBounds(_start, _charReader.Position));
 
-        private SourceRange CurrentSpanStart => MakeAbsolute(TextSpan.FromBounds(Text, _start, Math.Min(_start + 2, Text.Length)));
+        private SourceRange CurrentSpanStart => MakeAbsolute(TextSpan.FromBounds(_start, Math.Min(_start + 2, File.Text.Length)));
 
         private void ReadTrivia(List<SyntaxNode> target, bool isTrailing)
         {
@@ -295,12 +296,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 var includeDirective = (IncludeDirectiveTriviaSyntax) directive;
                 var includeFilename = includeDirective.TrimmedFilename;
 
-                SourceText include;
+                SourceFile include;
                 try
                 {
                     include = _includeFileResolver.OpenInclude(includeFilename,
-                        _includeStack.Peek().Text.Filename, 
-                        _rootText.Filename,
+                        _includeStack.Peek().File, 
                         _options.AdditionalIncludeDirectories);
                     if (include == null)
                     {
@@ -331,14 +331,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return true;
         }
 
-        private void PushIncludeContext(SourceText text)
+        private void PushIncludeContext(SourceFile file)
         {
             _currentFileSegmentAbsolutePosition = FileSegments.Sum(x => x.Length);
 
-            var includeContext = new IncludeContext(text);
+            var includeContext = new IncludeContext(file);
             _includeStack.Push(includeContext);
             _charReader = includeContext.CharReader;
-            FileSegments.Add(new FileSegment(text, 0));
+            FileSegments.Add(new FileSegment(file, 0));
         }
 
         private void PopIncludeContext()
@@ -348,7 +348,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             _includeStack.Pop();
             _charReader = _includeStack.Peek().CharReader;
 
-            FileSegments.Add(new FileSegment(_includeStack.Peek().Text, _charReader.Position));
+            FileSegments.Add(new FileSegment(_includeStack.Peek().File, _charReader.Position));
         }
 
         private void LexExcludedDirectivesAndTrivia(bool endIsActive, List<SyntaxNode> triviaList)
@@ -413,9 +413,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         private SyntaxTrivia CreateDisabledText()
         {
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text, _start, end);
-            var text = Text.GetText(span);
-            return new SyntaxTrivia(SyntaxKind.DisabledTextTrivia, text, MakeAbsolute(span), span, ImmutableArray<Diagnostic>.Empty);
+            var span = TextSpan.FromBounds(_start, end);
+            var text = File.Text.GetSubText(span).ToString();
+            return new SyntaxTrivia(SyntaxKind.DisabledTextTrivia, text, MakeAbsolute(span), CreateSourceFileSpan(span), ImmutableArray<Diagnostic>.Empty);
         }
 
         private SyntaxNode LexSingleDirective(
@@ -536,10 +536,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         {
             var start = _start;
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text, start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(start, end);
+            var text = File.Text.GetSubText(span).ToString();
             var diagnostics = _diagnostics.ToImmutableArray();
-            var trivia = new SyntaxTrivia(kind, text, MakeAbsolute(span), span, diagnostics);
+            var trivia = new SyntaxTrivia(kind, text, MakeAbsolute(span), CreateSourceFileSpan(span), diagnostics);
             target.Add(trivia);
 
             _diagnostics.Clear();
@@ -1233,8 +1233,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             }
 
             var end = _charReader.Position;
-            var span = TextSpan.FromBounds(Text, start, end);
-            var text = Text.GetText(span);
+            var span = TextSpan.FromBounds(start, end);
+            var text = File.Text.GetSubText(span).ToString();
 
             _kind = SyntaxFacts.GetKeywordKind(text);
 

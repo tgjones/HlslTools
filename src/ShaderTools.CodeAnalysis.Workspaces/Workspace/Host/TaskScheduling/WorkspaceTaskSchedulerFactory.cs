@@ -1,5 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
+using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Host.Mef;
 
@@ -11,6 +12,15 @@ namespace ShaderTools.CodeAnalysis.Host
         public virtual IWorkspaceTaskScheduler CreateBackgroundTaskScheduler()
         {
             return new WorkspaceTaskScheduler(this, TaskScheduler.Default);
+        }
+
+        public virtual IWorkspaceTaskScheduler CreateEventingTaskQueue()
+        {
+            var taskScheduler = (SynchronizationContext.Current != null)
+                ? TaskScheduler.FromCurrentSynchronizationContext()
+                : TaskScheduler.Default;
+
+            return new WorkspaceTaskQueue(this, taskScheduler);
         }
 
         protected virtual object BeginAsyncOperation(string taskName)

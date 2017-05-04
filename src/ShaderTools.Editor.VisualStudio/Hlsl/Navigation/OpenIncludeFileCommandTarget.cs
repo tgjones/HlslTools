@@ -6,8 +6,8 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
+using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
-using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
@@ -16,14 +16,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
     {
         private readonly IWpfTextView _textView;
         private readonly IServiceProvider _serviceProvider;
-        private readonly VisualStudioSourceTextFactory _sourceTextFactory;
 
-        public OpenIncludeFileCommandTarget(IVsTextView adapter, IWpfTextView textView, IServiceProvider serviceProvider, VisualStudioSourceTextFactory sourceTextFactory)
+        public OpenIncludeFileCommandTarget(IVsTextView adapter, IWpfTextView textView, IServiceProvider serviceProvider)
             : base(adapter, textView, VSConstants.VSStd2KCmdID.OPENFILE)
         {
             _textView = textView;
             _serviceProvider = serviceProvider;
-            _sourceTextFactory = sourceTextFactory;
         }
 
         protected override bool IsEnabled(VSConstants.VSStd2KCmdID commandId, ref string commandText)
@@ -42,18 +40,17 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             if (includeDirectiveTrivia == null)
                 return false;
 
-            var includeFileResolver = new IncludeFileResolver(_textView.TextBuffer.GetIncludeFileSystem(_sourceTextFactory));
+            var includeFileResolver = new IncludeFileResolver(_textView.TextBuffer.GetIncludeFileSystem());
 
             var include = includeFileResolver.OpenInclude(
                 includeDirectiveTrivia.TrimmedFilename,
-                _textView.TextBuffer.GetTextContainer().Filename,
-                _textView.TextBuffer.GetTextContainer().Filename,
+                new CodeAnalysis.Text.SourceFile(_textView.TextBuffer.CurrentSnapshot.ToSourceText(), null),
                 _textView.TextBuffer.GetConfigFile().HlslAdditionalIncludeDirectories);
 
             if (include == null)
                 return false;
 
-            _serviceProvider.NavigateTo(include.Filename, 0, 0, 0, 0);
+            _serviceProvider.NavigateTo(include.FilePath, 0, 0, 0, 0);
             return true;
         }
 

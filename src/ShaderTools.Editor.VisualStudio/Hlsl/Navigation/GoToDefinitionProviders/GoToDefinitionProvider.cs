@@ -8,7 +8,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
     internal abstract class GoToDefinitionProvider<T> : IGoToDefinitionProvider
         where T : SyntaxNode
     {
-        public TextSpan? GetTargetSpan(SemanticModel semanticModel, SourceLocation position)
+        public SourceFileSpan? GetTargetSpan(SemanticModel semanticModel, SourceLocation position)
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
             return syntaxTree.Root
@@ -19,6 +19,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
                 .FirstOrDefault();
         }
 
-        protected abstract TextSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, T node);
+        protected abstract SourceFileSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, T node);
     }
 }

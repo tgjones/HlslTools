@@ -58,7 +58,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
                 return;
 
             var textDocument = pos.Snapshot.TextBuffer.GetTextDocument();
-            GoToLocation(textSpan.Value.Filename ?? textDocument.FilePath, textSpan.Value, null, false);
+            GoToLocation(textSpan.Value.File.FilePath ?? textDocument.FilePath, textSpan.Value.Span, null, false);
         }
 
         // From https://github.com/rsdn/nemerle/blob/master/snippets/VS2010/Nemerle.VisualStudio/LanguageService/NemerleLanguageService.cs#L565

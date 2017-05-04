@@ -10,7 +10,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
         {
             if (File.Exists(path))
             {
-                text = new StringText(File.ReadAllText(path), path, isRoot: false);
+                text = new StringText(File.ReadAllText(path), path);
                 return true;
             }
 

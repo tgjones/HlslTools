@@ -73,7 +73,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
                     {
                         var syntaxTree = _model.SemanticModel.Compilation.SyntaxTree;
                         var snapshot = syntaxTree.Text.ToTextSnapshot();
-                        var triggerPosition = _model.Span.Start;
+                        var triggerPosition = _model.Span.Span.Start;
                         var triggerPoint = snapshot.CreateTrackingPoint(triggerPosition, PointTrackingMode.Negative);
 
                         _session = _quickInfoBroker.CreateQuickInfoSession(_textView, triggerPoint, true);

@@ -68,8 +68,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
 
                 foreach (var diagnostic in diagnostics.Item2)
                 {
-                    var span = diagnostics.Item1.GetSourceTextSpan(diagnostic.SourceRange);
-                    ErrorListHelper?.AddError(diagnostic, span);
+                    ErrorListHelper?.AddError(diagnostics.Item1, diagnostic);
                 }
             }
         }

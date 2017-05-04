@@ -8,12 +8,15 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 {
     public sealed class SyntaxTree : SyntaxTreeBase
     {
-        public override SourceText Text { get; }
+        private readonly SourceFile _sourceFile;
+
+        public override SourceText Text => _sourceFile.Text;
+
         public SyntaxNode Root { get; }
 
         internal SyntaxTree(SourceText text, Func<SyntaxTree, SyntaxNode> parseFunc)
         {
-            Text = text;
+            _sourceFile = new SourceFile(text, null);
             Root = parseFunc(this);
         }
 
@@ -22,9 +25,11 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             return Root.GetDiagnostics();
         }
 
-        public override TextSpan GetSourceTextSpan(SourceRange range)
+        public override SourceFileSpan GetSourceFileSpan(SourceRange range)
         {
-            return new TextSpan(Text, range.Start.Position, range.Length);
+            return new SourceFileSpan(
+                _sourceFile, 
+                new TextSpan(range.Start.Position, range.Length));
         }
     }
 }

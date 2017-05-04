@@ -20,7 +20,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Syntax
             var tree = SyntaxFactory.ParseSyntaxTree(SourceText.From(text));
             Assert.Equal(text, tree.Root.ToFullString());
 
-            var tokens = tree.Root.DescendantTokens(descendIntoTrivia: true).Where(t => t.Span.Length > 0).ToList();
+            var tokens = tree.Root.DescendantTokens(descendIntoTrivia: true).Where(t => t.Span.Span.Length > 0).ToList();
             Assert.Equal(11, tokens.Count);
             Assert.Equal("garbage", tokens[6].Text);
 

@@ -5,6 +5,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
 {
     internal interface IGoToDefinitionProvider
     {
-        TextSpan? GetTargetSpan(SemanticModel semanticModel, SourceLocation position);
+        SourceFileSpan? GetTargetSpan(SemanticModel semanticModel, SourceLocation position);
     }
 }

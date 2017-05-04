@@ -5,7 +5,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 {
     public interface ILexer
     {
-        SourceText Text { get; }
+        //SourceText Text { get; }
 
         SyntaxToken Lex(LexerMode mode);
     }

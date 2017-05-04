@@ -14,7 +14,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             _fileSystem = fileSystem;
         }
 
-        public SourceText OpenInclude(string includeFilename, string currentFilename, string rootFilename, IEnumerable<string> additionalIncludeDirectories)
+        public SourceFile OpenInclude(string includeFilename, SourceFile currentFile, IEnumerable<string> additionalIncludeDirectories)
         {
             SourceText text;
 
@@ -25,30 +25,33 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             // If path is rooted, open it directly.
             if (Path.IsPathRooted(includeFilename))
             {
-                _fileSystem.TryGetFile(includeFilename, out text);
-                return text;
+                if (_fileSystem.TryGetFile(includeFilename, out text))
+                    return new SourceFile(text, currentFile);
+                return null;
             }
 
-            // If current file has been saved (i.e. has a filename), try same directory as current file.
-            if (currentFilename != null)
+            // Look through the hierarchy of files that included currentFile, to see if any of their
+            // directories contain the include.
+            var fileToCheck = currentFile;
+            while (fileToCheck != null)
             {
-                var rootFileDirectory = Path.GetDirectoryName(currentFilename);
-                if (_fileSystem.TryGetFile(Path.Combine(rootFileDirectory, includeFilename), out text))
-                    return text;
-            }
-
-            // If this is not the root file, try same directory as root file.
-            if (rootFilename != currentFilename)
-            {
-                var rootFileDirectory = Path.GetDirectoryName(rootFilename);
-                if (_fileSystem.TryGetFile(Path.Combine(rootFileDirectory, includeFilename), out text))
-                    return text;
+                if (fileToCheck.FilePath != null)
+                {
+                    var rootFileDirectory = Path.GetDirectoryName(fileToCheck.FilePath);
+                    var testFilename = Path.Combine(rootFileDirectory, includeFilename);
+                    if (_fileSystem.TryGetFile(testFilename, out text))
+                        return new SourceFile(text, currentFile);
+                }
+                fileToCheck = fileToCheck.IncludedBy;
             }
 
             // Then try additional include directories.
             foreach (var includeDirectory in additionalIncludeDirectories)
-                if (_fileSystem.TryGetFile(Path.Combine(includeDirectory, includeFilename), out text))
-                    return text;
+            {
+                var testFilename = Path.Combine(includeDirectory, includeFilename);
+                if (_fileSystem.TryGetFile(testFilename, out text))
+                    return new SourceFile(text, currentFile);
+            }
 
             return null;
         }

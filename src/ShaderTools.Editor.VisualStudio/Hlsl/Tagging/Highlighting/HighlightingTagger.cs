@@ -58,7 +58,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
 
             var tagSpans = semanticModel.GetHighlights(position, _highlighters)
                 .Select(span => (ITagSpan<NavigableHighlightTag>) new TagSpan<NavigableHighlightTag>(
-                    new SnapshotSpan(snapshot, span.Span.Start, span.Span.Length),
+                    new SnapshotSpan(snapshot, span.Span.Span.Start, span.Span.Span.Length),
                     span.IsDefinition
                         ? (NavigableHighlightTag) DefinitionHighlightTag.Instance
                         : ReferenceHighlightTag.Instance));

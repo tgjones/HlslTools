@@ -20,7 +20,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
             SyntaxTree syntaxTree;
             if (!TryGetSyntaxTree(buffer, out syntaxTree))
                 return;
-            var edits = Formatter.GetEdits(syntaxTree,
+            var edits = Formatter.GetEdits(
+                syntaxTree,
                 span,
                 optionsService.FormattingOptions);
             ApplyEdits(buffer, edits);

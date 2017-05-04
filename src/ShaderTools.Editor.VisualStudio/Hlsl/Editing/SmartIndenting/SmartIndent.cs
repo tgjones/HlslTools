@@ -48,26 +48,29 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
         // From https://github.com/KirillOsenkov/XmlParser/blob/master/src/Microsoft.Language.Xml.Editor/SmartIndent/SmartIndent.cs#L39
         public static int FindTotalParentChainIndent(SyntaxNode node, int position, int indent)
         {
-            var textSpan = node.GetTextSpanRoot();
+            var textSpanOpt = node.GetTextSpanRoot();
+            if (textSpanOpt == null)
+                return indent;
+
+            var textSpan = textSpanOpt.Value;
 
             if (!textSpan.IsInRootFile)
                 return indent;
 
-            if (position < textSpan.Start || position > textSpan.End)
+            if (position < textSpan.Span.Start || position > textSpan.Span.End)
                 return indent;
 
             foreach (var child in node.ChildNodes.Cast<SyntaxNode>())
             {
                 var childSpan = child.GetTextSpanRoot();
-
-                if (!childSpan.IsInRootFile)
+                if (childSpan == null || !childSpan.Value.IsInRootFile)
                     continue;
 
                 var shouldIndent = ShouldIndent(child);
                 if (shouldIndent)
                     indent += 4;
 
-                if (position <= childSpan.End)
+                if (position <= childSpan.Value.Span.End)
                     return FindTotalParentChainIndent(child, position, indent);
 
                 if (shouldIndent)

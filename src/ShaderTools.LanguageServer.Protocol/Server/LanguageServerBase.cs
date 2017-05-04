@@ -118,7 +118,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         {
             var openedDocument = _workspace.OpenDocument(
                 CreateDocumentId(openParams.Uri),
-                SourceText.From(openParams.Text, openParams.Uri));
+                SourceText.From(openParams.Text));
 
             // TODO: Get all recently edited files in the workspace
             this.RunScriptDiagnostics(new Document[] { openedDocument });
@@ -174,10 +174,10 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         private static TextChange GetFileChangeDetails(Document document, Range changeRange, string insertString)
         {
-            var startPosition = document.SourceText.GetPosition(new TextLocation(changeRange.Start.Line, changeRange.Start.Character));
-            var endPosition = document.SourceText.GetPosition(new TextLocation(changeRange.End.Line, changeRange.End.Character));
+            var startPosition = document.SourceText.Lines.GetPosition(new LinePosition(changeRange.Start.Line, changeRange.Start.Character));
+            var endPosition = document.SourceText.Lines.GetPosition(new LinePosition(changeRange.End.Line, changeRange.End.Character));
 
-            return new TextChange(TextSpan.FromBounds(document.SourceText, startPosition, endPosition), insertString);
+            return new TextChange(TextSpan.FromBounds(startPosition, endPosition), insertString);
         }
 
         private async Task ClearMarkers(Document scriptFile, EventContext eventContext)
@@ -329,9 +329,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         private static Diagnostic GetDiagnosticFromMarker(SyntaxTreeBase syntaxTree, CodeAnalysis.Diagnostics.Diagnostic diagnostic)
         {
-            var sourceTextSpan = syntaxTree.GetSourceTextSpan(diagnostic.SourceRange);
-            var startLocation = syntaxTree.Text.GetTextLocation(sourceTextSpan.Start);
-            var endLocation = syntaxTree.Text.GetTextLocation(sourceTextSpan.End);
+            var sourceFileSpan = syntaxTree.GetSourceFileSpan(diagnostic.SourceRange);
+            var linePositionSpan = syntaxTree.Text.Lines.GetLinePositionSpan(sourceFileSpan.Span);
 
             return new Diagnostic
             {
@@ -343,13 +342,13 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                 {
                     Start = new Position
                     {
-                        Line = startLocation.Line,
-                        Character = startLocation.Column
+                        Line = linePositionSpan.Start.Line,
+                        Character = linePositionSpan.Start.Character
                     },
                     End = new Position
                     {
-                        Line = endLocation.Line,
-                        Character = endLocation.Column
+                        Line = linePositionSpan.End.Line,
+                        Character = linePositionSpan.End.Character
                     }
                 }
             };

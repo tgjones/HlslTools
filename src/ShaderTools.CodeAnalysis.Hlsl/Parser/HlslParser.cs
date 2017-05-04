@@ -156,10 +156,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         {
             var missingTokenSourceRange = new SourceRange(Current.FullSourceRange.Start, 0);
 
-            var missingTokenSpan = new TextSpan(Current.Span.SourceText, Current.Span.Start, 0);
+            var missingTokenSpan = new SourceFileSpan(Current.Span.File, new TextSpan(Current.Span.Span.Start, 0));
             var leadingLocatedTrivia = Current.LeadingTrivia.OfType<LocatedNode>().FirstOrDefault();
             if (leadingLocatedTrivia != null)
-                missingTokenSpan = new TextSpan(leadingLocatedTrivia.Span.SourceText, leadingLocatedTrivia.Span.Start, 0);
+                missingTokenSpan = new SourceFileSpan(leadingLocatedTrivia.Span.File, new TextSpan(leadingLocatedTrivia.Span.Span.Start, 0));
             
             var diagnosticSpan = GetDiagnosticSourceRangeForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
@@ -180,13 +180,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return Current.SourceRange;
         }
 
-        protected TextSpan GetDiagnosticTextSpanForMissingToken()
+        protected SourceFileSpan GetDiagnosticTextSpanForMissingToken()
         {
             if (_tokenIndex > 0)
             {
                 var previousToken = _tokens[_tokenIndex - 1];
                 if (previousToken.TrailingTrivia.Any(x => x.Kind == SyntaxKind.EndOfLineTrivia))
-                    return new TextSpan(previousToken.Span.SourceText, previousToken.Span.End, 2);
+                    return new SourceFileSpan(previousToken.Span.File, new TextSpan(previousToken.Span.Span.End, 2));
             }
 
             return Current.Span;

@@ -112,22 +112,47 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
             var lastDeclarator = variables.Last();
             var firstDeclarator = variables.First();
 
-            if (!node.GetFirstToken().Span.IsInRootFile)
+            if (!node.GetFirstToken().Span.File.IsRootFile)
+                return;
+
+            var nodeRootSpan = node.GetTextSpanRoot();
+            if (nodeRootSpan == null)
                 return;
 
             var declarationRootSpan = node.Declaration.GetTextSpanRoot();
-            var firstDeclaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, declarationRootSpan.Start, firstDeclarator.GetTextSpanRoot().End);
+            if (declarationRootSpan == null)
+                return;
+
+            var firstDeclaratorRootSpan = firstDeclarator.GetTextSpanRoot();
+            if (firstDeclaratorRootSpan == null)
+                return;
+
+            var firstDeclaratorTextSpan = new SourceFileSpan(
+                declarationRootSpan.Value.File, 
+                TextSpan.FromBounds(
+                    declarationRootSpan.Value.Span.Start,
+                    firstDeclaratorRootSpan.Value.Span.End));
 
             if (firstDeclarator == lastDeclarator)
-                firstDeclaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, firstDeclaratorTextSpan.Start, node.GetTextSpanRoot().End);
+                firstDeclaratorTextSpan = new SourceFileSpan(
+                    declarationRootSpan.Value.File, 
+                    TextSpan.FromBounds(
+                        firstDeclaratorTextSpan.Span.Start, 
+                        nodeRootSpan.Value.Span.End));
 
             ProcessItem(firstDeclarator.Identifier, firstDeclarator.Identifier.Text, firstDeclaratorTextSpan, NavigateToItemKind.Field, node.Parent, Glyph.Variable);
 
             foreach (var declarator in variables.Skip(1))
             {
                 var declaratorTextSpan = declarator.GetTextSpanRoot();
+                if (declaratorTextSpan == null)
+                    continue;
                 if (declarator == lastDeclarator)
-                    declaratorTextSpan = TextSpan.FromBounds(declarationRootSpan.SourceText, declaratorTextSpan.Start, node.GetTextSpanRoot().End);
+                    declaratorTextSpan = new SourceFileSpan(
+                        declarationRootSpan.Value.File,
+                        TextSpan.FromBounds( 
+                            declaratorTextSpan.Value.Span.Start,
+                            nodeRootSpan.Value.Span.End));
                 ProcessItem(declarator.Identifier, declarator.Identifier.Text, declaratorTextSpan, NavigateToItemKind.Field, node.Parent, Glyph.Variable);
             }
         }
@@ -162,9 +187,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
             }
         }
 
-        private void ProcessItem(SyntaxToken name, string nameText, TextSpan nodeSpan, string kind, SyntaxNode parent, Glyph icon)
+        private void ProcessItem(SyntaxToken name, string nameText, SourceFileSpan? nodeSpan, string kind, SyntaxNode parent, Glyph icon)
         {
-            if (!nodeSpan.IsInRootFile)
+            if (nodeSpan == null)
+                return;
+
+            // TODO: Allow NavigateTo non-root file items.
+            if (!nodeSpan.Value.File.IsRootFile)
                 return;
 
             if (name == null)
@@ -177,8 +206,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
 
             Action navigateCallback = () => _textView.NavigateTo(
                 _bufferGraphFactoryService,
-                new SnapshotSpan(_snapshot, nodeSpan.Start, nodeSpan.Length),
-                new SnapshotSpan(_snapshot, name.Span.Start, name.Span.Length));
+                new SnapshotSpan(_snapshot, nodeSpan.Value.Span.Start, nodeSpan.Value.Span.Length),
+                new SnapshotSpan(_snapshot, name.Span.Span.Start, name.Span.Span.Length));
 
             var itemDisplay = new NavigateToItemDisplay(icon.GetIcon(_glyphService),
                 nameText, description, null, navigateCallback);

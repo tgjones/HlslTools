@@ -82,13 +82,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification
             if (classificationType == null)
                 throw new ArgumentNullException(nameof(classificationType));
 
-            if (node.SourceRange.Length > 0 && node.Span.IsInRootFile)
+            if (node.SourceRange.Length > 0 && node.Span.File.IsRootFile)
                 _results.Add(CreateClassificationTagSpan(node, classificationType));
         }
 
         private ITagSpan<IClassificationTag> CreateClassificationTagSpan(LocatedNode node, IClassificationType classificationType)
         {
-            var snapshotSpan = new SnapshotSpan(_snapshot, node.Span.Start, node.Span.Length);
+            var snapshotSpan = new SnapshotSpan(_snapshot, node.Span.Span.Start, node.Span.Span.Length);
             var classificationTag = new ClassificationTag(classificationType);
             return new TagSpan<ClassificationTag>(snapshotSpan, classificationTag);
         }

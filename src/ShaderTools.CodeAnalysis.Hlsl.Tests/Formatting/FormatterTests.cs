@@ -1771,7 +1771,7 @@ RWBuffer<uint> BoundingBox _ : register(u2);
             // Arrange.
             var syntaxTree = parse(unformattedText);
             if (textSpan == null)
-                textSpan = new TextSpan(syntaxTree.Text, 0, unformattedText.Length);
+                textSpan = new TextSpan(0, unformattedText.Length);
             if (options == null)
                 options = new FormattingOptions();
 

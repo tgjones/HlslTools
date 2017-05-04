@@ -23,7 +23,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             else if (node is SyntaxTrivia)
             {
                 var trivia = (SyntaxTrivia) node;
-                if (trivia.Span.IsInRootFile)
+                if (trivia.Span.File.IsRootFile)
                     yield return trivia;
             }
             else
@@ -51,7 +51,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             }
             else
             {
-                if (token.Span.IsInRootFile)
+                if (token.Span.File.IsRootFile)
                     yield return token;
             }
 

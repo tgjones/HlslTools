@@ -1,6 +1,9 @@
-﻿using System;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+
+using System;
 using System.Collections.Generic;
 using ShaderTools.Utilities;
+using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Text
 {
@@ -51,7 +54,7 @@ namespace ShaderTools.CodeAnalysis.Text
         /// </summary>
         public override bool Equals(object obj)
         {
-            return obj is TextChangeRange && Equals((TextChangeRange) obj);
+            return obj is TextChangeRange && Equals((TextChangeRange)obj);
         }
 
         /// <summary>
@@ -82,7 +85,7 @@ namespace ShaderTools.CodeAnalysis.Text
         /// <summary>
         /// An empty set of changes.
         /// </summary>
-        public static IReadOnlyList<TextChangeRange> NoChanges { get; } = new List<TextChangeRange>();
+        public static IReadOnlyList<TextChangeRange> NoChanges => SpecializedCollections.EmptyReadOnlyList<TextChangeRange>();
 
         /// <summary>
         /// Collapse a set of <see cref="TextChangeRange"/>s into a single encompassing range.  If
@@ -115,7 +118,7 @@ namespace ShaderTools.CodeAnalysis.Text
                 return default(TextChangeRange);
             }
 
-            var combined = TextSpan.FromBounds(null, start, end);
+            var combined = TextSpan.FromBounds(start, end);
             var newLen = combined.Length + diff;
 
             return new TextChangeRange(combined, newLen);

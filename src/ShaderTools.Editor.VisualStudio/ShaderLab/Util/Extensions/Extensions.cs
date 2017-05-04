@@ -3,9 +3,7 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Text;
-using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.ShaderLab.Parsing;
-using ShaderTools.Editor.VisualStudio.ShaderLab.Text;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Util.Extensions
 {
@@ -26,9 +24,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.Util.Extensions
             return CachedSyntaxTrees.GetValue(snapshot, key =>
             {
                 var sourceText = key.ToSourceText();
-
-                var sourceTextFactory = VisualStudioSourceTextFactory.Instance ?? ShaderLabPackage.Instance.AsVsServiceProvider().GetComponentModel().GetService<VisualStudioSourceTextFactory>();
-
                 return SyntaxFactory.ParseUnitySyntaxTree(sourceText, cancellationToken);
             });
         }

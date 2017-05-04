@@ -4,13 +4,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 {
     internal sealed class FileSegment
     {
-        public readonly SourceText Text;
+        public readonly SourceFile File;
         public readonly int Start;
         public int Length;
 
-        public FileSegment(SourceText text, int start)
+        public FileSegment(SourceFile file, int start)
         {
-            Text = text;
+            File = file;
             Start = start;
         }
     }

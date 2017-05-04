@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Text
 {
@@ -15,7 +14,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
             if (textSnapshot == null)
                 throw new ArgumentNullException(nameof(textSnapshot));
 
-            return SnapshotMap.GetValue(textSnapshot, ts => new VisualStudioSourceText(ts, ts.TextBuffer.GetTextDocument()?.FilePath, true));
+            return SnapshotMap.GetValue(textSnapshot, ts => ts.AsText());
         }
 
         public static ITextSnapshot ToTextSnapshot(this SourceText text)
@@ -23,11 +22,11 @@ namespace ShaderTools.Editor.VisualStudio.Core.Text
             if (text == null)
                 throw new ArgumentNullException(nameof(text));
 
-            var visualStudioSourceText = text as VisualStudioSourceText;
-            if (visualStudioSourceText == null)
+            var snapshot = text.FindCorrespondingEditorTextSnapshot();
+            if (snapshot == null)
                 throw new ArgumentException("The source text didn't originate from a Visual Studio Editor", nameof(text));
 
-            return visualStudioSourceText.Snapshot;
+            return snapshot;
         }
     }
 }

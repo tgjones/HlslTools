@@ -964,7 +964,7 @@ float bar;
 
         private static CompilationUnitSyntax Parse(string text, IIncludeFileSystem fileSystem = null)
         {
-            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text, "__RootFile__.hlsl"), fileSystem);
+            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text, "__Root__.hlsl"), fileSystem);
         }
 
         private static void TestRoundTripping(CompilationUnitSyntax node, string text, bool disallowErrors = true)

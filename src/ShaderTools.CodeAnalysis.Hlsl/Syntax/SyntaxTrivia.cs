@@ -12,7 +12,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override bool ContainsDiagnostics => Diagnostics.Any();
         public override IEnumerable<Diagnostic> GetDiagnostics() => Diagnostics;
 
-        internal SyntaxTrivia(SyntaxKind kind, string text, SourceRange sourceRange, TextSpan span, ImmutableArray<Diagnostic> diagnostics)
+        internal SyntaxTrivia(SyntaxKind kind, string text, SourceRange sourceRange, SourceFileSpan span, ImmutableArray<Diagnostic> diagnostics)
             : base(kind, text, span, diagnostics)
         {
             SourceRange = sourceRange;
@@ -31,7 +31,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences)
         {
-            if (Span.IsInRootFile || includeNonRootFile)
+            if (Span.File.IsRootFile || includeNonRootFile)
                 sb.Append(Text);
         }
     }
