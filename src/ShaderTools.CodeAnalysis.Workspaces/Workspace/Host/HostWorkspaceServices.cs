@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ShaderTools.CodeAnalysis.Properties;
+using System;
 
 namespace ShaderTools.CodeAnalysis.Host
 {
@@ -33,7 +34,7 @@ namespace ShaderTools.CodeAnalysis.Host
             var service = GetService<TWorkspaceService>();
             if (service == null)
             {
-                //throw new InvalidOperationException(string.Format(WorkspacesResources.Service_of_type_0_is_required_to_accomplish_the_task_but_is_not_available_from_the_workspace, typeof(TWorkspaceService).FullName));
+                throw new InvalidOperationException(string.Format(WorkspacesResources.Service_of_type_0_is_required_to_accomplish_the_task_but_is_not_available_from_the_workspace, typeof(TWorkspaceService).FullName));
             }
 
             return service;
@@ -44,8 +45,7 @@ namespace ShaderTools.CodeAnalysis.Host
         /// </summary>
         public virtual HostLanguageServices GetLanguageServices(string languageName)
         {
-            return null;
-            //throw new NotSupportedException(string.Format(WorkspacesResources.The_language_0_is_not_supported, languageName));
+            throw new NotSupportedException(string.Format(WorkspacesResources.The_language_0_is_not_supported, languageName));
         }
     }
 }

@@ -38,9 +38,31 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures\ShaderTools.CodeAnalysis.EditorFeatures.csproj">
+      <Project>{c9467a05-4901-4d20-acce-62506f3239d3}</Project>
+      <Name>ShaderTools.CodeAnalysis.EditorFeatures</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Features\ShaderTools.CodeAnalysis.Features.csproj">
+      <Project>{6b3bae0e-7e7f-4975-a28f-e1614c8afe35}</Project>
+      <Name>ShaderTools.CodeAnalysis.Features</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj">
+      <Project>{028116df-9897-45c3-911c-ac3c15e588ea}</Project>
+      <Name>ShaderTools.CodeAnalysis.Hlsl.Workspaces</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj">
       <Project>{485596dc-edc9-4c95-9807-229355f4a941}</Project>
       <Name>ShaderTools.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.VisualStudio.LanguageServices\ShaderTools.VisualStudio.LanguageServices.csproj">
+      <Project>{3d3317e0-0f38-4321-99c4-9f87bdea92cc}</Project>
+      <Name>ShaderTools.VisualStudio.LanguageServices</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
@@ -202,6 +224,7 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization.Primitives, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj">
       <Project>{2ad2617f-db08-4ac7-8c8a-f6f1325df2ef}</Project>
@@ -220,6 +243,8 @@
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj">
       <Project>{e098dc48-574c-45ab-9f46-e47d977b45d5}</Project>
       <Name>ShaderTools.CodeAnalysis.Workspaces</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj">
       <Name>ShaderTools.EditorServices</Name>
@@ -229,9 +254,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ContentTypeNames.cs" />
-    <Compile Include="Core\EditorFactoryBase.cs" />
-    <Compile Include="Core\ContentTypeDefinitions.cs" />
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="Core\Options\IOptionsService.cs" />
@@ -250,8 +272,6 @@
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
     <Compile Include="Core\Util\IComEventSink.cs" />
-    <Compile Include="Core\Workspace\DocumentListener.cs" />
-    <Compile Include="Core\Workspace\VisualStudioWorkspace.cs" />
     <Compile Include="Hlsl\ContentTypeDefinitions.cs" />
     <Compile Include="Hlsl\HlslWorkspaceListener.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
@@ -280,7 +300,6 @@
     <Compile Include="Hlsl\Formatting\FormattingExtensions.cs" />
     <Compile Include="Hlsl\Formatting\FormatCommandTarget.cs" />
     <Compile Include="Hlsl\Formatting\FormattingTextViewCreationListener.cs" />
-    <Compile Include="Hlsl\HlslEditorFactory.cs" />
     <Compile Include="Core\LanguagePreferences.cs" />
     <Compile Include="Hlsl\HlslPackage.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
@@ -437,7 +456,6 @@
     </Compile>
     <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
     <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
-    <Compile Include="ShaderLab\ShaderLabEditorFactory.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
     <Compile Include="ShaderLab\Tagging\Classification\ClassificationColorManager.cs" />
     <Compile Include="ShaderLab\Tagging\Classification\SemanticClassificationMetadata.cs" />
@@ -579,6 +597,10 @@
       <Link>System.IO.Primitives.FileSystem.dll</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Content Include="..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll">
+      <Link>System.Runtime.Serialization.Primitives.dll</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
     <Content Include="Resources\icon.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -619,6 +641,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Core\Workspace\" />
   </ItemGroup>
   <PropertyGroup>
     <UseCodebase>true</UseCodebase>

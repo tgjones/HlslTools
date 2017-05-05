@@ -2,7 +2,7 @@
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 
-namespace ShaderTools.EditorServices.Hlsl.LanguageServices
+namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {
     [ExportLanguageServiceFactory(typeof(ISyntaxTreeFactoryService), LanguageNames.Hlsl)]
     internal sealed class HlslSyntaxTreeFactoryServiceFactory : ILanguageServiceFactory

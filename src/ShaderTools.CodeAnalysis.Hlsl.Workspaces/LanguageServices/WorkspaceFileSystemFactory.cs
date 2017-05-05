@@ -1,7 +1,7 @@
 ﻿using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 
-namespace ShaderTools.EditorServices.Hlsl.LanguageServices
+namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {
     [ExportWorkspaceServiceFactory(typeof(IWorkspaceIncludeFileSystem))]
     internal sealed class WorkspaceFileSystemFactory : IWorkspaceServiceFactory

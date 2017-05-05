@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Threading;
-using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Parser;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
@@ -8,7 +7,7 @@ using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.EditorServices.Hlsl.LanguageServices
+namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {
     internal sealed class HlslSyntaxTreeFactoryService : ISyntaxTreeFactoryService
     {

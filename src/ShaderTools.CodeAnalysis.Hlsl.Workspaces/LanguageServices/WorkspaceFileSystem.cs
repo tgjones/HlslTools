@@ -2,7 +2,7 @@
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.EditorServices.Hlsl.LanguageServices
+namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {
     internal sealed class WorkspaceFileSystem : IWorkspaceIncludeFileSystem
     {

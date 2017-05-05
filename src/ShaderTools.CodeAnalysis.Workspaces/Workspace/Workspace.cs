@@ -66,15 +66,17 @@ namespace ShaderTools.CodeAnalysis
             return new Document(languageServices, documentId, sourceText);
         }
 
-        protected void OnDocumentOpened(Document document)
+        protected void OnDocumentOpened(Document document, SourceTextContainer textContainer)
         {
             ImmutableInterlocked.AddOrUpdate(ref _openDocuments, document.Id, document, (k, v) => document);
 
-            // SignupForTextChanges(documentId, textContainer, isCurrentContext, (w, id, text, mode) => w.OnDocumentTextChanged(id, text, mode));
+            SignupForTextChanges(document.Id, textContainer, (w, id, text) => w.OnDocumentTextChanged(id, text));
 
             OnDocumentTextChanged(document);
 
             DocumentOpened?.Invoke(this, new DocumentEventArgs(document));
+
+            RegisterText(textContainer);
         }
 
         protected void OnDocumentClosed(DocumentId documentId)
@@ -82,6 +84,16 @@ namespace ShaderTools.CodeAnalysis
             OnDocumentClosing(documentId);
 
             ImmutableInterlocked.TryRemove(ref _openDocuments, documentId, out var document);
+
+            // Stop tracking the buffer or update the documentId associated with the buffer.
+            if (_textTrackers.TryGetValue(documentId, out var tracker))
+            {
+                tracker.Disconnect();
+                _textTrackers.Remove(documentId);
+                
+                // No documentIds are attached to this buffer, so stop tracking it.
+                this.UnregisterText(tracker.TextContainer);
+            }
 
             DocumentClosed?.Invoke(this, new DocumentEventArgs(document));
         }
@@ -94,12 +106,12 @@ namespace ShaderTools.CodeAnalysis
             ImmutableInterlocked.TryAdd(ref _openDocuments, newDocumentId, oldDocument.WithId(newDocumentId));
         }
 
-        protected Document OnDocumentTextChanged(Document document, SourceText newText)
+        protected Document OnDocumentTextChanged(DocumentId documentId, SourceText newText)
         {
             var newDocument = ImmutableInterlocked.AddOrUpdate(
                 ref _openDocuments,
-                document.Id,
-                k => document.WithText(newText),
+                documentId,
+                k => GetDocument(documentId).WithText(newText), // TODO: GetDocument is not thread-safe here?
                 (k, v) => v.WithText(newText));
 
             OnDocumentTextChanged(newDocument);
@@ -123,7 +135,7 @@ namespace ShaderTools.CodeAnalysis
         {
         }
 
-        private void SignupForTextChanges(DocumentId documentId, SourceTextContainer textContainer, bool isCurrentContext, Action<Workspace, DocumentId, SourceText> onChangedHandler)
+        private void SignupForTextChanges(DocumentId documentId, SourceTextContainer textContainer, Action<Workspace, DocumentId, SourceText> onChangedHandler)
         {
             var tracker = new TextTracker(this, documentId, textContainer, onChangedHandler);
             _textTrackers.Add(documentId, tracker);

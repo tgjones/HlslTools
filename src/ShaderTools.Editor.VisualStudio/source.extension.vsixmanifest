@@ -21,5 +21,9 @@
   <Assets>
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices" Path="|ShaderTools.VisualStudio.LanguageServices|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures" Path="|ShaderTools.CodeAnalysis.EditorFeatures|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Workspaces" Path="|ShaderTools.CodeAnalysis.Workspaces|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Workspaces" Path="|ShaderTools.CodeAnalysis.Hlsl.Workspaces|" />
   </Assets>
 </PackageManifest>

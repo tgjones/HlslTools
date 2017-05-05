@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <RootNamespace>ShaderTools.CodeAnalysis.Editor.Hlsl</RootNamespace>
   </PropertyGroup>
 

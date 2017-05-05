@@ -46,12 +46,9 @@ namespace ShaderTools.Editor.VisualStudio.Core
             LanguagePreferences = new LanguagePreferences(this, langPrefs[0]);
 
             _languagePreferencesEventsSink = ComEventSink.Advise<IVsTextManagerEvents2>(textMgr, LanguagePreferences);
-
-            RegisterEditorFactory(CreateEditorFactory());
         }
 
         protected abstract LanguageInfoBase CreateLanguageInfo();
-        protected abstract EditorFactoryBase CreateEditorFactory();
 
         internal TOptionsPage GetDialogPage<TOptionsPage>()
             where TOptionsPage : DialogPage

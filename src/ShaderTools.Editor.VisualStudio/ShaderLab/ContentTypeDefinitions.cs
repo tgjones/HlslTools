@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.Editor.VisualStudio.Core;
+using ShaderTools.CodeAnalysis.Editor;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab
 {

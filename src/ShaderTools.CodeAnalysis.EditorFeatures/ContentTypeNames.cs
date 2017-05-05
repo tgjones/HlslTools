@@ -1,4 +1,4 @@
-﻿namespace ShaderTools.Editor.VisualStudio.Core
+﻿namespace ShaderTools.CodeAnalysis.Editor
 {
     internal static class ContentTypeNames
     {

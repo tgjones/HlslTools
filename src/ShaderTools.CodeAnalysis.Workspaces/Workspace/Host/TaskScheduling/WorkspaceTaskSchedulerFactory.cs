@@ -3,10 +3,12 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Host.Mef;
+using System.Composition;
 
 namespace ShaderTools.CodeAnalysis.Host
 {
     [ExportWorkspaceService(typeof(IWorkspaceTaskSchedulerFactory))]
+    [Shared]
     internal partial class WorkspaceTaskSchedulerFactory : IWorkspaceTaskSchedulerFactory
     {
         public virtual IWorkspaceTaskScheduler CreateBackgroundTaskScheduler()

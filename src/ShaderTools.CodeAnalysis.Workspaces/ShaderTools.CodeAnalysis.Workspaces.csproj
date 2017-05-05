@@ -7,4 +7,17 @@
     <PackageReference Include="System.Composition" Version="1.0.31" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\WorkspacesResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>WorkspacesResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\WorkspacesResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>WorkspacesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

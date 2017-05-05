@@ -28,8 +28,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
 
     //[ProvideLanguageExtension(typeof(ShaderLabLanguageInfo), ShaderLabConstants.FileExtension)]
 
-    //[ProvideEditorFactory(typeof(ShaderLabEditorFactory), 150, CommonPhysicalViewAttributes = (int) __VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
-    //[ProvideEditorLogicalView(typeof(ShaderLabEditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
     //[ProvideFileExtensionMapping("{C911385A-6AF2-4C17-B1FE-4D29F6E58B31}", "ShaderLab Editor", typeof(ShaderLabEditorFactory), typeof(ShaderLabLanguageInfo), PackageId, 100)]
     internal sealed class ShaderLabPackage : LanguagePackageBase
     {
@@ -55,11 +53,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
         protected override LanguageInfoBase CreateLanguageInfo()
         {
             return new ShaderLabLanguageInfo(this);
-        }
-
-        protected override EditorFactoryBase CreateEditorFactory()
-        {
-            return new ShaderLabEditorFactory(this);
         }
 
         protected override void Initialize()

@@ -1,8 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard1.3</TargetFramework>
+    <TargetFramework>net46</TargetFramework>
     <RootNamespace>ShaderTools.CodeAnalysis.Editor</RootNamespace>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.ComponentModel.Composition" />
+    <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="14.3.25407" />
+  </ItemGroup>
 
 </Project>

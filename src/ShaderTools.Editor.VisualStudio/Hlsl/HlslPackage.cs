@@ -42,9 +42,14 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension7)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension8)]
 
-    [ProvideEditorFactory(typeof(HlslEditorFactory), 140, CommonPhysicalViewAttributes = (int) __VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
-    [ProvideEditorLogicalView(typeof(HlslEditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
-    [ProvideFileExtensionMapping("{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", "HLSL Editor", typeof(HlslEditorFactory), typeof(HlslLanguageInfo), PackageId, 100)]
+    // Adds support for user mapping of custom file extensions.
+    [ProvideFileExtensionMapping(
+        "{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", 
+        "HLSL Editor", 
+        typeof(IVsEditorFactory),  // A bit weird, but seems to work, and means we don't need to implement IVsEditorFactory ourselves.
+        typeof(HlslLanguageInfo), 
+        PackageId, 
+        100)]
 
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
 
@@ -70,11 +75,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
         protected override LanguageInfoBase CreateLanguageInfo()
         {
             return new HlslLanguageInfo(this);
-        }
-
-        protected override EditorFactoryBase CreateEditorFactory()
-        {
-            return new HlslEditorFactory(this);
         }
 
         protected override void Initialize()
