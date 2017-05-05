@@ -7,7 +7,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 
-namespace ShaderTools.EditorServices.Utility
+namespace ShaderTools.LanguageServer.Protocol.Utilities
 {
     /// <summary>
     /// Provides a SynchronizationContext implementation that can be used

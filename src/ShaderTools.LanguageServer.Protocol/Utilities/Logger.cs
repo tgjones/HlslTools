@@ -8,7 +8,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace ShaderTools.EditorServices.Utility
+namespace ShaderTools.LanguageServer.Protocol.Utilities
 {
     /// <summary>
     /// Defines the level indicators for log messages.

@@ -6,9 +6,9 @@
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using ShaderTools.EditorServices.Utility;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using ShaderTools.LanguageServer.Protocol.Utilities;
 using ShaderTools.Utilities;
 
 namespace ShaderTools.LanguageServer.Protocol.MessageProtocol

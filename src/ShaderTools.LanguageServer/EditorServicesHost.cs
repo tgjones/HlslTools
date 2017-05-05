@@ -8,9 +8,9 @@ using System.Diagnostics;
 using System.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using ShaderTools.EditorServices.Utility;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
 using ShaderTools.LanguageServer.Protocol.Server;
+using ShaderTools.LanguageServer.Protocol.Utilities;
 
 namespace ShaderTools.LanguageServer
 {

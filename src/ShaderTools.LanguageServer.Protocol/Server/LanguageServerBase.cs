@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using ShaderTools.LanguageServer.Protocol.LanguageServer;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
-using ShaderTools.EditorServices.Utility;
+using ShaderTools.LanguageServer.Protocol.Utilities;
 using System.IO;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Syntax;

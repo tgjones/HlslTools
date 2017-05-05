@@ -10,6 +10,5 @@
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <ProjectReference Include="..\ShaderTools.LanguageServer.Protocol.Hlsl\ShaderTools.LanguageServer.Protocol.Hlsl.csproj" />
     <ProjectReference Include="..\ShaderTools.LanguageServer.Protocol\ShaderTools.LanguageServer.Protocol.csproj" />
-    <ProjectReference Include="..\ShaderTools.EditorServices\ShaderTools.EditorServices.csproj" />
   </ItemGroup>
 </Project>

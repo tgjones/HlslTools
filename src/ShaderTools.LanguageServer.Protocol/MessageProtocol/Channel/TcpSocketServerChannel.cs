@@ -3,10 +3,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 //
 
-using ShaderTools.EditorServices.Utility;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using ShaderTools.LanguageServer.Protocol.Utilities;
 
 namespace ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel
 {

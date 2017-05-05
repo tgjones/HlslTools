@@ -7,7 +7,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShaderTools.EditorServices.Utility
+namespace ShaderTools.LanguageServer.Protocol.Utilities
 {
     /// <summary>
     /// Provides a simple wrapper over a SemaphoreSlim to allow

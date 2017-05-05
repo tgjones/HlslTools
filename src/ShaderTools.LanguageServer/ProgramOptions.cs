@@ -1,5 +1,5 @@
 ﻿using CommandLine;
-using ShaderTools.EditorServices.Utility;
+using ShaderTools.LanguageServer.Protocol.Utilities;
 
 namespace ShaderTools.LanguageServer
 {
