@@ -88,7 +88,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
 
             var document = CreateDocument(documentId, textBuffer.ContentType.TypeName, textContainer.CurrentText);
 
-            OnDocumentOpened(document, textContainer);
+            OnDocumentOpened(document);
         }
 
         internal void OnTextViewClosed(ITextView textView)

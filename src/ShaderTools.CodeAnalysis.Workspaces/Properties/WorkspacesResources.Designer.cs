@@ -62,6 +62,33 @@ namespace ShaderTools.CodeAnalysis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not open..
+        /// </summary>
+        internal static string _0_is_not_open {
+            get {
+                return ResourceManager.GetString("_0_is_not_open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not part of the workspace..
+        /// </summary>
+        internal static string _0_is_not_part_of_the_workspace {
+            get {
+                return ResourceManager.GetString("_0_is_not_part_of_the_workspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is still open..
+        /// </summary>
+        internal static string _0_is_still_open {
+            get {
+                return ResourceManager.GetString("_0_is_still_open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service of type &apos;{0}&apos; is required to accomplish the task but is not available from the workspace..
         /// </summary>
         internal static string Service_of_type_0_is_required_to_accomplish_the_task_but_is_not_available_from_the_workspace {
@@ -77,6 +104,15 @@ namespace ShaderTools.CodeAnalysis.Properties {
         internal static string The_language_0_is_not_supported {
             get {
                 return ResourceManager.GetString("The_language_0_is_not_supported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The workspace does not contain the specified document..
+        /// </summary>
+        internal static string The_workspace_does_not_contain_the_specified_document {
+            get {
+                return ResourceManager.GetString("The_workspace_does_not_contain_the_specified_document", resourceCulture);
             }
         }
     }

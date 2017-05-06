@@ -123,4 +123,16 @@
   <data name="The_language_0_is_not_supported" xml:space="preserve">
     <value>The language '{0}' is not supported.</value>
   </data>
+  <data name="The_workspace_does_not_contain_the_specified_document" xml:space="preserve">
+    <value>The workspace does not contain the specified document.</value>
+  </data>
+  <data name="_0_is_not_open" xml:space="preserve">
+    <value>'{0}' is not open.</value>
+  </data>
+  <data name="_0_is_not_part_of_the_workspace" xml:space="preserve">
+    <value>'{0}' is not part of the workspace.</value>
+  </data>
+  <data name="_0_is_still_open" xml:space="preserve">
+    <value>{0} is still open.</value>
+  </data>
 </root>

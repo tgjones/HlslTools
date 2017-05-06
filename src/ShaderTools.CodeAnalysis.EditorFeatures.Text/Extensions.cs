@@ -50,15 +50,15 @@ namespace ShaderTools.CodeAnalysis.Text
 
             return null;
         }
-        
-        ///// <summary>
-        ///// Gets the <see cref="Document"/> from the corresponding <see cref="Workspace.CurrentSolution"/> that is associated with the <see cref="ITextSnapshot"/>'s buffer
-        ///// in its current project context, updated to contain the same text as the snapshot if necessary. There may be multiple <see cref="Document"/>s
-        ///// associated with the buffer if it is linked into multiple projects or is part of a Shared Project. In this case, the <see cref="Workspace"/>
-        ///// is responsible for keeping track of which of these <see cref="Document"/>s is in the current project context.
-        ///// </summary>
-        //public static Document GetOpenDocumentInCurrentContextWithChanges(this ITextSnapshot text)
-        //    => text.AsText().GetOpenDocumentInCurrentContextWithChanges();
+
+        /// <summary>
+        /// Gets the <see cref="Document"/> from the corresponding <see cref="Workspace.CurrentSolution"/> that is associated with the <see cref="ITextSnapshot"/>'s buffer
+        /// in its current project context, updated to contain the same text as the snapshot if necessary. There may be multiple <see cref="Document"/>s
+        /// associated with the buffer if it is linked into multiple projects or is part of a Shared Project. In this case, the <see cref="Workspace"/>
+        /// is responsible for keeping track of which of these <see cref="Document"/>s is in the current project context.
+        /// </summary>
+        public static Document GetOpenDocumentInCurrentContextWithChanges(this ITextSnapshot text)
+            => text.AsText().GetOpenDocumentInCurrentContextWithChanges();
 
         //internal static bool CanApplyChangeDocumentToWorkspace(this ITextBuffer buffer)
         //    => Workspace.TryGetWorkspace(buffer.AsTextContainer(), out var workspace) &&

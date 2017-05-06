@@ -16,7 +16,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
         public bool TryGetFile(string path, out SourceText text)
         {
             // Is file open in workspace?
-            var document = _workspace.GetDocument(new DocumentId(path));
+            var document = _workspace.CurrentDocuments.GetDocument(new DocumentId(path));
             if (document != null)
             {
                 text = document.SourceText;

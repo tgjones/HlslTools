@@ -4,13 +4,14 @@
 //
 
 using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.CodeAnalysis
 {
@@ -18,12 +19,16 @@ namespace ShaderTools.CodeAnalysis
     {
         private readonly HostWorkspaceServices _services;
 
+        // forces serialization of mutation calls from host (OnXXX methods). Must take this lock before taking stateLock.
         private readonly SemaphoreSlim _serializationLock = new SemaphoreSlim(initialCount: 1);
 
-        private ImmutableDictionary<DocumentId, Document> _openDocuments = ImmutableDictionary<DocumentId, Document>.Empty;
-        private ImmutableDictionary<string, ConfigFile> _configFiles = ImmutableDictionary<string, ConfigFile>.Empty;
+        // this lock guards all the mutable fields (do not share lock with derived classes)
+        private readonly NonReentrantLock _stateLock = new NonReentrantLock(useThisInstanceForSynchronization: true);
 
-        private readonly Dictionary<DocumentId, TextTracker> _textTrackers = new Dictionary<DocumentId, TextTracker>();
+        // Current documents.
+        private WorkspaceDocuments _latestDocuments;
+
+        private ImmutableDictionary<string, ConfigFile> _configFiles = ImmutableDictionary<string, ConfigFile>.Empty;
 
         public event EventHandler<DocumentEventArgs> DocumentOpened;
         public event EventHandler<DocumentEventArgs> DocumentClosed;
@@ -40,83 +45,31 @@ namespace ShaderTools.CodeAnalysis
             var workspaceTaskSchedulerFactory = _services.GetRequiredService<IWorkspaceTaskSchedulerFactory>();
             _taskQueue = workspaceTaskSchedulerFactory.CreateEventingTaskQueue();
 
-            _openDocuments = ImmutableDictionary<DocumentId, Document>.Empty;
+            // initialize with empty document set
+            _latestDocuments = new WorkspaceDocuments(ImmutableDictionary<DocumentId, Document>.Empty);
         }
 
-        public IEnumerable<Document> OpenDocuments
+        /// <summary>
+        /// The current documents. 
+        /// 
+        /// <see cref="WorkspaceDocuments"/> is an immutable model of the current set of open documents,
+        /// and referenced (i.e. #include'd) documents.
+        /// It provides access to source text, syntax trees and semantics.
+        /// 
+        /// This property may change as the workspace reacts to changes in the environment.
+        /// </summary>
+        public WorkspaceDocuments CurrentDocuments
         {
             get
             {
-                var latestDocuments = Volatile.Read(ref _openDocuments);
-                return latestDocuments.Values;
+                return Volatile.Read(ref _latestDocuments);
             }
-        }
-
-        public Document GetDocument(DocumentId documentId)
-        {
-            var latestDocuments = Volatile.Read(ref _openDocuments);
-            if (latestDocuments.TryGetValue(documentId, out var document))
-                return document;
-            return null;
         }
 
         protected Document CreateDocument(DocumentId documentId, string languageName, SourceText sourceText)
         {
             var languageServices = _services.GetLanguageServices(languageName);
             return new Document(languageServices, documentId, sourceText);
-        }
-
-        protected void OnDocumentOpened(Document document, SourceTextContainer textContainer)
-        {
-            ImmutableInterlocked.AddOrUpdate(ref _openDocuments, document.Id, document, (k, v) => document);
-
-            SignupForTextChanges(document.Id, textContainer, (w, id, text) => w.OnDocumentTextChanged(id, text));
-
-            OnDocumentTextChanged(document);
-
-            DocumentOpened?.Invoke(this, new DocumentEventArgs(document));
-
-            RegisterText(textContainer);
-        }
-
-        protected void OnDocumentClosed(DocumentId documentId)
-        {
-            OnDocumentClosing(documentId);
-
-            ImmutableInterlocked.TryRemove(ref _openDocuments, documentId, out var document);
-
-            // Stop tracking the buffer or update the documentId associated with the buffer.
-            if (_textTrackers.TryGetValue(documentId, out var tracker))
-            {
-                tracker.Disconnect();
-                _textTrackers.Remove(documentId);
-                
-                // No documentIds are attached to this buffer, so stop tracking it.
-                this.UnregisterText(tracker.TextContainer);
-            }
-
-            DocumentClosed?.Invoke(this, new DocumentEventArgs(document));
-        }
-
-        protected void OnDocumentRenamed(DocumentId oldDocumentId, DocumentId newDocumentId)
-        {
-            if (!ImmutableInterlocked.TryRemove(ref _openDocuments, oldDocumentId, out var oldDocument))
-                return;
-
-            ImmutableInterlocked.TryAdd(ref _openDocuments, newDocumentId, oldDocument.WithId(newDocumentId));
-        }
-
-        protected Document OnDocumentTextChanged(DocumentId documentId, SourceText newText)
-        {
-            var newDocument = ImmutableInterlocked.AddOrUpdate(
-                ref _openDocuments,
-                documentId,
-                k => GetDocument(documentId).WithText(newText), // TODO: GetDocument is not thread-safe here?
-                (k, v) => v.WithText(newText));
-
-            OnDocumentTextChanged(newDocument);
-
-            return newDocument;
         }
 
         /// <summary>
@@ -135,11 +88,31 @@ namespace ShaderTools.CodeAnalysis
         {
         }
 
-        private void SignupForTextChanges(DocumentId documentId, SourceTextContainer textContainer, Action<Workspace, DocumentId, SourceText> onChangedHandler)
+        protected void OnDocumentTextChanged(DocumentId documentId, SourceText newText)
         {
-            var tracker = new TextTracker(this, documentId, textContainer, onChangedHandler);
-            _textTrackers.Add(documentId, tracker);
-            tracker.Connect();
+            using (_serializationLock.DisposableWait())
+            {
+                CheckDocumentIsInCurrentSolution(documentId);
+
+                var oldSolution = this.CurrentDocuments;
+                var newSolution = this.SetCurrentDocuments(oldSolution.WithDocumentText(documentId, newText));
+
+                var newDocument = newSolution.GetDocument(documentId);
+                this.OnDocumentTextChanged(newDocument);
+            }
+        }
+
+        /// <summary>
+        /// Throws an exception if a document is not part of the current solution.
+        /// </summary>
+        protected void CheckDocumentIsInCurrentSolution(DocumentId documentId)
+        {
+            if (this.CurrentDocuments.GetDocument(documentId) == null)
+            {
+                throw new ArgumentException(string.Format(
+                    WorkspacesResources._0_is_not_part_of_the_workspace,
+                    this.GetDocumentName(documentId)));
+            }
         }
 
         // TODO: Refactor this.
@@ -157,6 +130,40 @@ namespace ShaderTools.CodeAnalysis
         protected internal Task ScheduleTask(Action action, string taskName = "Workspace.Task")
         {
             return _taskQueue.ScheduleTask(action, taskName);
+        }
+
+        /// <summary>
+        /// Gets the name to use for a document in an error message.
+        /// </summary>
+        protected virtual string GetDocumentName(DocumentId documentId)
+        {
+            var document = this.CurrentDocuments.GetDocument(documentId);
+            var name = document != null ? document.Name : "<Document" + documentId.Id + ">";
+            return name;
+        }
+
+        /// <summary>
+        /// Sets the <see cref="CurrentDocuments"/> of this workspace. This method does not raise a <see cref="WorkspaceChanged"/> event.
+        /// </summary>
+        protected WorkspaceDocuments SetCurrentDocuments(WorkspaceDocuments documents)
+        {
+            var currentDocuments = Volatile.Read(ref _latestDocuments);
+            if (documents == currentDocuments)
+            {
+                // No change
+                return documents;
+            }
+
+            while (true)
+            {
+                var replacedSolution = Interlocked.CompareExchange(ref _latestDocuments, documents, currentDocuments);
+                if (replacedSolution == currentDocuments)
+                {
+                    return documents;
+                }
+
+                currentDocuments = replacedSolution;
+            }
         }
     }
 }

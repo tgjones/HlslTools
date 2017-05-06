@@ -17,14 +17,15 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         public Document OpenDocument(DocumentId documentId, SourceText sourceText)
         {
             var document = CreateDocument(documentId, _languageName, sourceText);
-            OnDocumentOpened(document, sourceText.Container);
+            OnDocumentOpened(document);
             return document;
         }
 
         public Document UpdateDocument(Document document, TextChange change)
         {
             var newText = document.SourceText.WithChanges(change);
-            return OnDocumentTextChanged(document.Id, newText);
+            throw new System.NotImplementedException();
+            //return OnDocumentTextChanged(document.Id, newText);
         }
 
         public void CloseDocument(DocumentId documentId)

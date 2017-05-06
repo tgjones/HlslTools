@@ -133,7 +133,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             EventContext eventContext)
         {
             // Find and close the file in the current session
-            var fileToClose = _workspace.GetDocument(CreateDocumentId(closeParams.Uri));
+            var fileToClose = _workspace.CurrentDocuments.GetDocument(CreateDocumentId(closeParams.Uri));
 
             if (fileToClose != null)
             {
@@ -153,7 +153,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             // A text change notification can batch multiple change requests
             foreach (var textChange in textChangeParams.ContentChanges)
             {
-                var fileToChange = _workspace.GetDocument(CreateDocumentId(textChangeParams.Uri));
+                var fileToChange = _workspace.CurrentDocuments.GetDocument(CreateDocumentId(textChangeParams.Uri));
                 if (fileToChange == null)
                     continue;
 

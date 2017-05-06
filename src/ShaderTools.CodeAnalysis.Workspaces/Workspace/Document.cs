@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Host;
@@ -30,6 +31,8 @@ namespace ShaderTools.CodeAnalysis
         /// Gets the path at which this file resides.
         /// </summary>
         public string FilePath => Id.OriginalFilePath;
+
+        public string Name => (FilePath != null) ? Path.GetFileName(FilePath) : "[NoName]";
 
         internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText)
         {
@@ -70,6 +73,9 @@ namespace ShaderTools.CodeAnalysis
             return new Document(_languageServices, documentId, SourceText);
         }
 
+        /// <summary>
+        /// Creates a new instance of this document updated to have the text specified.
+        /// </summary>
         public Document WithText(SourceText newText)
         {
             return new Document(_languageServices, Id, newText);
