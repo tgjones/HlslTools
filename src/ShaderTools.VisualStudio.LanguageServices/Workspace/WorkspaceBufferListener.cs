@@ -21,7 +21,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
 
         public void TextViewCreated(IWpfTextView textView)
         {
-            _workspace.OnDocumentOpened(textView.TextBuffer);
+            _workspace.OnTextViewCreated(textView);
 
             textView.Closed += OnTextViewClosed;
         }
@@ -31,7 +31,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
             var textView = (IWpfTextView) sender;
             textView.Closed -= OnTextViewClosed;
 
-            _workspace.OnDocumentClosed(textView.TextBuffer);
+            _workspace.OnTextViewClosed(textView);
         }
     }
 }

@@ -10,20 +10,31 @@ using ShaderTools.CodeAnalysis.Text;
 using System.ComponentModel.Composition.Hosting;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
+using System.Runtime.CompilerServices;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {
     [Export(typeof(VisualStudioWorkspace))]
     internal sealed class VisualStudioWorkspace : Workspace
     {
+        private readonly ITextDocumentFactoryService _textDocumentFactoryService;
         private readonly BackgroundParser _backgroundParser;
+        private readonly ConditionalWeakTable<ITextBuffer, ITextDocument> _textBufferToDocumentMap;
+        private readonly ConditionalWeakTable<ITextBuffer, List<ITextView>> _textBufferToViewsMap;
 
         [ImportingConstructor]
-        public VisualStudioWorkspace(SVsServiceProvider serviceProvider)
+        public VisualStudioWorkspace(
+            SVsServiceProvider serviceProvider,
+            ITextDocumentFactoryService textDocumentFactoryService)
             : base(MefV1HostServices.Create(GetExportProvider(serviceProvider)))
         {
+            _textDocumentFactoryService = textDocumentFactoryService;
+
             _backgroundParser = new BackgroundParser(this);
             _backgroundParser.Start();
+
+            _textBufferToDocumentMap = new ConditionalWeakTable<ITextBuffer, ITextDocument>();
+            _textBufferToViewsMap = new ConditionalWeakTable<ITextBuffer, List<ITextView>>();
         }
 
         private static ExportProvider GetExportProvider(SVsServiceProvider serviceProvider)
@@ -48,10 +59,28 @@ namespace ShaderTools.VisualStudio.LanguageServices
             }
         }
 
-        internal void OnDocumentOpened(ITextBuffer textBuffer)
+        internal void OnTextViewCreated(ITextView textView)
         {
-            if (!textBuffer.Properties.TryGetProperty(typeof(ITextDocument), out ITextDocument textDocument))
+            var textBuffer = textView.TextBuffer;
+
+            // Add this ITextView to the list of known views for this buffer.
+            _textBufferToViewsMap.GetOrCreateValue(textBuffer).Add(textView);
+
+            // Do we already know about this text buffer?
+            if (_textBufferToDocumentMap.TryGetValue(textBuffer, out var _))
+            {
                 return;
+            }
+
+            if (!_textDocumentFactoryService.TryGetTextDocument(textBuffer, out var textDocument))
+            {
+                // Don't know why this would ever happen.
+                return;
+            }
+
+            _textBufferToDocumentMap.Add(textBuffer, textDocument);
+
+            // TODO: hookup textDocument.FileActionOccurred for renames.
 
             var documentId = new DocumentId(textDocument.FilePath);
 
@@ -62,15 +91,31 @@ namespace ShaderTools.VisualStudio.LanguageServices
             OnDocumentOpened(document, textContainer);
         }
 
-        internal void OnDocumentClosed(ITextBuffer textBuffer)
+        internal void OnTextViewClosed(ITextView textView)
         {
-            if (!textBuffer.Properties.TryGetProperty(typeof(ITextDocument), out ITextDocument textDocument))
-                throw new InvalidOperationException(); // TODO: Store weak link from text buffer to text document.
+            var textBuffer = textView.TextBuffer;
+
+            // Remove text view from the list of known text views for this text buffer.
+            var textViews = _textBufferToViewsMap.GetOrCreateValue(textBuffer);
+            textViews.Remove(textView);
+
+            // Only close document if this is the last view referencing the text buffer.
+            if (textViews.Count > 0)
+            {
+                return;
+            }
+
+            if (!_textBufferToDocumentMap.TryGetValue(textBuffer, out var textDocument))
+            {
+                throw new InvalidOperationException();
+            }
 
             var documentId = new DocumentId(textDocument.FilePath);
 
-            // TODO: Check whether there are any other views associated with this buffer.
             OnDocumentClosed(documentId);
+
+            _textBufferToViewsMap.Remove(textBuffer);
+            _textBufferToDocumentMap.Remove(textBuffer);
         }
     }
 }
