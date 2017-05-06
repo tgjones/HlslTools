@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Host;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Threading;
@@ -65,6 +66,10 @@ namespace ShaderTools.CodeAnalysis
 
         public Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
         {
+            var optionsService = _languageServices.GetRequiredService<IOptionsService>();
+            if (!optionsService.EnableIntelliSense)
+                return Task.FromResult<SemanticModelBase>(null);
+
             return _lazySemanticModel.GetValueAsync(cancellationToken);
         }
 

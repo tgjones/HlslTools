@@ -1,8 +1,5 @@
-﻿using System.Threading;
-using Microsoft.VisualStudio.Text;
-using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+﻿using Microsoft.VisualStudio.Text;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Parsing
 {
@@ -11,19 +8,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Parsing
         public BackgroundParser(ITextBuffer textBuffer)
             : base(textBuffer)
         {
-        }
-
-        protected override void CreateSyntaxTree(ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            // Force creation of SyntaxTree.
-            snapshot.GetSyntaxTree(cancellationToken);
-        }
-
-        protected override bool TryCreateSemanticModel(ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            // Force creation of SemanticModel.
-            SemanticModel semanticModel;
-            return snapshot.TryGetSemanticModel(cancellationToken, out semanticModel);
         }
     }
 }

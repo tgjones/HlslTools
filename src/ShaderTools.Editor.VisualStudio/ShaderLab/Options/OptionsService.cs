@@ -1,16 +1,20 @@
 ﻿using System;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Shell;
+using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.ShaderLab.Formatting;
-using ShaderTools.Editor.VisualStudio.Core.Options;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Options
 {
     [Export(typeof(IShaderLabOptionsService))]
+    [ExportLanguageService(typeof(IOptionsService), LanguageNames.ShaderLab)]
     internal sealed class OptionsService : IShaderLabOptionsService
     {
         public event EventHandler OptionsChanged;
 
+        bool IOptionsService.EnableIntelliSense => AdvancedOptions.EnableIntelliSense;
         bool IOptionsService.EnableErrorReporting => AdvancedOptions.EnableErrorReporting;
         bool IOptionsService.EnableSquiggles => AdvancedOptions.EnableSquiggles;
 

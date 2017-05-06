@@ -1,6 +1,5 @@
-﻿using System;
-using ShaderTools.CodeAnalysis.Hlsl.Formatting;
-using ShaderTools.Editor.VisualStudio.Core.Options;
+﻿using ShaderTools.CodeAnalysis.Hlsl.Formatting;
+using ShaderTools.CodeAnalysis.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
 {

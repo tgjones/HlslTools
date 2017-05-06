@@ -3,36 +3,24 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Editor.VisualStudio.Core.Text;
-using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using System.IO;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
-using ShaderTools.CodeAnalysis.Hlsl.Parser;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 {
     internal static class Extensions
     {
-        private static readonly ConditionalWeakTable<ITextSnapshot, SyntaxTree> CachedSyntaxTrees = new ConditionalWeakTable<ITextSnapshot, SyntaxTree>();
-        private static readonly ConditionalWeakTable<ITextSnapshot, SemanticModel> CachedSemanticModels = new ConditionalWeakTable<ITextSnapshot, SemanticModel>();
-
-        private static readonly object TextContainerKey = new object();
         private static readonly object IncludeFileSystemKey = new object();
         private static readonly object ConfigFileKey = new object();
         private static readonly object BackgroundParserKey = new object();
-
-        public static VisualStudioSourceTextContainer GetTextContainer(this ITextBuffer textBuffer)
-        {
-            return textBuffer.Properties.GetOrCreateSingletonProperty(TextContainerKey,
-                () => new VisualStudioSourceTextContainer(textBuffer));
-        }
 
         public static IIncludeFileSystem GetIncludeFileSystem(this ITextBuffer textBuffer)
         {
@@ -65,54 +53,20 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 
         public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
-            return CachedSyntaxTrees.GetValue(snapshot, key =>
-            {
-                var sourceText = key.ToSourceText();
-
-                var configFile = snapshot.TextBuffer.GetConfigFile();
-
-                var options = new ParserOptions();
-                options.PreprocessorDefines.Add("__INTELLISENSE__", "1");
-
-                foreach (var kvp in configFile.HlslPreprocessorDefinitions)
-                    options.PreprocessorDefines.Add(kvp.Key, kvp.Value);
-
-                options.AdditionalIncludeDirectories.AddRange(configFile.HlslAdditionalIncludeDirectories);
-
-                var fileSystem = (VisualStudioFileSystem) key.TextBuffer.GetIncludeFileSystem();
-
-                return SyntaxFactory.ParseSyntaxTree(sourceText, options, fileSystem, cancellationToken);
-            });
+            var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+            var syntaxTreeTask = document.GetSyntaxTreeAsync(cancellationToken);
+            syntaxTreeTask.Wait(cancellationToken);
+            return (SyntaxTree) syntaxTreeTask.Result;
         }
 
         public static bool TryGetSemanticModel(this ITextSnapshot snapshot, CancellationToken cancellationToken, out SemanticModel semanticModel)
         {
-            if (HlslPackage.Instance != null && !HlslPackage.Instance.Options.AdvancedOptions.EnableIntelliSense)
-            {
-                semanticModel = null;
-                return false;
-            }
-
             try
             {
-                semanticModel = CachedSemanticModels.GetValue(snapshot, key =>
-                {
-                    try
-                    {
-                        var syntaxTree = key.GetSyntaxTree(cancellationToken);
-                        var compilation = new Compilation(syntaxTree);
-                        return compilation.GetSemanticModel(cancellationToken);
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.Log($"Failed to create semantic model: {ex}");
-                        return null;
-                    }
-                });
+                var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+                var semanticModelTask = document.GetSemanticModelAsync(cancellationToken);
+                semanticModelTask.Wait(cancellationToken);
+                semanticModel = (SemanticModel) semanticModelTask.Result;
             }
             catch (OperationCanceledException)
             {

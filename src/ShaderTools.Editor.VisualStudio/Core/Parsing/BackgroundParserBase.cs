@@ -3,6 +3,7 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Parsing
 {
@@ -70,14 +71,20 @@ namespace ShaderTools.Editor.VisualStudio.Core.Parsing
                 {
                     var cancellationToken = _currentParseCancellationTokenSource.Token;
 
-                    CreateSyntaxTree(snapshot, cancellationToken);
+                    var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+
+                    document.GetSyntaxTreeAsync(cancellationToken).Wait(cancellationToken);
 
                     cancellationToken.ThrowIfCancellationRequested();
 
                     var args = new BackgroundParserEventArgs(snapshot, cancellationToken);
                     RaiseEvent(SyntaxTreeAvailable, args);
 
-                    if (TryCreateSemanticModel(snapshot, cancellationToken))
+                    var semanticModelTask = document.GetSemanticModelAsync(cancellationToken);
+                    semanticModelTask.Wait(cancellationToken);
+                    var semanticModel = semanticModelTask.Result;
+
+                    if (semanticModel != null)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
                         RaiseEvent(SemanticModelAvailable, args);
@@ -91,10 +98,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.Parsing
                 Thread.Yield();
             }
         }
-
-        protected abstract void CreateSyntaxTree(ITextSnapshot snapshot, CancellationToken cancellationToken);
-
-        protected abstract bool TryCreateSemanticModel(ITextSnapshot snapshot, CancellationToken cancellationToken);
 
         private void RaiseEvent(EventHandler<BackgroundParserEventArgs> handler, BackgroundParserEventArgs args)
         {

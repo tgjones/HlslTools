@@ -109,6 +109,10 @@
       <Project>{dbcc4d3a-b2e3-4df5-9378-d1321e619ebd}</Project>
       <Name>ShaderTools.CodeAnalysis.Hlsl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj">
+      <Project>{e098dc48-574c-45ab-9f46-e47d977b45d5}</Project>
+      <Name>ShaderTools.CodeAnalysis.Workspaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj">
       <Project>{2361a2c2-d048-4694-9000-25b4ea846cba}</Project>
       <Name>ShaderTools.CodeAnalysis</Name>

@@ -1,4 +1,4 @@
-﻿using ShaderTools.Editor.VisualStudio.Core.Options;
+﻿using ShaderTools.CodeAnalysis.Options;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Options
 {

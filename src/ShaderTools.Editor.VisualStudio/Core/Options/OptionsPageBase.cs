@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using Microsoft.VisualStudio.Shell;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.Editor.VisualStudio.Core.Options.Views;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 

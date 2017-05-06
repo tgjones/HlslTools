@@ -1,6 +1,6 @@
 ﻿using System;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
-using ShaderTools.Editor.VisualStudio.Core.Options;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support
@@ -14,6 +14,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support
             OptionsChanged?.Invoke(this, EventArgs.Empty);
         }
 
+        bool IOptionsService.EnableIntelliSense => AdvancedOptions.EnableIntelliSense;
         bool IOptionsService.EnableErrorReporting => AdvancedOptions.EnableErrorReporting;
         bool IOptionsService.EnableSquiggles => AdvancedOptions.EnableSquiggles;
 

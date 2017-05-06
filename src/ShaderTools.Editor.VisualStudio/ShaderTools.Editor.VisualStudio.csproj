@@ -253,7 +253,6 @@
   <ItemGroup>
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
-    <Compile Include="Core\Options\IOptionsService.cs" />
     <Compile Include="Core\Options\OptionsPageBase.cs">
       <SubType>Component</SubType>
     </Compile>
