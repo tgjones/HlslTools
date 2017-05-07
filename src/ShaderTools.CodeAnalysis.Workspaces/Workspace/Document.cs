@@ -35,6 +35,8 @@ namespace ShaderTools.CodeAnalysis
 
         public string Name => (FilePath != null) ? Path.GetFileName(FilePath) : "[NoName]";
 
+        public string Language => _languageServices.Language;
+
         internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText)
         {
             _languageServices = languageServices;

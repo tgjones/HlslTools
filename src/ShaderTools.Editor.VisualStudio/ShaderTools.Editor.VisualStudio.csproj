@@ -263,7 +263,6 @@
     <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
     <Compile Include="Core\Util\ComEventSink.cs" />
-    <Compile Include="Core\Util\Extensions\IDictionaryExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ITextViewExtensions.PerSubjectBufferProperty.cs" />
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
@@ -511,7 +510,6 @@
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTreeExtensions.cs" />
     <Compile Include="Core\Util\ExceptionHelper.cs" />
-    <Compile Include="Core\Util\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Core\Util\Extensions\SnapshotSpanExtensions.cs" />
     <Compile Include="Core\Util\Extensions\SpanExtensions.cs" />
     <Compile Include="Core\Util\Hash.cs" />

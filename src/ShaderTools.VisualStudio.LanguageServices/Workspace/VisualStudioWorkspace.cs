@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Hosting;
+using System.Runtime.CompilerServices;
+using Microsoft.VisualStudio.ComponentModelHost;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
-using ShaderTools.EditorServices.Host;
 using ShaderTools.CodeAnalysis.Text;
-using System.ComponentModel.Composition.Hosting;
-using Microsoft.VisualStudio.ComponentModelHost;
-using Microsoft.VisualStudio.Shell;
-using System.Runtime.CompilerServices;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {

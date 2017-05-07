@@ -89,6 +89,24 @@ namespace ShaderTools.CodeAnalysis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A language name cannot be specified for this option..
+        /// </summary>
+        internal static string A_language_name_cannot_be_specified_for_this_option {
+            get {
+                return ResourceManager.GetString("A_language_name_cannot_be_specified_for_this_option", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A language name must be specified for this option..
+        /// </summary>
+        internal static string A_language_name_must_be_specified_for_this_option {
+            get {
+                return ResourceManager.GetString("A_language_name_must_be_specified_for_this_option", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service of type &apos;{0}&apos; is required to accomplish the task but is not available from the workspace..
         /// </summary>
         internal static string Service_of_type_0_is_required_to_accomplish_the_task_but_is_not_available_from_the_workspace {

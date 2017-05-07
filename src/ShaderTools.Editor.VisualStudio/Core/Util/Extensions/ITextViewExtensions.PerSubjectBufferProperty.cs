@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
+using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
 {

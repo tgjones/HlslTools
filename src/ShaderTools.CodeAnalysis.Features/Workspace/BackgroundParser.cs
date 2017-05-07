@@ -7,7 +7,7 @@ using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.Utilities.Threading;
 
-namespace ShaderTools.EditorServices.Host
+namespace ShaderTools.CodeAnalysis.Host
 {
     internal class BackgroundParser
     {

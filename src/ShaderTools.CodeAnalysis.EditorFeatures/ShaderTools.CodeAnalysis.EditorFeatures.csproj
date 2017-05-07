@@ -6,8 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="WindowsBase" />
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Features\ShaderTools.CodeAnalysis.Features.csproj" />
   </ItemGroup>
 
 </Project>
