@@ -59,8 +59,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
                     var outliningManager = _outliningManagerService.GetOutliningManager(_textView);
                     if (outliningManager != null)
                     {
-                        var outliningTagger = _textView.TextBuffer.Properties.GetProperty<OutliningTagger>(typeof(OutliningTagger));
-                        outliningTagger?.UpdateEnabled(outliningManager.Enabled);
+                        // TODO
+                        //var outliningTagger = _textView.TextBuffer.Properties.GetProperty<OutliningTagger>(typeof(OutliningTagger));
+                        //outliningTagger?.UpdateEnabled(outliningManager.Enabled);
                     }
                 }
             }

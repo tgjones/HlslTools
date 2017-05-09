@@ -10,6 +10,7 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Outlining
 {
+#if false
     public class OutliningTaggerTests : AsyncTaggerTestsBase
     {
         [WpfFact]
@@ -58,4 +59,5 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Outlining
             return new OutliningTagger(textBuffer, backgroundParser, new FakeOptionsService());
         }
     }
+#endif
 }

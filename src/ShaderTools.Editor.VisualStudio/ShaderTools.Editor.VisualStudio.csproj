@@ -531,9 +531,6 @@
     <Compile Include="Hlsl\Navigation\EditorNavigationSource.cs" />
     <Compile Include="Hlsl\Navigation\EditorNavigationTarget.cs" />
     <Compile Include="Hlsl\Navigation\NavigationTargetsVisitor.cs" />
-    <Compile Include="Hlsl\Tagging\Outlining\OutliningTagger.cs" />
-    <Compile Include="Hlsl\Tagging\Outlining\OutliningTaggerProvider.cs" />
-    <Compile Include="Hlsl\Tagging\Outlining\OutliningVisitor.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

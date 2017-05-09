@@ -1,20 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using System.Threading;
-using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Structure;
+using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
+namespace ShaderTools.CodeAnalysis.Hlsl.Structure
 {
     internal sealed class OutliningVisitor : SyntaxWalker
     {
-        private readonly ITextSnapshot _snapshot;
-        private readonly List<ITagSpan<IOutliningRegionTag>> _results;
+        private readonly SourceText _sourceText;
+        private readonly ImmutableArray<BlockSpan>.Builder _results;
         private readonly CancellationToken _cancellationToken;
 
-        public OutliningVisitor(ITextSnapshot snapshot, List<ITagSpan<IOutliningRegionTag>> results, CancellationToken cancellationToken)
+        public OutliningVisitor(SourceText sourceText, ImmutableArray<BlockSpan>.Builder results, CancellationToken cancellationToken)
         {
-            _snapshot = snapshot;
+            _sourceText = sourceText;
             _results = results;
             _cancellationToken = cancellationToken;
         }
@@ -61,15 +61,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
                 || endToken == null || !endToken.Span.IsInRootFile)
                 return;
 
-            var span = new Span(startToken.Span.Span.End, endToken.Span.Span.End - startToken.Span.Span.End);
-            if (_snapshot.GetLineNumberFromPosition(span.Start) == _snapshot.GetLineNumberFromPosition(span.End))
-                return;
+            var textSpan = new TextSpan(startToken.Span.Span.End, endToken.Span.Span.End - startToken.Span.Span.End);
+            var lineSpan = _sourceText.Lines.GetLinePositionSpan(textSpan);
+            var isCollapsible = lineSpan.Start.Line != lineSpan.End.Line;
 
-            var snapshotSpan = new SnapshotSpan(_snapshot, span);
-            var tag = new OutliningRegionTag(false, isImplementation, "...", snapshotSpan.GetText());
-            var tagSpan = new TagSpan<IOutliningRegionTag>(snapshotSpan, tag);
-
-            _results.Add(tagSpan);
+            _results.Add(new BlockSpan(isCollapsible, textSpan, autoCollapse: isImplementation));
         }
     }
 }
