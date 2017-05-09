@@ -6,11 +6,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="Shared\Tagging\EventSources\TaggerEventSources.ViewSpanChangedEventSource.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="WindowsBase" />
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />
   </ItemGroup>

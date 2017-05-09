@@ -144,7 +144,7 @@ namespace ShaderTools.CodeAnalysis.Text
                 return new LineInfo(this);
             }
 
-            private class LineInfo : TextLineCollection
+            private new class LineInfo : TextLineCollection
             {
                 private readonly SnapshotSourceText _text;
 

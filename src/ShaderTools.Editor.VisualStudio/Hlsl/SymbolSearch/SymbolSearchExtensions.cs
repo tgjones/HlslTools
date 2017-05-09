@@ -15,8 +15,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
             if (semanticModel == null)
                 throw new ArgumentNullException(nameof(semanticModel));
 
-            var syntaxTree = semanticModel.SyntaxTree;
-            return syntaxTree.Root.FindNodes(position)
+            var syntaxTreeRoot = (SyntaxNode) semanticModel.SyntaxTree.Root;
+            return syntaxTreeRoot.FindNodes(position)
                 .SelectMany(n => GetSymbolSpans(semanticModel, n))
                 .Where(s => s.Span.File.IsRootFile && s.SourceRange.ContainsOrTouches(position))
                 .Select(s => s).Cast<SymbolSpan?>().FirstOrDefault();
@@ -30,9 +30,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
             if (symbol == null)
                 throw new ArgumentNullException(nameof(symbol));
 
-            var syntaxTree = semanticModel.SyntaxTree;
+            var syntaxTreeRoot = (SyntaxNode) semanticModel.SyntaxTree.Root;
 
-            return from n in syntaxTree.Root.DescendantNodes()
+            return from n in syntaxTreeRoot.DescendantNodes()
                 from s in GetSymbolSpans(semanticModel, n)
                 where s.Symbol.Equals(symbol)
                 select s;

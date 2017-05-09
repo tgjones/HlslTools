@@ -12,7 +12,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         {
             // Format.
             var formattingVisitor = new FormattingVisitor(syntaxTree, textSpan, options);
-            formattingVisitor.Visit(syntaxTree.Root);
+            formattingVisitor.Visit((SyntaxNode) syntaxTree.Root);
 
             return formattingVisitor.Edits.Values;
         }
@@ -22,7 +22,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             var location = syntaxTree.MapRootFilePosition(position);
 
             // Find span of block / statement terminated by the character just typed.
-            var token = syntaxTree.Root.FindTokenOnLeft(location);
+            var token = ((SyntaxNode) syntaxTree.Root).FindTokenOnLeft(location);
             if (token.Text != character.ToString())
                 return new List<Edit>();
 

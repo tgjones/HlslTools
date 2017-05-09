@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Parsing;
 using ShaderTools.Editor.VisualStudio.Core.Tagging;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
@@ -54,7 +55,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
                 return Tuple.Create(snapshot, _emptyList);
 
             var syntaxTree = semanticModel.SyntaxTree;
-            var position = syntaxTree.MapRootFilePosition(unmappedPosition.Value);
+            var position = ((SyntaxTree) syntaxTree).MapRootFilePosition(unmappedPosition.Value);
 
             var tagSpans = semanticModel.GetHighlights(position, _highlighters)
                 .Select(span => (ITagSpan<NavigableHighlightTag>) new TagSpan<NavigableHighlightTag>(

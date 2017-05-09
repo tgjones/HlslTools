@@ -299,7 +299,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var token = tree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) tree.Root).FindTokenOnLeft(position);
 
             return token.Ancestors().OfType<DirectiveTriviaSyntax>().Any();
         }
@@ -309,7 +309,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var token = tree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) tree.Root).FindTokenOnLeft(position);
 
             return token.Ancestors().OfType<VariableDeclaratorQualifierSyntax>().Any();
         }
@@ -319,7 +319,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var token = tree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) tree.Root).FindTokenOnLeft(position);
 
             return PossiblyInTypeDefinitionName(token, position)
                 || PossiblyInConstantBufferDefinitionName(token, position)
@@ -366,7 +366,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (tree.DefinitelyInTypeName(position))
                 return true;
 
-            var token = tree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) tree.Root).FindTokenOnLeft(position);
             var parent = GetNonIdentifierParent(token);
 
             if (parent.Kind == SyntaxKind.SkippedTokensTrivia)
@@ -387,7 +387,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (tree == null)
                 throw new ArgumentNullException(nameof(tree));
 
-            var token = tree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) tree.Root).FindTokenOnLeft(position);
             var parent = GetNonIdentifierParent(token);
 
             if (parent is TypeSyntax)

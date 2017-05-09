@@ -61,6 +61,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.ErrorList
                 return;
 
             var diagnostics = GetDiagnostics(snapshot, cancellationToken);
+            if (diagnostics.Item1 == null || diagnostics.Item2 == null)
+                return;
 
             lock (_lockObject)
             {

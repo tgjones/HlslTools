@@ -3,12 +3,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Editor.Tagging;
+using ShaderTools.CodeAnalysis.Notification;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
 {
-    internal static partial class TaggerEventSources
+    internal static partial class 
+        TaggerEventSources
     {
         public static ITaggerEventSource Compose(
             params ITaggerEventSource[] eventSources)
@@ -21,10 +25,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
             return new CompositionEventSource(eventSources.ToArray());
         }
 
-        //public static ITaggerEventSource OnCaretPositionChanged(ITextView textView, ITextBuffer subjectBuffer, TaggerDelay delay)
-        //{
-        //    return new CaretPositionChangedEventSource(textView, subjectBuffer, delay);
-        //}
+        public static ITaggerEventSource OnCaretPositionChanged(ITextView textView, ITextBuffer subjectBuffer, TaggerDelay delay)
+        {
+            return new CaretPositionChangedEventSource(textView, subjectBuffer, delay);
+        }
 
         //public static ITaggerEventSource OnCompletionClosed(
         //    ITextView textView,
@@ -34,23 +38,23 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
         //    return new CompletionClosedEventSource(textView, sessionStack, delay);
         //}
 
-        //public static ITaggerEventSource OnTextChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
-        //{
-        //    Contract.ThrowIfNull(subjectBuffer);
+        public static ITaggerEventSource OnTextChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
+        {
+            Contract.ThrowIfNull(subjectBuffer);
 
-        //    return new TextChangedEventSource(subjectBuffer, delay);
-        //}
+            return new TextChangedEventSource(subjectBuffer, delay);
+        }
 
-        ///// <summary>
-        ///// Reports an event any time the semantics have changed such that this 
-        ///// <paramref name="subjectBuffer"/> should be retagged.  Semantics are considered changed 
-        ///// for a buffer if an edit happens directly in that buffer, or if a top level visible 
-        ///// change happens in any sibling document or in any dependent projects' documents.
-        ///// </summary>
-        //public static ITaggerEventSource OnSemanticChanged(ITextBuffer subjectBuffer, TaggerDelay delay, ISemanticChangeNotificationService notificationService)
-        //{
-        //    return new SemanticChangedEventSource(subjectBuffer, delay, notificationService);
-        //}
+        /// <summary>
+        /// Reports an event any time the semantics have changed such that this 
+        /// <paramref name="subjectBuffer"/> should be retagged.  Semantics are considered changed 
+        /// for a buffer if an edit happens directly in that buffer, or if a top level visible 
+        /// change happens in any sibling document or in any dependent projects' documents.
+        /// </summary>
+        public static ITaggerEventSource OnSemanticChanged(ITextBuffer subjectBuffer, TaggerDelay delay, ISemanticChangeNotificationService notificationService)
+        {
+            return new SemanticChangedEventSource(subjectBuffer, delay, notificationService);
+        }
 
         //public static ITaggerEventSource OnDocumentActiveContextChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
         //{
@@ -99,10 +103,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
         //    return new WorkspaceRegistrationChangedEventSource(subjectBuffer, delay);
         //}
 
-        //public static ITaggerEventSource OnViewSpanChanged(ITextView textView, TaggerDelay textChangeDelay, TaggerDelay scrollChangeDelay)
-        //{
-        //    return new ViewSpanChangedEventSource(textView, textChangeDelay, scrollChangeDelay);
-        //}
+        public static ITaggerEventSource OnViewSpanChanged(ITextView textView, TaggerDelay textChangeDelay, TaggerDelay scrollChangeDelay)
+        {
+            return new ViewSpanChangedEventSource(textView, textChangeDelay, scrollChangeDelay);
+        }
 
         //public static ITaggerEventSource OnEditorFormatMapChanged(
         //    IEditorFormatMap editorFormatMap, TaggerDelay delay)

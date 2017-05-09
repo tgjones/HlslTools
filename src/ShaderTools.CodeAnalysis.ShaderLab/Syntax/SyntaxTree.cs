@@ -12,7 +12,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public override SourceText Text => _sourceFile.Text;
 
-        public SyntaxNode Root { get; }
+        public override SyntaxNodeBase Root { get; }
 
         internal SyntaxTree(SourceText text, Func<SyntaxTree, SyntaxNode> parseFunc)
         {
@@ -30,6 +30,11 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             return new SourceFileSpan(
                 _sourceFile, 
                 new TextSpan(range.Start.Position, range.Length));
+        }
+
+        public override SourceLocation MapRootFilePosition(int position)
+        {
+            return new SourceLocation(position);
         }
     }
 }

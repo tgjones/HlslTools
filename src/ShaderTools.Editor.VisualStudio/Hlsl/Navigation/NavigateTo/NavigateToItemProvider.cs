@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Language.NavigateTo.Interfaces;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
@@ -59,7 +60,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
                         searchValue, snapshot, textView, callback, _bufferGraphFactoryService,
                         _navigateToItemProviderFactory, _glyphService, cancellationToken);
 
-                    visitor.Visit(syntaxTree.Root);
+                    visitor.Visit((SyntaxNode) syntaxTree.Root);
                 }
                 catch (OperationCanceledException)
                 {

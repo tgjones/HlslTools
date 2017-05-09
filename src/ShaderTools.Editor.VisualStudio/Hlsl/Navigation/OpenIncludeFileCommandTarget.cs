@@ -59,7 +59,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             var pos = _textView.Caret.Position.BufferPosition;
             var syntaxTree = pos.Snapshot.GetSyntaxTree(CancellationToken.None);
             var sourceLocation = syntaxTree.MapRootFilePosition(pos.Position);
-            var syntaxToken = syntaxTree.Root.FindToken(sourceLocation, true);
+            var syntaxToken = ((SyntaxNode) syntaxTree.Root).FindToken(sourceLocation, true);
 
             if (syntaxToken.Parent == null || syntaxToken.Parent.Kind != SyntaxKind.IncludeDirectiveTrivia)
                 return null;

@@ -1,13 +1,15 @@
-﻿using System.ComponentModel.Composition;
+﻿using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Diagnostics;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.CodeAnalysis.Classification;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 {
@@ -20,9 +22,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
     [ContentType(HlslConstants.ContentTypeName)]
     internal sealed class BraceCompletionContextProvider : IBraceCompletionContextProvider
     {
-        [Import]
-        public HlslClassificationService ClassificationService { get; set; }
-
         [Import]
         public ISmartIndentationService SmartIndentationService { get; set; }
 
@@ -37,7 +36,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             // if we are in a comment or string literal we cannot begin a completion session.
             if (IsValidBraceCompletionContext(openingPoint))
             {
-                context = new BraceCompletionContext(SmartIndentationService, TextBufferUndoManagerProvider, ClassificationService, OptionsService);
+                context = new BraceCompletionContext(SmartIndentationService, TextBufferUndoManagerProvider, OptionsService);
                 return true;
             }
             else
@@ -53,19 +52,25 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 
             if (openingPoint.Position > 0)
             {
-                var classifier = openingPoint.Snapshot.TextBuffer.GetSyntaxTagger();
-                var snapshotSpan = new SnapshotSpan(openingPoint - 1, 1);
-                var classificationSpans = classifier.GetTags(new NormalizedSnapshotSpanCollection(snapshotSpan));
+                var document = openingPoint.Snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+                var syntaxTree = document.GetSyntaxTreeAsync(CancellationToken.None).Result; // TODO: Don't do this.
+
+                var classificationService = document.LanguageServices.GetRequiredService<IClassificationService>();
+
+                var classificationSpans = new List<ClassifiedSpan>();
+
+                var textSpan = new TextSpan(openingPoint.Position - 1, 1);
+                classificationService.AddSyntacticClassifications(syntaxTree, textSpan, classificationSpans, CancellationToken.None);
 
                 foreach (var span in classificationSpans)
                 {
-                    if (!span.Span.OverlapsWith(snapshotSpan))
+                    if (!span.TextSpan.OverlapsWith(textSpan))
                         continue;
 
-                    if (span.Tag.ClassificationType.IsOfType("comment"))
+                    if (span.ClassificationType == ClassificationTypeNames.Comment)
                         return false;
 
-                    if (span.Tag.ClassificationType.IsOfType("literal"))
+                    if (span.ClassificationType == ClassificationTypeNames.NumericLiteral || span.ClassificationType == ClassificationTypeNames.StringLiteral)
                         return false;
                 }
             }

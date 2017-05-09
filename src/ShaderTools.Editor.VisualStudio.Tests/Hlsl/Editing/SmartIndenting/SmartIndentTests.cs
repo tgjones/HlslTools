@@ -60,7 +60,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
 
             var code = codeWithCaret.Remove(caret, 1);
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
-            var actualIndent = SmartIndent.FindTotalParentChainIndent(syntaxTree.Root, caret, 0);
+            var actualIndent = SmartIndent.FindTotalParentChainIndent((SyntaxNode) syntaxTree.Root, caret, 0);
             Assert.Equal(expectedIndent, actualIndent);
         }
     }

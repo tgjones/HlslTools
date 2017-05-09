@@ -4,11 +4,11 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using NSubstitute;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.BraceMatching;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.BraceMatching
 {
+#if false
     public class BraceMatchingTaggerTests : AsyncTaggerTestsBase
     {
         [Theory(Skip = "Need to update test")]
@@ -34,4 +34,5 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.BraceMatching
 
         protected override bool MustCreateTagSpans => false;
     }
+#endif
 }

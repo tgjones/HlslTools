@@ -17,21 +17,23 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
     {
         public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
         {
-            var root = semanticModel.SyntaxTree.Root;
+            var root =(SyntaxNode) semanticModel.SyntaxTree.Root;
+
+            var syntaxTree = (SyntaxTree) semanticModel.SyntaxTree;
 
             // We don't want to show a completions for these cases.
-            if (semanticModel.SyntaxTree.PossiblyInUserGivenName(position))
+            if (syntaxTree.PossiblyInUserGivenName(position))
                 return Enumerable.Empty<CompletionItem>();
-            if (semanticModel.SyntaxTree.DefinitelyInMacro(position))
+            if (syntaxTree.DefinitelyInMacro(position))
                 return Enumerable.Empty<CompletionItem>();
-            if (semanticModel.SyntaxTree.DefinitelyInVariableDeclaratorQualifier(position))
+            if (syntaxTree.DefinitelyInVariableDeclaratorQualifier(position))
                 return Enumerable.Empty<CompletionItem>();
 
             // Comments and literals don't get completion information
             if (root.InComment(position) || root.InLiteral(position))
                 return Enumerable.Empty<CompletionItem>();
 
-            if (semanticModel.SyntaxTree.DefinitelyInTypeName(position))
+            if (syntaxTree.DefinitelyInTypeName(position))
                 return GetTypeCompletions(semanticModel, position);
 
             var propertyAccessExpression = GetPropertyAccessExpression(root, position);
@@ -52,7 +54,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
                 .Where(x => !(x is SemanticSymbol))
                 .Where(x => !(x is AttributeSymbol));
 
-            if (!semanticModel.SyntaxTree.PossiblyInTypeName(position))
+            if (!((SyntaxTree) semanticModel.SyntaxTree).PossiblyInTypeName(position))
                 symbols = symbols.Where(x => !(x is TypeSymbol));
 
             return CreateSymbolCompletions(symbols);

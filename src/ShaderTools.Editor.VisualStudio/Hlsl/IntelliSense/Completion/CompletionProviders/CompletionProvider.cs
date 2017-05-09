@@ -12,7 +12,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
         public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
-            var token = syntaxTree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) syntaxTree.Root).FindTokenOnLeft(position);
             var node = token.Parent.AncestorsAndSelf()
                 .OfType<T>()
                 .FirstOrDefault();

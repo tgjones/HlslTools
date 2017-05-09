@@ -19,7 +19,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
 
         public SemanticModel GetSemanticModel(CancellationToken? cancellationToken = null)
         {
-            var bindingResult = Binder.Bind(SyntaxTree.Root, cancellationToken ?? CancellationToken.None);
+            var bindingResult = Binder.Bind((SyntaxNode) SyntaxTree.Root, cancellationToken ?? CancellationToken.None);
             return new SemanticModel(this, bindingResult);
         }
 

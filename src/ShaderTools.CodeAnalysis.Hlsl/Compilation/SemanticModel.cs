@@ -6,6 +6,7 @@ using ShaderTools.CodeAnalysis.Hlsl.Binding;
 using ShaderTools.CodeAnalysis.Hlsl.Binding.BoundNodes;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
@@ -16,7 +17,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
 
         public Compilation Compilation { get; }
 
-        public SyntaxTree SyntaxTree => Compilation.SyntaxTree;
+        public override SyntaxTreeBase SyntaxTree => Compilation.SyntaxTree;
 
         internal SemanticModel(Compilation compilation, BindingResult bindingResult)
         {

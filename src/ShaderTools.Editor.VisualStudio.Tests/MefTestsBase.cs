@@ -5,7 +5,7 @@ using System.ComponentModel.Composition.Primitives;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
+using ShaderTools.Editor.VisualStudio.Hlsl;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 
 namespace ShaderTools.Editor.VisualStudio.Tests
@@ -36,7 +36,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests
         protected MefTestsBase()
         {
             var editorCatalogs = GetEditorCatalogs();
-            var localCatalog = new AssemblyCatalog(typeof(SyntaxTagger).Assembly);
+            var localCatalog = new AssemblyCatalog(typeof(HlslPackage).Assembly);
             var catalog = new AggregateCatalog(editorCatalogs.Union(new[] { localCatalog }));
             Container = new CompositionContainer(catalog, new UndoExportProvider());
         }

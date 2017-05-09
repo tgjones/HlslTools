@@ -37,6 +37,8 @@ namespace ShaderTools.CodeAnalysis
 
         public string Language => _languageServices.Language;
 
+        public HostLanguageServices LanguageServices => _languageServices;
+
         internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText)
         {
             _languageServices = languageServices;

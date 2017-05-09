@@ -77,7 +77,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             return sb.ToString();
         }
 
-        public virtual string ToFullString()
+        public override string ToFullString()
         {
             var sb = new StringBuilder();
             WriteTo(sb, true, true);

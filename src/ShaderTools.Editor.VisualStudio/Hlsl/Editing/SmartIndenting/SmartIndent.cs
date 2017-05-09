@@ -41,7 +41,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
             var syntaxTree = line.Snapshot.GetSyntaxTree(CancellationToken.None);
             var root = syntaxTree.Root;
             var lineStartPosition = line.Start.Position;
-            var indent = FindTotalParentChainIndent(root, lineStartPosition, 0);
+            var indent = FindTotalParentChainIndent((SyntaxNode) root, lineStartPosition, 0);
             return indent;
         }
 

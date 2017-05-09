@@ -107,7 +107,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return sb.ToString();
         }
 
-        public virtual string ToFullString()
+        public override string ToFullString()
         {
             var sb = new StringBuilder();
             WriteTo(sb, true, true, false, false);

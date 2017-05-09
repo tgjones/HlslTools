@@ -13,7 +13,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
         public QuickInfoModel GetModel(SemanticModel semanticModel, SourceLocation position)
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
-            return syntaxTree.Root
+            return ((SyntaxNode) syntaxTree.Root)
                 .FindStartTokens(position, true)
                 .Select(token => token.AncestorsAndSelf().OfType<T>().FirstOrDefault())
                 .Where(t => t != null)

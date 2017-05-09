@@ -25,7 +25,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         public FormattingVisitor(SyntaxTree tree, TextSpan spanToFormat, FormattingOptions options)
         {
             _rootSourceFile = tree.File;
-            _locatedNodes = tree.Root.GetRootLocatedNodes().ToList();
+            _locatedNodes = ((SyntaxNode) tree.Root).GetRootLocatedNodes().ToList();
 
             _locatedNodeIndexLookup = new Dictionary<LocatedNode, int>();
             for (var i = 0; i < _locatedNodes.Count; i++)

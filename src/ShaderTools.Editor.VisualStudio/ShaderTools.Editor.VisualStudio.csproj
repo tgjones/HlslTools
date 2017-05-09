@@ -47,6 +47,20 @@
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Features\ShaderTools.CodeAnalysis.Features.csproj">
       <Project>{6b3bae0e-7e7f-4975-a28f-e1614c8afe35}</Project>
       <Name>ShaderTools.CodeAnalysis.Features</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.csproj">
+      <Project>{71ec216a-9c33-4b96-ac22-7167833daaed}</Project>
+      <Name>ShaderTools.CodeAnalysis.Hlsl.EditorFeatures</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Features\ShaderTools.CodeAnalysis.Hlsl.Features.csproj">
+      <Project>{3812db4e-ba47-4db7-9683-a4c3cc7f8c26}</Project>
+      <Name>ShaderTools.CodeAnalysis.Hlsl.Features</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj">
       <Project>{028116df-9897-45c3-911c-ac3c15e588ea}</Project>
@@ -54,9 +68,29 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures\ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures.csproj">
+      <Project>{7dd0dc6a-5836-4b08-bcf0-3378e56924c8}</Project>
+      <Name>ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab.Workspaces\ShaderTools.CodeAnalysis.ShaderLab.Workspaces.csproj">
+      <Project>{21f7a626-177c-4125-bd2c-55cf26c0acf3}</Project>
+      <Name>ShaderTools.CodeAnalysis.ShaderLab.Workspaces</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj">
       <Project>{485596dc-edc9-4c95-9807-229355f4a941}</Project>
       <Name>ShaderTools.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.VisualStudio.LanguageServices.Hlsl\ShaderTools.VisualStudio.LanguageServices.Hlsl.csproj">
+      <Project>{a963c25b-5e83-413a-9757-1259e7c11368}</Project>
+      <Name>ShaderTools.VisualStudio.LanguageServices.Hlsl</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.VisualStudio.LanguageServices.ShaderLab\ShaderTools.VisualStudio.LanguageServices.ShaderLab.csproj">
+      <Project>{29f65024-2f2d-466d-98a3-4698baef7e1d}</Project>
+      <Name>ShaderTools.VisualStudio.LanguageServices.ShaderLab</Name>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.VisualStudio.LanguageServices\ShaderTools.VisualStudio.LanguageServices.csproj">
       <Project>{3d3317e0-0f38-4321-99c4-9f87bdea92cc}</Project>
@@ -275,8 +309,6 @@
     <Compile Include="Hlsl\Tagging\Highlighting\ReferenceHighlightTag.cs" />
     <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
-    <Compile Include="Core\Tagging\Classification\ClassificationColorManagerBase.cs" />
-    <Compile Include="Core\Tagging\Classification\SemanticTaggerProviderBase.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContext.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContextProvider.cs" />
     <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionExtensions.cs" />
@@ -452,12 +484,6 @@
     <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
     <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
-    <Compile Include="ShaderLab\Tagging\Classification\ClassificationColorManager.cs" />
-    <Compile Include="ShaderLab\Tagging\Classification\SemanticClassificationMetadata.cs" />
-    <Compile Include="ShaderLab\Tagging\Classification\ShaderLabClassificationService.cs" />
-    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTagger.cs" />
-    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerProvider.cs" />
-    <Compile Include="ShaderLab\Tagging\Classification\SyntaxTaggerWorker.cs" />
     <Compile Include="ShaderLab\Util\Extensions\Extensions.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
@@ -468,19 +494,6 @@
       <DependentUpon>SyntaxVisualizerToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Core\Tagging\AsyncTaggerUtility.cs" />
-    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatcher.cs" />
-    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingResult.cs" />
-    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingTagger.cs" />
-    <Compile Include="Hlsl\Tagging\BraceMatching\BraceMatchingTaggerProvider.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\ClassificationColorManager.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\HlslClassificationService.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SemanticClassificationMetadata.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SyntaxTagger.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SyntaxTaggerProvider.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SemanticTaggerProvider.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SemanticTagger.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SemanticTaggerVisitor.cs" />
-    <Compile Include="Hlsl\Tagging\Classification\SyntaxTaggerWorker.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingTextViewCreationListener.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingCommandTarget.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\Highlighters\HighlighterService.cs" />
@@ -519,8 +532,6 @@
     <Compile Include="Core\Util\Logger.cs" />
     <Compile Include="Core\Util\Extensions\StringExtensions.cs" />
     <Compile Include="Hlsl\Util\SyntaxOutput\SyntaxExtensions.cs" />
-    <Compile Include="Core\Util\ThemeManager.cs" />
-    <Compile Include="Core\Util\VisualStudioTheme.cs" />
     <Compile Include="Hlsl\Util\Extensions\Extensions.cs" />
     <Compile Include="Core\Glyphs\DispatcherGlyphService.cs" />
     <Compile Include="Core\Glyphs\Glyph.cs" />

@@ -23,7 +23,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Formatting
                 fileSystem: new TestFileSystem());
 
             // Check roundtripping.
-            var allRootTokensAndTrivia = syntaxTree.Root.GetRootLocatedNodes();
+            var allRootTokensAndTrivia = ((SyntaxNode) syntaxTree.Root).GetRootLocatedNodes();
             var sb = new StringBuilder();
             foreach (var locatedNode in allRootTokensAndTrivia)
                 sb.Append(locatedNode.Text);

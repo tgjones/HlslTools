@@ -203,7 +203,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
         private void DisplaySyntaxTree()
         {
             TreeView.Items.Clear();
-            AddNode(TreeView.Items, _activeSyntaxTree.Root, string.Empty);
+            AddNode(TreeView.Items, (SyntaxNode) _activeSyntaxTree.Root, string.Empty);
         }
 
         private static void AddNode(ItemCollection items, SyntaxNode node, string prefix)

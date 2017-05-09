@@ -15,7 +15,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         // TODO: Don't need both File and Text. And it should be renamed to RootFile.
         public SourceFile File { get; }
         public override SourceText Text { get; }
-        public SyntaxNode Root { get; }
+        public override SyntaxNodeBase Root { get; }
 
         internal SyntaxTree(SourceFile file, Func<SyntaxTree, Tuple<SyntaxNode, List<FileSegment>>> parseFunc)
         {
@@ -32,7 +32,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return Root.GetDiagnostics();
         }
 
-        public SourceLocation MapRootFilePosition(int position)
+        public override SourceLocation MapRootFilePosition(int position)
         {
             if (position < 0)
                 throw new ArgumentOutOfRangeException(nameof(position));

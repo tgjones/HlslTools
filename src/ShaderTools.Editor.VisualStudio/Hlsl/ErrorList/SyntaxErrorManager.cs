@@ -31,7 +31,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.ErrorList
         protected override Tuple<SyntaxTreeBase, IEnumerable<Diagnostic>> GetDiagnostics(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
-            return Tuple.Create((SyntaxTreeBase) syntaxTree, syntaxTree.GetDiagnostics());
+            return Tuple.Create((SyntaxTreeBase) syntaxTree, syntaxTree?.GetDiagnostics());
         }
     }
 }

@@ -8,7 +8,11 @@ namespace ShaderTools.CodeAnalysis.Syntax
     {
         public abstract SourceText Text { get; }
 
+        public abstract SyntaxNodeBase Root { get; }
+
         public abstract SourceFileSpan GetSourceFileSpan(SourceRange range);
         public abstract IEnumerable<Diagnostic> GetDiagnostics();
+
+        public abstract SourceLocation MapRootFilePosition(int position);
     }
 }

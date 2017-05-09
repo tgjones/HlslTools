@@ -3,15 +3,19 @@
 // Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.CodeAnalysis.Classification;
+using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Formatting;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
 
@@ -21,16 +25,15 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
     {
         private readonly ISmartIndentationService _smartIndentationService;
         private readonly ITextBufferUndoManagerProvider _undoManager;
-        private readonly HlslClassificationService _classificationService;
         private readonly IHlslOptionsService _optionsService;
 
         public BraceCompletionContext(
-            ISmartIndentationService smartIndentationService, ITextBufferUndoManagerProvider undoManager, 
-            HlslClassificationService classificationService, IHlslOptionsService optionsService)
+            ISmartIndentationService smartIndentationService, 
+            ITextBufferUndoManagerProvider undoManager, 
+            IHlslOptionsService optionsService)
         {
             _smartIndentationService = smartIndentationService;
             _undoManager = undoManager;
-            _classificationService = classificationService;
             _optionsService = optionsService;
         }
 
@@ -46,22 +49,26 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             var snapshot = session.SubjectBuffer.CurrentSnapshot;
             var startPoint = session.OpeningPoint.GetPoint(snapshot);
 
-            var classifier = startPoint.Snapshot.TextBuffer.GetSyntaxTagger();
-            var snapshotSpan = new SnapshotSpan(startPoint - 1, 1);
-            var classificationSpans = classifier
-                .GetTags(new NormalizedSnapshotSpanCollection(snapshotSpan))
-                .Where(x => x.Span.Start < startPoint);
+            var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+            var syntaxTree = document.GetSyntaxTreeAsync(CancellationToken.None).Result; // TODO: Don't do this.
 
-            foreach (var span in classificationSpans.Reverse())
+            var classificationService = document.LanguageServices.GetRequiredService<IClassificationService>();
+
+            var classificationSpans = new List<ClassifiedSpan>();
+            classificationService.AddSyntacticClassifications(syntaxTree, new TextSpan(startPoint - 1, 1), classificationSpans, CancellationToken.None);
+            classificationSpans.RemoveAll(x => x.TextSpan.Start >= startPoint);
+            classificationSpans.Reverse();
+
+            foreach (var span in classificationSpans)
             {
-                if (span.Tag.ClassificationType.IsOfType(_classificationService.WhiteSpace.Classification))
+                if (span.ClassificationType == ClassificationTypeNames.WhiteSpace)
                     continue;
-                if (span.Tag.ClassificationType.IsOfType(_classificationService.Identifier.Classification))
+                if (span.ClassificationType == ClassificationTypeNames.Identifier)
                     continue;
 
-                if (span.Tag.ClassificationType.IsOfType(_classificationService.Keyword.Classification))
+                if (span.ClassificationType == ClassificationTypeNames.Keyword)
                 {
-                    switch (span.Span.GetText())
+                    switch (new SnapshotSpan(snapshot, span.TextSpan.ToSpan()).GetText())
                     {
                         case "class":
                         case "struct":

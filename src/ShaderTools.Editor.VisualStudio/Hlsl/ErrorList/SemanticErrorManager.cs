@@ -35,7 +35,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.ErrorList
             SemanticModel semanticModel;
             if (!snapshot.TryGetSemanticModel(cancellationToken, out semanticModel))
                 return Tuple.Create<SyntaxTreeBase, IEnumerable<Diagnostic>>(null, Enumerable.Empty<Diagnostic>());
-            return Tuple.Create((SyntaxTreeBase) semanticModel.SyntaxTree, semanticModel.GetDiagnostics());
+            return Tuple.Create(semanticModel.SyntaxTree, semanticModel.GetDiagnostics());
         }
     }
 }

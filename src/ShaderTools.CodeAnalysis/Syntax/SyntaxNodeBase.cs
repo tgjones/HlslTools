@@ -101,5 +101,7 @@ namespace ShaderTools.CodeAnalysis.Syntax
         {
             throw new NotImplementedException("SetDiagnostics not implemented for " + GetType().Name);
         }
+
+        public abstract string ToFullString();
     }
 }

@@ -35,7 +35,9 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
             var outliningRegions = new List<ITagSpan<IOutliningRegionTag>>();
             var outliningVisitor = new OutliningVisitor(snapshot, outliningRegions, cancellationToken);
 
-            outliningVisitor.VisitCompilationUnit((CompilationUnitSyntax) snapshot.GetSyntaxTree(cancellationToken).Root);
+            var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+            if (syntaxTree != null)
+                outliningVisitor.VisitCompilationUnit((CompilationUnitSyntax) syntaxTree.Root);
 
             return Tuple.Create(snapshot, outliningRegions);
         }

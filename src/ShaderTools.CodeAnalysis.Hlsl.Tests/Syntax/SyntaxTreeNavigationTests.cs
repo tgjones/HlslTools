@@ -20,12 +20,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Syntax
             var tree = SyntaxFactory.ParseSyntaxTree(SourceText.From(text));
             Assert.Equal(text, tree.Root.ToFullString());
 
-            var tokens = tree.Root.DescendantTokens(descendIntoTrivia: true).Where(t => t.Span.Span.Length > 0).ToList();
+            var tokens = ((SyntaxNode) tree.Root).DescendantTokens(descendIntoTrivia: true).Where(t => t.Span.Span.Length > 0).ToList();
             Assert.Equal(11, tokens.Count);
             Assert.Equal("garbage", tokens[6].Text);
 
             var list = new List<SyntaxToken>(tokens.Count);
-            var token = tree.Root.GetLastToken(includeSkippedTokens: true);
+            var token = ((SyntaxNode) tree.Root).GetLastToken(includeSkippedTokens: true);
             while (token != null)
             {
                 list.Add(token);

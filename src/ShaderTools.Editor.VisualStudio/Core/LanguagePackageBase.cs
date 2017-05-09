@@ -7,6 +7,9 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util;
+using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
+using ShaderTools.VisualStudio.LanguageServices;
+using ShaderTools.VisualStudio.LanguageServices.Classification;
 
 namespace ShaderTools.Editor.VisualStudio.Core
 {
@@ -46,6 +49,10 @@ namespace ShaderTools.Editor.VisualStudio.Core
             LanguagePreferences = new LanguagePreferences(this, langPrefs[0]);
 
             _languagePreferencesEventsSink = ComEventSink.Advise<IVsTextManagerEvents2>(textMgr, LanguagePreferences);
+
+            // TODO: Only need to do this once, not per package.
+            var componentModel = this.AsVsServiceProvider().GetComponentModel();
+            componentModel.GetService<ThemeColorFixer>();
         }
 
         protected abstract LanguageInfoBase CreateLanguageInfo();

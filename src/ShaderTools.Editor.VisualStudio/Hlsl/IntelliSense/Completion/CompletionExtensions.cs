@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion
@@ -16,7 +15,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
             var rootFilePosition = semanticModel.Compilation.SyntaxTree.MapRootFilePosition(position);
-            var token = GetIdentifierOrKeywordAtPosition(syntaxTree.Root, rootFilePosition);
+            var token = GetIdentifierOrKeywordAtPosition((SyntaxNode) syntaxTree.Root, rootFilePosition);
             var applicableSpan = token?.Span.Span ?? new TextSpan(position, 0);
 
             cancellationToken.ThrowIfCancellationRequested();

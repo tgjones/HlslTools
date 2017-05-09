@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Composition;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
 {
@@ -52,6 +54,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
         private static TOptionsPage GetDialogPage<TOptionsPage>()
             where TOptionsPage : DialogPage
         {
+            // TODO: Remove this.
+            if (HlslPackage.Instance == null)
+                ((IVsShell) Package.GetGlobalService(typeof(SVsShell))).LoadPackage<HlslPackage>();
+
             return HlslPackage.Instance.GetDialogPage<TOptionsPage>();
         }
     }

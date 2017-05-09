@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using System.IO;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
@@ -46,14 +44,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
                 () => new BackgroundParser(textBuffer));
         }
 
-        public static SyntaxTagger GetSyntaxTagger(this ITextBuffer textBuffer)
-        {
-            return (SyntaxTagger) textBuffer.Properties.GetProperty(typeof(SyntaxTagger));
-        }
-
         public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+            if (document == null)
+                return null;
             var syntaxTreeTask = document.GetSyntaxTreeAsync(cancellationToken);
             syntaxTreeTask.Wait(cancellationToken);
             return (SyntaxTree) syntaxTreeTask.Result;
@@ -64,6 +59,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
             try
             {
                 var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+                if (document == null)
+                {
+                    semanticModel = null;
+                    return false;
+                }
                 var semanticModelTask = document.GetSemanticModelAsync(cancellationToken);
                 semanticModelTask.Wait(cancellationToken);
                 semanticModel = (SemanticModel) semanticModelTask.Result;

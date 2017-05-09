@@ -10,9 +10,11 @@ using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Classification;
 using Microsoft.VisualStudio.Text.Formatting;
+using ShaderTools.CodeAnalysis.Classification;
+using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
+using ShaderTools.CodeAnalysis.Hlsl.Classification;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Classification;
 using Span = Microsoft.VisualStudio.Text.Span;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
@@ -21,17 +23,17 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
     {
         private readonly IClassificationFormatMap _classificationFormatMap;
         private readonly IClassificationFormatMap _tooltipClassificationFormatMap;
-        private readonly HlslClassificationService _classificationService;
+        private readonly ClassificationTypeMap _classificationTypeMap;
         private readonly DispatcherGlyphService _dispatcherGlyphService;
 
         public QuickInfoSource(
             IClassificationFormatMapService classificationFormatMapService,
-            HlslClassificationService classificationService,
+            ClassificationTypeMap classificationTypeMap,
             DispatcherGlyphService dispatcherGlyphService)
         {
             _classificationFormatMap = classificationFormatMapService.GetClassificationFormatMap("text");
             _tooltipClassificationFormatMap = classificationFormatMapService.GetClassificationFormatMap("tooltip");
-            _classificationService = classificationService;
+            _classificationTypeMap = classificationTypeMap;
             _dispatcherGlyphService = dispatcherGlyphService;
         }
 
@@ -125,50 +127,52 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
             switch (markupToken.Kind)
             {
                 case SymbolMarkupKind.Keyword:
-                    return GetClassifiedText(markupToken.Text, _classificationService.Keyword);
+                    return GetClassifiedText(markupToken.Text, ClassificationTypeNames.Keyword);
                 case SymbolMarkupKind.Punctuation:
-                    return GetClassifiedText(markupToken.Text, _classificationService.Punctuation);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.Punctuation);
                 case SymbolMarkupKind.Whitespace:
-                    return GetClassifiedText(markupToken.Text, _classificationService.WhiteSpace);
+                    return GetClassifiedText(markupToken.Text, ClassificationTypeNames.WhiteSpace);
                 case SymbolMarkupKind.LocalVariableName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.LocalVariableIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.LocalVariableIdentifier);
                 case SymbolMarkupKind.ConstantBufferVariableName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.ConstantBufferVariableIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.ConstantBufferVariableIdentifier);
                 case SymbolMarkupKind.GlobalVariableName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.GlobalVariableIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.GlobalVariableIdentifier);
                 case SymbolMarkupKind.ParameterName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.ParameterIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.ParameterIdentifier);
                 case SymbolMarkupKind.FunctionName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.FunctionIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.FunctionIdentifier);
                 case SymbolMarkupKind.MethodName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.MethodIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.MethodIdentifier);
                 case SymbolMarkupKind.FieldName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.FieldIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.FieldIdentifier);
                 case SymbolMarkupKind.IntrinsicTypeName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.ClassIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.ClassIdentifier);
                 case SymbolMarkupKind.ClassName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.ClassIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.ClassIdentifier);
                 case SymbolMarkupKind.StructName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.StructIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.StructIdentifier);
                 case SymbolMarkupKind.ConstantBufferName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.ConstantBufferIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.ConstantBufferIdentifier);
                 case SymbolMarkupKind.InterfaceName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.InterfaceIdentifier);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.InterfaceIdentifier);
                 case SymbolMarkupKind.NamespaceName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.Identifier);
+                    return GetClassifiedText(markupToken.Text, ClassificationTypeNames.Identifier);
                 case SymbolMarkupKind.SemanticName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.Semantic);
+                    return GetClassifiedText(markupToken.Text, HlslClassificationTypeNames.Semantic);
                 case SymbolMarkupKind.TechniqueName:
-                    return GetClassifiedText(markupToken.Text, _classificationService.Identifier);
+                    return GetClassifiedText(markupToken.Text, ClassificationTypeNames.Identifier);
                 case SymbolMarkupKind.PlainText:
-                    return GetClassifiedText(markupToken.Text, _classificationService.Other);
+                    return GetClassifiedText(markupToken.Text, ClassificationTypeNames.Text);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(markupToken.Kind));
             }
         }
 
-        private Inline GetClassifiedText(string text, IClassificationType classificationType)
+        private Inline GetClassifiedText(string text, string classificationTypeName)
         {
+            var classificationType = _classificationTypeMap.GetClassificationType(classificationTypeName);
+
             var properties = _classificationFormatMap.GetTextProperties(classificationType);
 
             var run = new Run(text);

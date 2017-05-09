@@ -25,5 +25,12 @@
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures" Path="|ShaderTools.CodeAnalysis.EditorFeatures|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Workspaces" Path="|ShaderTools.CodeAnalysis.Workspaces|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Workspaces" Path="|ShaderTools.CodeAnalysis.Hlsl.Workspaces|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.Hlsl" Path="|ShaderTools.VisualStudio.LanguageServices.Hlsl|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.ShaderLab" Path="|ShaderTools.VisualStudio.LanguageServices.ShaderLab|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.EditorFeatures" Path="|ShaderTools.CodeAnalysis.Hlsl.EditorFeatures|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures" Path="|ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.Workspaces" Path="|ShaderTools.CodeAnalysis.ShaderLab.Workspaces|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Features" Path="|ShaderTools.CodeAnalysis.Features|" />
+    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Features" Path="|ShaderTools.CodeAnalysis.Hlsl.Features|" />
   </Assets>
 </PackageManifest>

@@ -13,7 +13,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.SignatureHelp.Signat
         public SignatureHelpModel GetModel(SemanticModel semanticModel, SourceLocation position)
         {
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
-            var token = syntaxTree.Root.FindTokenOnLeft(position);
+            var token = ((SyntaxNode) syntaxTree.Root).FindTokenOnLeft(position);
             var node = token.Parent
                 .AncestorsAndSelf()
                 .OfType<T>()

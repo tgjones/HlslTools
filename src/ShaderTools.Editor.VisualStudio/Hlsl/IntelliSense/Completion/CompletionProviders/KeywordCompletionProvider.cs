@@ -32,13 +32,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
 
         private static IEnumerable<SyntaxKind> GetAvailableKeywords(SyntaxTree syntaxTree, SourceLocation position)
         {
-            var isInNonUserCode = syntaxTree.Root.InNonUserCode(position);
+            var isInNonUserCode = ((SyntaxNode) syntaxTree.Root).InNonUserCode(position);
             if (isInNonUserCode)
                 yield break;
 
             var isPreprocessorDirectiveContext = syntaxTree.DefinitelyInMacro(position);
 
-            var leftToken = syntaxTree.Root.FindTokenOnLeft(position);
+            var leftToken = ((SyntaxNode) syntaxTree.Root).FindTokenOnLeft(position);
 
             var targetToken = leftToken.GetPreviousTokenIfTouchingWord(position);
             if (targetToken == null)
