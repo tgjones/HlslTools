@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
+using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
-using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.SymbolSearch;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
+namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
 {
-    internal static class SymbolSearchExtensions
+    [ExportLanguageService(typeof(ISymbolSearchService), LanguageNames.Hlsl)]
+    internal sealed class HlslSymbolSearchService : ISymbolSearchService
     {
-        public static SymbolSpan? FindSymbol(this SemanticModel semanticModel, SourceLocation position)
+        public SymbolSpan? FindSymbol(SemanticModelBase semanticModel, SourceLocation position)
         {
             if (semanticModel == null)
                 throw new ArgumentNullException(nameof(semanticModel));
 
             var syntaxTreeRoot = (SyntaxNode) semanticModel.SyntaxTree.Root;
             return syntaxTreeRoot.FindNodes(position)
-                .SelectMany(n => GetSymbolSpans(semanticModel, n))
+                .SelectMany(n => GetSymbolSpans((SemanticModel) semanticModel, n))
                 .Where(s => s.Span.File.IsRootFile && s.SourceRange.ContainsOrTouches(position))
                 .Select(s => s).Cast<SymbolSpan?>().FirstOrDefault();
         }
 
-        public static IEnumerable<SymbolSpan> FindUsages(this SemanticModel semanticModel, Symbol symbol)
+        public ImmutableArray<SymbolSpan> FindUsages(SemanticModelBase semanticModel, ISymbol symbol)
         {
             if (semanticModel == null)
                 throw new ArgumentNullException(nameof(semanticModel));
@@ -32,10 +37,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
 
             var syntaxTreeRoot = (SyntaxNode) semanticModel.SyntaxTree.Root;
 
-            return from n in syntaxTreeRoot.DescendantNodes()
-                from s in GetSymbolSpans(semanticModel, n)
-                where s.Symbol.Equals(symbol)
-                select s;
+            return (from n in syntaxTreeRoot.DescendantNodes()
+                   from s in GetSymbolSpans((SemanticModel) semanticModel, n)
+                   where s.Symbol.Equals(symbol)
+                   select s).ToImmutableArray();
         }
 
         private static IEnumerable<SymbolSpan> GetSymbolSpans(SemanticModel semanticModel, SyntaxNode node)

@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders;
@@ -50,8 +51,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             if (!await System.Threading.Tasks.Task.Run(() => pos.Snapshot.TryGetSemanticModel(CancellationToken.None, out semanticModel)))
                 return;
 
+            var document = pos.Snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+            if (document == null)
+                return;
+
             var textSpan = _goToDefinitionProviderService.Providers
-                .Select(x => x.GetTargetSpan(semanticModel, semanticModel.Compilation.SyntaxTree.MapRootFilePosition(pos.Position)))
+                .Select(x => x.GetTargetSpan(document, semanticModel, semanticModel.Compilation.SyntaxTree.MapRootFilePosition(pos.Position)))
                 .FirstOrDefault(x => x != null);
 
             if (textSpan == null)

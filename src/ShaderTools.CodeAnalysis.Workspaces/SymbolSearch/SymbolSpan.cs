@@ -1,12 +1,12 @@
 ﻿using System;
-using ShaderTools.CodeAnalysis.Hlsl.Symbols;
+using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
+namespace ShaderTools.CodeAnalysis.SymbolSearch
 {
     internal struct SymbolSpan : IEquatable<SymbolSpan>
     {
-        public SymbolSpan(SymbolSpanKind kind, Symbol symbol, SourceRange sourceRange, SourceFileSpan span)
+        public SymbolSpan(SymbolSpanKind kind, ISymbol symbol, SourceRange sourceRange, SourceFileSpan span)
         {
             if (symbol == null)
                 throw new ArgumentNullException(nameof(symbol));
@@ -19,7 +19,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
 
         public SymbolSpanKind Kind { get; }
 
-        public Symbol Symbol { get; }
+        public ISymbol Symbol { get; }
 
         public SourceRange SourceRange { get; }
         public SourceFileSpan Span { get; }
@@ -58,12 +58,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
             return !left.Equals(right);
         }
 
-        public static SymbolSpan CreateReference(Symbol symbol, SourceRange sourceRange, SourceFileSpan span)
+        public static SymbolSpan CreateReference(ISymbol symbol, SourceRange sourceRange, SourceFileSpan span)
         {
             return new SymbolSpan(SymbolSpanKind.Reference, symbol, sourceRange, span);
         }
 
-        public static SymbolSpan CreateDefinition(Symbol symbol, SourceRange sourceRange, SourceFileSpan span)
+        public static SymbolSpan CreateDefinition(ISymbol symbol, SourceRange sourceRange, SourceFileSpan span)
         {
             return new SymbolSpan(SymbolSpanKind.Definition, symbol, sourceRange, span);
         }

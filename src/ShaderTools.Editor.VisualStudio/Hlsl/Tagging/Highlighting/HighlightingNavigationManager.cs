@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
+using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
 {

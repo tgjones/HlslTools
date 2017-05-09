@@ -1,15 +1,16 @@
 using System.Linq;
+using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.SymbolSearch;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders
 {
     internal abstract class SymbolReferenceGoToDefinitionProvider<T> : GoToDefinitionProvider<T>
         where T : ExpressionSyntax
     {
-        protected override SourceFileSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, T node)
+        protected override SourceFileSpan? CreateTargetSpan(Document document, SemanticModel semanticModel, SourceLocation position, T node)
         {
             var nameToken = GetNameToken(node);
 
@@ -23,7 +24,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
             if (symbol == null)
                 return null;
 
-            var definition = semanticModel.FindUsages(symbol)
+            var symbolSearchService = document.LanguageServices.GetService<ISymbolSearchService>();
+            if (symbolSearchService == null)
+                return null;
+
+            var definition = symbolSearchService.FindUsages(semanticModel, symbol)
                 .FirstOrDefault(x => x.Kind == SymbolSpanKind.Definition);
 
             if (definition == default(SymbolSpan))

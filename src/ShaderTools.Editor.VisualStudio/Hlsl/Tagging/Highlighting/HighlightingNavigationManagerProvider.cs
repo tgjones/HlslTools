@@ -1,6 +1,7 @@
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
+using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
 {

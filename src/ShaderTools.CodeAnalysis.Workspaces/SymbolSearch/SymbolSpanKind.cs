@@ -1,4 +1,4 @@
-namespace ShaderTools.Editor.VisualStudio.Hlsl.SymbolSearch
+namespace ShaderTools.CodeAnalysis.SymbolSearch
 {
     internal enum SymbolSpanKind
     {

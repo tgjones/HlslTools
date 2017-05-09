@@ -1,4 +1,5 @@
 using System.ComponentModel.Composition;
+using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;
@@ -8,7 +9,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
     [Export(typeof(IGoToDefinitionProvider))]
     internal sealed class MacroReferenceGoToDefinitionProvider : GoToDefinitionProvider<SyntaxToken>
     {
-        protected override SourceFileSpan? CreateTargetSpan(SemanticModel semanticModel, SourceLocation position, SyntaxToken node)
+        protected override SourceFileSpan? CreateTargetSpan(Document document, SemanticModel semanticModel, SourceLocation position, SyntaxToken node)
         {
             if (node.MacroReference == null)
                 return null;

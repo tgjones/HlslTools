@@ -1,6 +1,6 @@
-﻿using Microsoft.VisualStudio.Text.Tagging;
+﻿using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Highlighting
+namespace ShaderTools.CodeAnalysis.Editor.Implementation.ReferenceHighlighting
 {
     internal sealed class DefinitionHighlightTag : NavigableHighlightTag
     {
