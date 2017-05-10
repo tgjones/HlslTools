@@ -32,7 +32,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 
                 if (document != null)
                 {
-                    throw new NotImplementedException();
+                    return true; // TODO
                     //return document.Project.Solution.Options.GetOption(option, document.Language);
                 }
 

@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Text.Tagging;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 using ShaderTools.CodeAnalysis.Editor.Tagging;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 using ShaderTools.CodeAnalysis.Structure;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
@@ -37,6 +38,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
 
         protected override async Task ProduceTagsAsync(TaggerContext<IOutliningRegionTag> context, DocumentSnapshotSpan spanToTag, int? caretPosition)
         {
+            if (!spanToTag.Document.LanguageServices.GetRequiredService<IOptionsService>().EnableOutlining)
+                return;
+
             var blockStructureProvider = spanToTag.Document.LanguageServices.GetService<IBlockStructureProvider>();
             if (blockStructureProvider == null)
                 return;

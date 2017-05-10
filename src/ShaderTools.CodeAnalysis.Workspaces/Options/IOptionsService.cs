@@ -13,5 +13,6 @@ namespace ShaderTools.CodeAnalysis.Options
         bool EnableIntelliSense { get; }
         bool EnableErrorReporting { get; }
         bool EnableSquiggles { get; }
+        bool EnableOutlining { get; }
     }
 }

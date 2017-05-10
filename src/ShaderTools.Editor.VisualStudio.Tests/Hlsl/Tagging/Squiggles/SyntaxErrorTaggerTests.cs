@@ -4,12 +4,12 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using NSubstitute;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
-using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Squiggles;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Squiggles
 {
+#if false
     public class SyntaxErrorTaggerTests : AsyncTaggerTestsBase
     {
         [Theory(Skip = "Need to update test")]
@@ -30,4 +30,5 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Squiggles
 
         protected override bool MustCreateTagSpans => false;
     }
+#endif
 }

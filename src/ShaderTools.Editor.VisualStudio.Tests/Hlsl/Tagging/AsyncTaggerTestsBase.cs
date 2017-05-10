@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Editor.VisualStudio.Core.Tagging;
 using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
@@ -13,6 +12,7 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
 {
+#if false
     public abstract class AsyncTaggerTestsBase : MefTestsBase
     {
         internal async Task RunTestAsync<TTagger, TTag>(string testFile, CreateTagger<TTagger, TTag> createTagger)
@@ -52,4 +52,5 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging
 
         protected virtual bool MustCreateTagSpans => true;
     }
+#endif
 }

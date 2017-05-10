@@ -17,6 +17,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support
         bool IOptionsService.EnableIntelliSense => AdvancedOptions.EnableIntelliSense;
         bool IOptionsService.EnableErrorReporting => AdvancedOptions.EnableErrorReporting;
         bool IOptionsService.EnableSquiggles => AdvancedOptions.EnableSquiggles;
+        bool IOptionsService.EnableOutlining => AdvancedOptions.EnterOutliningModeWhenFilesOpen;
 
         public AdvancedOptions AdvancedOptions { get; } = new AdvancedOptions();
         public GeneralOptions GeneralOptions { get; } = new GeneralOptions();

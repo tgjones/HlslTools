@@ -19,6 +19,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
         bool IOptionsService.EnableIntelliSense => AdvancedOptions.EnableIntelliSense;
         bool IOptionsService.EnableErrorReporting => AdvancedOptions.EnableErrorReporting;
         bool IOptionsService.EnableSquiggles => AdvancedOptions.EnableSquiggles;
+        bool IOptionsService.EnableOutlining => AdvancedOptions.EnterOutliningModeWhenFilesOpen;
 
         public OptionsService()
         {
