@@ -29,14 +29,14 @@ namespace ShaderTools.Editor.VisualStudio.Core
 
         public int GetFileExtensions(out string pbstrExtensions)
         {
-            pbstrExtensions = string.Join(";", FileExtensions);
-            return VSConstants.S_OK;
+            pbstrExtensions = null;
+            return VSConstants.E_NOTIMPL;
         }
 
         public int GetColorizer(IVsTextLines pBuffer, out IVsColorizer ppColorizer)
         {
             ppColorizer = null;
-            return VSConstants.E_FAIL;
+            return VSConstants.E_NOTIMPL;
         }
 
         public int GetCodeWindowManager(IVsCodeWindow pCodeWin, out IVsCodeWindowManager ppCodeWinMgr)

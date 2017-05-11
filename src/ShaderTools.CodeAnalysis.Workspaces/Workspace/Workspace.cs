@@ -30,9 +30,6 @@ namespace ShaderTools.CodeAnalysis
 
         private ImmutableDictionary<string, ConfigFile> _configFiles = ImmutableDictionary<string, ConfigFile>.Empty;
 
-        public event EventHandler<DocumentEventArgs> DocumentOpened;
-        public event EventHandler<DocumentEventArgs> DocumentClosed;
-
         public HostWorkspaceServices Services => _services;
 
         private readonly IWorkspaceTaskScheduler _taskQueue;
@@ -99,6 +96,8 @@ namespace ShaderTools.CodeAnalysis
 
                 var newDocument = newSolution.GetDocument(documentId);
                 this.OnDocumentTextChanged(newDocument);
+
+                DocumentChanged?.Invoke(this, new DocumentEventArgs(newDocument));
             }
         }
 

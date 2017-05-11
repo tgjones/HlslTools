@@ -10,6 +10,7 @@ using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.LanguageServices;
 using ShaderTools.VisualStudio.LanguageServices.Classification;
+using ShaderTools.VisualStudio.LanguageServices.ErrorList;
 
 namespace ShaderTools.Editor.VisualStudio.Core
 {
@@ -53,6 +54,7 @@ namespace ShaderTools.Editor.VisualStudio.Core
             // TODO: Only need to do this once, not per package.
             var componentModel = this.AsVsServiceProvider().GetComponentModel();
             componentModel.GetService<ThemeColorFixer>();
+            componentModel.GetService<ErrorsTableDataSource>();
         }
 
         protected abstract LanguageInfoBase CreateLanguageInfo();

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Composition;
-using System.Text;
 
 namespace ShaderTools.CodeAnalysis.Host.Mef
 {

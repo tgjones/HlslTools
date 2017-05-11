@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.CodeAnalysis.Text;
@@ -12,6 +13,8 @@ namespace ShaderTools.CodeAnalysis
     public sealed class WorkspaceDocuments
     {
         private readonly ImmutableDictionary<DocumentId, Document> _idToDocumentMap;
+
+        public IEnumerable<DocumentId> DocumentIds => _idToDocumentMap.Keys;
 
         internal WorkspaceDocuments(ImmutableDictionary<DocumentId, Document> idToDocumentMap)
         {

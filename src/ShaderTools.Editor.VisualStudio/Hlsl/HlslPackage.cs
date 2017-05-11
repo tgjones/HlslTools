@@ -79,11 +79,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
 
         protected override void Initialize()
         {
+            Instance = this;
+
             SyntaxVisualizerToolWindowCommand.Initialize(this);
 
             base.Initialize();
-
-            Instance = this;
 
             Options = this.AsVsServiceProvider().GetComponentModel().GetService<IHlslOptionsService>();
         }

@@ -13,7 +13,6 @@ using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 using ShaderTools.CodeAnalysis.Editor.Tagging;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
-using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.Diagnostics
@@ -23,6 +22,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Diagnostics
     [ContentType(ContentTypeNames.ShaderToolsContentType)]
     internal sealed class DiagnosticsSquiggleTaggerProvider : AsynchronousTaggerProvider<IErrorTag>
     {
+        private readonly IDiagnosticService _diagnosticService;
         private readonly ImmutableArray<PerLanguageOption<bool>> _options;
 
         [ImportingConstructor]
@@ -30,7 +30,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Diagnostics
             IForegroundNotificationService notificationService,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners)
             : base(new AggregateAsynchronousOperationListener(asyncListeners, FeatureAttribute.DiagnosticService), notificationService)
-        {
+        {            
+            _diagnosticService = PrimaryWorkspace.Workspace.Services.GetRequiredService<IDiagnosticService>();
             _options = new[] { DiagnosticsOptions.EnableErrorReporting, DiagnosticsOptions.EnableSquiggles }.ToImmutableArray();
         }
 
@@ -38,7 +39,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Diagnostics
 
         protected override ITaggerEventSource CreateEventSource(ITextView textViewOpt, ITextBuffer subjectBuffer)
         {
-            return TaggerEventSources.OnTextChanged(subjectBuffer, TaggerDelay.OnIdle);
+            return TaggerEventSources.OnDiagnosticsChanged(subjectBuffer, _diagnosticService, TaggerDelay.OnIdle);
         }
 
         protected override async Task ProduceTagsAsync(TaggerContext<IErrorTag> context, DocumentSnapshotSpan spanToTag, int? caretPosition)
@@ -51,34 +52,27 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Diagnostics
             if (!optionsService.EnableErrorReporting || !optionsService.EnableSquiggles)
                 return;
 
-            var syntaxTree = await document.GetSyntaxTreeAsync(context.CancellationToken).ConfigureAwait(false);
-            if (syntaxTree == null)
-                return;
+            var diagnostics = await _diagnosticService.GetDiagnosticsAsync(document.Id, context.CancellationToken);
 
-            AddDiagnostics(context, syntaxTree.GetDiagnostics(), snapshot, syntaxTree, true);
-
-            var semanticModel = await document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
-            if (semanticModel != null)
-                AddDiagnostics(context, semanticModel.GetDiagnostics(), snapshot, syntaxTree, true);
+            AddDiagnostics(context, diagnostics, snapshot);
         }
 
-        private void AddDiagnostics(TaggerContext<IErrorTag> context, IEnumerable<Diagnostic> diagnostics, ITextSnapshot snapshot, SyntaxTreeBase syntaxTree, bool isSyntax)
+        private static void AddDiagnostics(TaggerContext<IErrorTag> context, IEnumerable<MappedDiagnostic> mappedDiagnostics, ITextSnapshot snapshot)
         {
-            foreach (var diagnostic in diagnostics)
+            foreach (var mappedDiagnostic in mappedDiagnostics)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                var diagnosticTextSpan = syntaxTree.GetSourceFileSpan(diagnostic.SourceRange);
-                if (!diagnosticTextSpan.IsInRootFile)
+                if (!mappedDiagnostic.FileSpan.IsInRootFile)
                     continue;
 
-                var errorType = diagnostic.Severity == DiagnosticSeverity.Warning
+                var errorType = mappedDiagnostic.Diagnostic.Severity == DiagnosticSeverity.Warning
                     ? PredefinedErrorTypeNames.Warning
-                    : (isSyntax ? PredefinedErrorTypeNames.SyntaxError : PredefinedErrorTypeNames.CompilerError);
+                    : (mappedDiagnostic.Source == DiagnosticSource.SyntaxParsing ? PredefinedErrorTypeNames.SyntaxError : PredefinedErrorTypeNames.CompilerError);
 
-                var tag = new ErrorTag(errorType, diagnostic.Message);
+                var tag = new ErrorTag(errorType, mappedDiagnostic.Diagnostic.Message);
 
-                context.AddTag(snapshot.GetTagSpan(diagnosticTextSpan.Span.ToSpan(), tag));
+                context.AddTag(snapshot.GetTagSpan(mappedDiagnostic.FileSpan.Span.ToSpan(), tag));
             }
         }
     }

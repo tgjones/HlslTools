@@ -8,7 +8,7 @@ using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.ErrorList
 {
-    [Export(typeof(IWpfTextViewCreationListener))]
+    //[Export(typeof(IWpfTextViewCreationListener))]
     [ContentType(HlslConstants.ContentTypeName)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class ErrorManagerProvider : IWpfTextViewCreationListener

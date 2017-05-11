@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Editor.Tagging;
 using ShaderTools.CodeAnalysis.Notification;
 using ShaderTools.CodeAnalysis.Options;
@@ -83,13 +84,13 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
             return new OptionChangedEventSource(subjectBuffer, option, delay);
         }
 
-        //public static ITaggerEventSource OnDiagnosticsChanged(
-        //    ITextBuffer subjectBuffer,
-        //    IDiagnosticService service,
-        //    TaggerDelay delay)
-        //{
-        //    return new DiagnosticsChangedEventSource(subjectBuffer, service, delay);
-        //}
+        public static ITaggerEventSource OnDiagnosticsChanged(
+            ITextBuffer subjectBuffer,
+            IDiagnosticService service,
+            TaggerDelay delay)
+        {
+            return new DiagnosticsChangedEventSource(subjectBuffer, service, delay);
+        }
 
         //public static ITaggerEventSource OnParseOptionChanged(
         //    ITextBuffer subjectBuffer,

@@ -28,6 +28,8 @@ namespace ShaderTools.VisualStudio.LanguageServices
             ITextDocumentFactoryService textDocumentFactoryService)
             : base(MefV1HostServices.Create(GetExportProvider(serviceProvider)))
         {
+            PrimaryWorkspace.Register(this);
+
             _textDocumentFactoryService = textDocumentFactoryService;
 
             _backgroundParser = new BackgroundParser(this);
