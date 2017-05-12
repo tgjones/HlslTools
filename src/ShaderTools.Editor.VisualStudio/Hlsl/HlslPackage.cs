@@ -42,11 +42,14 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension7)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension8)]
 
+    [ProvideEditorFactory(typeof(HlslEditorFactory), 140, CommonPhysicalViewAttributes = (int)__VSPHYSICALVIEWATTRIBUTES.PVA_SupportsPreview, TrustLevel = __VSEDITORTRUSTLEVEL.ETL_AlwaysTrusted)]
+    [ProvideEditorLogicalView(typeof(HlslEditorFactory), VSConstants.LOGVIEWID.TextView_string, IsTrusted = true)]
+
     // Adds support for user mapping of custom file extensions.
     [ProvideFileExtensionMapping(
         "{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", 
         "HLSL Editor", 
-        typeof(IVsEditorFactory),  // A bit weird, but seems to work, and means we don't need to implement IVsEditorFactory ourselves.
+        typeof(HlslEditorFactory),  // A bit weird, but seems to work, and means we don't need to implement IVsEditorFactory ourselves.
         typeof(HlslLanguageInfo), 
         PackageId, 
         100)]
@@ -84,6 +87,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
             SyntaxVisualizerToolWindowCommand.Initialize(this);
 
             base.Initialize();
+
+            RegisterEditorFactory(new HlslEditorFactory(this));
 
             Options = this.AsVsServiceProvider().GetComponentModel().GetService<IHlslOptionsService>();
         }
