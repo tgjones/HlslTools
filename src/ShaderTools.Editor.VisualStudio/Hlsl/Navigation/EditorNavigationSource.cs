@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
+using ShaderTools.CodeAnalysis.Editor.Shared.Threading;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Shared.TestHooks;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
-using ShaderTools.Editor.VisualStudio.Core.Parsing;
-using ShaderTools.Editor.VisualStudio.Core.Util;
-using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {
@@ -18,34 +17,55 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         private readonly DispatcherGlyphService _glyphService;
         private List<EditorTypeNavigationTarget> _navigationTargets;
 
-        public EditorNavigationSource(ITextBuffer textBuffer, BackgroundParser backgroundParser, DispatcherGlyphService glyphService)
+        private readonly AsynchronousSerialWorkQueue _workQueue;
+
+        public EditorNavigationSource(ITextBuffer textBuffer, DispatcherGlyphService glyphService)
         {
             _textBuffer = textBuffer;
             _glyphService = glyphService;
 
             _navigationTargets = new List<EditorTypeNavigationTarget>();
 
-            backgroundParser.SubscribeToThrottledSyntaxTreeAvailable(BackgroundParserSubscriptionDelay.Medium,
-                async x => await ExceptionHelper.TryCatchCancellation(async () => await InvalidateTargets(x.Snapshot, x.CancellationToken)));
+            _workQueue = new AsynchronousSerialWorkQueue(new AsynchronousOperationListener());
+
+            // TODO: We don't unsubscribe from this.
+            _textBuffer.Changed += OnTextBufferChanged;
+
+            OnTextBufferChanged();
         }
 
-        public async void Initialize()
+        private void OnTextBufferChanged(object sender, TextContentChangedEventArgs e)
         {
-            await Task.Run(async () => await InvalidateTargets(_textBuffer.CurrentSnapshot, CancellationToken.None));
+            OnTextBufferChanged();
         }
 
-        private async Task InvalidateTargets(ITextSnapshot snapshot, CancellationToken cancellationToken)
+        private void OnTextBufferChanged()
+        {
+            _workQueue.CancelCurrentWork();
+
+            var cancellationToken = _workQueue.CancellationToken;
+
+            _workQueue.EnqueueBackgroundTask(
+                ct => InvalidateTargetsAsync(_textBuffer.CurrentSnapshot, ct),
+                "InvalidateTargets",
+                cancellationToken);
+        }
+
+        private async Task InvalidateTargetsAsync(ITextSnapshot snapshot, CancellationToken cancellationToken)
         {
             var navigationTargets = new List<EditorTypeNavigationTarget>();
 
-            await Task.Run(() =>
-            {
-                var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
-                var navigationTargetsVisitor = new NavigationTargetsVisitor(snapshot, syntaxTree, _glyphService, cancellationToken);
-                navigationTargets.AddRange(navigationTargetsVisitor.GetTargets((CompilationUnitSyntax) syntaxTree.Root));
-            }, cancellationToken);
+            var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+            if (document == null)
+                return;
+
+            var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+
+            var navigationTargetsVisitor = new NavigationTargetsVisitor(snapshot, (SyntaxTree) syntaxTree, _glyphService, cancellationToken);
+            navigationTargets.AddRange(navigationTargetsVisitor.GetTargets((CompilationUnitSyntax) syntaxTree.Root));
 
             _navigationTargets = navigationTargets;
+
             OnNavigationTargetsChanged(EventArgs.Empty);
         }
 

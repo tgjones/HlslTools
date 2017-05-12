@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using ShaderTools.Editor.VisualStudio.Core;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab
@@ -13,6 +12,5 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
         }
 
         protected override string LanguageName { get; } = ShaderLabConstants.LanguageName;
-        protected override IEnumerable<string> FileExtensions { get; } = new[] { ShaderLabConstants.FileExtension };
     }
 }

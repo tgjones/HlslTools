@@ -291,8 +291,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Core\Options\ViewModels\OptionsPreviewViewModelBase.cs" />
-    <Compile Include="Core\Parsing\BackgroundParserBase.cs" />
-    <Compile Include="Core\Parsing\BackgroundParserManagerBase.cs" />
     <Compile Include="Core\Projection\IProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
@@ -302,7 +300,6 @@
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
     <Compile Include="Core\Util\IComEventSink.cs" />
     <Compile Include="Hlsl\ContentTypeDefinitions.cs" />
-    <Compile Include="Hlsl\HlslWorkspaceListener.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
@@ -315,12 +312,6 @@
     <Compile Include="Hlsl\Editing\Commenting\CommentingExtensions.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentingTextViewCreationListener.cs" />
     <Compile Include="Hlsl\Editing\Commenting\UncommentCommandTarget.cs" />
-    <Compile Include="Core\ErrorList\ErrorListHelper.cs" />
-    <Compile Include="Core\ErrorList\ErrorManager.cs" />
-    <Compile Include="Hlsl\ErrorList\ErrorManagerProvider.cs" />
-    <Compile Include="Core\ErrorList\IErrorListHelper.cs" />
-    <Compile Include="Hlsl\ErrorList\SemanticErrorManager.cs" />
-    <Compile Include="Hlsl\ErrorList\SyntaxErrorManager.cs" />
     <Compile Include="Hlsl\Formatting\FormattingExtensions.cs" />
     <Compile Include="Hlsl\Formatting\FormatCommandTarget.cs" />
     <Compile Include="Hlsl\Formatting\FormattingTextViewCreationListener.cs" />
@@ -456,11 +447,8 @@
     </Compile>
     <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndent.cs" />
     <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndentProvider.cs" />
-    <Compile Include="Hlsl\Parsing\BackgroundParserManager.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
-    <Compile Include="ShaderLab\ErrorList\ErrorManagerProvider.cs" />
-    <Compile Include="ShaderLab\ErrorList\SyntaxErrorManager.cs" />
     <Compile Include="ShaderLab\Options\IShaderLabOptionsService.cs" />
     <Compile Include="ShaderLab\Options\OptionsService.cs" />
     <Compile Include="ShaderLab\Options\ShaderLabAdvancedOptionsPage.cs">
@@ -478,10 +466,7 @@
     <Compile Include="ShaderLab\Options\Views\ShaderLabAdvancedOptionsControl.xaml.cs">
       <DependentUpon>ShaderLabAdvancedOptionsControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ShaderLab\Parsing\BackgroundParser.cs" />
-    <Compile Include="ShaderLab\Parsing\BackgroundParserManager.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
-    <Compile Include="ShaderLab\Util\Extensions\Extensions.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
@@ -498,7 +483,6 @@
     <Compile Include="Hlsl\Tagging\Outlining\OutliningCommandTarget.cs" />
     <Compile Include="Hlsl\Text\VisualStudioFileSystem.cs" />
     <Compile Include="Core\Text\VisualStudioTextExtensions.cs" />
-    <Compile Include="Hlsl\Parsing\BackgroundParser.cs" />
     <Compile Include="Core\Util\CommandTargetBase.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTreeExtensions.cs" />
@@ -579,6 +563,10 @@
     </Content>
     <Content Include="..\packages\System.Runtime.Serialization.Primitives.4.3.0\lib\net46\System.Runtime.Serialization.Primitives.dll">
       <Link>System.Runtime.Serialization.Primitives.dll</Link>
+      <IncludeInVSIX>true</IncludeInVSIX>
+    </Content>
+    <Content Include="..\packages\System.ValueTuple.4.3.0\lib\netstandard1.0\System.ValueTuple.dll">
+      <Link>System.ValueTuple.dll</Link>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\icon.png">

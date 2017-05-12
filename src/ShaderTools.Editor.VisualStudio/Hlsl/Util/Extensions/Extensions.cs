@@ -1,16 +1,15 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
-using ShaderTools.Editor.VisualStudio.Hlsl.Text;
-using System.IO;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
+using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
 {
@@ -18,7 +17,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
     {
         private static readonly object IncludeFileSystemKey = new object();
         private static readonly object ConfigFileKey = new object();
-        private static readonly object BackgroundParserKey = new object();
 
         public static IIncludeFileSystem GetIncludeFileSystem(this ITextBuffer textBuffer)
         {
@@ -36,12 +34,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
                         filePath = Path.GetDirectoryName(filePath);
                     return ConfigFileLoader.LoadAndMergeConfigFile(filePath);
                 });
-        }
-
-        public static BackgroundParser GetBackgroundParser(this ITextBuffer textBuffer)
-        {
-            return textBuffer.Properties.GetOrCreateSingletonProperty(BackgroundParserKey,
-                () => new BackgroundParser(textBuffer));
         }
 
         public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, CancellationToken cancellationToken)

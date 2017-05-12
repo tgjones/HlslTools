@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio;
-using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.VisualStudio.LanguageServices;
 using ShaderTools.VisualStudio.LanguageServices.Classification;
 using ShaderTools.VisualStudio.LanguageServices.ErrorList;
 

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {
@@ -14,12 +13,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         public EditorNavigationSource TryCreateEditorNavigationSource(ITextBuffer textBuffer)
         {
             return textBuffer.Properties.GetOrCreateSingletonProperty(
-                () =>
-                {
-                    var result = new EditorNavigationSource(textBuffer, textBuffer.GetBackgroundParser(), GlyphService);
-                    result.Initialize();
-                    return result;
-                });
+                () => new EditorNavigationSource(textBuffer, GlyphService));
         }
     }
 }

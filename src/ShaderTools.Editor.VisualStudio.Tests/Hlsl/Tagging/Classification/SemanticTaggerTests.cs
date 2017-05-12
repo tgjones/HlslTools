@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Tagging.Classification

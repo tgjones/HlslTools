@@ -3,7 +3,6 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using NSubstitute;
-using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 using Xunit;
 

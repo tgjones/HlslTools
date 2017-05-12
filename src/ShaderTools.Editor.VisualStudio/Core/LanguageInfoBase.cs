@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Microsoft.VisualStudio;
+﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
@@ -19,7 +18,6 @@ namespace ShaderTools.Editor.VisualStudio.Core
         }
 
         protected abstract string LanguageName { get; }
-        protected abstract IEnumerable<string> FileExtensions { get; }
 
         public int GetLanguageName(out string bstrName)
         {

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using ShaderTools.Editor.VisualStudio.Core;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl
@@ -13,6 +12,5 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
         }
 
         protected override string LanguageName { get; } = HlslConstants.LanguageName;
-        protected override IEnumerable<string> FileExtensions { get; } = HlslConstants.FileExtensions;
     }
 }

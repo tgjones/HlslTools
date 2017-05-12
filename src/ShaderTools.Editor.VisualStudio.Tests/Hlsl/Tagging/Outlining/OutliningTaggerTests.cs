@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.Editor.VisualStudio.Hlsl.Parsing;
 using ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 using ShaderTools.Editor.VisualStudio.Tests.Support;

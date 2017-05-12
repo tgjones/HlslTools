@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Syntax;
 
 namespace ShaderTools.CodeAnalysis.Diagnostics
@@ -31,6 +32,11 @@ namespace ShaderTools.CodeAnalysis.Diagnostics
             var document = _workspace.CurrentDocuments.GetDocument(documentId);
 
             if (document == null)
+                return ImmutableArray<MappedDiagnostic>.Empty;
+
+            // TODO: Remove this.
+            var optionsService = document.LanguageServices.GetRequiredService<IOptionsService>();
+            if (!optionsService.EnableErrorReporting)
                 return ImmutableArray<MappedDiagnostic>.Empty;
 
             var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
