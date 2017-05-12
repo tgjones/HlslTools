@@ -38,6 +38,8 @@ namespace ShaderTools.VisualStudio.LanguageServices.ErrorList
 
             _factories.Add(documentId, factory);
             _sink.AddFactory(factory);
+
+            OnDocumentChanged(documentId);
         }
 
         private void OnDocumentOpened(object sender, DocumentEventArgs e)
@@ -47,7 +49,12 @@ namespace ShaderTools.VisualStudio.LanguageServices.ErrorList
 
         private void OnDocumentChanged(object sender, DocumentEventArgs e)
         {
-            if (_factories.TryGetValue(e.Document.Id, out var factory))
+            OnDocumentChanged(e.Document.Id);
+        }
+
+        private void OnDocumentChanged(DocumentId documentId)
+        {
+            if (_factories.TryGetValue(documentId, out var factory))
             {
                 factory.OnDocumentChanged(() => _sink.FactorySnapshotChanged(factory));
             }
@@ -67,6 +74,11 @@ namespace ShaderTools.VisualStudio.LanguageServices.ErrorList
             _workspace.DocumentClosed -= OnDocumentClosed;
             _workspace.DocumentChanged -= OnDocumentChanged;
             _workspace.DocumentOpened -= OnDocumentOpened;
+
+            foreach (var factory in _factories.Values)
+                factory.Dispose();
+
+            _factories.Clear();
         }
     }
 }

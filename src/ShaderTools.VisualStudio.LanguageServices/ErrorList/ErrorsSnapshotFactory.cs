@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Shell.TableManager;
@@ -27,8 +28,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.ErrorList
 
             _workQueue = new AsynchronousSerialWorkQueue(new AsynchronousOperationListener());
 
-            // Not ideal, doing this as a blocking call, but not sure what the correct thing to do is.
-            UpdateCurrentSnapshotAsync(CancellationToken.None).Wait();
+            _currentSnapshot = new ErrorsSnapshot(ImmutableArray<MappedDiagnostic>.Empty, 0);
         }
 
         public void OnDocumentChanged(Action onCompleted)
@@ -58,7 +58,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.ErrorList
 
             var snapshot = new ErrorsSnapshot(
                 diagnostics,
-                (_currentSnapshot?.VersionNumber + 1) ?? 0);
+                _currentSnapshot.VersionNumber + 1);
 
             _currentSnapshot = snapshot;
         }
