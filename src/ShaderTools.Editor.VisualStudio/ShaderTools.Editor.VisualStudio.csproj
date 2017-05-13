@@ -288,7 +288,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\EditorFactoryBase.cs" />
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="Core\Options\OptionsPageBase.cs">
@@ -304,7 +303,6 @@
     <Compile Include="Core\Util\Extensions\TextSpanExtensions.cs" />
     <Compile Include="Core\Util\IComEventSink.cs" />
     <Compile Include="Hlsl\ContentTypeDefinitions.cs" />
-    <Compile Include="Hlsl\HlslEditorFactory.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
