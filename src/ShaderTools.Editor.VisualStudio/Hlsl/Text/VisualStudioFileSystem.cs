@@ -12,7 +12,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Text
 
             if (File.Exists(path))
             {
-                text = SourceText.From(File.ReadAllText(path));
+                text = SourceText.From(File.ReadAllText(path), path);
                 return true;
             }
 
