@@ -8,3 +8,4 @@
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Workspaces.Desktop")]
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio")]
 [assembly: InternalsVisibleTo("ShaderTools.LanguageServer.Protocol")]
+[assembly: InternalsVisibleTo("ShaderTools.VisualStudio.LanguageServices")]

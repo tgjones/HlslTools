@@ -1,9 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using ShaderTools.Editor.VisualStudio.Core;
+using ShaderTools.VisualStudio.LanguageServices;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl
 {
-    [Guid("80329450-4B0D-4EC7-A4E4-A57C024888D5")]
+    [Guid(Guids.HlslLanguageServiceIdString)]
     internal sealed class HlslLanguageInfo : LanguageInfoBase
     {
         public HlslLanguageInfo(LanguagePackageBase languagePackage)
@@ -11,6 +12,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
         {
         }
 
-        protected override string LanguageName { get; } = HlslConstants.LanguageName;
+        internal override string LanguageName { get; } = HlslConstants.LanguageName;
     }
 }

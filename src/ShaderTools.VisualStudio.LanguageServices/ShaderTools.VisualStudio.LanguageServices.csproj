@@ -55,8 +55,13 @@
     <Compile Include="ErrorList\ErrorsTableDataSource.cs" />
     <Compile Include="ErrorList\ErrorsSnapshot.cs" />
     <Compile Include="ErrorList\ErrorsSnapshotFactory.cs" />
+    <Compile Include="Guids.cs" />
+    <Compile Include="Options\LanguageSettingsPersister.cs" />
+    <Compile Include="Options\LocalUserRegistryOptionPersister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classification\ThemeManager.cs" />
+    <Compile Include="Utilities\ComEventSink.cs" />
+    <Compile Include="Utilities\IComEventSink.cs" />
     <Compile Include="Workspace\VisualStudioWorkspace.cs" />
     <Compile Include="Workspace\WorkspaceBufferListener.cs" />
   </ItemGroup>
@@ -84,6 +89,10 @@
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj">
       <Project>{2361a2c2-d048-4694-9000-25b4ea846cba}</Project>
       <Name>ShaderTools.CodeAnalysis</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj">
+      <Project>{485596dc-edc9-4c95-9807-229355f4a941}</Project>
+      <Name>ShaderTools.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +155,16 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.7.10.6070\lib\Microsoft.VisualStudio.TextManager.Interop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.11.0, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.11.0.11.0.61030\lib\Microsoft.VisualStudio.TextManager.Interop.11.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.12.0.12.0.30110\lib\Microsoft.VisualStudio.TextManager.Interop.12.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

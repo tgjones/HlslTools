@@ -16,8 +16,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 
             if (document != null)
             {
-                throw new NotImplementedException();
-                //return document.Project.Solution.Options.GetOption(option);
+                return document.Workspace.Options.GetOption(option);
             }
 
             return option.DefaultValue;
@@ -32,8 +31,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 
                 if (document != null)
                 {
-                    return true; // TODO
-                    //return document.Project.Solution.Options.GetOption(option, document.Language);
+                    return document.Workspace.Options.GetOption(option, document.Language);
                 }
 
                 return option.DefaultValue;

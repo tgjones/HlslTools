@@ -82,6 +82,11 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Classification
 
             var semanticModel = await document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
 
+            if (semanticModel == null)
+            {
+                return;
+            }
+
             var classifiedSpans = ClassificationUtilities.GetOrCreateClassifiedSpanList();
 
             classificationService.AddSemanticClassifications(

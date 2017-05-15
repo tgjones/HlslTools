@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
@@ -17,6 +19,8 @@ namespace ShaderTools.Editor.VisualStudio.Core
         private readonly Dictionary<IVsCodeWindow, CodeWindowManagerBase> _codeWindowManagers = new Dictionary<IVsCodeWindow, CodeWindowManagerBase>();
         private IComEventSink _languagePreferencesEventsSink;
 
+        internal IComponentModel ComponentModel => (IComponentModel) GetService(typeof(SComponentModel));
+
         internal CodeWindowManagerBase GetOrCreateCodeWindowManager(IVsCodeWindow window)
         {
             CodeWindowManagerBase value;
@@ -27,30 +31,34 @@ namespace ShaderTools.Editor.VisualStudio.Core
 
         protected abstract CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window);
 
-        internal IEnumerable<CodeWindowManagerBase> CodeWindowManagers => _codeWindowManagers.Values;
-
         internal LanguagePreferences LanguagePreferences { get; private set; }
+
+        internal LanguageInfoBase LanguageInfo { get; private set; }
 
         protected override void Initialize()
         {
             base.Initialize();
 
             // Proffer the service.
-            var languageInfo = CreateLanguageInfo();
-            ((IServiceContainer)this).AddService(languageInfo.GetType(), languageInfo, true);
+            LanguageInfo = CreateLanguageInfo();
+            ((IServiceContainer)this).AddService(LanguageInfo.GetType(), LanguageInfo, true);
+
+            // Ensure the options persisters are loaded since we have to fetch options from the shell
+            var componentModel = this.AsVsServiceProvider().GetComponentModel();
+            componentModel.GetExtensions<IOptionPersister>();
 
             // Hook up language preferences.
             var textMgr = (IVsTextManager) GetService(typeof(SVsTextManager));
 
             var langPrefs = new LANGPREFERENCES[1];
-            langPrefs[0].guidLang = languageInfo.GetType().GUID;
+            langPrefs[0].guidLang = LanguageInfo.GetType().GUID;
             ErrorHandler.ThrowOnFailure(textMgr.GetUserPreferences(null, null, langPrefs, null));
             LanguagePreferences = new LanguagePreferences(this, langPrefs[0]);
 
             _languagePreferencesEventsSink = ComEventSink.Advise<IVsTextManagerEvents2>(textMgr, LanguagePreferences);
 
             // TODO: Only need to do this once, not per package.
-            var componentModel = this.AsVsServiceProvider().GetComponentModel();
+            
             componentModel.GetService<ThemeColorFixer>();
             componentModel.GetService<ErrorsTableDataSource>();
         }

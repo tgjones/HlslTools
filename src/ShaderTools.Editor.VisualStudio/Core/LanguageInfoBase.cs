@@ -17,7 +17,7 @@ namespace ShaderTools.Editor.VisualStudio.Core
             _serviceProvider = languagePackage.AsVsServiceProvider();
         }
 
-        protected abstract string LanguageName { get; }
+        internal abstract string LanguageName { get; }
 
         public int GetLanguageName(out string bstrName)
         {

@@ -2,20 +2,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using ShaderTools.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Options
 {
     /// <summary>
-    /// Provides services for reading and writing options.  This will provide support for
-    /// customizations workspaces need to perform around options.  Note that 
-    /// <see cref="IGlobalOptionService"/> options will normally still be offered through 
-    /// implementations of this.  However, implementations may customize things differently 
-    /// depending on their needs.
+    /// Provides services for reading and writing options.
+    /// This will provide support for options at the global level (i.e. shared among
+    /// all workspaces/services).
+    /// 
+    /// In general you should not import this type directly, and should instead get an
+    /// <see cref="IOptionService"/> from <see cref="Workspace.Services"/>
     /// </summary>
-    internal interface IOptionService : IWorkspaceService
+    internal interface IGlobalOptionService
     {
         /// <summary>
         /// Gets the current value of the specific option.
@@ -33,12 +31,7 @@ namespace ShaderTools.CodeAnalysis.Options
         object GetOption(OptionKey optionKey);
 
         /// <summary>
-        /// Fetches an immutable set of all current options.
-        /// </summary>
-        OptionSet GetOptions();
-
-        /// <summary>
-        /// Applies a set of options.
+        /// Applies a set of options, invoking serializers if needed.
         /// </summary>
         void SetOptions(OptionSet optionSet);
 
@@ -49,11 +42,9 @@ namespace ShaderTools.CodeAnalysis.Options
 
         event EventHandler<OptionChangedEventArgs> OptionChanged;
 
-        void RegisterDocumentOptionsProvider(IDocumentOptionsProvider documentOptionsProvider);
-
         /// <summary>
-        /// Returns the <see cref="OptionSet"/> that applies to a specific document, given that document and the global options.
+        /// Refreshes the stored value of a serialized option. This should only be called from serializers.
         /// </summary>
-        Task<OptionSet> GetUpdatedOptionSetForDocumentAsync(Document document, OptionSet optionSet, CancellationToken cancellationToken);
+        void RefreshOption(OptionKey optionKey, object newValue);
     }
 }

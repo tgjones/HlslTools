@@ -1,9 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using ShaderTools.Editor.VisualStudio.Core;
+using ShaderTools.VisualStudio.LanguageServices;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab
 {
-    [Guid("E77D10A9-504A-45D6-B1AC-8492236D9564")]
+    [Guid(Guids.ShaderLabLanguageServiceIdString)]
     internal sealed class ShaderLabLanguageInfo : LanguageInfoBase
     {
         public ShaderLabLanguageInfo(LanguagePackageBase languagePackage)
@@ -11,6 +12,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
         {
         }
 
-        protected override string LanguageName { get; } = ShaderLabConstants.LanguageName;
+        internal override string LanguageName { get; } = ShaderLabConstants.LanguageName;
     }
 }

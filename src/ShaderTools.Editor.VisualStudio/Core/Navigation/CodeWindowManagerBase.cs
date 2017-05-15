@@ -2,12 +2,16 @@
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.CodeAnalysis.Editor.Options;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.VisualStudio.LanguageServices;
 
 namespace ShaderTools.Editor.VisualStudio.Core.Navigation
 {
     internal abstract class CodeWindowManagerBase : IVsCodeWindowManager
     {
         private readonly LanguagePackageBase _languagePackage;
+        private readonly IOptionService _optionService;
         private IVsDropdownBarClient _dropdownBarClient;
 
         protected CodeWindowManagerBase(LanguagePackageBase languagePackage, IVsCodeWindow codeWindow, SVsServiceProvider serviceProvider)
@@ -15,6 +19,26 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
             _languagePackage = languagePackage;
             CodeWindow = codeWindow;
             ServiceProvider = serviceProvider;
+
+            var workspace = languagePackage.ComponentModel.GetService<VisualStudioWorkspace>();
+            _optionService = workspace.Services.GetService<IOptionService>();
+
+            _optionService.OptionChanged += OnOptionChanged;
+        }
+
+        private void OnOptionChanged(object sender, OptionChangedEventArgs e)
+        {
+            if (e.Language != _languagePackage.LanguageInfo.LanguageName ||
+                e.Option != NavigationBarOptions.ShowNavigationBar)
+            {
+                return;
+            }
+
+            var enabled = _optionService.GetOption(NavigationBarOptions.ShowNavigationBar, _languagePackage.LanguageInfo.LanguageName);
+            if (enabled)
+                AddDropDownBar();
+            else
+                RemoveDropDownBar();
         }
 
         public IVsCodeWindow CodeWindow { get; }
@@ -28,7 +52,9 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
             if (ErrorHandler.Succeeded(CodeWindow.GetSecondaryView(out textView)) && textView != null)
                 ErrorHandler.ThrowOnFailure(OnNewView(textView));
 
-            if (_languagePackage.LanguagePreferences.NavigationBar)
+            var enabled = _optionService.GetOption(NavigationBarOptions.ShowNavigationBar, _languagePackage.LanguageInfo.LanguageName);
+
+            if (enabled)
                 return AddDropDownBar();
 
             return VSConstants.S_OK;
@@ -61,7 +87,11 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
 
         public int RemoveAdornments()
         {
-            return RemoveDropDownBar();
+            var result = RemoveDropDownBar();
+
+            _optionService.OptionChanged -= OnOptionChanged;
+
+            return result;
         }
 
         private int RemoveDropDownBar()
@@ -84,6 +114,7 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
             }
 
             _dropdownBarClient = null;
+
             return VSConstants.S_OK;
         }
 
@@ -105,11 +136,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
             }
 
             return manager.AddDropdownBar(comboBoxCount, client);
-        }
-
-        public int ToggleNavigationBar(bool fEnable)
-        {
-            return fEnable ? AddDropDownBar() : RemoveDropDownBar();
         }
     }
 }

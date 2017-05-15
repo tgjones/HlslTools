@@ -107,6 +107,15 @@ namespace ShaderTools.CodeAnalysis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Options did not come from Workspace.
+        /// </summary>
+        internal static string Options_did_not_come_from_Workspace {
+            get {
+                return ResourceManager.GetString("Options_did_not_come_from_Workspace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service of type &apos;{0}&apos; is required to accomplish the task but is not available from the workspace..
         /// </summary>
         internal static string Service_of_type_0_is_required_to_accomplish_the_task_but_is_not_available_from_the_workspace {

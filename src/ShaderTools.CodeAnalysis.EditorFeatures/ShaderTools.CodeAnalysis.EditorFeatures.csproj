@@ -23,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Features\ShaderTools.CodeAnalysis.Features.csproj" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces.Desktop\ShaderTools.CodeAnalysis.Workspaces.Desktop.csproj" />
   </ItemGroup>
 
 </Project>

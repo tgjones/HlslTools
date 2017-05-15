@@ -123,6 +123,9 @@
   <data name="A_language_name_must_be_specified_for_this_option" xml:space="preserve">
     <value>A language name must be specified for this option.</value>
   </data>
+  <data name="Options_did_not_come_from_Workspace" xml:space="preserve">
+    <value>Options did not come from Workspace</value>
+  </data>
   <data name="Service_of_type_0_is_required_to_accomplish_the_task_but_is_not_available_from_the_workspace" xml:space="preserve">
     <value>Service of type '{0}' is required to accomplish the task but is not available from the workspace.</value>
   </data>

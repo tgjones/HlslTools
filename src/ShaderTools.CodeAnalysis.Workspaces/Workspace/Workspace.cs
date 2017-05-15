@@ -164,5 +164,21 @@ namespace ShaderTools.CodeAnalysis
                 currentDocuments = replacedSolution;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the set of all global options.
+        /// </summary>
+        public OptionSet Options
+        {
+            get
+            {
+                return _services.GetService<IOptionService>().GetOptions();
+            }
+
+            set
+            {
+                _services.GetService<IOptionService>().SetOptions(value);
+            }
+        }
     }
 }

@@ -36,18 +36,6 @@ namespace ShaderTools.Editor.VisualStudio.Core
                 _preferences.IndentStyle = pLangPrefs[0].IndentStyle;
                 _preferences.fInsertTabs = pLangPrefs[0].fInsertTabs;
                 _preferences.uIndentSize = pLangPrefs[0].uIndentSize;
-
-                if (_preferences.fDropdownBar != (_preferences.fDropdownBar = pLangPrefs[0].fDropdownBar))
-                {
-                    foreach (var window in _package.CodeWindowManagers)
-                    {
-                        var hr = window.ToggleNavigationBar(_preferences.fDropdownBar != 0);
-                        if (ErrorHandler.Failed(hr))
-                        {
-                            break;
-                        }
-                    }
-                }
             }
             return VSConstants.S_OK;
         }
@@ -63,7 +51,6 @@ namespace ShaderTools.Editor.VisualStudio.Core
         }
 
         public vsIndentStyle IndentMode => _preferences.IndentStyle;
-        public bool NavigationBar => _preferences.fDropdownBar != 0;
 
         public int? SpacesPerIndent => _preferences.fInsertTabs == 0 ? (int?) _preferences.uIndentSize : null;
         public int TabSize => (int) _preferences.uTabSize;
