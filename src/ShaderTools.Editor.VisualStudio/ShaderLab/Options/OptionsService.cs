@@ -30,7 +30,7 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab.Options
 
             FormattingOptions = new FormattingOptions
             {
-                SpacesPerIndent = ShaderLabPackage.Instance.LanguagePreferences.SpacesPerIndent
+                SpacesPerIndent = PrimaryWorkspace.Workspace.Options.GetOption(CodeAnalysis.Formatting.FormattingOptions.IndentationSize, ShaderLabConstants.LanguageName)
             };
 
             GeneralOptions = GetDialogPage<ShaderLabFormattingGeneralOptionsPage>().Options;

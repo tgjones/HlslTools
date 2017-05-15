@@ -40,7 +40,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
                 NewLines = newLinesOptions,
                 Spacing = spacingOptions,
 
-                SpacesPerIndent = HlslPackage.Instance.LanguagePreferences.SpacesPerIndent
+                SpacesPerIndent = PrimaryWorkspace.Workspace.Options.GetOption(CodeAnalysis.Formatting.FormattingOptions.IndentationSize, HlslConstants.LanguageName)
             };
 
             GeneralOptions = GetDialogPage<HlslFormattingGeneralOptionsPage>().Options;

@@ -318,7 +318,6 @@
     <Compile Include="Hlsl\Formatting\FormattingExtensions.cs" />
     <Compile Include="Hlsl\Formatting\FormatCommandTarget.cs" />
     <Compile Include="Hlsl\Formatting\FormattingTextViewCreationListener.cs" />
-    <Compile Include="Core\LanguagePreferences.cs" />
     <Compile Include="Hlsl\HlslPackage.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionExtensions.cs" />

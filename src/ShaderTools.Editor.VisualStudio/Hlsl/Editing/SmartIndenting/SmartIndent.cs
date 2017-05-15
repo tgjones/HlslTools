@@ -1,34 +1,35 @@
 ﻿using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 using System.Linq;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Utilities.Threading;
+using ShaderTools.CodeAnalysis.Formatting;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
 {
     internal sealed class SmartIndent : ISmartIndent
     {
-        private readonly LanguagePreferences _languagePreferences;
-
-        public SmartIndent(LanguagePackageBase languagePackage)
-        {
-            _languagePreferences = languagePackage.LanguagePreferences;
-        }
-
         public int? GetDesiredIndentation(ITextSnapshotLine line)
         {
-            switch (_languagePreferences.IndentMode)
+            var document = line.Snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
+            if (document == null)
+                return null;
+
+            var documentOptions = document.GetOptionsAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None);
+
+            switch (documentOptions.GetOption(FormattingOptions.SmartIndent))
             {
-                case vsIndentStyle.vsIndentStyleNone:
+                case FormattingOptions.IndentStyle.None:
                     return null;
 
-                case vsIndentStyle.vsIndentStyleDefault:
-                    return DoBlockIndent(line);
+                case FormattingOptions.IndentStyle.Block:
+                    return DoBlockIndent(line, documentOptions);
 
-                case vsIndentStyle.vsIndentStyleSmart:
+                case FormattingOptions.IndentStyle.Smart:
                     return DoSmartIndent(line);
 
                 default:
@@ -110,7 +111,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
             }
         }
 
-        private int? DoBlockIndent(ITextSnapshotLine line)
+        private int? DoBlockIndent(ITextSnapshotLine line, DocumentOptionSet optionSet)
         {
             for (var lineNumber = line.LineNumber - 1; lineNumber >= 0; --lineNumber)
             {
@@ -120,20 +121,20 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
 
                 if (text.Length > 0)
                 {
-                    return GetLeadingWhiteSpace(text);
+                    return GetLeadingWhiteSpace(text, optionSet);
                 }
             }
 
             return null;
         }
 
-        private int GetLeadingWhiteSpace(string text)
+        private int GetLeadingWhiteSpace(string text, DocumentOptionSet optionSet)
         {
             var size = 0;
             foreach (var ch in text)
             {
                 if (ch == '\t')
-                    size += _languagePreferences.TabSize;
+                    size += optionSet.GetOption(FormattingOptions.TabSize);
                 else if (ch == ' ')
                     size++;
                 else

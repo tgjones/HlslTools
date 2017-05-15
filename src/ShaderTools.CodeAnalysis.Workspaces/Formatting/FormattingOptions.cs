@@ -2,7 +2,7 @@
 
 using ShaderTools.CodeAnalysis.Options;
 
-namespace Microsoft.CodeAnalysis.Formatting
+namespace ShaderTools.CodeAnalysis.Formatting
 {
     public static class FormattingOptions
     {

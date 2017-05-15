@@ -12,11 +12,13 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Classification;
+using ShaderTools.CodeAnalysis.Formatting;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Formatting;
 using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.Utilities.Threading;
 using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
@@ -124,7 +126,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             var startPosition = startPoint.Position;
             var endPosition = endPoint.Position;
 
-            if (HlslPackage.Instance.LanguagePreferences.IndentMode == vsIndentStyle.vsIndentStyleSmart)
+            var document = session.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
+            var documentOptions = document.GetOptionsAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None);
+
+            if (documentOptions.GetOption(FormattingOptions.SmartIndent) == FormattingOptions.IndentStyle.Smart)
             {
                 // skip whitespace
                 while (startPosition >= 0 && char.IsWhiteSpace(snapshot[startPosition]))
