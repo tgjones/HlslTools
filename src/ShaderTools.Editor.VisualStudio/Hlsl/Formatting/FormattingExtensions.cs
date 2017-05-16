@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
@@ -19,14 +18,18 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
     {
         public static void Format(this ITextBuffer buffer, TextSpan span, IHlslOptionsService optionsService)
         {
+            var document = buffer.AsTextContainer().GetOpenDocumentInCurrentContext();
+
+            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
+
             SyntaxTree syntaxTree;
-            if (!TryGetSyntaxTree(buffer, out syntaxTree))
+            if (!TryGetSyntaxTree(document, out syntaxTree))
                 return;
             var edits = Formatter.GetEdits(
                 syntaxTree,
                 (SyntaxNode) syntaxTree.Root,
                 span,
-                optionsService.GetPrimaryWorkspaceFormattingOptions());
+                optionsService.GetFormattingOptions(documentOptions));
             ApplyEdits(buffer, edits);
         }
 
@@ -41,12 +44,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
                 return;
 
             SyntaxTree syntaxTree;
-            if (!TryGetSyntaxTree(textView.TextBuffer, out syntaxTree))
+            if (!TryGetSyntaxTree(document, out syntaxTree))
                 return;
 
             var edits = Formatter.GetEditsAfterKeystroke(syntaxTree,
                 textView.Caret.Position.BufferPosition.Position, ch,
-                optionsService.GetPrimaryWorkspaceFormattingOptions());
+                optionsService.GetFormattingOptions(documentOptions));
+
             ApplyEdits(textView.TextBuffer, edits);
         }
 
@@ -62,20 +66,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
             return false;
         }
 
-        private static bool TryGetSyntaxTree(ITextBuffer textBuffer, out SyntaxTree syntaxTree)
+        private static bool TryGetSyntaxTree(Document document, out SyntaxTree syntaxTree)
         {
             try
             {
-                var syntaxTreeTask = Task.Run(() => textBuffer.CurrentSnapshot.GetSyntaxTree(CancellationToken.None));
-
-                if (!syntaxTreeTask.Wait(TimeSpan.FromSeconds(5)))
-                {
-                    Logger.Log("Parsing timeout");
-                    syntaxTree = null;
-                    return false;
-                }
-
-                syntaxTree = syntaxTreeTask.Result;
+                syntaxTree = (SyntaxTree) document.GetSyntaxTreeSynchronously(CancellationToken.None);
                 return true;
             }
             catch (Exception ex)
