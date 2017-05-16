@@ -4,3 +4,4 @@
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures")]
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio")]
 [assembly: InternalsVisibleTo("ShaderTools.VisualStudio.LanguageServices")]
+[assembly: InternalsVisibleTo("ShaderTools.VisualStudio.LanguageServices.Hlsl")]

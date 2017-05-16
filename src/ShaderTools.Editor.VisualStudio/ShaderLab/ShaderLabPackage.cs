@@ -1,13 +1,10 @@
-﻿using System;
-using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
+﻿using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.Editor.VisualStudio.ShaderLab.Options;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab
 {

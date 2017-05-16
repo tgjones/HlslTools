@@ -1,12 +1,15 @@
 ﻿using System;
+using System.Threading;
 using System.Windows.Threading;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.Editor.VisualStudio.Core.Text;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
+using ShaderTools.CodeAnalysis.Hlsl.Options;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Utilities.Threading;
 using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
@@ -107,7 +110,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
         // From https://github.com/Microsoft/nodejstools/blob/master/Nodejs/Product/Nodejs/EditFilter.cs#L901
         private void FormatAfterPaste(ITextSnapshot curVersion)
         {
-            if (!_optionsService.GeneralOptions.AutomaticallyFormatOnPaste)
+            var document = curVersion.TextBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
+            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
+
+            if (!documentOptions.GetOption(FeatureOnOffOptions.FormatOnPaste))
                 return;
 
             // calculate the range for the paste...

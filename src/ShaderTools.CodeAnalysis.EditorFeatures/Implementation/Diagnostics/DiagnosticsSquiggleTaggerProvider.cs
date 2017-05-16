@@ -47,11 +47,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Diagnostics
             var document = spanToTag.Document;
             var snapshot = spanToTag.SnapshotSpan.Snapshot;
 
-            // TODO: Remove this.
-            var optionsService = document.LanguageServices.GetRequiredService<IOptionsService>();
-            if (!optionsService.EnableErrorReporting || !optionsService.EnableSquiggles)
-                return;
-
             var diagnostics = await _diagnosticService.GetDiagnosticsAsync(document.Id, context.CancellationToken);
 
             AddDiagnostics(context, diagnostics, snapshot);

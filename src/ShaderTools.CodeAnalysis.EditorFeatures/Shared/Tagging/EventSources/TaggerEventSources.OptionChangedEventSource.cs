@@ -4,7 +4,6 @@ using System;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Editor.Tagging;
 using ShaderTools.CodeAnalysis.Options;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
 {
@@ -14,7 +13,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
         {
             private readonly IOption _option;
             private IOptionService _optionService;
-            private IOptionsService _optionsService;
 
             public OptionChangedEventSource(ITextBuffer subjectBuffer, IOption option, TaggerDelay delay) : base(subjectBuffer, delay)
             {
@@ -28,10 +26,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
                 {
                     _optionService.OptionChanged += OnOptionChanged;
                 }
-
-                // TODO: Remove this.
-                _optionsService = base.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext().LanguageServices.GetRequiredService<IOptionsService>();
-                _optionsService.OptionsChanged += OnOptionsChanged;
             }
 
             protected override void DisconnectFromWorkspace(Workspace workspace)
@@ -40,12 +34,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
                 {
                     _optionService.OptionChanged -= OnOptionChanged;
                     _optionService = null;
-                }
-
-                if (_optionsService != null)
-                {
-                    _optionsService.OptionsChanged -= OnOptionsChanged;
-                    _optionsService = null;
                 }
             }
 

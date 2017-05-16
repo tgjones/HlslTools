@@ -1,26 +1,20 @@
 ﻿using System;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
+using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Options;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support
 {
     internal class FakeOptionsService : IHlslOptionsService
     {
-        public event EventHandler OptionsChanged;
-
-        public void RaiseOptionsChanged()
+        public FormattingOptions GetPrimaryWorkspaceFormattingOptions()
         {
-            OptionsChanged?.Invoke(this, EventArgs.Empty);
+            return new FormattingOptions();
         }
 
-        bool IOptionsService.EnableIntelliSense => AdvancedOptions.EnableIntelliSense;
-        bool IOptionsService.EnableErrorReporting => AdvancedOptions.EnableErrorReporting;
-        bool IOptionsService.EnableSquiggles => AdvancedOptions.EnableSquiggles;
-        bool IOptionsService.EnableOutlining => AdvancedOptions.EnterOutliningModeWhenFilesOpen;
-
-        public AdvancedOptions AdvancedOptions { get; } = new AdvancedOptions();
-        public GeneralOptions GeneralOptions { get; } = new GeneralOptions();
-        public FormattingOptions FormattingOptions { get; } = new FormattingOptions();
+        public FormattingOptions GetFormattingOptions(OptionSet options)
+        {
+            return new FormattingOptions();
+        }
     }
 }

@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
+using ShaderTools.CodeAnalysis.Hlsl.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
 {

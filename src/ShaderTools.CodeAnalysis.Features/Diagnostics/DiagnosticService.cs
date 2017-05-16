@@ -34,9 +34,8 @@ namespace ShaderTools.CodeAnalysis.Diagnostics
             if (document == null)
                 return ImmutableArray<MappedDiagnostic>.Empty;
 
-            // TODO: Remove this.
-            var optionsService = document.LanguageServices.GetRequiredService<IOptionsService>();
-            if (!optionsService.EnableErrorReporting)
+            var options = await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+            if (!options.GetOption(DiagnosticsOptions.EnableErrorReporting))
                 return ImmutableArray<MappedDiagnostic>.Empty;
 
             var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);

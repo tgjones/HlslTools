@@ -117,6 +117,9 @@ namespace ShaderTools.CodeAnalysis
         // TODO: Refactor this.
         public ConfigFile LoadConfigFile(string directory)
         {
+            if (directory == null)
+                return new ConfigFile();
+
             return ImmutableInterlocked.GetOrAdd(
                 ref _configFiles, 
                 directory.ToLower(), 

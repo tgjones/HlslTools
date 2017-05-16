@@ -12,7 +12,10 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Classification;
+using ShaderTools.CodeAnalysis.Editor.Options;
 using ShaderTools.CodeAnalysis.Formatting;
+using ShaderTools.CodeAnalysis.Hlsl.Options;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Formatting;
@@ -31,7 +34,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 
         public BraceCompletionContext(
             ISmartIndentationService smartIndentationService, 
-            ITextBufferUndoManagerProvider undoManager, 
+            ITextBufferUndoManagerProvider undoManager,
             IHlslOptionsService optionsService)
         {
             _smartIndentationService = smartIndentationService;
@@ -42,7 +45,14 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
         public void Start(IBraceCompletionSession session)
         {
             // If user has just typed opening brace of a type, then (depending on user settings) add a semicolon after the close brace.
-            if (session.OpeningBrace == BraceKind.CurlyBrackets.Open && _optionsService.AdvancedOptions.AddSemicolonForTypes && IsOpeningBraceOfType(session))
+
+            if (session.OpeningBrace != BraceKind.CurlyBrackets.Open)
+                return;
+
+            var document = session.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
+            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
+
+            if (documentOptions.GetOption(BraceCompletionOptions.AddSemicolonForTypes) && IsOpeningBraceOfType(session))
                 session.SubjectBuffer.Insert(session.ClosingPoint.GetPosition(session.SubjectBuffer.CurrentSnapshot), ";");
         }
 
@@ -52,7 +62,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             var startPoint = session.OpeningPoint.GetPoint(snapshot);
 
             var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
-            var syntaxTree = document.GetSyntaxTreeAsync(CancellationToken.None).Result; // TODO: Don't do this.
+            var syntaxTree = document.GetSyntaxTreeAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None); // TODO: Don't do this.
 
             var classificationService = document.LanguageServices.GetRequiredService<IClassificationService>();
 
@@ -117,7 +127,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 
         private void FormatTrackingSpan(IBraceCompletionSession session, bool shouldHonorAutoFormattingOnCloseBraceOption)
         {
-            if (!_optionsService.GeneralOptions.AutomaticallyFormatBlockOnCloseBrace && shouldHonorAutoFormattingOnCloseBraceOption)
+            var document = session.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
+            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
+
+            if (!documentOptions.GetOption(FeatureOnOffOptions.AutoFormattingOnCloseBrace) && shouldHonorAutoFormattingOnCloseBraceOption)
                 return;
 
             var snapshot = session.SubjectBuffer.CurrentSnapshot;
@@ -125,9 +138,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             var endPoint = session.ClosingPoint.GetPoint(snapshot);
             var startPosition = startPoint.Position;
             var endPosition = endPoint.Position;
-
-            var document = session.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
-            var documentOptions = document.GetOptionsAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None);
 
             if (documentOptions.GetOption(FormattingOptions.SmartIndent) == FormattingOptions.IndentStyle.Smart)
             {

@@ -7,6 +7,8 @@ namespace ShaderTools.CodeAnalysis.Options
     /// </summary>
     internal sealed class LocalUserProfileStorageLocation : OptionStorageLocation
     {
+        public const string RootRegistryPath = @"ShaderTools\";
+
         public string KeyName { get; }
 
         public LocalUserProfileStorageLocation(string keyName)

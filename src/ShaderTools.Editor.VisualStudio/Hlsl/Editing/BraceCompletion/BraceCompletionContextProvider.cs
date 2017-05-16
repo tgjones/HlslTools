@@ -8,8 +8,8 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Classification;
+using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 {

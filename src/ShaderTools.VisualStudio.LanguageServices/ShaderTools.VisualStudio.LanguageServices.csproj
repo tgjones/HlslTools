@@ -56,10 +56,25 @@
     <Compile Include="ErrorList\ErrorsSnapshot.cs" />
     <Compile Include="ErrorList\ErrorsSnapshotFactory.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="Options\UI\AbstractCheckBoxViewModel.cs" />
+    <Compile Include="Options\UI\AbstractOptionPage.cs" />
+    <Compile Include="Options\UI\AbstractOptionPageControl.cs" />
     <Compile Include="Options\LanguageSettingsPersister.cs" />
     <Compile Include="Options\LocalUserRegistryOptionPersister.cs" />
+    <Compile Include="Options\UI\AbstractRadioButtonViewModel.cs" />
+    <Compile Include="Options\UI\CheckBoxOptionViewModel.cs" />
+    <Compile Include="Options\UI\HeaderItemViewModel.cs" />
+    <Compile Include="Options\UI\OptionBinding.cs" />
+    <Compile Include="Options\UI\OptionLogger.cs" />
+    <Compile Include="Options\UI\OptionPreviewControl.xaml.cs">
+      <DependentUpon>OptionPreviewControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Options\UI\PerLanguageOptionBinding.cs" />
+    <Compile Include="Options\UI\RadioButtonViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classification\ThemeManager.cs" />
+    <Compile Include="Utilities\AbstractNotifyPropertyChanged.cs" />
+    <Compile Include="Options\UI\AbstractOptionPreviewViewModel.cs" />
     <Compile Include="Utilities\ComEventSink.cs" />
     <Compile Include="Utilities\IComEventSink.cs" />
     <Compile Include="Workspace\VisualStudioWorkspace.cs" />
@@ -181,6 +196,7 @@
       <HintPath>..\packages\Microsoft.VisualStudio.Validation.14.1.111\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Collections.Immutable, Version=1.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Collections.Immutable.1.3.1\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
@@ -191,9 +207,17 @@
       <HintPath>..\packages\System.Composition.AttributedModel.1.0.31\lib\portable-net45+win8+wp8+wpa81\System.Composition.AttributedModel.dll</HintPath>
     </Reference>
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Options\UI\OptionPreviewControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

@@ -70,13 +70,14 @@ namespace ShaderTools.CodeAnalysis
             return _lazySyntaxTree.GetValueAsync(cancellationToken);
         }
 
-        public Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
+        public async Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
         {
-            var optionsService = _languageServices.GetRequiredService<IOptionsService>();
-            if (!optionsService.EnableIntelliSense)
-                return Task.FromResult<SemanticModelBase>(null);
+            var options = await GetOptionsAsync(cancellationToken).ConfigureAwait(false);
 
-            return _lazySemanticModel.GetValueAsync(cancellationToken);
+            if (!options.GetOption(FeatureOnOffOptions.IntelliSense))
+                return null;
+
+            return await _lazySemanticModel.GetValueAsync(cancellationToken);
         }
 
         public Document WithId(DocumentId documentId)

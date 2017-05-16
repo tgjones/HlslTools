@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
+using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
 {
@@ -23,14 +25,18 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
             var edits = Formatter.GetEdits(
                 syntaxTree,
                 span,
-                optionsService.FormattingOptions);
+                optionsService.GetPrimaryWorkspaceFormattingOptions());
             ApplyEdits(buffer, edits);
         }
 
         // https://github.com/Microsoft/nodejstools/blob/master/Nodejs/Product/Nodejs/EditFilter.cs#L866
         public static void FormatAfterTyping(this ITextView textView, char ch, IHlslOptionsService optionsService)
         {
-            if (!ShouldFormatOnCharacter(ch, optionsService))
+            var document = textView.TextBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
+
+            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
+
+            if (!ShouldFormatOnCharacter(ch, documentOptions))
                 return;
 
             SyntaxTree syntaxTree;
@@ -39,18 +45,18 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
 
             var edits = Formatter.GetEditsAfterKeystroke(syntaxTree,
                 textView.Caret.Position.BufferPosition.Position, ch,
-                optionsService.FormattingOptions);
+                optionsService.GetPrimaryWorkspaceFormattingOptions());
             ApplyEdits(textView.TextBuffer, edits);
         }
 
-        private static bool ShouldFormatOnCharacter(char ch, IHlslOptionsService optionsService)
+        private static bool ShouldFormatOnCharacter(char ch, DocumentOptionSet options)
         {
             switch (ch)
             {
                 case '}':
-                    return optionsService.GeneralOptions.AutomaticallyFormatBlockOnCloseBrace;
+                    return options.GetOption(FeatureOnOffOptions.AutoFormattingOnCloseBrace);
                 case ';':
-                    return optionsService.GeneralOptions.AutomaticallyFormatStatementOnSemicolon;
+                    return options.GetOption(FeatureOnOffOptions.AutoFormattingOnSemicolon);
             }
             return false;
         }

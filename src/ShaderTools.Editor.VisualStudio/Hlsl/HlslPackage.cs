@@ -8,8 +8,8 @@ using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
 using ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer;
+using ShaderTools.VisualStudio.LanguageServices.Hlsl.Options.Formatting;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl
 {
@@ -29,11 +29,11 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
 
     [ProvideService(typeof(HlslLanguageInfo), ServiceName = "HLSL Language Service")]
 
-    [ProvideLanguageEditorOptionPage(typeof(HlslAdvancedOptionsPage), HlslConstants.LanguageName, null, "Advanced", "120")]
-    [ProvideLanguageEditorOptionPage(typeof(HlslFormattingGeneralOptionsPage), HlslConstants.LanguageName, "Formatting", "General", "123")]
-    [ProvideLanguageEditorOptionPage(typeof(HlslFormattingIndentationOptionsPage), HlslConstants.LanguageName, "Formatting", "Indentation", "124")]
-    [ProvideLanguageEditorOptionPage(typeof(HlslFormattingNewLinesOptionsPage), HlslConstants.LanguageName, "Formatting", "New Lines", "125")]
-    [ProvideLanguageEditorOptionPage(typeof(HlslFormattingSpacingOptionsPage), HlslConstants.LanguageName, "Formatting", "Spacing", "126")]
+    [ProvideLanguageEditorOptionPage(typeof(AdvancedOptionPage), HlslConstants.LanguageName, null, "Advanced", "120")]
+    [ProvideLanguageEditorOptionPage(typeof(FormattingOptionPage), HlslConstants.LanguageName, "Formatting", "General", "123")]
+    [ProvideLanguageEditorOptionPage(typeof(FormattingIndentationOptionPage), HlslConstants.LanguageName, "Formatting", "Indentation", "124")]
+    [ProvideLanguageEditorOptionPage(typeof(FormattingNewLinesPage), HlslConstants.LanguageName, "Formatting", "New Lines", "125")]
+    [ProvideLanguageEditorOptionPage(typeof(FormattingSpacingPage), HlslConstants.LanguageName, "Formatting", "Spacing", "126")]
 
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension1)]
     [ProvideLanguageExtension(typeof(HlslLanguageInfo), HlslConstants.FileExtension2)]
@@ -67,8 +67,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
 
         public static HlslPackage Instance { get; private set; }
 
-        internal IHlslOptionsService Options { get; private set; }
-
         protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
         {
             return new CodeWindowManager(this, window, this.AsVsServiceProvider());
@@ -86,8 +84,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
             SyntaxVisualizerToolWindowCommand.Initialize(this);
 
             base.Initialize();
-
-            Options = this.AsVsServiceProvider().GetComponentModel().GetService<IHlslOptionsService>();
         }
     }
 }

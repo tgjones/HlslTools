@@ -4,7 +4,9 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Outlining;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
+using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.VisualStudio.LanguageServices;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
 {
@@ -20,7 +22,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
         public IOutliningManagerService OutliningManagerService { get; set; }
 
         [Import]
-        public IHlslOptionsService OptionsService { get; set; }
+        public VisualStudioWorkspace Workspace { get; set; }
 
         public void VsTextViewCreated(IVsTextView textViewAdapter)
         {
@@ -28,7 +30,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Tagging.Outlining
 
             var outliningManager = OutliningManagerService.GetOutliningManager(textView);
 
-            if (!OptionsService.AdvancedOptions.EnterOutliningModeWhenFilesOpen)
+            if (!Workspace.Options.GetOption(FeatureOnOffOptions.Outlining, LanguageNames.Hlsl))
                 outliningManager.Enabled = false;
 
             textView.Properties.GetOrCreateSingletonProperty(() => new OutliningCommandTarget(textViewAdapter, textView, OutliningManagerService));

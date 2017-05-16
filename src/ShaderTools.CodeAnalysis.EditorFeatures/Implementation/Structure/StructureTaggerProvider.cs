@@ -32,15 +32,11 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
         protected override ITaggerEventSource CreateEventSource(ITextView textViewOpt, ITextBuffer subjectBuffer)
         {
             return TaggerEventSources.Compose(
-                TaggerEventSources.OnTextChanged(subjectBuffer, TaggerDelay.OnIdle),
-                TaggerEventSources.OnOptionChanged(subjectBuffer, BlockStructureOptions.EnterOutliningModeWhenFilesOpen, TaggerDelay.NearImmediate));
+                TaggerEventSources.OnTextChanged(subjectBuffer, TaggerDelay.OnIdle));
         }
 
         protected override async Task ProduceTagsAsync(TaggerContext<IOutliningRegionTag> context, DocumentSnapshotSpan spanToTag, int? caretPosition)
         {
-            if (!spanToTag.Document.LanguageServices.GetRequiredService<IOptionsService>().EnableOutlining)
-                return;
-
             var blockStructureProvider = spanToTag.Document.LanguageServices.GetService<IBlockStructureProvider>();
             if (blockStructureProvider == null)
                 return;

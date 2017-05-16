@@ -105,6 +105,10 @@
     <Compile Include="VisualStudioTestsBase.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj">
+      <Project>{028116df-9897-45c3-911c-ac3c15e588ea}</Project>
+      <Name>ShaderTools.CodeAnalysis.Hlsl.Workspaces</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj">
       <Project>{dbcc4d3a-b2e3-4df5-9378-d1321e619ebd}</Project>
       <Name>ShaderTools.CodeAnalysis.Hlsl</Name>
