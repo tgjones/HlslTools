@@ -28,6 +28,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return ChildNodes.Cast<SyntaxNode>().SelectMany(x => x.GetDirectives());
         }
 
+        public override string Language => LanguageNames.Hlsl;
+
         protected SyntaxNode(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)
             : base((ushort) kind, diagnostics)
         {

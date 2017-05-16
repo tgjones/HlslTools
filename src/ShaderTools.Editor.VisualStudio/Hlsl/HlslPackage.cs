@@ -6,10 +6,10 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation;
 using ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer;
 using ShaderTools.VisualStudio.LanguageServices.Hlsl.Options.Formatting;
+using ShaderTools.VisualStudio.LanguageServices.Registration;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl
 {

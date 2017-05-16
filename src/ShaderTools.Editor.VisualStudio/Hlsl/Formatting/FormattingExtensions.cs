@@ -24,6 +24,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
                 return;
             var edits = Formatter.GetEdits(
                 syntaxTree,
+                (SyntaxNode) syntaxTree.Root,
                 span,
                 optionsService.GetPrimaryWorkspaceFormattingOptions());
             ApplyEdits(buffer, edits);
@@ -85,12 +86,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Formatting
             }
         }
 
-        private static void ApplyEdits(ITextBuffer textBuffer, IList<Edit> edits)
+        private static void ApplyEdits(ITextBuffer textBuffer, IList<TextChange> edits)
         {
             using (var vsEdit = textBuffer.CreateEdit())
             {
                 foreach (var edit in edits)
-                    vsEdit.Replace(edit.Start, edit.Length, edit.Text);
+                    vsEdit.Replace(edit.Span.Start, edit.Span.Length, edit.NewText);
                 vsEdit.Apply();
             }
         }

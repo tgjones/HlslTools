@@ -3,100 +3,39 @@
 // Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
-using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.CodeAnalysis.Classification;
-using ShaderTools.CodeAnalysis.Editor.Options;
+using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Formatting;
-using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.Editor.VisualStudio.Hlsl.Formatting;
-using ShaderTools.Editor.VisualStudio.Hlsl.Options;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 using ShaderTools.Utilities.Threading;
 using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
+namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion
 {
     internal sealed class BraceCompletionContext : IBraceCompletionContext
     {
         private readonly ISmartIndentationService _smartIndentationService;
-        private readonly ITextBufferUndoManagerProvider _undoManager;
-        private readonly IHlslOptionsService _optionsService;
+        private readonly ITextBufferUndoManager _undoManager;
+        private readonly IEditorBraceCompletionSession _editorSession;
 
         public BraceCompletionContext(
-            ISmartIndentationService smartIndentationService, 
-            ITextBufferUndoManagerProvider undoManager,
-            IHlslOptionsService optionsService)
+            ISmartIndentationService smartIndentationService,
+            ITextBufferUndoManager undoManager,
+            IEditorBraceCompletionSession editorSession)
         {
             _smartIndentationService = smartIndentationService;
             _undoManager = undoManager;
-            _optionsService = optionsService;
+            _editorSession = editorSession;
         }
 
         public void Start(IBraceCompletionSession session)
         {
-            // If user has just typed opening brace of a type, then (depending on user settings) add a semicolon after the close brace.
-
-            if (session.OpeningBrace != BraceKind.CurlyBrackets.Open)
-                return;
-
-            var document = session.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
-            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
-
-            if (documentOptions.GetOption(BraceCompletionOptions.AddSemicolonForTypes) && IsOpeningBraceOfType(session))
-                session.SubjectBuffer.Insert(session.ClosingPoint.GetPosition(session.SubjectBuffer.CurrentSnapshot), ";");
-        }
-
-        private bool IsOpeningBraceOfType(IBraceCompletionSession session)
-        {
-            var snapshot = session.SubjectBuffer.CurrentSnapshot;
-            var startPoint = session.OpeningPoint.GetPoint(snapshot);
-
-            var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
-            var syntaxTree = document.GetSyntaxTreeAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None); // TODO: Don't do this.
-
-            var classificationService = document.LanguageServices.GetRequiredService<IClassificationService>();
-
-            var classificationSpans = new List<ClassifiedSpan>();
-            classificationService.AddSyntacticClassifications(syntaxTree, new TextSpan(startPoint - 1, 1), classificationSpans, CancellationToken.None);
-            classificationSpans.RemoveAll(x => x.TextSpan.Start >= startPoint);
-            classificationSpans.Reverse();
-
-            foreach (var span in classificationSpans)
-            {
-                if (span.ClassificationType == ClassificationTypeNames.WhiteSpace)
-                    continue;
-                if (span.ClassificationType == ClassificationTypeNames.Identifier)
-                    continue;
-
-                if (span.ClassificationType == ClassificationTypeNames.Keyword)
-                {
-                    switch (new SnapshotSpan(snapshot, span.TextSpan.ToSpan()).GetText())
-                    {
-                        case "class":
-                        case "struct":
-                        case "interface":
-                        case "cbuffer":
-                            return true;
-
-                        default:
-                            return false;
-                    }
-                }
-
-                return false;
-            }
-
-            return false;
+            _editorSession.AfterStart(session, CancellationToken.None);
         }
 
         public void Finish(IBraceCompletionSession session)
@@ -127,10 +66,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 
         private void FormatTrackingSpan(IBraceCompletionSession session, bool shouldHonorAutoFormattingOnCloseBraceOption)
         {
-            var document = session.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
-            var documentOptions = document.GetOptionsAsync().WaitAndGetResult(CancellationToken.None);
-
-            if (!documentOptions.GetOption(FeatureOnOffOptions.AutoFormattingOnCloseBrace) && shouldHonorAutoFormattingOnCloseBraceOption)
+            if (!session.SubjectBuffer.GetFeatureOnOffOption(FeatureOnOffOptions.AutoFormattingOnCloseBrace) && shouldHonorAutoFormattingOnCloseBraceOption)
                 return;
 
             var snapshot = session.SubjectBuffer.CurrentSnapshot;
@@ -139,7 +75,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
             var startPosition = startPoint.Position;
             var endPosition = endPoint.Position;
 
-            if (documentOptions.GetOption(FormattingOptions.SmartIndent) == FormattingOptions.IndentStyle.Smart)
+            var document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
+            var style = document != null 
+                ? document.GetOptionsAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None).GetOption(FormattingOptions.SmartIndent)
+                : FormattingOptions.SmartIndent.DefaultValue;
+
+            if (style == FormattingOptions.IndentStyle.Smart)
             {
                 // skip whitespace
                 while (startPosition >= 0 && char.IsWhiteSpace(snapshot[startPosition]))
@@ -151,9 +92,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
                     startPosition--;
             }
 
-            session.SubjectBuffer.Format(
-                TextSpan.FromBounds(Math.Max(startPosition, 0), endPosition),
-                _optionsService);
+            session.SubjectBuffer.Format(TextSpan.FromBounds(Math.Max(startPosition, 0), endPosition));
         }
 
         private void PutCaretOnLine(IBraceCompletionSession session, int lineNumber)
@@ -182,7 +121,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 
         private ITextUndoHistory GetUndoHistory(ITextView textView)
         {
-            return _undoManager.GetTextBufferUndoManager(textView.TextBuffer).TextBufferUndoHistory;
+            return _undoManager.TextBufferUndoHistory;
         }
 
         private static bool ContainsOnlyWhitespace(IBraceCompletionSession session)
@@ -213,7 +152,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
 
         public bool AllowOverType(IBraceCompletionSession session)
         {
-            return true;
+            return _editorSession.AllowOverType(session, CancellationToken.None);
         }
     }
 }

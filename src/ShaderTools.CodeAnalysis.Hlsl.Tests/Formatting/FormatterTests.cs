@@ -1776,7 +1776,7 @@ RWBuffer<uint> BoundingBox _ : register(u2);
                 options = new FormattingOptions();
 
             // Act.
-            var edits = Formatter.GetEdits(syntaxTree, textSpan.Value, options);
+            var edits = Formatter.GetEdits(syntaxTree, (SyntaxNode) syntaxTree.Root, textSpan.Value, options);
             var formattedCode = Formatter.ApplyEdits(unformattedText, edits);
 
             // Assert.

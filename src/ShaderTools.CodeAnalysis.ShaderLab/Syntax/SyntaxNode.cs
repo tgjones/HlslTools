@@ -21,6 +21,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public override bool ContainsDirectives => false;
 
+        public override string Language => LanguageNames.ShaderLab;
+
         protected SyntaxNode(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)
             : base((ushort) kind, diagnostics)
         {

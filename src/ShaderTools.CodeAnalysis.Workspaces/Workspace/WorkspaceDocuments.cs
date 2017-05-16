@@ -16,6 +16,8 @@ namespace ShaderTools.CodeAnalysis
 
         public IEnumerable<DocumentId> DocumentIds => _idToDocumentMap.Keys;
 
+        internal IEnumerable<Document> Documents => _idToDocumentMap.Values;
+
         internal WorkspaceDocuments(ImmutableDictionary<DocumentId, Document> idToDocumentMap)
         {
             _idToDocumentMap = idToDocumentMap;

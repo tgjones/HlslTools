@@ -169,6 +169,37 @@ namespace ShaderTools.CodeAnalysis
         }
 
         /// <summary>
+        /// Apply changes made to a solution back to the workspace.
+        /// 
+        /// The specified solution must be one that originated from this workspace. If it is not, or the workspace
+        /// has been updated since the solution was obtained from the workspace, then this method returns false. This method
+        /// will still throw if the solution contains changes that are not supported according to the <see cref="CanApplyChange(ApplyChangesKind)"/>
+        /// method.
+        /// </summary>
+        /// <exception cref="NotSupportedException">Thrown if the solution contains changes not supported according to the
+        /// <see cref="CanApplyChange(ApplyChangesKind)"/> method.</exception>
+        public virtual bool TryApplyChanges(WorkspaceDocuments newDocuments)
+        {
+            var currentDocuments = CurrentDocuments;
+
+            foreach (var newDocument in newDocuments.Documents)
+            {
+                var currentDocument = currentDocuments.GetDocument(newDocument.Id);
+                if (currentDocument != null && currentDocument.SourceText != newDocument.SourceText)
+                    ApplyDocumentTextChanged(currentDocument.Id, newDocument.SourceText);
+            }
+
+            SetCurrentDocuments(newDocuments); // TODO: Is this safe?
+
+            return true;
+        }
+
+        protected virtual void ApplyDocumentTextChanged(DocumentId id, SourceText text)
+        {
+
+        }
+
+        /// <summary>
         /// Gets or sets the set of all global options.
         /// </summary>
         public OptionSet Options

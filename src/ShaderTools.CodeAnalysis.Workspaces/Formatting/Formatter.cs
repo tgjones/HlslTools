@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Utilities.Collections;
+using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.CodeAnalysis.Formatting
 {
@@ -22,6 +26,40 @@ namespace ShaderTools.CodeAnalysis.Formatting
             var formatted = formatter.Format(tree, new Text.TextSpan(0, tree.Text.Length), options, cancellationToken);
 
             return document.WithText(SourceText.From(formatted, document.SourceText.FilePath));
+        }
+
+        internal static IList<TextChange> GetFormattedTextChanges(SyntaxTreeBase tree, SyntaxNodeBase node, IEnumerable<TextSpan> spans, Workspace workspace, OptionSet options, CancellationToken cancellationToken)
+        {
+            return GetFormattedTextChangesAsync(tree, node, spans, workspace, options, cancellationToken).WaitAndGetResult(cancellationToken);
+        }
+
+        internal static async Task<IList<TextChange>> GetFormattedTextChangesAsync(SyntaxTreeBase tree, SyntaxNodeBase node, IEnumerable<TextSpan> spans, Workspace workspace, OptionSet options, CancellationToken cancellationToken)
+        {
+            if (workspace == null)
+            {
+                throw new ArgumentNullException(nameof(workspace));
+            }
+
+            if (node == null)
+            {
+                throw new ArgumentNullException(nameof(node));
+            }
+
+            if (spans == null)
+            {
+                throw new ArgumentNullException(nameof(spans));
+            }
+
+            var languageFormatter = workspace.Services.GetLanguageServices(node.Language).GetService<ISyntaxFormattingService>();
+            if (languageFormatter != null)
+            {
+                options = options ?? workspace.Options;
+                return (await languageFormatter.FormatAsync(tree, node, spans, options, cancellationToken).ConfigureAwait(false)).GetTextChanges(cancellationToken);
+            }
+            else
+            {
+                return SpecializedCollections.EmptyList<TextChange>();
+            }
         }
     }
 }

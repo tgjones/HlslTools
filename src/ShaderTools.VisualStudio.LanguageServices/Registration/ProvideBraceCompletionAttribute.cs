@@ -1,6 +1,6 @@
 ﻿using Microsoft.VisualStudio.Shell;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
+namespace ShaderTools.VisualStudio.LanguageServices.Registration
 {
     internal sealed class ProvideBraceCompletionAttribute : RegistrationAttribute
     {

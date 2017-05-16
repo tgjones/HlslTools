@@ -36,6 +36,8 @@ namespace ShaderTools.CodeAnalysis.Syntax
             get { return Diagnostics.Any() || ChildNodes.Any(t => t.ContainsDiagnostics); }
         }
 
+        public abstract string Language { get; }
+
         protected SyntaxNodeBase(ushort rawKind, IEnumerable<Diagnostic> diagnostics)
         {
             ChildNodes = new List<SyntaxNodeBase>();

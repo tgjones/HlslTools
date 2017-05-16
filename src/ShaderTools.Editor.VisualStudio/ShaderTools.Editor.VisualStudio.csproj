@@ -302,11 +302,6 @@
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
-    <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContext.cs" />
-    <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionContextProvider.cs" />
-    <Compile Include="Hlsl\Editing\BraceCompletion\BraceCompletionExtensions.cs" />
-    <Compile Include="Hlsl\Editing\BraceCompletion\BraceKind.cs" />
-    <Compile Include="Hlsl\Editing\BraceCompletion\ProvideBraceCompletionAttribute.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentCommandTarget.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentingExtensions.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentingTextViewCreationListener.cs" />

@@ -20,7 +20,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         private readonly List<string> _whitespace = new List<string>();
         private int _indentLevel;
 
-        public SortedList<int, Edit> Edits { get; }
+        public SortedList<int, TextChange> Edits { get; }
 
         public FormattingVisitor(SyntaxTree tree, TextSpan spanToFormat, FormattingOptions options)
         {
@@ -33,7 +33,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
             _spanToFormat = ExpandToIncludeFullLines(spanToFormat);
             _options = options;
-            Edits = new SortedList<int, Edit>();
+            Edits = new SortedList<int, TextChange>();
         }
 
         private TextSpan ExpandToIncludeFullLines(TextSpan span)
@@ -1763,10 +1763,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             var indentation = newText ?? GetIndentation();
             var existingWsLength = span.Length;
 
-            Edit edit;
+            TextChange edit;
             if (Edits.TryGetValue(span.Start, out edit))
                 Edits.Remove(span.Start);
-            Edits.Add(span.Start, new Edit(span.Start, existingWsLength, indentation));
+            Edits.Add(span.Start, new TextChange(new TextSpan(span.Start, existingWsLength), indentation));
         }
 
         private void AlignDirective(DirectiveTriviaSyntax directive)

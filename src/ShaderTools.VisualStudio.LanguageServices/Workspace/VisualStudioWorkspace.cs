@@ -119,5 +119,31 @@ namespace ShaderTools.VisualStudio.LanguageServices
             _textBufferToViewsMap.Remove(textBuffer);
             _textBufferToDocumentMap.Remove(textBuffer);
         }
+
+        protected override void ApplyDocumentTextChanged(DocumentId id, SourceText text)
+        {
+            var currentDocumentBuffer = CurrentDocuments.GetDocument(id)?.SourceText.Container.GetTextBuffer();
+            if (currentDocumentBuffer == null)
+                return;
+
+            using (var edit = currentDocumentBuffer.CreateEdit(EditOptions.DefaultMinimalChange, reiteratedVersionNumber: null, editTag: null))
+            {
+                var oldSnapshot = currentDocumentBuffer.CurrentSnapshot;
+                var oldText = oldSnapshot.AsText();
+                var changes = text.GetTextChanges(oldText);
+                //if (Workspace.TryGetWorkspace(oldText.Container, out var workspace))
+                //{
+                //    var undoService = workspace.Services.GetService<ISourceTextUndoService>();
+                //    undoService.BeginUndoTransaction(oldSnapshot);
+                //}
+
+                foreach (var change in changes)
+                {
+                    edit.Replace(change.Span.Start, change.Span.Length, change.NewText);
+                }
+
+                edit.Apply();
+            }
+        }
     }
 }

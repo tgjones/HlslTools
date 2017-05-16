@@ -8,10 +8,11 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Classification;
-using ShaderTools.CodeAnalysis.Hlsl.Options;
+using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
+using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
+namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion
 {
     [Export(typeof(IBraceCompletionContextProvider))]
     [BracePair(BraceKind.CurlyBrackets.Open, BraceKind.CurlyBrackets.Close)]
@@ -19,31 +20,48 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
     [BracePair(BraceKind.Parentheses.Open, BraceKind.Parentheses.Close)]
     [BracePair(BraceKind.SingleQuotes.Open, BraceKind.SingleQuotes.Close)]
     [BracePair(BraceKind.DoubleQuotes.Open, BraceKind.DoubleQuotes.Close)]
-    [ContentType(HlslConstants.ContentTypeName)]
-    internal sealed class BraceCompletionContextProvider : IBraceCompletionContextProvider
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    internal sealed class BraceCompletionContextProvider : ForegroundThreadAffinitizedObject, IBraceCompletionContextProvider
     {
-        [Import]
-        public ISmartIndentationService SmartIndentationService { get; set; }
+        private readonly ISmartIndentationService _smartIndentationService;
+        private readonly ITextBufferUndoManagerProvider _textBufferUndoManagerProvider;
 
-        [Import]
-        public ITextBufferUndoManagerProvider TextBufferUndoManagerProvider { get; set; }
-
-        [Import]
-        public IHlslOptionsService OptionsService { get; set; }
+        [ImportingConstructor]
+        public BraceCompletionContextProvider(ISmartIndentationService smartIndentationService, ITextBufferUndoManagerProvider textBufferUndoManagerProvider)
+        {
+            _smartIndentationService = smartIndentationService;
+            _textBufferUndoManagerProvider = textBufferUndoManagerProvider;
+        }
 
         public bool TryCreateContext(ITextView textView, SnapshotPoint openingPoint, char openingBrace, char closingBrace, out IBraceCompletionContext context)
         {
-            // if we are in a comment or string literal we cannot begin a completion session.
+            this.AssertIsForeground();
+
             if (IsValidBraceCompletionContext(openingPoint))
             {
-                context = new BraceCompletionContext(SmartIndentationService, TextBufferUndoManagerProvider, OptionsService);
-                return true;
+                var textSnapshot = openingPoint.Snapshot;
+                var document = textSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+                if (document != null)
+                {
+                    var editorSessionFactory = document.GetLanguageService<IEditorBraceCompletionSessionFactory>();
+                    if (editorSessionFactory != null)
+                    {
+                        // Brace completion is (currently) not cancellable.
+                        var cancellationToken = CancellationToken.None;
+
+                        var editorSession = editorSessionFactory.TryCreateSession(document, openingPoint, openingBrace, cancellationToken);
+                        if (editorSession != null)
+                        {
+                            var undoManager = _textBufferUndoManagerProvider.GetTextBufferUndoManager(textView.TextBuffer);
+                            context = new BraceCompletionContext(_smartIndentationService, undoManager, editorSession);
+                            return true;
+                        }
+                    }
+                }
             }
-            else
-            {
-                context = null;
-                return false;
-            }
+
+            context = null;
+            return false;
         }
 
         private static bool IsValidBraceCompletionContext(SnapshotPoint openingPoint)

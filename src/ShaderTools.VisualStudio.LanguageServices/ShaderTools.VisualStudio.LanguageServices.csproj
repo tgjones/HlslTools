@@ -73,6 +73,7 @@
     <Compile Include="Options\UI\RadioButtonViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Classification\ThemeManager.cs" />
+    <Compile Include="Registration\ProvideBraceCompletionAttribute.cs" />
     <Compile Include="Utilities\AbstractNotifyPropertyChanged.cs" />
     <Compile Include="Options\UI\AbstractOptionPreviewViewModel.cs" />
     <Compile Include="Utilities\ComEventSink.cs" />

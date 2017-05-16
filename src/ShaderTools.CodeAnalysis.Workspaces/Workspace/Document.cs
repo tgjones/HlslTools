@@ -70,6 +70,22 @@ namespace ShaderTools.CodeAnalysis
             return _lazySyntaxTree.GetValueAsync(cancellationToken);
         }
 
+        /// <summary>
+        /// Only for features that absolutely must run synchronously (probably because they're
+        /// on the UI thread).  Right now, the only feature this is for is Outlining as VS will
+        /// block on that feature from the UI thread when a document is opened.
+        /// </summary>
+        internal SyntaxNodeBase GetSyntaxRootSynchronously(CancellationToken cancellationToken)
+        {
+            var tree = this.GetSyntaxTreeSynchronously(cancellationToken);
+            return tree.Root;
+        }
+
+        internal SyntaxTreeBase GetSyntaxTreeSynchronously(CancellationToken cancellationToken)
+        {
+            return _lazySyntaxTree.GetValue(cancellationToken);
+        }
+
         public async Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
         {
             var options = await GetOptionsAsync(cancellationToken).ConfigureAwait(false);

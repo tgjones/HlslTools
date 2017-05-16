@@ -14,7 +14,7 @@
 //
 //*********************************************************//
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
+namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion
 {
     internal static class BraceKind
     {

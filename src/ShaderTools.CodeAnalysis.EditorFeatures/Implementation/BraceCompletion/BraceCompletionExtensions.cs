@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
+using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
+using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
+namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion
 {
     internal static class BraceCompletionExtensions
     {
@@ -24,6 +27,15 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.BraceCompletion
         public static bool PositionInSnapshot(this int position, ITextSnapshot snapshot)
         {
             return position.GetValueInValidRange(0, Math.Max(0, snapshot.Length - 1)) == position;
+        }
+
+        /// <summary>
+        /// format span
+        /// </summary>
+        public static void Format(this ITextBuffer buffer, TextSpan span)
+        {
+            var snapshot = buffer.CurrentSnapshot;
+            snapshot.FormatAndApplyToBuffer(span, CancellationToken.None);
         }
     }
 }
