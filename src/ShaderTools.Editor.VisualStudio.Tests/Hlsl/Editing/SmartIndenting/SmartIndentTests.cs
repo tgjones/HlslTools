@@ -1,6 +1,7 @@
-﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+﻿using ShaderTools.CodeAnalysis.Editor.Hlsl.SmartIndent;
+using ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting;
 using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
@@ -58,9 +59,12 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
                 expectedIndent++;
             }
 
+            var indentationService = new HlslIndentationService();
+            var syntaxFactsService = new HlslSyntaxFactsService();
+
             var code = codeWithCaret.Remove(caret, 1);
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
-            var actualIndent = SmartIndent.FindTotalParentChainIndent((SyntaxNode) syntaxTree.Root, caret, 0);
+            var actualIndent = SmartIndent.FindTotalParentChainIndent((SyntaxNode) syntaxTree.Root, caret, 0, indentationService, syntaxFactsService);
             Assert.Equal(expectedIndent, actualIndent);
         }
     }

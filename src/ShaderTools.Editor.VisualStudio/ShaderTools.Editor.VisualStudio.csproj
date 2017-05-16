@@ -400,8 +400,6 @@
     <Compile Include="Core\Navigation\NavigationExtensions.cs" />
     <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
     <Compile Include="Hlsl\Options\OptionsService.cs" />
-    <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndent.cs" />
-    <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndentProvider.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="ProvideFileExtensionMapping.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />

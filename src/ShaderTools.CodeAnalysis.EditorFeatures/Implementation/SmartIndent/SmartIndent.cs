@@ -1,25 +1,43 @@
-﻿using System.Threading;
+﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
+
+using System;
+using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
-using System.Linq;
-using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Formatting;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Shared.Extensions;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Threading;
-using ShaderTools.CodeAnalysis.Formatting;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
+namespace ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent
 {
-    internal sealed class SmartIndent : ISmartIndent
+    internal partial class SmartIndent : ISmartIndent
     {
+        private readonly ITextView _textView;
+
+        public SmartIndent(ITextView textView)
+        {
+            _textView = textView ?? throw new ArgumentNullException(nameof(textView));
+        }
+
         public int? GetDesiredIndentation(ITextSnapshotLine line)
+        {
+            return GetDesiredIndentation(line, CancellationToken.None);
+        }
+
+        public void Dispose()
+        {
+        }
+
+        private int? GetDesiredIndentation(ITextSnapshotLine line, CancellationToken cancellationToken)
         {
             var document = line.Snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
             if (document == null)
                 return null;
 
-            var documentOptions = document.GetOptionsAsync(CancellationToken.None).WaitAndGetResult(CancellationToken.None);
+            var documentOptions = document.GetOptionsAsync(cancellationToken).WaitAndGetResult(cancellationToken);
 
             switch (documentOptions.GetOption(FormattingOptions.SmartIndent))
             {
@@ -30,26 +48,39 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
                     return DoBlockIndent(line, documentOptions);
 
                 case FormattingOptions.IndentStyle.Smart:
-                    return DoSmartIndent(line);
+                    return DoSmartIndent(line, document, cancellationToken);
 
                 default:
                     return null;
             }
         }
 
-        private int? DoSmartIndent(ITextSnapshotLine line)
+        private int? DoSmartIndent(ITextSnapshotLine line, Document document, CancellationToken cancellationToken)
         {
-            var syntaxTree = line.Snapshot.GetSyntaxTree(CancellationToken.None);
-            var root = syntaxTree.Root;
-            var lineStartPosition = line.Start.Position;
-            var indent = FindTotalParentChainIndent((SyntaxNode) root, lineStartPosition, 0);
+            var indentationService = document.GetLanguageService<IIndentationService>();
+            var syntaxFactsService = document.GetLanguageService<ISyntaxFactsService>();
+
+            var syntaxTree = document.GetSyntaxTreeSynchronously(cancellationToken);
+
+            var indent = FindTotalParentChainIndent(
+                syntaxTree.Root,
+                line.Start.Position, 
+                0, 
+                indentationService,
+                syntaxFactsService);
+
             return indent;
         }
 
         // From https://github.com/KirillOsenkov/XmlParser/blob/master/src/Microsoft.Language.Xml.Editor/SmartIndent/SmartIndent.cs#L39
-        public static int FindTotalParentChainIndent(SyntaxNode node, int position, int indent)
+        public static int FindTotalParentChainIndent(
+            SyntaxNodeBase node, 
+            int position, 
+            int indent, 
+            IIndentationService indentationService,
+            ISyntaxFactsService syntaxFactsService)
         {
-            var textSpanOpt = node.GetTextSpanRoot();
+            var textSpanOpt = syntaxFactsService.GetFileSpanRoot(node);
             if (textSpanOpt == null)
                 return indent;
 
@@ -61,54 +92,24 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
             if (position < textSpan.Span.Start || position > textSpan.Span.End)
                 return indent;
 
-            foreach (var child in node.ChildNodes.Cast<SyntaxNode>())
+            foreach (var child in node.ChildNodes)
             {
-                var childSpan = child.GetTextSpanRoot();
+                var childSpan = syntaxFactsService.GetFileSpanRoot(child);
                 if (childSpan == null || !childSpan.Value.IsInRootFile)
                     continue;
 
-                var shouldIndent = ShouldIndent(child);
+                var shouldIndent = indentationService.ShouldIndent(child);
                 if (shouldIndent)
                     indent += 4;
 
                 if (position <= childSpan.Value.Span.End)
-                    return FindTotalParentChainIndent(child, position, indent);
+                    return FindTotalParentChainIndent(child, position, indent, indentationService, syntaxFactsService);
 
                 if (shouldIndent)
                     indent -= 4;
             }
 
             return indent;
-        }
-
-        private static bool ShouldIndent(SyntaxNode node)
-        {
-            if (node.Kind == SyntaxKind.ElseClause)
-                return false;
-
-            switch (node.Parent.Kind)
-            {
-                case SyntaxKind.Block:
-                    return true;
-
-                case SyntaxKind.IfStatement:
-                case SyntaxKind.DoStatement:
-                case SyntaxKind.WhileStatement:
-                case SyntaxKind.ForStatement:
-                case SyntaxKind.SwitchStatement:
-                    return node.Kind != SyntaxKind.Block;
-
-                case SyntaxKind.Namespace:
-                case SyntaxKind.ConstantBufferDeclaration:
-                case SyntaxKind.ClassType:
-                case SyntaxKind.StructType:
-                case SyntaxKind.InterfaceType:
-                case SyntaxKind.ArrayInitializerExpression:
-                    return true;
-
-                default:
-                    return false;
-            }
         }
 
         private int? DoBlockIndent(ITextSnapshotLine line, DocumentOptionSet optionSet)
@@ -142,10 +143,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Editing.SmartIndenting
             }
 
             return size;
-        }
-
-        public void Dispose()
-        {
         }
     }
 }
