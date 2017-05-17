@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 using ShaderTools.Editor.VisualStudio.Hlsl;
+using ShaderTools.VisualStudio.LanguageServices;
 
 [assembly: AssemblyTitle("HLSL Tools for Visual Studio")]
 [assembly: AssemblyDescription("")]
@@ -18,8 +19,8 @@ using ShaderTools.Editor.VisualStudio.Hlsl;
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
 
-[assembly: AssemblyVersion(HlslPackage.Version)]
-[assembly: AssemblyFileVersion(HlslPackage.Version)]
+[assembly: AssemblyVersion(ShaderToolsPackage.Version)]
+[assembly: AssemblyFileVersion(ShaderToolsPackage.Version)]
 
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio.Tests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]

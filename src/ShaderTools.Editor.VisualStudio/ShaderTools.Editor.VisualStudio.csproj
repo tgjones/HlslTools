@@ -95,7 +95,7 @@
     <ProjectReference Include="..\ShaderTools.VisualStudio.LanguageServices\ShaderTools.VisualStudio.LanguageServices.csproj">
       <Project>{3d3317e0-0f38-4321-99c4-9f87bdea92cc}</Project>
       <Name>ShaderTools.VisualStudio.LanguageServices</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bPkgdefProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.VisualStudio.SyntaxVisualizer\ShaderTools.VisualStudio.SyntaxVisualizer.csproj">
@@ -301,6 +301,7 @@
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
     <Compile Include="Hlsl\ContentTypeDefinitions.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
+    <Compile Include="SetupPackage.cs" />
     <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentCommandTarget.cs" />

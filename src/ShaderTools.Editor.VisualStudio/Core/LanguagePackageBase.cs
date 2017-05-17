@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.Design;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
-using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.VisualStudio.LanguageServices.Classification;
-using ShaderTools.VisualStudio.LanguageServices.ErrorList;
+using ShaderTools.VisualStudio.LanguageServices;
 
 namespace ShaderTools.Editor.VisualStudio.Core
 {
@@ -38,27 +36,11 @@ namespace ShaderTools.Editor.VisualStudio.Core
             LanguageInfo = CreateLanguageInfo();
             ((IServiceContainer)this).AddService(LanguageInfo.GetType(), LanguageInfo, true);
 
-            // Ensure the options persisters are loaded since we have to fetch options from the shell
-            var componentModel = this.AsVsServiceProvider().GetComponentModel();
-            componentModel.GetExtensions<IOptionPersister>();
-
-            // TODO: Only need to do this once, not per package.
-            componentModel.GetService<ThemeColorFixer>();
-            componentModel.GetService<ErrorsTableDataSource>();
+            var shell = (IVsShell) GetService(typeof(SVsShell));
+            shell.LoadPackage<ShaderToolsPackage>();
         }
 
         protected abstract LanguageInfoBase CreateLanguageInfo();
-
-        internal TOptionsPage GetDialogPage<TOptionsPage>()
-            where TOptionsPage : DialogPage
-        {
-            return (TOptionsPage)GetDialogPage(typeof(TOptionsPage));
-        }
-
-        internal new object GetService(Type serviceType)
-        {
-            return base.GetService(serviceType);
-        }
 
         protected override void Dispose(bool disposing)
         {

@@ -13,17 +13,5 @@
         public const string FileExtension6 = ".psh";
         public const string FileExtension7 = ".cginc";
         public const string FileExtension8 = ".compute";
-
-        public static string[] FileExtensions =
-        {
-            FileExtension1,
-            FileExtension2,
-            FileExtension3,
-            FileExtension4,
-            FileExtension5,
-            FileExtension6,
-            FileExtension7,
-            FileExtension8
-        };
     }
 }

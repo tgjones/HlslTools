@@ -6,15 +6,14 @@ using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation;
+using ShaderTools.VisualStudio.LanguageServices;
 using ShaderTools.VisualStudio.LanguageServices.Hlsl.Options.Formatting;
 using ShaderTools.VisualStudio.LanguageServices.Registration;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl
 {
-    [InstalledProductRegistration("#110", "#112", Version, IconResourceID = 400)]
-
     [PackageRegistration(UseManagedResourcesOnly = true)]
-    [Guid(PackageId)]
+    [Guid(Guids.HlslPackageIdString)]
 
     [ProvideLanguageService(typeof(HlslLanguageInfo), HlslConstants.LanguageName, 0,
         ShowCompletion = true,
@@ -46,19 +45,14 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
     [ProvideFileExtensionMapping(
         "{A95B1F48-2A2E-492C-BABE-8DCC8A4643A8}", 
         "HLSL Editor", 
-        typeof(IVsEditorFactory),  // A bit weird, but seems to work, and means we don't need to implement IVsEditorFactory ourselves.
-        typeof(HlslLanguageInfo), 
-        PackageId, 
+        typeof(IVsEditorFactory), // A bit weird, but seems to work, and means we don't need to implement IVsEditorFactory ourselves.
+        typeof(HlslLanguageInfo),
+        Guids.HlslPackageIdString, 
         100)]
 
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
     internal sealed class HlslPackage : LanguagePackageBase
     {
-        // Updated by build process.
-        public const string Version = "1.0.0";
-
-        private const string PackageId = "0E01DDB3-F537-4C49-9B50-BDA9DCCE2172";
-
         public static HlslPackage Instance { get; private set; }
 
         protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
