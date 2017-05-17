@@ -7,9 +7,8 @@ using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
-using ShaderTools.Editor.VisualStudio.Core.Text;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoModelProviders;
-using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
@@ -72,7 +71,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
                     else if (showSession)
                     {
                         var syntaxTree = _model.SemanticModel.Compilation.SyntaxTree;
-                        var snapshot = syntaxTree.Text.ToTextSnapshot();
+                        var snapshot = syntaxTree.Text.FindCorrespondingEditorTextSnapshot();
                         var triggerPosition = _model.Span.Span.Start;
                         var triggerPoint = snapshot.CreateTrackingPoint(triggerPosition, PointTrackingMode.Negative);
 

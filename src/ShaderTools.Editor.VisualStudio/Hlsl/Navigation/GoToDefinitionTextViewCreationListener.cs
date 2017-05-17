@@ -5,7 +5,6 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProviders;
-using ShaderTools.Editor.VisualStudio.Hlsl.Text;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {

@@ -1,15 +1,15 @@
 ﻿using System;
+using System.IO;
 using System.Threading;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
+using ShaderTools.CodeAnalysis.Hlsl.LanguageServices;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
-using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 {
@@ -41,12 +41,19 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             if (includeDirectiveTrivia == null)
                 return false;
 
-            var includeFileResolver = new IncludeFileResolver(_textView.TextBuffer.GetIncludeFileSystem());
+            var document = _textView.TextBuffer.CurrentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+
+            var includeFileSystem = document.Workspace.Services.GetRequiredService<IWorkspaceIncludeFileSystem>();
+            var includeFileResolver = new IncludeFileResolver(includeFileSystem);
+
+            var syntaxTree = document.GetSyntaxTreeSynchronously(CancellationToken.None);
+
+            var configFile = document.Workspace.LoadConfigFile(Path.GetDirectoryName(document.SourceText.FilePath));
 
             var include = includeFileResolver.OpenInclude(
                 includeDirectiveTrivia.TrimmedFilename,
-                new CodeAnalysis.Text.SourceFile(_textView.TextBuffer.CurrentSnapshot.ToSourceText(), null),
-                _textView.TextBuffer.GetConfigFile().HlslAdditionalIncludeDirectories);
+                ((SyntaxTree) syntaxTree).File,
+                configFile.HlslAdditionalIncludeDirectories);
 
             if (include == null)
                 return false;
