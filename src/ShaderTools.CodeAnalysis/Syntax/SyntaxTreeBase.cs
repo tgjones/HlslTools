@@ -14,5 +14,6 @@ namespace ShaderTools.CodeAnalysis.Syntax
         public abstract IEnumerable<Diagnostic> GetDiagnostics();
 
         public abstract SourceLocation MapRootFilePosition(int position);
+        public abstract SourceRange MapRootFileRange(TextSpan span);
     }
 }

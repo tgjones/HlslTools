@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.TextManager.Interop;
@@ -7,7 +6,6 @@ using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.Editor.VisualStudio.Hlsl.Navigation;
-using ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer;
 using ShaderTools.VisualStudio.LanguageServices.Hlsl.Options.Formatting;
 using ShaderTools.VisualStudio.LanguageServices.Registration;
 
@@ -54,10 +52,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
         100)]
 
     [ProvideBraceCompletion(HlslConstants.LanguageName)]
-
-    [ProvideMenuResource("Menus.ctmenu", 1)]
-
-    [ProvideToolWindow(typeof(SyntaxVisualizerToolWindow))]
     internal sealed class HlslPackage : LanguagePackageBase
     {
         // Updated by build process.
@@ -79,9 +73,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl
 
         protected override void Initialize()
         {
-            Instance = this;
-
-            SyntaxVisualizerToolWindowCommand.Initialize(this);
+            Instance = this;        
 
             base.Initialize();
         }

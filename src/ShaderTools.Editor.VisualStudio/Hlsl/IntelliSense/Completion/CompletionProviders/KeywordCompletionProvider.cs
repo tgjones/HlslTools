@@ -91,7 +91,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
             if (!isStatementContext)
                 return false;
 
-            foreach (var v in token.Ancestors())
+            foreach (var v in token.Ancestors().Cast<SyntaxNode>())
                 if (v.IsBreakableConstruct())
                     return true;
 
@@ -103,7 +103,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
             if (!isStatementContext)
                 return false;
 
-            foreach (var v in token.Ancestors())
+            foreach (var v in token.Ancestors().Cast<SyntaxNode>())
                 if (v.IsContinuableConstruct())
                     return true;
 

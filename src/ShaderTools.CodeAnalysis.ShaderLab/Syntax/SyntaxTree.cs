@@ -36,5 +36,10 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
         {
             return new SourceLocation(position);
         }
+
+        public override SourceRange MapRootFileRange(TextSpan span)
+        {
+            return new SourceRange(new SourceLocation(span.Start), span.Length);
+        }
     }
 }

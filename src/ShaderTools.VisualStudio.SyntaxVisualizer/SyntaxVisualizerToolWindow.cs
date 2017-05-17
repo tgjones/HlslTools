@@ -1,7 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.Shell;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
+namespace ShaderTools.VisualStudio.SyntaxVisualizer
 {
     [Guid("86efe633-4513-42b9-b315-0b515a0d607b")]
     public class SyntaxVisualizerToolWindow : ToolWindowPane
@@ -9,7 +9,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
         public SyntaxVisualizerToolWindow()
             : base(null)
         {
-            Caption = "HLSL Syntax Visualizer";
+            Caption = "Shader Syntax Visualizer";
 
             // Set the image that will appear on the tab of the window frame
             // when docked with an other window

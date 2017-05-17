@@ -9,7 +9,7 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public sealed class SyntaxToken : LocatedNode
+    public sealed class SyntaxToken : LocatedNode, ISyntaxToken
     {
         public SyntaxKind ContextualKind { get; }
         public object Value { get; }
@@ -93,6 +93,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         public ImmutableArray<SyntaxNode> LeadingTrivia { get; }
         public ImmutableArray<SyntaxNode> TrailingTrivia { get; }
+
+        ImmutableArray<SyntaxNodeBase> ISyntaxToken.LeadingTrivia => LeadingTrivia.Cast<SyntaxNodeBase>().ToImmutableArray();
+        ImmutableArray<SyntaxNodeBase> ISyntaxToken.TrailingTrivia => TrailingTrivia.Cast<SyntaxNodeBase>().ToImmutableArray();
 
         public MacroReference MacroReference { get; }
         public bool IsFirstTokenInMacroExpansion { get; }

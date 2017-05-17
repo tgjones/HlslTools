@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <!--This is the file that defines the IDs for all the commands exposed by VisualStudio. -->
+  <Extern href="stdidcmd.h"/>
+
+  <!--This header contains the command ids for the menus provided by the shell. -->
+  <Extern href="vsshlids.h"/>
+
+  <Commands package="guidSyntaxVisualizerPackage">
+    <Buttons>
+      <Button guid="guidSyntaxVisualizerPackageCmdSet" id="SyntaxVisualizerToolWindowCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1"/>
+        <Icon guid="guidImages" id="bmpPic1" />
+        <Strings>
+          <ButtonText>Shader Syntax Visualizer</ButtonText>
+        </Strings>
+      </Button>
+    </Buttons>
+    
+    <Bitmaps>
+      <Bitmap guid="guidImages" href="Resources\TreeView_713.png" usedList="bmpPic1"/>
+    </Bitmaps>
+  </Commands>
+  
+  <Symbols>
+    <!-- This is the package guid. -->
+    <GuidSymbol name="guidSyntaxVisualizerPackage" value="{fbbea939-3d7a-4430-a90a-84bf062584a4}" />
+    
+    <!-- This is the guid used to group the menu commands together -->
+    <GuidSymbol name="guidSyntaxVisualizerPackageCmdSet" value="{1971badd-f315-45f6-b241-4813788988bf}">
+      <IDSymbol name="SyntaxVisualizerToolWindowCommandId" value="0x0100" />
+    </GuidSymbol>
+    
+    <GuidSymbol name="guidImages" value="{da9b6308-b8bb-4281-8a59-3489678ad49c}" >
+      <IDSymbol name="bmpPic1" value="1" />
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

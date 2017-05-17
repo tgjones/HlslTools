@@ -1,22 +1,23 @@
 ﻿using System;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Editor;
+using ShaderTools.CodeAnalysis.Shared.Extensions;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Util;
-using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
+using ShaderTools.VisualStudio.SyntaxVisualizer.Utilities;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
+namespace ShaderTools.VisualStudio.SyntaxVisualizer
 {
     public sealed partial class SyntaxVisualizerToolWindowControl : UserControl, IVsRunningDocTableEvents, IDisposable
     {
@@ -26,7 +27,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
         private uint _runningDocumentTableCookie;
 
         private IWpfTextView _activeWpfTextView;
-        private SyntaxTree _activeSyntaxTree;
+        private Document _activeDocument;
+        private SyntaxTreeBase _activeSyntaxTree;
 
         private DispatcherTimer _typingTimer;
 
@@ -38,10 +40,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
             get
             {
                 if (_runningDocumentTable == null)
-                    _runningDocumentTable = Core.Util.Extensions.ServiceProviderExtensions.GetGlobalService<SVsRunningDocumentTable, IVsRunningDocumentTable>();
+                    _runningDocumentTable = (IVsRunningDocumentTable) Package.GetGlobalService(typeof(SVsRunningDocumentTable));
                 return _runningDocumentTable;
             }
         }
+
+        private ISyntaxFactsService GetSyntaxFactsService() => _activeDocument?.GetLanguageService<ISyntaxFactsService>();
 
         public SyntaxVisualizerToolWindowControl()
         {
@@ -82,7 +86,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
                 if (wpfTextView != null)
                 {
                     var contentType = wpfTextView.TextBuffer.ContentType;
-                    if (contentType.IsOfType(HlslConstants.ContentTypeName))
+                    if (contentType.IsOfType(ContentTypeNames.ShaderToolsContentType))
                     {
                         Clear();
                         _activeWpfTextView = wpfTextView;
@@ -137,6 +141,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
                 _activeWpfTextView = null;
             }
             _activeSyntaxTree = null;
+            _activeDocument = null;
             TreeView.Items.Clear();
         }
 
@@ -173,18 +178,24 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
             if (!IsVisible || _activeWpfTextView == null)
                 return;
 
-            var currentSnapshot = _activeWpfTextView.TextBuffer.CurrentSnapshot;
+            var textBuffer = _activeWpfTextView.TextBuffer;
+
+            var currentSnapshot = textBuffer.CurrentSnapshot;
             var contentType = currentSnapshot.ContentType;
-            if (!contentType.IsOfType(HlslConstants.ContentTypeName))
+            if (!contentType.IsOfType(ContentTypeNames.ShaderToolsContentType))
+                return;
+
+            var document = _activeDocument = currentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+            if (document == null)
                 return;
 
             try
             {
-                _activeSyntaxTree = await Task.Run(() => currentSnapshot.GetSyntaxTree(CancellationToken.None));
+                _activeSyntaxTree = await System.Threading.Tasks.Task.Run(() => document.GetSyntaxTreeAsync(CancellationToken.None));
             }
             catch (Exception ex)
             {
-                Logger.Log("Failed to get syntax tree for syntax visualizer: " + ex);
+                //Logger.Log("Failed to get syntax tree for syntax visualizer: " + ex);
                 return;
             }
             
@@ -203,27 +214,29 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
         private void DisplaySyntaxTree()
         {
             TreeView.Items.Clear();
-            AddNode(TreeView.Items, (SyntaxNode) _activeSyntaxTree.Root, string.Empty);
+            AddNode(TreeView.Items, _activeSyntaxTree.Root, string.Empty);
         }
 
-        private static void AddNode(ItemCollection items, SyntaxNode node, string prefix)
+        private void AddNode(ItemCollection items, SyntaxNodeBase node, string prefix)
         {
+            var syntaxFactsService = GetSyntaxFactsService();
+
             var tooltip = string.Join(Environment.NewLine, node.GetDiagnostics().Select(x => x.ToString()));
             var treeViewItem = new TreeViewItem
             {
                 Background = (node.ContainsDiagnostics) ? Brushes.Pink : Brushes.Transparent,
                 Foreground = (node.IsToken) ? Brushes.DarkGreen : (node.Ancestors().Any(a => a.IsToken) ? Brushes.DarkRed : Brushes.Blue),
-                Header = $"{prefix}{node.Kind} [{node.SourceRange.Start}..{node.SourceRange.End})",
+                Header = $"{prefix}{syntaxFactsService.GetKindText(node.RawKind)} [{node.SourceRange.Start}..{node.SourceRange.End})",
                 ToolTip = string.IsNullOrEmpty(tooltip) ? null : tooltip,
                 Tag = node
             };
 
             foreach (var childNode in node.ChildNodes)
-                AddNode(treeViewItem.Items, (SyntaxNode) childNode, string.Empty);
+                AddNode(treeViewItem.Items, childNode, string.Empty);
 
             if (node.IsToken)
             {
-                var token = (SyntaxToken) node;
+                var token = (ISyntaxToken) node;
                 foreach (var childNode in token.LeadingTrivia)
                     AddNode(treeViewItem.Items, childNode, "Lead: ");
                 foreach (var childNode in token.TrailingTrivia)
@@ -246,7 +259,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
 
         private bool NavigateToBestMatch(TreeViewItem treeViewItem, SourceRange span)
         {
-            var currentNode = (SyntaxNode) treeViewItem.Tag;
+            var currentNode = (SyntaxNodeBase) treeViewItem.Tag;
             if (currentNode.FullSourceRange.Contains(span))
             {
                 CollapseEverythingBut(treeViewItem);
@@ -293,12 +306,12 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
             _isNavigatingFromTreeToSource = true;
 
             var newSelectedItem = (TreeViewItem) TreeView.SelectedItem;
-            var syntaxNode = newSelectedItem?.Tag as SyntaxNode;
+            var syntaxNode = newSelectedItem?.Tag as SyntaxNodeBase;
 
             PropertyGrid.SelectedObject = syntaxNode;
 
             if (!_isNavigatingFromSourceToTree && syntaxNode != null)
-                NavigateToSource(syntaxNode.GetTextSpanRoot());
+                NavigateToSource(GetSyntaxFactsService().GetFileSpanRoot(syntaxNode));
 
             _isNavigatingFromTreeToSource = false;
         }

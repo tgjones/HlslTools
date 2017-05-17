@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis", "ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
 EndProject
@@ -72,6 +72,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures", "ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures\ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures.csproj", "{7DD0DC6A-5836-4B08-BCF0-3378E56924C8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.Features", "ShaderTools.CodeAnalysis.Hlsl.Features\ShaderTools.CodeAnalysis.Hlsl.Features.csproj", "{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.SyntaxVisualizer", "ShaderTools.VisualStudio.SyntaxVisualizer\ShaderTools.VisualStudio.SyntaxVisualizer.csproj", "{EE73E1A5-CABC-4184-B95B-DA3D74696D1C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -187,6 +189,10 @@ Global
 		{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EE73E1A5-CABC-4184-B95B-DA3D74696D1C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EE73E1A5-CABC-4184-B95B-DA3D74696D1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EE73E1A5-CABC-4184-B95B-DA3D74696D1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EE73E1A5-CABC-4184-B95B-DA3D74696D1C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -219,5 +225,6 @@ Global
 		{21F7A626-177C-4125-BD2C-55CF26C0ACF3} = {AA1A8DD5-D463-4426-B9DE-39DB7AE04A86}
 		{7DD0DC6A-5836-4B08-BCF0-3378E56924C8} = {7C680757-8612-43C4-8E5A-BBCCA08E0211}
 		{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26} = {80AA1968-FC70-4591-A40A-21DADB3AAF73}
+		{EE73E1A5-CABC-4184-B95B-DA3D74696D1C} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
 	EndGlobalSection
 EndGlobal

@@ -105,5 +105,20 @@ namespace ShaderTools.CodeAnalysis.Syntax
         }
 
         public abstract string ToFullString();
+
+        public IEnumerable<SyntaxNodeBase> Ancestors()
+        {
+            return AncestorsAndSelf().Skip(1);
+        }
+
+        public IEnumerable<SyntaxNodeBase> AncestorsAndSelf()
+        {
+            var node = this;
+            while (node != null)
+            {
+                yield return node;
+                node = node.Parent;
+            }
+        }
     }
 }

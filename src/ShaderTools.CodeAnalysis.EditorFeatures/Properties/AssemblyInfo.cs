@@ -6,3 +6,4 @@
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio.Tests")]
 [assembly: InternalsVisibleTo("ShaderTools.VisualStudio.LanguageServices")]
 [assembly: InternalsVisibleTo("ShaderTools.VisualStudio.LanguageServices.Hlsl")]
+[assembly: InternalsVisibleTo("ShaderTools.VisualStudio.SyntaxVisualizer")]

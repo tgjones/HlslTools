@@ -51,7 +51,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return new SourceLocation(runningTotal);
         }
 
-        public SourceRange MapRootFileRange(TextSpan span)
+        public override SourceRange MapRootFileRange(TextSpan span)
         {
             return new SourceRange(MapRootFilePosition(span.Start), span.Length);
         }

@@ -98,6 +98,12 @@
       <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
       <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
+    <ProjectReference Include="..\ShaderTools.VisualStudio.SyntaxVisualizer\ShaderTools.VisualStudio.SyntaxVisualizer.csproj">
+      <Project>{ee73e1a5-cabc-4184-b95b-da3d74696d1c}</Project>
+      <Name>ShaderTools.VisualStudio.SyntaxVisualizer</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3bPkgdefProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
+    </ProjectReference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -406,11 +412,6 @@
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindow.cs" />
-    <Compile Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowCommand.cs" />
-    <Compile Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml.cs">
-      <DependentUpon>SyntaxVisualizerToolWindowControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingTextViewCreationListener.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingCommandTarget.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingNavigationManager.cs" />
@@ -513,14 +514,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Resource Include="Hlsl\SyntaxVisualizer\Resources\TreeView_713.png" />
-    <VSCTCompile Include="Hlsl\SyntaxVisualizer\ShaderToolsPackage.vsct">
-      <ResourceName>Menus.ctmenu</ResourceName>
-    </VSCTCompile>
-    <Page Include="Hlsl\SyntaxVisualizer\SyntaxVisualizerToolWindowControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>

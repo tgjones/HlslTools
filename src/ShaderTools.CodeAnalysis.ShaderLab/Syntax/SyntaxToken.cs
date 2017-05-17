@@ -9,7 +9,7 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 {
-    public sealed class SyntaxToken : SyntaxNode
+    public sealed class SyntaxToken : SyntaxNode, ISyntaxToken
     {
         public SyntaxKind ContextualKind { get; }
         public object Value { get; }
@@ -136,6 +136,9 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public ImmutableArray<SyntaxNode> LeadingTrivia { get; }
         public ImmutableArray<SyntaxNode> TrailingTrivia { get; }
+
+        ImmutableArray<SyntaxNodeBase> ISyntaxToken.LeadingTrivia => LeadingTrivia.Cast<SyntaxNodeBase>().ToImmutableArray();
+        ImmutableArray<SyntaxNodeBase> ISyntaxToken.TrailingTrivia => TrailingTrivia.Cast<SyntaxNodeBase>().ToImmutableArray();
 
         public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {

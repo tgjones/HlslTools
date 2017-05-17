@@ -234,7 +234,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
         private SyntaxNode FindClosestNodeWithBinder(SyntaxNode root, SourceLocation position)
         {
             var token = root.FindTokenContext(position);
-            return (from n in token.Parent.AncestorsAndSelf()
+            return (from n in token.Parent.AncestorsAndSelf().Cast<SyntaxNode>()
                 let bc = _bindingResult.GetBinder(n)
                 where bc != null
                 select n).FirstOrDefault();

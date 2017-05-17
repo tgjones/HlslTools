@@ -10,20 +10,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
     public static class SyntaxNodeExtensions
     {
-        public static IEnumerable<SyntaxNode> Ancestors(this SyntaxNode node)
-        {
-            return node.AncestorsAndSelf().Skip(1);
-        }
-
-        public static IEnumerable<SyntaxNode> AncestorsAndSelf(this SyntaxNode node)
-        {
-            while (node != null)
-            {
-                yield return node;
-                node = node.Parent;
-            }
-        }
-
         public static T GetAncestor<T>(this SyntaxNode node)
             where T : SyntaxNode
         {
@@ -271,6 +257,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             var seenNodes = new HashSet<SyntaxNode>();
             return root.FindStartTokens(position)
                 .SelectMany(t => t.Parent.AncestorsAndSelf())
+                .Cast<SyntaxNode>()
                 .Where(seenNodes.Add);
         }
 

@@ -9,7 +9,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         public static SyntaxNode FindCommonAncestor(this SyntaxToken token, SyntaxToken otherToken)
         {
             var otherTokenAncestors = otherToken.Ancestors().ToList();
-            return token.Ancestors().FirstOrDefault(ancestor => otherTokenAncestors.Contains(ancestor));
+            return token.Ancestors().Cast<SyntaxNode>().FirstOrDefault(ancestor => otherTokenAncestors.Contains(ancestor));
         }
 
         public static IEnumerable<LocatedNode> GetRootLocatedNodes(this SyntaxNode node)

@@ -9,7 +9,7 @@ using System.ComponentModel.Design;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.SyntaxVisualizer
+namespace ShaderTools.VisualStudio.SyntaxVisualizer
 {
     /// <summary>
     /// Command handler
