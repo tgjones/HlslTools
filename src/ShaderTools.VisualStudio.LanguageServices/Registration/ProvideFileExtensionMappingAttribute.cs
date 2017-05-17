@@ -15,20 +15,20 @@
 using System;
 using Microsoft.VisualStudio.Shell;
 
-namespace ShaderTools.Editor.VisualStudio
+namespace ShaderTools.VisualStudio.LanguageServices.Registration
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-    internal sealed class ProvideFileExtensionMapping : RegistrationAttribute
+    internal sealed class ProvideFileExtensionMappingAttribute : RegistrationAttribute
     {
         private readonly string _name, _id, _editorGuid, _logViewGuid, _package;
         private readonly int _sortPriority;
 
-        public ProvideFileExtensionMapping(string id, string name, Type editorGuid, Type logViewGuid, string package, int sortPriority)
+        public ProvideFileExtensionMappingAttribute(string id, string name, Type editorGuid, Type logViewGuid, string package, int sortPriority)
         {
             _id = id;
             _name = name;
-            _editorGuid = ((Type) editorGuid).GUID.ToString("B");
-            _logViewGuid = ((Type) logViewGuid).GUID.ToString("B");
+            _editorGuid = editorGuid.GUID.ToString("B");
+            _logViewGuid = logViewGuid.GUID.ToString("B");
             _package = package;
             _sortPriority = sortPriority;
         }

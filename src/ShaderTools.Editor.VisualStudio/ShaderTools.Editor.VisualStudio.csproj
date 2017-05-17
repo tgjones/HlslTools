@@ -407,7 +407,6 @@
     <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
     <Compile Include="Hlsl\Options\OptionsService.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
-    <Compile Include="ProvideFileExtensionMapping.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
