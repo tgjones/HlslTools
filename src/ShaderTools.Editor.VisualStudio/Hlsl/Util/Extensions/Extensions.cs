@@ -36,16 +36,6 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions
                 });
         }
 
-        public static SyntaxTree GetSyntaxTree(this ITextSnapshot snapshot, CancellationToken cancellationToken)
-        {
-            var document = snapshot.AsText().GetOpenDocumentInCurrentContextWithChanges();
-            if (document == null)
-                return null;
-            var syntaxTreeTask = document.GetSyntaxTreeAsync(cancellationToken);
-            syntaxTreeTask.Wait(cancellationToken);
-            return (SyntaxTree) syntaxTreeTask.Result;
-        }
-
         public static bool TryGetSemanticModel(this ITextSnapshot snapshot, CancellationToken cancellationToken, out SemanticModel semanticModel)
         {
             try

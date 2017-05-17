@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Hlsl.Util.Extensions;
 
@@ -49,12 +50,13 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
             var cancellationToken = cancellationTokenSource.Token;
 
             var snapshot = textView.TextSnapshot;
+            var document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
                 try
                 {
-                    var syntaxTree = snapshot.GetSyntaxTree(cancellationToken);
+                    var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
 
                     var visitor = new NavigateToVisitor(
                         searchValue, snapshot, textView, callback, _bufferGraphFactoryService,

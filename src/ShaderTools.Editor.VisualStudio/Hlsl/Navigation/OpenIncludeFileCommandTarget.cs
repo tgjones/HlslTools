@@ -5,6 +5,7 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Text;
 using ShaderTools.Editor.VisualStudio.Core.Util;
@@ -57,7 +58,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
         private IncludeDirectiveTriviaSyntax GetIncludeDirective()
         {
             var pos = _textView.Caret.Position.BufferPosition;
-            var syntaxTree = pos.Snapshot.GetSyntaxTree(CancellationToken.None);
+            var document = pos.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
+            var syntaxTree = document.GetSyntaxTreeSynchronously(CancellationToken.None);
             var sourceLocation = syntaxTree.MapRootFilePosition(pos.Position);
             var syntaxToken = ((SyntaxNode) syntaxTree.Root).FindToken(sourceLocation, true);
 
