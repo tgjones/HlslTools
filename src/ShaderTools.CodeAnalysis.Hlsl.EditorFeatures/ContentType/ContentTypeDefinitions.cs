@@ -1,8 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.CodeAnalysis.Editor;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl
+namespace ShaderTools.CodeAnalysis.Editor.Hlsl.ContentType
 {
     internal static class ContentTypeDefinitions
     {

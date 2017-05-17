@@ -299,10 +299,8 @@
     <Compile Include="Core\Projection\IProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionBufferManager.cs" />
     <Compile Include="Core\Projection\ProjectionTextViewModel.cs" />
-    <Compile Include="Hlsl\ContentTypeDefinitions.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="SetupPackage.cs" />
-    <Compile Include="ShaderLab\ContentTypeDefinitions.cs" />
     <Compile Include="ShaderLab\Projection\ProjectionTextViewModelProvider.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentCommandTarget.cs" />
     <Compile Include="Hlsl\Editing\Commenting\CommentingExtensions.cs" />
@@ -443,7 +441,6 @@
     <Compile Include="Core\Util\Extensions\IVsShellExtensions.cs" />
     <Compile Include="Core\Util\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Core\Util\Extensions\VsExtensions.cs" />
-    <Compile Include="ShaderLab\ShaderLabConstants.cs" />
     <Compile Include="ShaderLab\ShaderLabPackage.cs" />
     <EmbeddedResource Include="Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

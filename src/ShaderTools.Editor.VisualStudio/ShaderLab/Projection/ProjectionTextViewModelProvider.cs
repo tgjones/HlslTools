@@ -3,12 +3,13 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
+using ShaderTools.CodeAnalysis.Editor;
 using ShaderTools.Editor.VisualStudio.Core.Projection;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab.Projection
 {
     //[Export(typeof(ITextViewModelProvider))]
-    [ContentType(ShaderLabConstants.ContentTypeName)]
+    [ContentType(ContentTypeNames.ShaderLabContentType)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal class ProjectionTextViewModelProvider : ITextViewModelProvider
     {

@@ -5,11 +5,12 @@ using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
+using ShaderTools.VisualStudio.LanguageServices;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab
 {
     //[PackageRegistration(UseManagedResourcesOnly = true)]
-    //[Guid(PackageId)]
+    //[Guid(Guids.ShaderLabPackageIdString)]
 
     //[ProvideLanguageService(typeof(ShaderLabLanguageInfo), ShaderLabConstants.LanguageName, 0,
     //    ShowCompletion = true,
@@ -23,25 +24,11 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
     //[ProvideLanguageEditorOptionPage(typeof(ShaderLabAdvancedOptionsPage), ShaderLabConstants.LanguageName, null, "Advanced", "120")]
     //[ProvideLanguageEditorOptionPage(typeof(ShaderLabFormattingGeneralOptionsPage), ShaderLabConstants.LanguageName, null, "Formatting", "122")]
 
-    //[ProvideLanguageExtension(typeof(ShaderLabLanguageInfo), ShaderLabConstants.FileExtension)]
+    //[ProvideLanguageExtension(typeof(ShaderLabLanguageInfo), ".shader")]
 
     //[ProvideFileExtensionMapping("{C911385A-6AF2-4C17-B1FE-4D29F6E58B31}", "ShaderLab Editor", typeof(ShaderLabEditorFactory), typeof(ShaderLabLanguageInfo), PackageId, 100)]
     internal sealed class ShaderLabPackage : LanguagePackageBase
     {
-        private const string PackageId = "448635DC-AF8B-4767-BFDB-26ED6A865158";
-
-        private static ShaderLabPackage _instance;
-        public static ShaderLabPackage Instance
-        {
-            get
-            {
-                if (_instance != null)
-                    return _instance;
-                _instance = ((IVsShell) GetGlobalService(typeof(SVsShell))).LoadPackage<ShaderLabPackage>();
-                return _instance;
-            }
-        }
-
         protected override CodeWindowManagerBase CreateCodeWindowManager(IVsCodeWindow window)
         {
             return new CodeWindowManager(this, window, this.AsVsServiceProvider());
@@ -50,13 +37,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
         protected override LanguageInfoBase CreateLanguageInfo()
         {
             return new ShaderLabLanguageInfo(this);
-        }
-
-        protected override void Initialize()
-        {
-            _instance = this;
-
-            base.Initialize();
         }
 
         private sealed class CodeWindowManager : CodeWindowManagerBase

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.InteropServices;
+using ShaderTools.CodeAnalysis;
 using ShaderTools.Editor.VisualStudio.Core;
 using ShaderTools.VisualStudio.LanguageServices;
 
@@ -12,6 +13,6 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
         {
         }
 
-        internal override string LanguageName { get; } = ShaderLabConstants.LanguageName;
+        internal override string LanguageName { get; } = LanguageNames.ShaderLab;
     }
 }
