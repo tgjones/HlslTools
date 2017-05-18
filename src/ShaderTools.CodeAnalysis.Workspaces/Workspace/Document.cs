@@ -66,6 +66,8 @@ namespace ShaderTools.CodeAnalysis
             }, ct), true);
         }
 
+        public bool SupportsSemanticModel => LanguageServices.GetService<ICompilationFactoryService>() != null;
+
         public Task<SyntaxTreeBase> GetSyntaxTreeAsync(CancellationToken cancellationToken)
         {
             return _lazySyntaxTree.GetValueAsync(cancellationToken);
@@ -89,6 +91,9 @@ namespace ShaderTools.CodeAnalysis
 
         public async Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
         {
+            if (!SupportsSemanticModel)
+                return null;
+
             var options = await GetOptionsAsync(cancellationToken).ConfigureAwait(false);
 
             if (!options.GetOption(FeatureOnOffOptions.IntelliSense))

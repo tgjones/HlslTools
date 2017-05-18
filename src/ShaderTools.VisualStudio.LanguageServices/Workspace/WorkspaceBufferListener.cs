@@ -1,15 +1,16 @@
-﻿using System;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {
-    [Export(typeof(IWpfTextViewCreationListener))]
+    [Export(typeof(IWpfTextViewConnectionListener))]
     [ContentType(ContentTypeNames.ShaderToolsContentType)]
     [TextViewRole(PredefinedTextViewRoles.Interactive)]
-    internal sealed class WorkspaceBufferListener : IWpfTextViewCreationListener
+    internal sealed class WorkspaceBufferListener : IWpfTextViewConnectionListener
     {
         private readonly VisualStudioWorkspace _workspace;
 
@@ -19,19 +20,16 @@ namespace ShaderTools.VisualStudio.LanguageServices
             _workspace = workspace;
         }
 
-        public void TextViewCreated(IWpfTextView textView)
+        public void SubjectBuffersConnected(IWpfTextView textView, ConnectionReason reason, Collection<ITextBuffer> subjectBuffers)
         {
-            _workspace.OnTextViewCreated(textView);
-
-            textView.Closed += OnTextViewClosed;
+            foreach (var subjectBuffer in subjectBuffers)
+                _workspace.OnSubjectBufferConnected(textView, subjectBuffer);
         }
 
-        private void OnTextViewClosed(object sender, EventArgs e)
+        public void SubjectBuffersDisconnected(IWpfTextView textView, ConnectionReason reason, Collection<ITextBuffer> subjectBuffers)
         {
-            var textView = (IWpfTextView) sender;
-            textView.Closed -= OnTextViewClosed;
-
-            _workspace.OnTextViewClosed(textView);
+            foreach (var subjectBuffer in subjectBuffers)
+                _workspace.OnSubjectBufferDisconnected(textView, subjectBuffer);
         }
     }
 }
