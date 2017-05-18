@@ -20,7 +20,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Preview
 
         public Document OpenDocument(DocumentId documentId, SourceText sourceText, string languageName)
         {
-            var document = CreateDocument(documentId, languageName, sourceText);
+            var document = CreateDocument(documentId, languageName, sourceText, null);
             OnDocumentOpened(document);
             return document;
         }

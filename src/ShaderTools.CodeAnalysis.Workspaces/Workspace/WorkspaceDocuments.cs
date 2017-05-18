@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Linq;
 using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Diagnostics;
@@ -36,6 +37,18 @@ namespace ShaderTools.CodeAnalysis
         public Document GetDocument(DocumentId documentId)
         {
             return _idToDocumentMap.GetValueOrDefault(documentId);
+        }
+
+        public ImmutableArray<Document> GetDocumentsWithFilePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return ImmutableArray.Create<Document>();
+            }
+
+            return _idToDocumentMap.Values
+                .Where(x => string.Equals(x.FilePath, filePath, StringComparison.OrdinalIgnoreCase))
+                .ToImmutableArray();
         }
 
         /// <summary>

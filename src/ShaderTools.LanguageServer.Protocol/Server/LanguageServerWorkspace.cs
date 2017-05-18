@@ -16,7 +16,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         public Document OpenDocument(DocumentId documentId, SourceText sourceText)
         {
-            var document = CreateDocument(documentId, _languageName, sourceText);
+            var document = CreateDocument(documentId, _languageName, sourceText, sourceText.FilePath);
             OnDocumentOpened(document);
             return document;
         }

@@ -117,7 +117,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             EventContext eventContext)
         {
             var openedDocument = _workspace.OpenDocument(
-                CreateDocumentId(openParams.Uri),
+                DocumentId.CreateNewId(ResolveFilePath(openParams.Uri)),
                 SourceText.From(openParams.Text));
 
             // TODO: Get all recently edited files in the workspace
@@ -133,7 +133,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             EventContext eventContext)
         {
             // Find and close the file in the current session
-            var fileToClose = _workspace.CurrentDocuments.GetDocument(CreateDocumentId(closeParams.Uri));
+            var fileToClose = _workspace.CurrentDocuments.GetDocumentsWithFilePath(closeParams.Uri).FirstOrDefault();
 
             if (fileToClose != null)
             {
@@ -153,7 +153,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             // A text change notification can batch multiple change requests
             foreach (var textChange in textChangeParams.ContentChanges)
             {
-                var fileToChange = _workspace.CurrentDocuments.GetDocument(CreateDocumentId(textChangeParams.Uri));
+                var fileToChange = _workspace.CurrentDocuments.GetDocumentsWithFilePath(textChangeParams.Uri).FirstOrDefault();
                 if (fileToChange == null)
                     continue;
 
@@ -426,11 +426,6 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             Logger.Write(LogLevel.Verbose, "Resolved path: " + filePath);
 
             return filePath;
-        }
-
-        private DocumentId CreateDocumentId(string filePath)
-        {
-            return new DocumentId(ResolveFilePath(filePath));
         }
     }
 }

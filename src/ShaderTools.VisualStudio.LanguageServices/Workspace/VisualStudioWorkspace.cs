@@ -84,11 +84,15 @@ namespace ShaderTools.VisualStudio.LanguageServices
 
             // TODO: hookup textDocument.FileActionOccurred for renames.
 
-            var documentId = new DocumentId(textDocument.FilePath);
+            var documentId = DocumentId.CreateNewId(textDocument.FilePath);
 
             var textContainer = textBuffer.AsTextContainer();
 
-            var document = CreateDocument(documentId, textBuffer.ContentType.TypeName, textContainer.CurrentText);
+            var document = CreateDocument(
+                documentId, 
+                textBuffer.ContentType.TypeName, 
+                textContainer.CurrentText,
+                textDocument.FilePath);
 
             OnDocumentOpened(document);
         }
@@ -112,9 +116,9 @@ namespace ShaderTools.VisualStudio.LanguageServices
                 throw new InvalidOperationException();
             }
 
-            var documentId = new DocumentId(textDocument.FilePath);
+            var document = textBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
 
-            OnDocumentClosed(documentId);
+            OnDocumentClosed(document.Id);
 
             _textBufferToViewsMap.Remove(textBuffer);
             _textBufferToDocumentMap.Remove(textBuffer);

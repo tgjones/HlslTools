@@ -114,7 +114,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Options.UI
             var service = MefV1HostServices.Create(_componentModel.DefaultExportProvider);
             var workspace = new PreviewWorkspace(service);
 
-            var document = workspace.OpenDocument(new DocumentId("document"), SourceText.From(text), Language);
+            var document = workspace.OpenDocument(DocumentId.CreateNewId("document"), SourceText.From(text), Language);
             var formatted = Formatter.FormatAsync(document, this.Options).WaitAndGetResult(CancellationToken.None);
 
             var textBuffer = _textBufferFactoryService.CreateTextBuffer(formatted.SourceText.ToString(), _contentType);

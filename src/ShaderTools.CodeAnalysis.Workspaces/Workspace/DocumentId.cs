@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis
@@ -10,22 +11,24 @@ namespace ShaderTools.CodeAnalysis
     [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
     public sealed class DocumentId
     {
-        /// <summary>
-        /// Canonical form of the document file path.
-        /// </summary>
-        public string Id { get; }
+        public Guid Id { get; }
 
-        internal string OriginalFilePath { get; }
+        internal string DebugName { get; }
 
-        public DocumentId(string filePath)
+        private DocumentId(Guid id, string debugName)
         {
-            Id = filePath.ToLowerInvariant();
-            OriginalFilePath = filePath;
+            Id = id;
+            DebugName = debugName;
+        }
+
+        public static DocumentId CreateNewId(string debugName = null)
+        {
+            return new DocumentId(Guid.NewGuid(), debugName);
         }
 
         internal string GetDebuggerDisplay()
         {
-            return string.Format("({0}, #{1} - {2})", GetType().Name, Id, OriginalFilePath);
+            return string.Format("({0}, #{1} - {2})", GetType().Name, Id, DebugName);
         }
 
         public override string ToString()

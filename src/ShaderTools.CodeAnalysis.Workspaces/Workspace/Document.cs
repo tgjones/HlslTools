@@ -31,7 +31,7 @@ namespace ShaderTools.CodeAnalysis
         /// <summary>
         /// Gets the path at which this file resides.
         /// </summary>
-        public string FilePath => Id.OriginalFilePath;
+        public string FilePath { get; }
 
         public string Name => (FilePath != null) ? Path.GetFileName(FilePath) : "[NoName]";
 
@@ -41,12 +41,13 @@ namespace ShaderTools.CodeAnalysis
 
         public Workspace Workspace => _languageServices.WorkspaceServices.Workspace;
 
-        internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText)
+        internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText, string filePath)
         {
             _languageServices = languageServices;
 
             Id = documentId;
             SourceText = sourceText;
+            FilePath = filePath;
 
             _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() =>
             {
@@ -98,7 +99,7 @@ namespace ShaderTools.CodeAnalysis
 
         public Document WithId(DocumentId documentId)
         {
-            return new Document(_languageServices, documentId, SourceText);
+            return new Document(_languageServices, documentId, SourceText, FilePath);
         }
 
         /// <summary>
@@ -106,7 +107,12 @@ namespace ShaderTools.CodeAnalysis
         /// </summary>
         public Document WithText(SourceText newText)
         {
-            return new Document(_languageServices, Id, newText);
+            return new Document(_languageServices, Id, newText, FilePath);
+        }
+
+        public Document WithFilePath(string filePath)
+        {
+            return new Document(_languageServices, Id, SourceText, filePath);
         }
 
         private AsyncLazy<DocumentOptionSet> _cachedOptions;
