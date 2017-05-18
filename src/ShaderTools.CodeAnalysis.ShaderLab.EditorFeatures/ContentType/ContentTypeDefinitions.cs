@@ -8,7 +8,7 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.ContentType
         /// <summary>
         /// Definition of the primary ShaderLab content type.
         /// </summary>
-        [Export]
+        //[Export]
         [Name(ContentTypeNames.ShaderLabContentType)]
         [BaseDefinition(ContentTypeNames.ShaderToolsContentType)]
         public static readonly ContentTypeDefinition ShaderLabContentTypeDefinition;
