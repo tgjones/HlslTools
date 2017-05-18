@@ -3,10 +3,12 @@ using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
 
-namespace ShaderTools.Editor.VisualStudio.Core.Projection
+namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 {
     internal sealed class ProjectionTextViewModel : ITextViewModel
     {
+        private readonly ProjectionBufferManager _projectionBufferManager;
+
         public ITextBuffer DataBuffer => DataModel.DataBuffer;
 
         public ITextDataModel DataModel { get; }
@@ -17,14 +19,19 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
 
         public PropertyCollection Properties { get; }
 
-        public void Dispose()
+        public ProjectionTextViewModel(
+            IProjectionBufferFactoryService projectionBufferFactoryService,
+            IContentTypeRegistryService contentTypeRegistryService,
+            ITextDataModel dataModel)
         {
-        }
+            _projectionBufferManager = new ProjectionBufferManager(
+                dataModel.DataBuffer,
+                projectionBufferFactoryService,
+                contentTypeRegistryService,
+                ContentTypeNames.HlslContentType);
 
-        public ProjectionTextViewModel(ITextDataModel dataModel, IProjectionBuffer projectionBuffer)
-        {
             DataModel = dataModel;
-            EditBuffer = VisualBuffer = projectionBuffer;
+            EditBuffer = VisualBuffer = _projectionBufferManager.ViewBuffer;
             Properties = new PropertyCollection();
         }
 
@@ -41,6 +48,11 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
         public bool IsPointInVisualBuffer(SnapshotPoint editBufferPoint, PositionAffinity affinity)
         {
             return true;
+        }
+
+        public void Dispose()
+        {
+            _projectionBufferManager.Dispose();
         }
     }
 }

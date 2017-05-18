@@ -5,27 +5,26 @@ using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 
-namespace ShaderTools.Editor.VisualStudio.Core.Projection
+namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 {
     /// <summary>
-    /// Manages the projection buffer for the primary language
+    /// Manages the projection buffer for the primary language.
     /// </summary>
-    internal sealed class ProjectionBufferManager : IProjectionBufferManager
+    internal sealed class ProjectionBufferManager : IDisposable
     {
-        private const string _inertContentTypeName = "inert";
+        private const string InertContentTypeName = "inert";
 
         private readonly IContentTypeRegistryService _contentTypeRegistryService;
 
-        public ProjectionBufferManager(ITextBuffer diskBuffer,
-                                       IProjectionBufferFactoryService projectionBufferFactoryService,
-                                       IContentTypeRegistryService contentTypeRegistryService,
-                                       string secondaryContentTypeName)
+        public ProjectionBufferManager(
+            ITextBuffer dataBuffer,
+            IProjectionBufferFactoryService projectionBufferFactoryService,
+            IContentTypeRegistryService contentTypeRegistryService,
+            string secondaryContentTypeName)
         {
-            DiskBuffer = diskBuffer;
-
             _contentTypeRegistryService = contentTypeRegistryService;
 
-            var snapshot = diskBuffer.CurrentSnapshot;
+            var snapshot = dataBuffer.CurrentSnapshot;
 
             //var shaderLabSyntaxTree = SyntaxFactory.ParseUnitySyntaxTree(new Text.VisualStudioSourceText(snapshot, null, true));
 
@@ -60,9 +59,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
             }
 
             ViewBuffer = projectionBufferFactoryService.CreateProjectionBuffer(null, dataBufferSpans, ProjectionBufferOptions.None);
-
-            DiskBuffer.Properties.AddProperty(typeof(IProjectionBufferManager), this);
-            ViewBuffer.Properties.AddProperty(typeof(IProjectionBufferManager), this);
         }
 
         private sealed class CgBlockVisitor : SyntaxWalker
@@ -82,8 +78,6 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
             }
         }
 
-        #region IProjectionBufferManager
-
         //  Graph:
         //      View Buffer [ContentType = ShaderLab Projection]
         //        |      \
@@ -91,17 +85,12 @@ namespace ShaderTools.Editor.VisualStudio.Core.Projection
         //        |      /
         //       Disk Buffer [ContentType = ShaderLab]
         public IProjectionBuffer ViewBuffer { get; }
-        public ITextBuffer DiskBuffer { get; }
 
-#pragma warning disable CS0067
         public event EventHandler MappingsChanged;
-#pragma warning restore CS0067
 
         public void Dispose()
         {
-            DiskBuffer.Properties.RemoveProperty(typeof(IProjectionBufferManager));
-            ViewBuffer.Properties.RemoveProperty(typeof(IProjectionBufferManager));
+            
         }
-        #endregion
     }
 }
