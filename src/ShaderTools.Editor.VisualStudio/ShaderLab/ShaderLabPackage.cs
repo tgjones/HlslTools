@@ -52,6 +52,14 @@ namespace ShaderTools.Editor.VisualStudio.ShaderLab
             return new ShaderLabLanguageInfo(this);
         }
 
+        protected override void Initialize()
+        {
+            base.Initialize();
+
+            var workspace = ComponentModel.GetService<VisualStudioWorkspace>();
+            workspace.Services.GetService<IProjectionBufferService>();
+        }
+
         private sealed class CodeWindowManager : CodeWindowManagerBase
         {
             public CodeWindowManager(LanguagePackageBase languagePackage, IVsCodeWindow codeWindow, SVsServiceProvider serviceProvider)

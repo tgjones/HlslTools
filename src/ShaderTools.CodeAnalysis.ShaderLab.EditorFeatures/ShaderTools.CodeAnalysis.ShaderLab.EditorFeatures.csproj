@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net46</TargetFramework>
+    <RootNamespace>ShaderTools.CodeAnalysis.Editor.ShaderLab</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

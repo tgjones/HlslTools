@@ -32,6 +32,11 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
                 new TextSpan(range.Start.Position, range.Length));
         }
 
+        public int GetSourceFilePoint(SourceLocation location)
+        {
+            return location.Position;
+        }
+
         public override SourceLocation MapRootFilePosition(int position)
         {
             return new SourceLocation(position);

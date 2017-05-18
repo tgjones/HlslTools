@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using Microsoft.VisualStudio.Utilities;
@@ -7,8 +8,6 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 {
     internal sealed class ProjectionTextViewModel : ITextViewModel
     {
-        private readonly ProjectionBufferManager _projectionBufferManager;
-
         public ITextBuffer DataBuffer => DataModel.DataBuffer;
 
         public ITextDataModel DataModel { get; }
@@ -21,17 +20,27 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 
         public ProjectionTextViewModel(
             IProjectionBufferFactoryService projectionBufferFactoryService,
-            IContentTypeRegistryService contentTypeRegistryService,
             ITextDataModel dataModel)
         {
-            _projectionBufferManager = new ProjectionBufferManager(
-                dataModel.DataBuffer,
-                projectionBufferFactoryService,
-                contentTypeRegistryService,
-                ContentTypeNames.HlslContentType);
-
             DataModel = dataModel;
-            EditBuffer = VisualBuffer = _projectionBufferManager.ViewBuffer;
+
+            // Initially, populate projection buffer with single span covering entire data buffer.
+            // We'll update this before the view actually becomes visible.
+            var snapshot = dataModel.DataBuffer.CurrentSnapshot;
+
+            var span = snapshot.CreateTrackingSpan(
+                new Span(0, snapshot.Length), 
+                SpanTrackingMode.EdgeExclusive);
+
+            var projectionBuffer = projectionBufferFactoryService.CreateProjectionBuffer(
+                null,
+                new List<object> { span },
+                ProjectionBufferOptions.None);
+
+            EditBuffer = VisualBuffer = projectionBuffer;
+
+            dataModel.DataBuffer.Properties.GetOrCreateSingletonProperty(() => projectionBuffer);
+
             Properties = new PropertyCollection();
         }
 
@@ -52,7 +61,7 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 
         public void Dispose()
         {
-            _projectionBufferManager.Dispose();
+            
         }
     }
 }
