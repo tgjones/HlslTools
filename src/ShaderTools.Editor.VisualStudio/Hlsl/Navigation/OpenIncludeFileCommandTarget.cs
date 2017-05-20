@@ -68,7 +68,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
             var document = pos.Snapshot.GetOpenDocumentInCurrentContextWithChanges();
             var syntaxTree = document.GetSyntaxTreeSynchronously(CancellationToken.None);
             var sourceLocation = syntaxTree.MapRootFilePosition(pos.Position);
-            var syntaxToken = ((SyntaxNode) syntaxTree.Root).FindToken(sourceLocation, true);
+            var syntaxToken = (SyntaxToken) ((SyntaxNode) syntaxTree.Root).FindToken(sourceLocation, true);
 
             if (syntaxToken.Parent == null || syntaxToken.Parent.Kind != SyntaxKind.IncludeDirectiveTrivia)
                 return null;

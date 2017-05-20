@@ -166,7 +166,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
             return new EditorTypeNavigationTarget(name.GetFullyQualifiedName(),
                 new SnapshotSpan(_snapshot, nodeSpan.Value.Span.Start, nodeSpan.Value.Span.Length),
-                new SnapshotSpan(_snapshot, name.Span.Span.Start, 0),
+                new SnapshotSpan(_snapshot, name.FileSpan.Span.Start, 0),
                 icon, icon.GetImageSource(_glyphService),
                 childNodes.SelectMany(Visit).ToList());
         }
@@ -188,7 +188,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
             return new EditorNavigationTarget(description,
                 new SnapshotSpan(_snapshot, nodeSpan.Value.Span.Start, nodeSpan.Value.Span.Length),
-                new SnapshotSpan(_snapshot, name.Span.Span.Start, 0),
+                new SnapshotSpan(_snapshot, name.FileSpan.Span.Start, 0),
                 icon, icon.GetImageSource(_glyphService));
         }
     }

@@ -147,7 +147,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
                         var leadingTrivia = new List<SyntaxNode>();
                         leadingTrivia.AddRange(originalToken.LeadingTrivia);
-                        leadingTrivia.Add(new SyntaxTrivia(SyntaxKind.EmptyExpandedMacroTrivia, originalToken.Text, originalToken.SourceRange, originalToken.Span, ImmutableArray<Diagnostic>.Empty));
+                        leadingTrivia.Add(new SyntaxTrivia(SyntaxKind.EmptyExpandedMacroTrivia, originalToken.Text, originalToken.SourceRange, originalToken.FileSpan, ImmutableArray<Diagnostic>.Empty));
                         leadingTrivia.AddRange(originalToken.TrailingTrivia);
                         leadingTrivia.AddRange(token.LeadingTrivia);
                         token = token.WithLeadingTrivia(leadingTrivia.ToImmutableArray());

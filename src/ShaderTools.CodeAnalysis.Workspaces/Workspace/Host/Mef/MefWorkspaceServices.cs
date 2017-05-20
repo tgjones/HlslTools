@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using System.Threading;
 
 namespace ShaderTools.CodeAnalysis.Host.Mef
 {
@@ -70,6 +71,33 @@ namespace ShaderTools.CodeAnalysis.Host.Mef
         private Lazy<IWorkspaceService, WorkspaceServiceMetadata> PickWorkspaceService(IEnumerable<Lazy<IWorkspaceService, WorkspaceServiceMetadata>> services)
         {
             return services.SingleOrDefault();
+        }
+
+        private IEnumerable<string> _languages;
+
+        private IEnumerable<string> GetSupportedLanguages()
+        {
+            if (_languages == null)
+            {
+                var list = _exportProvider.GetExports<ILanguageService, LanguageServiceMetadata>().Select(lz => lz.Metadata.Language).Concat(
+                           _exportProvider.GetExports<ILanguageServiceFactory, LanguageServiceMetadata>().Select(lz => lz.Metadata.Language))
+                           .Distinct()
+                           .ToImmutableArray();
+
+                Interlocked.CompareExchange(ref _languages, list, null);
+            }
+
+            return _languages;
+        }
+
+        public override IEnumerable<string> SupportedLanguages
+        {
+            get { return this.GetSupportedLanguages(); }
+        }
+
+        public override bool IsSupported(string languageName)
+        {
+            return this.GetSupportedLanguages().Contains(languageName);
         }
 
         public override HostLanguageServices GetLanguageServices(string languageName)

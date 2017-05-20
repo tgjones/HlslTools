@@ -201,10 +201,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
 
         private void CreateTag(SyntaxToken token, string classificationType)
         {
-            if (token == null || !token.Span.IsInRootFile || token.MacroReference != null || classificationType == null)
+            if (token == null || !token.FileSpan.IsInRootFile || token.MacroReference != null || classificationType == null)
                 return;
 
-            _results.Add(new ClassifiedSpan(token.Span.Span, classificationType));
+            _results.Add(new ClassifiedSpan(token.FileSpan.Span, classificationType));
         }
     }
 }

@@ -77,40 +77,40 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public static SourceFileSpan? GetTextSpanSafe(this SyntaxNode node)
         {
             if (node is LocatedNode)
-                return ((LocatedNode) node).Span;
+                return ((LocatedNode) node).FileSpan;
 
             var firstToken = node.GetFirstTokenInDescendants();
             if (firstToken == null)
                 return null;
 
-            var lastToken = node.GetLastTokenInDescendants(t => t.Span.File == firstToken.Span.File);
+            var lastToken = node.GetLastTokenInDescendants(t => t.FileSpan.File == firstToken.FileSpan.File);
             if (lastToken == null)
                 return null;
 
-            return new SourceFileSpan(firstToken.Span.File,
+            return new SourceFileSpan(firstToken.FileSpan.File,
                 TextSpan.FromBounds(
-                    firstToken.Span.Span.Start,
-                    lastToken.Span.Span.End));
+                    firstToken.FileSpan.Span.Start,
+                    lastToken.FileSpan.Span.End));
         }
 
         // Returns a span only if the start and token token of the node are in the root file.
         public static SourceFileSpan? GetTextSpanRoot(this SyntaxNode node)
         {
             if (node is LocatedNode)
-                return ((LocatedNode) node).Span;
+                return ((LocatedNode) node).FileSpan;
 
-            var firstToken = node.GetFirstTokenInDescendants(t => t.Span.File.IsRootFile);
+            var firstToken = node.GetFirstTokenInDescendants(t => t.FileSpan.File.IsRootFile);
             if (firstToken == null)
                 return null;
 
-            var lastToken = node.GetLastTokenInDescendants(t => t.Span.File.IsRootFile);
+            var lastToken = node.GetLastTokenInDescendants(t => t.FileSpan.File.IsRootFile);
             if (lastToken == null)
                 return null;
 
-            return new SourceFileSpan(firstToken.Span.File,
+            return new SourceFileSpan(firstToken.FileSpan.File,
                 TextSpan.FromBounds(
-                    firstToken.Span.Span.Start,
-                    lastToken.Span.Span.End));
+                    firstToken.FileSpan.Span.Start,
+                    lastToken.FileSpan.Span.End));
         }
 
         public static SyntaxToken GetLastTokenInDescendants(this SyntaxNode node, Func<SyntaxToken, bool> filter = null)
@@ -127,19 +127,19 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         {
             var lastTrailingLocatedNode = node.TrailingTrivia.OfType<LocatedNode>().LastOrDefault();
             if (lastTrailingLocatedNode != null)
-                return lastTrailingLocatedNode.Span.Span;
-            return node.Span.Span;
+                return lastTrailingLocatedNode.FileSpan.Span;
+            return node.FileSpan.Span;
         }
 
         public static SyntaxToken FindTokenOnLeft(this SyntaxNode root, SourceLocation position)
         {
             var token = root.FindToken(position, descendIntoTrivia: true);
-            return token.GetPreviousTokenIfTouchingEndOrCurrentIsEndOfFile(position);
+            return ((SyntaxToken) token).GetPreviousTokenIfTouchingEndOrCurrentIsEndOfFile(position);
         }
 
         private static SyntaxToken GetPreviousTokenIfTouchingEndOrCurrentIsEndOfFile(this SyntaxToken token, SourceLocation position)
         {
-            var previous = token.GetPreviousToken(includeZeroLength: false, includeSkippedTokens: true);
+            var previous = (SyntaxToken) token.GetPreviousToken(includeZeroLength: false, includeSkippedTokens: true);
             if (previous != null)
             {
                 if (token.Kind == SyntaxKind.EndOfFileToken || previous.SourceRange.End == position)
@@ -152,28 +152,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public static SyntaxToken GetPreviousTokenIfTouchingWord(this SyntaxToken token, SourceLocation position)
         {
             return token.SourceRange.ContainsOrTouches(position) && token.IsWord()
-                ? token.GetPreviousToken(includeSkippedTokens: true)
+                ? (SyntaxToken) token.GetPreviousToken(includeSkippedTokens: true)
                 : token;
-        }
-
-        public static SyntaxToken GetPreviousToken(this SyntaxToken token, bool includeZeroLength = false, bool includeSkippedTokens = false)
-        {
-            return SyntaxTreeNavigation.GetPreviousToken(token, includeZeroLength, includeSkippedTokens);
-        }
-
-        public static SyntaxToken GetNextToken(this SyntaxToken token, bool includeZeroLength = false, bool includeSkippedTokens = false)
-        {
-            return SyntaxTreeNavigation.GetNextToken(token, includeZeroLength, includeSkippedTokens);
-        }
-
-        public static SyntaxToken GetFirstToken(this SyntaxNode token, bool includeZeroLength = false, bool includeSkippedTokens = false)
-        {
-            return SyntaxTreeNavigation.GetFirstToken(token, includeZeroLength, includeSkippedTokens);
-        }
-
-        public static SyntaxToken GetLastToken(this SyntaxNode token, bool includeZeroLength = false, bool includeSkippedTokens = false)
-        {
-            return SyntaxTreeNavigation.GetLastToken(token, includeZeroLength, includeSkippedTokens);
         }
 
         public static SyntaxToken FindTokenContext(this SyntaxNode root, SourceLocation position)
@@ -186,12 +166,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (!token.SourceRange.ContainsOrTouches(position))
             {
                 // token <missing> | token
-                var previousToken = token.GetPreviousToken(includeZeroLength: true);
+                var previousToken = (SyntaxToken) token.GetPreviousToken(includeZeroLength: true);
                 if (previousToken != null && previousToken.IsMissing && previousToken.SourceRange.End <= position)
                     return previousToken;
 
                 // token | <missing> token
-                var nextToken = token.GetNextToken(includeZeroLength: true);
+                var nextToken = (SyntaxToken) token.GetNextToken(includeZeroLength: true);
                 if (nextToken != null && nextToken.IsMissing && position <= nextToken.SourceRange.Start)
                     return nextToken;
             }
@@ -223,9 +203,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public static IEnumerable<SyntaxToken> FindStartTokens(this SyntaxNode root, SourceLocation position, bool descendIntoTriva = false)
         {
             var token = root.FindToken(position, descendIntoTriva);
-            yield return token;
+            yield return (SyntaxToken) token;
 
-            var previousToken = token.GetPreviousToken();
+            var previousToken = (SyntaxToken) ((SyntaxToken) token).GetPreviousToken();
             if (previousToken != null && previousToken.SourceRange.End == position)
                 yield return previousToken;
         }

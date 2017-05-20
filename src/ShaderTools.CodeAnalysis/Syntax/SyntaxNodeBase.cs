@@ -120,5 +120,22 @@ namespace ShaderTools.CodeAnalysis.Syntax
                 node = node.Parent;
             }
         }
+
+        internal virtual bool IsSkippedTokensTrivia => false;
+        internal virtual bool IsStructuredTrivia => false;
+
+        #region Token Lookup
+
+        /// <summary>
+        /// Finds a descendant token of this node whose span includes the supplied position. 
+        /// </summary>
+        /// <param name="position">The character position of the token relative to the beginning of the file.</param>
+        /// <param name="findInsideTrivia">
+        /// True to return tokens that are part of trivia. If false finds the token whose full span (including trivia)
+        /// includes the position.
+        /// </param>
+        public abstract ISyntaxToken FindToken(SourceLocation position, bool findInsideTrivia = false);
+
+        #endregion
     }
 }

@@ -20,10 +20,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
             if (!nameToken.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            if (!nameToken.Span.IsInRootFile)
+            if (!nameToken.FileSpan.IsInRootFile)
                 return null;
 
-            return QuickInfoModel.ForMacroReference(semanticModel, nameToken.Span, node.MacroReference);
+            return QuickInfoModel.ForMacroReference(semanticModel, nameToken.FileSpan, node.MacroReference);
         }
     }
 }

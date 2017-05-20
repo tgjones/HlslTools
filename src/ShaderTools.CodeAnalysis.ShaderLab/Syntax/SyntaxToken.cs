@@ -19,8 +19,10 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public override bool IsMissing { get; }
 
+        public SourceFileSpan FileSpan { get; }
+
         internal SyntaxToken(SyntaxKind kind, SyntaxKind contextualKind, 
-            bool isMissing, SourceRange sourceRange, string text, object value,
+            bool isMissing, SourceRange sourceRange, SourceFileSpan fileSpan, string text, object value,
             IEnumerable<SyntaxNode> leadingTrivia, IEnumerable<SyntaxNode> trailingTrivia, 
             IEnumerable<Diagnostic> diagnostics)
             : base(kind, diagnostics)
@@ -30,6 +32,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             IsMissing = isMissing;
 
             Text = text;
+            FileSpan = fileSpan;
             SourceRange = sourceRange;
             Value = value;
 
@@ -48,8 +51,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
                 || TrailingTrivia.Any(x => x.ContainsDiagnostics);
         }
 
-        internal SyntaxToken(SyntaxKind kind, bool isMissing, SourceRange sourceRange)
-            : this(kind, SyntaxKind.BadToken, isMissing, sourceRange, string.Empty, null, 
+        internal SyntaxToken(SyntaxKind kind, bool isMissing, SourceRange sourceRange, SourceFileSpan fileSpan)
+            : this(kind, SyntaxKind.BadToken, isMissing, sourceRange, fileSpan, string.Empty, null, 
                   Enumerable.Empty<SyntaxNode>(),
                   Enumerable.Empty<SyntaxNode>(),
                   Enumerable.Empty<Diagnostic>())
@@ -142,27 +145,27 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics);
         }
 
         public SyntaxToken WithLeadingTrivia(IEnumerable<SyntaxNode> trivia)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Text, Value, trivia, TrailingTrivia, Diagnostics);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, trivia, TrailingTrivia, Diagnostics);
         }
 
         public SyntaxToken WithTrailingTrivia(IEnumerable<SyntaxNode> trivia)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Text, Value, LeadingTrivia, trivia, Diagnostics);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, trivia, Diagnostics);
         }
 
         public SyntaxToken WithKind(SyntaxKind kind)
         {
-            return new SyntaxToken(kind, ContextualKind, IsMissing, SourceRange, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
+            return new SyntaxToken(kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
         }
 
         public SyntaxToken WithContextualKind(SyntaxKind kind)
         {
-            return new SyntaxToken(Kind, kind, IsMissing, SourceRange, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
+            return new SyntaxToken(Kind, kind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
         }
 
         protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing)

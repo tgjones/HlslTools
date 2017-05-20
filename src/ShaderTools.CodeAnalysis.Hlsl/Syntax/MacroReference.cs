@@ -12,7 +12,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         public abstract DefineDirectiveTriviaSyntax DefineDirective { get; }
         public abstract SyntaxToken NameToken { get; }
-        public abstract SourceFileSpan Span { get; }
+        public abstract SourceFileSpan FileSpan { get; }
 
         public abstract IEnumerable<SyntaxNode> OriginalNodes { get; }
 

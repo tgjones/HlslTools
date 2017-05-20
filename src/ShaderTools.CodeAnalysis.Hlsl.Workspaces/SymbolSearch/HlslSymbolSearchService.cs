@@ -52,7 +52,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (VariableDeclaratorSyntax) node;
                     var symbol = semanticModel.GetDeclaredSymbol(expression);
                     if (symbol != null)
-                        yield return SymbolSpan.CreateDefinition(symbol, expression.Identifier.SourceRange, expression.Identifier.Span);
+                        yield return SymbolSpan.CreateDefinition(symbol, expression.Identifier.SourceRange, expression.Identifier.FileSpan);
                     break;
                 }
                 case SyntaxKind.ClassType:
@@ -61,7 +61,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (StructTypeSyntax) node;
                     var symbol = semanticModel.GetDeclaredSymbol(expression);
                     if (symbol != null && expression.Name != null)
-                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.Span);
+                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.InterfaceType:
@@ -69,7 +69,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (InterfaceTypeSyntax) node;
                     var symbol = semanticModel.GetDeclaredSymbol(expression);
                     if (symbol != null)
-                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.Span);
+                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.IdentifierName:
@@ -77,7 +77,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (IdentifierNameSyntax) node;
                     var symbol = semanticModel.GetSymbol(expression);
                     if (symbol != null)
-                        yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.Span);
+                        yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.IdentifierDeclarationName:
@@ -85,7 +85,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (IdentifierDeclarationNameSyntax) node;
                     var symbol = semanticModel.GetSymbol(expression);
                     if (symbol != null)
-                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.Span);
+                        yield return SymbolSpan.CreateDefinition(symbol, expression.Name.SourceRange, expression.Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.FieldAccessExpression:
@@ -93,7 +93,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (FieldAccessExpressionSyntax) node;
                     var symbol = semanticModel.GetSymbol(expression);
                     if (symbol != null)
-                        yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.Span);
+                        yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.MethodInvocationExpression:
@@ -101,7 +101,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     var expression = (MethodInvocationExpressionSyntax) node;
                     var symbol = semanticModel.GetSymbol(expression);
                     if (symbol != null)
-                        yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.Span);
+                        yield return SymbolSpan.CreateReference(symbol, expression.Name.SourceRange, expression.Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.FunctionInvocationExpression:
@@ -111,7 +111,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     if (symbol != null)
                         yield return SymbolSpan.CreateReference(symbol, 
                             expression.Name.GetUnqualifiedName().Name.SourceRange, 
-                            expression.Name.GetUnqualifiedName().Name.Span);
+                            expression.Name.GetUnqualifiedName().Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.FunctionDefinition:
@@ -121,7 +121,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     if (symbol != null)
                         yield return SymbolSpan.CreateDefinition(symbol,
                             expression.Name.GetUnqualifiedName().Name.SourceRange,
-                            expression.Name.GetUnqualifiedName().Name.Span);
+                            expression.Name.GetUnqualifiedName().Name.FileSpan);
                     break;
                 }
                 case SyntaxKind.FunctionDeclaration:
@@ -131,7 +131,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
                     if (symbol != null)
                         yield return SymbolSpan.CreateDefinition(symbol,
                             expression.Name.GetUnqualifiedName().Name.SourceRange,
-                            expression.Name.GetUnqualifiedName().Name.Span);
+                            expression.Name.GetUnqualifiedName().Name.FileSpan);
                     break;
                 }
             }

@@ -77,13 +77,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
             if (classificationType == null)
                 throw new ArgumentNullException(nameof(classificationType));
 
-            if (node.SourceRange.Length > 0 && node.Span.File.IsRootFile)
+            if (node.SourceRange.Length > 0 && node.FileSpan.File.IsRootFile)
                 _results.Add(CreateClassifiedSpan(node, classificationType));
         }
 
         private static ClassifiedSpan CreateClassifiedSpan(LocatedNode node, string classificationType)
         {
-            return new ClassifiedSpan(node.Span.Span, classificationType);
+            return new ClassifiedSpan(node.FileSpan.Span, classificationType);
         }
 
         private string GetClassificationForToken(SyntaxToken token)

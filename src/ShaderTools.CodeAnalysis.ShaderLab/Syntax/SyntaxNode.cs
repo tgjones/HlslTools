@@ -38,7 +38,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
         public abstract void Accept(SyntaxVisitor visitor);
         public abstract T Accept<T>(SyntaxVisitor<T> visitor);
 
-        public SyntaxToken FindToken(SourceLocation position, bool descendIntoTrivia = false)
+        public override ISyntaxToken FindToken(SourceLocation position, bool descendIntoTrivia = false)
         {
             if (FullSourceRange.End == position)
             {

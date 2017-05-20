@@ -169,12 +169,12 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
         protected SyntaxToken InsertMissingToken(SyntaxKind kind)
         {
             var missingTokenSourceRange = new SourceRange(Current.FullSourceRange.Start, 0);
-
+       
             var diagnosticSpan = GetDiagnosticSourceRangeForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
             diagnostics.ReportTokenExpected(diagnosticSpan, Current, kind);
 
-            return new SyntaxToken(kind, true, missingTokenSourceRange).WithDiagnostics(diagnostics);
+            return new SyntaxToken(kind, true, missingTokenSourceRange, GetSourceFileSpan(missingTokenSourceRange)).WithDiagnostics(diagnostics);
         }
 
         protected SyntaxToken InsertMissingToken(SyntaxKind preferred, SyntaxKind[] otherOptions)
@@ -185,7 +185,12 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
             var diagnostics = new List<Diagnostic>(1);
             diagnostics.ReportTokenExpectedMultipleChoices(diagnosticSpan, Current, new[] { preferred }.Concat(otherOptions));
 
-            return new SyntaxToken(preferred, true, missingTokenSourceRange).WithDiagnostics(diagnostics);
+            return new SyntaxToken(preferred, true, missingTokenSourceRange, GetSourceFileSpan(missingTokenSourceRange)).WithDiagnostics(diagnostics);
+        }
+
+        private SourceFileSpan GetSourceFileSpan(SourceRange sourceRange)
+        {
+            return new SourceFileSpan(new SourceFile(_lexer.Text, null), new TextSpan(sourceRange.Start.Position, sourceRange.Length));
         }
 
         protected SourceRange GetDiagnosticSourceRangeForMissingToken()

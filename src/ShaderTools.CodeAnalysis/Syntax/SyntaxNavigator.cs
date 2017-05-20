@@ -2,34 +2,40 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
+namespace ShaderTools.CodeAnalysis.Syntax
 {
-    internal static class SyntaxTreeNavigation
+    internal sealed class SyntaxNavigator
     {
-        private static readonly Func<SyntaxToken, bool> AnyTokenPredicate = t => true;
-        private static readonly Func<SyntaxToken, bool> NonZeroLengthTokenPredicate = t => t.SourceRange.Length > 0;
+        //public static readonly SyntaxNavigator Instance = new SyntaxNavigator();
 
-        private static readonly Func<SyntaxNode, bool> NoTriviaPredicate = t => false;
-        private static readonly Func<SyntaxNode, bool> SkippedTokensTriviaPredicate = t => t.Kind == SyntaxKind.SkippedTokensTrivia;
+        //private SyntaxNavigator()
+        //{
+        //}
 
-        private static Func<SyntaxToken, bool> GetTokenPredicate(bool includeZeroLength)
+        private static readonly Func<ISyntaxToken, bool> AnyTokenPredicate = t => true;
+        private static readonly Func<ISyntaxToken, bool> NonZeroLengthTokenPredicate = t => t.SourceRange.Length > 0;
+
+        private static readonly Func<SyntaxNodeBase, bool> NoTriviaPredicate = t => false;
+        private static readonly Func<SyntaxNodeBase, bool> SkippedTokensTriviaPredicate = t => t.IsSkippedTokensTrivia;
+
+        private static Func<ISyntaxToken, bool> GetTokenPredicate(bool includeZeroLength)
         {
             return includeZeroLength ? AnyTokenPredicate : NonZeroLengthTokenPredicate;
         }
 
-        private static Func<SyntaxNode, bool> GetTriviaPredicate(bool includeSkippedTokens)
+        private static Func<SyntaxNodeBase, bool> GetTriviaPredicate(bool includeSkippedTokens)
         {
             return includeSkippedTokens ? SkippedTokensTriviaPredicate : NoTriviaPredicate;
         }
 
-        public static SyntaxToken GetPreviousToken(SyntaxToken token, bool includeZeroLength, bool includeSkippedTokens)
+        public static ISyntaxToken GetPreviousToken(ISyntaxToken token, bool includeZeroLength, bool includeSkippedTokens)
         {
             var tokenPredicate = GetTokenPredicate(includeZeroLength);
             var triviaPredicate = GetTriviaPredicate(includeSkippedTokens);
             return GetPreviousToken(token, true, tokenPredicate, triviaPredicate);
         }
 
-        private static SyntaxToken GetPreviousToken(SyntaxToken token, bool searchLeadingTrivia, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetPreviousToken(ISyntaxToken token, bool searchLeadingTrivia, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             if (searchLeadingTrivia)
             {
@@ -49,13 +55,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 {
                     if (nodeOrToken.IsToken)
                     {
-                        var t = GetLastToken((SyntaxToken) nodeOrToken, tokenPredicate, triviaPredicate);
+                        var t = GetLastToken((ISyntaxToken)nodeOrToken, tokenPredicate, triviaPredicate);
                         if (t != null)
                             return t;
                     }
                     else
                     {
-                        var t = GetLastToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
+                        var t = GetLastToken(nodeOrToken, tokenPredicate, triviaPredicate);
                         if (t != null)
                             return t;
                     }
@@ -70,9 +76,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return GetPreviousToken(token.Parent, tokenPredicate, triviaPredicate);
         }
 
-        private static SyntaxToken GetPreviousToken(SyntaxNode node, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetPreviousToken(SyntaxNodeBase node, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
-            if (node.Parent != null && !(node is StructuredTriviaSyntax))
+            if (node.Parent != null && !node.IsStructuredTrivia)
             {
                 var returnNext = false;
 
@@ -82,13 +88,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     {
                         if (nodeOrToken.IsToken)
                         {
-                            var t = GetLastToken((SyntaxToken) nodeOrToken, tokenPredicate, triviaPredicate);
+                            var t = GetLastToken((ISyntaxToken)nodeOrToken, tokenPredicate, triviaPredicate);
                             if (t != null)
                                 return t;
                         }
                         else
                         {
-                            var t = GetLastToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
+                            var t = GetLastToken(nodeOrToken, tokenPredicate, triviaPredicate);
                             if (t != null)
                                 return t;
                         }
@@ -101,17 +107,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 return GetPreviousToken(node.Parent, tokenPredicate, triviaPredicate);
             }
 
-            var structuredTrivia = node as StructuredTriviaSyntax;
-            if (structuredTrivia == null)
+            if (!node.IsStructuredTrivia)
                 return null;
 
-            var trivia = structuredTrivia.Parent as SyntaxToken;
+            var trivia = node.Parent as ISyntaxToken;
             return trivia == null
                 ? null
                 : GetPreviousTokenFromTrivia(trivia, tokenPredicate, triviaPredicate);
         }
 
-        private static SyntaxToken GetPreviousTokenFromTrivia(SyntaxToken token, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetPreviousTokenFromTrivia(ISyntaxToken token, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             if (token == null)
                 return null;
@@ -131,7 +136,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        private static SyntaxToken GetPreviousToken(IEnumerable<SyntaxNode> triviaList, SyntaxToken parentToken, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetPreviousToken(IEnumerable<SyntaxNodeBase> triviaList, ISyntaxToken parentToken, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             var returnNext = false;
 
@@ -139,10 +144,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             {
                 if (returnNext)
                 {
-                    var structure = otherTrivia as StructuredTriviaSyntax;
-                    if (triviaPredicate(otherTrivia) && structure != null)
+                    if (triviaPredicate(otherTrivia) && otherTrivia.IsStructuredTrivia)
                     {
-                        var token = GetLastToken(structure, tokenPredicate, triviaPredicate);
+                        var token = GetLastToken(otherTrivia, tokenPredicate, triviaPredicate);
                         if (token != null)
                             return token;
                     }
@@ -160,14 +164,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        public static SyntaxToken GetNextToken(SyntaxToken token, bool includeZeroLength, bool includeSkippedTokens)
+        public static ISyntaxToken GetNextToken(ISyntaxToken token, bool includeZeroLength, bool includeSkippedTokens)
         {
             var tokenPredicate = GetTokenPredicate(includeZeroLength);
             var triviaPredicate = GetTriviaPredicate(includeSkippedTokens);
             return GetNextToken(token, true, tokenPredicate, triviaPredicate);
         }
 
-        private static SyntaxToken GetNextToken(SyntaxToken token, bool searchTrailingTrivia, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetNextToken(ISyntaxToken token, bool searchTrailingTrivia, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             if (searchTrailingTrivia)
             {
@@ -187,13 +191,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 {
                     if (nodeOrToken.IsToken)
                     {
-                        var t = GetFirstToken((SyntaxToken) nodeOrToken, tokenPredicate, triviaPredicate);
+                        var t = GetFirstToken((ISyntaxToken)nodeOrToken, tokenPredicate, triviaPredicate);
                         if (t != null)
                             return t;
                     }
                     else
                     {
-                        var t = GetFirstToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
+                        var t = GetFirstToken(nodeOrToken, tokenPredicate, triviaPredicate);
                         if (t != null)
                             return t;
                     }
@@ -208,7 +212,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return GetNextToken(token.Parent, tokenPredicate, triviaPredicate);
         }
 
-        private static SyntaxToken GetNextToken(SyntaxNode node, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetNextToken(SyntaxNodeBase node, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             if (node.Parent != null)
             {
@@ -220,13 +224,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     {
                         if (nodeOrToken.IsToken)
                         {
-                            var t = GetFirstToken((SyntaxToken) nodeOrToken, tokenPredicate, triviaPredicate);
+                            var t = GetFirstToken((ISyntaxToken)nodeOrToken, tokenPredicate, triviaPredicate);
                             if (t != null)
                                 return t;
                         }
                         else
                         {
-                            var t = GetFirstToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
+                            var t = GetFirstToken(nodeOrToken, tokenPredicate, triviaPredicate);
                             if (t != null)
                                 return t;
                         }
@@ -242,33 +246,33 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        public static SyntaxToken GetFirstToken(SyntaxNode node, bool includeZeroLength, bool includeSkippedTokens)
+        public static ISyntaxToken GetFirstToken(SyntaxNodeBase node, bool includeZeroLength, bool includeSkippedTokens)
         {
             var tokenPredicate = GetTokenPredicate(includeZeroLength);
             var triviaPredicate = GetTriviaPredicate(includeSkippedTokens);
             return GetFirstToken(node, tokenPredicate, triviaPredicate);
         }
 
-        public static SyntaxToken GetLastToken(SyntaxNode node, bool includeZeroLength, bool includeSkippedTokens)
+        public static ISyntaxToken GetLastToken(SyntaxNodeBase node, bool includeZeroLength, bool includeSkippedTokens)
         {
             var tokenPredicate = GetTokenPredicate(includeZeroLength);
             var triviaPredicate = GetTriviaPredicate(includeSkippedTokens);
             return GetLastToken(node, tokenPredicate, triviaPredicate);
         }
 
-        private static SyntaxToken GetFirstToken(SyntaxNode node, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetFirstToken(SyntaxNodeBase node, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             foreach (var nodeOrToken in node.ChildNodes)
             {
                 if (nodeOrToken.IsToken)
                 {
-                    var t = GetFirstToken((SyntaxToken) nodeOrToken, tokenPredicate, triviaPredicate);
+                    var t = GetFirstToken((ISyntaxToken)nodeOrToken, tokenPredicate, triviaPredicate);
                     if (t != null)
                         return t;
                 }
                 else
                 {
-                    var t = GetFirstToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
+                    var t = GetFirstToken(nodeOrToken, tokenPredicate, triviaPredicate);
                     if (t != null)
                         return t;
                 }
@@ -277,7 +281,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        private static SyntaxToken GetFirstToken(SyntaxToken token, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetFirstToken(ISyntaxToken token, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             var lt = GetFirstToken(token.LeadingTrivia, tokenPredicate, triviaPredicate);
             if (lt != null)
@@ -293,11 +297,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        private static SyntaxToken GetFirstToken(IEnumerable<SyntaxNode> triviaList, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetFirstToken(IEnumerable<SyntaxNodeBase> triviaList, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             foreach (var trivia in triviaList)
             {
-                if (triviaPredicate(trivia) && trivia is StructuredTriviaSyntax)
+                if (triviaPredicate(trivia) && trivia.IsStructuredTrivia)
                 {
                     var t = GetFirstToken(trivia, tokenPredicate, triviaPredicate);
                     if (t != null)
@@ -308,19 +312,19 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        private static SyntaxToken GetLastToken(SyntaxNode node, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetLastToken(SyntaxNodeBase node, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             foreach (var nodeOrToken in node.ChildNodes.Reverse())
             {
                 if (nodeOrToken.IsToken)
                 {
-                    var t = GetLastToken((SyntaxToken) nodeOrToken, tokenPredicate, triviaPredicate);
+                    var t = GetLastToken((ISyntaxToken)nodeOrToken, tokenPredicate, triviaPredicate);
                     if (t != null)
                         return t;
                 }
                 else
                 {
-                    var t = GetLastToken((SyntaxNode) nodeOrToken, tokenPredicate, triviaPredicate);
+                    var t = GetLastToken(nodeOrToken, tokenPredicate, triviaPredicate);
                     if (t != null)
                         return t;
                 }
@@ -329,7 +333,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        private static SyntaxToken GetLastToken(SyntaxToken token, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetLastToken(ISyntaxToken token, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             var tt = GetLastToken(token.TrailingTrivia, tokenPredicate, triviaPredicate);
             if (tt != null)
@@ -345,11 +349,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return null;
         }
 
-        private static SyntaxToken GetLastToken(IEnumerable<SyntaxNode> triviaList, Func<SyntaxToken, bool> tokenPredicate, Func<SyntaxNode, bool> triviaPredicate)
+        private static ISyntaxToken GetLastToken(IEnumerable<SyntaxNodeBase> triviaList, Func<ISyntaxToken, bool> tokenPredicate, Func<SyntaxNodeBase, bool> triviaPredicate)
         {
             foreach (var trivia in triviaList.Reverse())
             {
-                if (triviaPredicate(trivia) && trivia is StructuredTriviaSyntax)
+                if (triviaPredicate(trivia) && trivia.IsStructuredTrivia)
                 {
                     var t = GetLastToken(trivia, tokenPredicate, triviaPredicate);
                     if (t != null)

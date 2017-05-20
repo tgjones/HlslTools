@@ -104,7 +104,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 {
                     var result = x
                         .WithOriginalMacroReference(macroReference, i == 0)
-                        .WithSpan(macroReference.SourceRange, macroReference.Span);
+                        .WithSpan(macroReference.SourceRange, macroReference.FileSpan);
                     if (i == 0)
                         result = result.WithLeadingTrivia(token.LeadingTrivia);
                     if (i == localExpandedTokens.Count - 1)

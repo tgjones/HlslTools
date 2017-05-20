@@ -16,7 +16,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion
             var syntaxTree = semanticModel.Compilation.SyntaxTree;
             var rootFilePosition = semanticModel.Compilation.SyntaxTree.MapRootFilePosition(position);
             var token = GetIdentifierOrKeywordAtPosition((SyntaxNode) syntaxTree.Root, rootFilePosition);
-            var applicableSpan = token?.Span.Span ?? new TextSpan(position, 0);
+            var applicableSpan = token?.FileSpan.Span ?? new TextSpan(position, 0);
 
             cancellationToken.ThrowIfCancellationRequested();
 

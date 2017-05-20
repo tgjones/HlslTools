@@ -7,6 +7,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
     {
         public readonly List<SyntaxToken> Tokens;
 
+        internal override bool IsSkippedTokensTrivia => true;
+
         public SkippedTokensTriviaSyntax(IEnumerable<SyntaxToken> tokens)
             : base(SyntaxKind.SkippedTokensTrivia)
         {

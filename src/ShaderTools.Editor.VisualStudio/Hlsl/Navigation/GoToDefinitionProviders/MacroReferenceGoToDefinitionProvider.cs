@@ -19,10 +19,10 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
             if (!nameToken.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            if (!nameToken.Span.IsInRootFile)
+            if (!nameToken.FileSpan.IsInRootFile)
                 return null;
 
-            return node.MacroReference.DefineDirective.MacroName.Span;
+            return node.MacroReference.DefineDirective.MacroName.FileSpan;
         }
     }
 }

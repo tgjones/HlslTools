@@ -57,11 +57,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Structure
 
         private void CreateTag(SyntaxToken startToken, SyntaxToken endToken, bool isImplementation)
         {
-            if (startToken == null || !startToken.Span.IsInRootFile
-                || endToken == null || !endToken.Span.IsInRootFile)
+            if (startToken == null || !startToken.FileSpan.IsInRootFile
+                || endToken == null || !endToken.FileSpan.IsInRootFile)
                 return;
 
-            var textSpan = new TextSpan(startToken.Span.Span.End, endToken.Span.Span.End - startToken.Span.Span.End);
+            var textSpan = new TextSpan(startToken.FileSpan.Span.End, endToken.FileSpan.Span.End - startToken.FileSpan.Span.End);
             var lineSpan = _sourceText.Lines.GetLinePositionSpan(textSpan);
             var isCollapsible = lineSpan.Start.Line != lineSpan.End.Line;
 

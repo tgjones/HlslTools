@@ -51,7 +51,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.BraceMatching
 
             if (isLeft)
             {
-                var left = token.Span;
+                var left = token.FileSpan;
                 SourceFileSpan right;
                 if (FindMatchingBrace(position, 1, token.Parent, rightKind, out right))
                     return MapResultToFile(left, right);
@@ -59,7 +59,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.BraceMatching
             else if (isRight)
             {
                 SourceFileSpan left;
-                var right = token.Span;
+                var right = token.FileSpan;
                 if (FindMatchingBrace(position, -1, token.Parent, leftKind, out left))
                     return MapResultToFile(left, right);
             }
@@ -93,7 +93,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.BraceMatching
             {
                 if (!found)
                 {
-                    right = token.Span;
+                    right = token.FileSpan;
                     found = true;
                 }
                 else

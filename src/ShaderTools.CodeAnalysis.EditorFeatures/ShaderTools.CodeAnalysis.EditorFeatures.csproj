@@ -13,8 +13,13 @@
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.ImageCatalog" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />

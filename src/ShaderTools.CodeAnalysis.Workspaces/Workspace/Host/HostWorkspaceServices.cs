@@ -1,5 +1,7 @@
 ﻿using ShaderTools.CodeAnalysis.Properties;
 using System;
+using System.Collections.Generic;
+using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Host
 {
@@ -38,6 +40,22 @@ namespace ShaderTools.CodeAnalysis.Host
             }
 
             return service;
+        }
+
+        /// <summary>
+        /// A list of language names for supported language services.
+        /// </summary>
+        public virtual IEnumerable<string> SupportedLanguages
+        {
+            get { return SpecializedCollections.EmptyEnumerable<string>(); }
+        }
+
+        /// <summary>
+        /// Returns true if the language is supported.
+        /// </summary>
+        public virtual bool IsSupported(string languageName)
+        {
+            return false;
         }
 
         /// <summary>

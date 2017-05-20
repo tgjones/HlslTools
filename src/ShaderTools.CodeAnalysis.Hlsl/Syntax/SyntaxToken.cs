@@ -102,32 +102,32 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
         public SyntaxToken WithLeadingTrivia(IEnumerable<SyntaxNode> trivia)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, trivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, trivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
         public SyntaxToken WithTrailingTrivia(IEnumerable<SyntaxNode> trivia)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, trivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, trivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
         public SyntaxToken WithOriginalMacroReference(MacroReference macroReference, bool isFirstTokenInMacroExpansion)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, macroReference, isFirstTokenInMacroExpansion);
+            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, macroReference, isFirstTokenInMacroExpansion);
         }
 
         public SyntaxToken WithKind(SyntaxKind kind)
         {
-            return new SyntaxToken(kind, ContextualKind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
+            return new SyntaxToken(kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
         public SyntaxToken WithContextualKind(SyntaxKind kind)
         {
-            return new SyntaxToken(Kind, kind, IsMissing, SourceRange, Span, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
+            return new SyntaxToken(Kind, kind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics, MacroReference, IsFirstTokenInMacroExpansion);
         }
 
         public SyntaxToken WithSpan(SourceRange sourceRange, SourceFileSpan span)
@@ -162,7 +162,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             {
                 MacroReference.WriteTo(sb, leading, trailing, includeNonRootFile, ignoreMacroReferences);
             }
-            else if (Span.File.IsRootFile || includeNonRootFile)
+            else if (FileSpan.File.IsRootFile || includeNonRootFile)
             {
                 sb.Append(Text);
             }

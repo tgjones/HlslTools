@@ -2,6 +2,8 @@
 
 using System;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Text.Properties;
 
@@ -59,6 +61,26 @@ namespace ShaderTools.CodeAnalysis.Text
         /// </summary>
         public static Document GetOpenDocumentInCurrentContextWithChanges(this ITextSnapshot text)
             => text.AsText().GetOpenDocumentInCurrentContextWithChanges();
+
+        /// <summary>
+        /// Tries to get the document corresponding to the text from the current partial solution 
+        /// associated with the text's container. If the document does not contain the exact text a document 
+        /// from a new solution containing the specified text is constructed. If no document is associated
+        /// with the specified text's container, or the text's container isn't associated with a workspace,
+        /// then the method returns false.
+        /// </summary>
+        internal static Task<Document> GetDocumentWithFrozenPartialSemanticsAsync(this SourceText text, CancellationToken cancellationToken)
+        {
+            var document = text.GetOpenDocumentInCurrentContextWithChanges();
+
+            //if (document != null)
+            //{
+            //    return await document.WithFrozenPartialSemanticsAsync(cancellationToken).ConfigureAwait(false);
+            //}
+            return Task.FromResult(document);
+
+            //return null;
+        }
 
         //internal static bool CanApplyChangeDocumentToWorkspace(this ITextBuffer buffer)
         //    => Workspace.TryGetWorkspace(buffer.AsTextContainer(), out var workspace) &&

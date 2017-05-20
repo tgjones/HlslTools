@@ -21,7 +21,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             var pretokenizer = new UnityPretokenizer(sourceText);
             var pretokenizedTokens = pretokenizer.GetTokens();
 
-            var lexer = new UnityLexer(pretokenizedTokens);
+            var lexer = new UnityLexer(sourceText, pretokenizedTokens);
             var parser = new UnityParser(lexer);
 
             var result = new SyntaxTree(sourceText,
@@ -39,7 +39,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             var pretokenizer = new UnityPretokenizer(sourceText);
             var pretokenizedTokens = pretokenizer.GetTokens();
 
-            var lexer = new UnityLexer(pretokenizedTokens);
+            var lexer = new UnityLexer(sourceText, pretokenizedTokens);
             SyntaxToken token;
             do
             {

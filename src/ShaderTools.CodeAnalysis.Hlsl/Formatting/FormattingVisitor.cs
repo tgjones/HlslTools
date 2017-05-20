@@ -38,13 +38,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
         private TextSpan ExpandToIncludeFullLines(TextSpan span)
         {
-            var firstLocatedNodeIndex = _locatedNodes.FindIndex(x => x.Span.Span.Start >= span.Start);
+            var firstLocatedNodeIndex = _locatedNodes.FindIndex(x => x.FileSpan.Span.Start >= span.Start);
             var previousEndOfLineNode = FindPreviousEndOfLine(firstLocatedNodeIndex);
-            var expandedSpan = TextSpan.FromBounds(previousEndOfLineNode?.Span.Span.End ?? 0, span.End);
+            var expandedSpan = TextSpan.FromBounds(previousEndOfLineNode?.FileSpan.Span.End ?? 0, span.End);
 
-            var lastLocatedNodeIndex = _locatedNodes.FindIndex(x => x.Span.Span.End >= span.End);
+            var lastLocatedNodeIndex = _locatedNodes.FindIndex(x => x.FileSpan.Span.End >= span.End);
             var nextEndOfLineNode = FindNextEndOfLine(lastLocatedNodeIndex);
-            expandedSpan = TextSpan.FromBounds(expandedSpan.Start, nextEndOfLineNode?.Span.Span.End ?? _locatedNodes.Last().Span.Span.End);
+            expandedSpan = TextSpan.FromBounds(expandedSpan.Start, nextEndOfLineNode?.FileSpan.Span.End ?? _locatedNodes.Last().FileSpan.Span.End);
 
             return expandedSpan;
         }
@@ -1521,12 +1521,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
             if (previousLocatedNode.Kind != SyntaxKind.WhitespaceTrivia)
             {
-                MaybeReplaceText(new SourceFileSpan(_rootSourceFile, new TextSpan(previousLocatedNode.Span.Span.End, 0)), whitespace);
+                MaybeReplaceText(new SourceFileSpan(_rootSourceFile, new TextSpan(previousLocatedNode.FileSpan.Span.End, 0)), whitespace);
                 return;
             }
 
             var whitespaceTrivia = (SyntaxTrivia) previousLocatedNode;
-            MaybeReplaceText(whitespaceTrivia.Span, whitespace);
+            MaybeReplaceText(whitespaceTrivia.FileSpan, whitespace);
         }
 
         private void ReplacePreceedingWhitespaceForOpenBraceIncludingNewLines(SyntaxToken openBraceToken, int openBraceTokenIndex, bool placeOpenBraceOnNewLine, bool addSpace)
@@ -1553,7 +1553,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                     default:
                         // hit a newline, replace the indentation with new indentation
                         MaybeReplaceText(
-                            new SourceFileSpan(_rootSourceFile, TextSpan.FromBounds(previousNode.Span.Span.End, openBraceToken.Span.Span.Start)), 
+                            new SourceFileSpan(_rootSourceFile, TextSpan.FromBounds(previousNode.FileSpan.Span.End, openBraceToken.FileSpan.Span.Start)), 
                             (!OnSameLine(nodeIndex, openBraceTokenIndex) && !previousNode.IsToken)
                                 ? GetBraceNewLineFormatting(ReplaceWith.InsertNewLineAndIndentation)
                                 : GetBraceNewLineFormatting(braceOnNewLine));
@@ -1561,7 +1561,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 }
             }
             MaybeReplaceText(
-                new SourceFileSpan(_rootSourceFile, new TextSpan(0, openBraceToken.Span.Span.Start)),
+                new SourceFileSpan(_rootSourceFile, new TextSpan(0, openBraceToken.FileSpan.Span.Start)),
                 GetBraceNewLineFormatting(braceOnNewLine));
         }
 
@@ -1608,14 +1608,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             if (nextLocatedNode.Kind == SyntaxKind.WhitespaceTrivia)
             {
                 var whitespaceTrivia = (SyntaxTrivia) nextLocatedNode;
-                MaybeReplaceText(whitespaceTrivia.Span, whitespace);
-                previousWhitespaceSpan = whitespaceTrivia.Span;
+                MaybeReplaceText(whitespaceTrivia.FileSpan, whitespace);
+                previousWhitespaceSpan = whitespaceTrivia.FileSpan;
                 startIndex++;
             }
             else if (!string.IsNullOrEmpty(whitespace))
             {
-                MaybeReplaceText(new SourceFileSpan(_rootSourceFile, new TextSpan(token.Span.Span.End, 0)), whitespace);
-                previousWhitespaceSpan = new SourceFileSpan(_rootSourceFile, new TextSpan(token.Span.Span.End, whitespace.Length));
+                MaybeReplaceText(new SourceFileSpan(_rootSourceFile, new TextSpan(token.FileSpan.Span.End, 0)), whitespace);
+                previousWhitespaceSpan = new SourceFileSpan(_rootSourceFile, new TextSpan(token.FileSpan.Span.End, whitespace.Length));
             }
 
             for (var i = startIndex; i < _locatedNodes.Count; i++)
@@ -1624,20 +1624,20 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 switch (nextLocatedNode.Kind)
                 {
                     case SyntaxKind.WhitespaceTrivia:
-                        MaybeReplaceText(nextLocatedNode.Span, string.Empty);
-                        previousWhitespaceSpan = nextLocatedNode.Span;
+                        MaybeReplaceText(nextLocatedNode.FileSpan, string.Empty);
+                        previousWhitespaceSpan = nextLocatedNode.FileSpan;
                         break;
 
                     case SyntaxKind.SingleLineCommentTrivia:
                         if (previousWhitespaceSpan == null)
-                            InsertWhitespace(nextLocatedNode.Span.Span.Start);
+                            InsertWhitespace(nextLocatedNode.FileSpan.Span.Start);
                         else if (whitespace == "")
                             MaybeReplaceText(previousWhitespaceSpan.Value, " ");
                         return;
 
                     case SyntaxKind.MultiLineCommentTrivia:
                         if (previousWhitespaceSpan == null)
-                            InsertWhitespace(nextLocatedNode.Span.Span.Start);
+                            InsertWhitespace(nextLocatedNode.FileSpan.Span.Start);
                         else if (whitespace == "")
                             MaybeReplaceText(previousWhitespaceSpan.Value, " ");
                         previousNonWhitespaceNode = nextLocatedNode;
@@ -1649,8 +1649,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                             new SourceFileSpan(
                                 _rootSourceFile,
                                 TextSpan.FromBounds(
-                                    previousWhitespaceSpan?.Span.Start ?? previousNonWhitespaceNode.Span.Span.End,
-                                    nextLocatedNode.Span.Span.Start)),
+                                    previousWhitespaceSpan?.Span.Start ?? previousNonWhitespaceNode.FileSpan.Span.End,
+                                    nextLocatedNode.FileSpan.Span.Start)),
                             "");
                         return;
 
@@ -1701,13 +1701,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 if (_locatedNodes[i].Kind == SyntaxKind.EndOfLineTrivia)
                 {
                     MaybeReplaceText(
-                        new SourceFileSpan(_rootSourceFile, TextSpan.FromBounds(_locatedNodes[i].Span.Span.End, token.Span.Span.Start)),
+                        new SourceFileSpan(_rootSourceFile, TextSpan.FromBounds(_locatedNodes[i].FileSpan.Span.End, token.FileSpan.Span.Start)),
                         GetIndentation());
                     break;
                 }
 
                 MaybeReplaceText(
-                    new SourceFileSpan(_rootSourceFile, TextSpan.FromBounds(_locatedNodes[i].Span.Span.End, token.Span.Span.Start)),
+                    new SourceFileSpan(_rootSourceFile, TextSpan.FromBounds(_locatedNodes[i].FileSpan.Span.End, token.FileSpan.Span.Start)),
                     _options.NewLine + GetIndentation());
                 break;
             }
@@ -1771,7 +1771,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
         private void AlignDirective(DirectiveTriviaSyntax directive)
         {
-            if (!directive.HashToken.Span.File.IsRootFile)
+            if (!directive.HashToken.FileSpan.File.IsRootFile)
                 return;
 
             var hashTokenIndex = FindIndex(directive.HashToken);

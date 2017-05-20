@@ -7,6 +7,7 @@ using System.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 
@@ -77,7 +78,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
         private static FieldAccessExpressionSyntax GetPropertyAccessExpression(SyntaxNode root, SourceLocation position)
         {
             var token = root.FindTokenOnLeft(position);
-            var previous = token.GetPreviousToken(false, true);
+            var previous = (SyntaxToken) token.GetPreviousToken(false, true);
             var dot = previous != null && previous.Kind == SyntaxKind.DotToken
                           ? previous
                           : token;

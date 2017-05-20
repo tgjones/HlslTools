@@ -153,7 +153,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             var exprLastToken = expr.GetLastToken();
 
             eod = eod.WithLeadingTrivia(eod.LeadingTrivia.Add(new SyntaxTrivia(SyntaxKind.DisabledTextTrivia, expr.ToFullString(),
-                expr.SourceRange, _lexer.CreateSourceFileSpan(TextSpan.FromBounds(exprFirstToken.Span.Span.Start, exprLastToken.Span.Span.End)),
+                expr.SourceRange, _lexer.CreateSourceFileSpan(TextSpan.FromBounds(exprFirstToken.FileSpan.Span.Start, exprLastToken.FileSpan.Span.End)),
                 ImmutableArray<Diagnostic>.Empty)).ToArray());
             if (_directiveStack.HasUnfinishedIf())
                 return WithDiagnostic(new BadDirectiveTriviaSyntax(hash, keyword, eod, isActive), DiagnosticId.EndIfDirectiveExpected);

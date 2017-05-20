@@ -11,10 +11,11 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
         private int _tokenIndex;
         private SourceLocation _tokenPosition;
 
-        //public SourceText Text { get; }
+        public SourceText Text { get; }
 
-        internal UnityLexer(ImmutableArray<PretokenizedSyntaxToken> pretokenizedTokens)
+        internal UnityLexer(SourceText text, ImmutableArray<PretokenizedSyntaxToken> pretokenizedTokens)
         {
+            Text = text;
             _pretokenizedTokens = pretokenizedTokens;
         }
 

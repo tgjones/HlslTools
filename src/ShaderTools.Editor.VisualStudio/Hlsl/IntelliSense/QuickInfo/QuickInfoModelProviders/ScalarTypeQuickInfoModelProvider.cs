@@ -14,7 +14,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
             if (!node.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            if (node.TypeTokens.Any(x => !x.Span.IsInRootFile))
+            if (node.TypeTokens.Any(x => !x.FileSpan.IsInRootFile))
                 return null;
 
             var symbol = semanticModel.GetSymbol(node);
@@ -22,8 +22,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
                 return null;
 
             var textSpan = (node.TypeTokens.Count > 1)
-                ? new SourceFileSpan(node.TypeTokens[0].Span.File, TextSpan.FromBounds(node.TypeTokens[0].Span.Span.Start, node.TypeTokens[1].Span.Span.End))
-                : node.TypeTokens[0].Span;
+                ? new SourceFileSpan(node.TypeTokens[0].FileSpan.File, TextSpan.FromBounds(node.TypeTokens[0].FileSpan.Span.Start, node.TypeTokens[1].FileSpan.Span.End))
+                : node.TypeTokens[0].FileSpan;
 
             return QuickInfoModel.ForSymbol(semanticModel, textSpan, symbol);
         }

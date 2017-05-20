@@ -156,10 +156,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         {
             var missingTokenSourceRange = new SourceRange(Current.FullSourceRange.Start, 0);
 
-            var missingTokenSpan = new SourceFileSpan(Current.Span.File, new TextSpan(Current.Span.Span.Start, 0));
+            var missingTokenSpan = new SourceFileSpan(Current.FileSpan.File, new TextSpan(Current.FileSpan.Span.Start, 0));
             var leadingLocatedTrivia = Current.LeadingTrivia.OfType<LocatedNode>().FirstOrDefault();
             if (leadingLocatedTrivia != null)
-                missingTokenSpan = new SourceFileSpan(leadingLocatedTrivia.Span.File, new TextSpan(leadingLocatedTrivia.Span.Span.Start, 0));
+                missingTokenSpan = new SourceFileSpan(leadingLocatedTrivia.FileSpan.File, new TextSpan(leadingLocatedTrivia.FileSpan.Span.Start, 0));
             
             var diagnosticSpan = GetDiagnosticSourceRangeForMissingToken();
             var diagnostics = new List<Diagnostic>(1);
@@ -186,10 +186,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             {
                 var previousToken = _tokens[_tokenIndex - 1];
                 if (previousToken.TrailingTrivia.Any(x => x.Kind == SyntaxKind.EndOfLineTrivia))
-                    return new SourceFileSpan(previousToken.Span.File, new TextSpan(previousToken.Span.Span.End, 2));
+                    return new SourceFileSpan(previousToken.FileSpan.File, new TextSpan(previousToken.FileSpan.Span.End, 2));
             }
 
-            return Current.Span;
+            return Current.FileSpan;
         }
 
         private StructuredTriviaSyntax CreateSkippedTokensTrivia(IReadOnlyCollection<SyntaxToken> tokens)

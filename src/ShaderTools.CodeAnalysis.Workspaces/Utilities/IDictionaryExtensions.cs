@@ -21,16 +21,6 @@ namespace ShaderTools.Utilities
             return value;
         }
 
-        public static TValue GetValueOrDefault<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-        {
-            if (dictionary.TryGetValue(key, out var value))
-            {
-                return value;
-            }
-
-            return default(TValue);
-        }
-
         public static bool DictionaryEquals<K, V>(this IDictionary<K, V> left, IDictionary<K, V> right, IEqualityComparer<KeyValuePair<K, V>> comparer = null)
         {
             comparer = comparer ?? EqualityComparer<KeyValuePair<K, V>>.Default;

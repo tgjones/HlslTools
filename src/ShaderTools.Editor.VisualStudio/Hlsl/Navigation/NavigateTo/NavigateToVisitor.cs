@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Projection;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 using ShaderTools.Editor.VisualStudio.Core.Navigation;
@@ -112,7 +113,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
             var lastDeclarator = variables.Last();
             var firstDeclarator = variables.First();
 
-            if (!node.GetFirstToken().Span.File.IsRootFile)
+            if (!node.GetFirstToken().FileSpan.File.IsRootFile)
                 return;
 
             var nodeRootSpan = node.GetTextSpanRoot();
@@ -207,7 +208,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.NavigateTo
             Action navigateCallback = () => _textView.NavigateTo(
                 _bufferGraphFactoryService,
                 new SnapshotSpan(_snapshot, nodeSpan.Value.Span.Start, nodeSpan.Value.Span.Length),
-                new SnapshotSpan(_snapshot, name.Span.Span.Start, name.Span.Span.Length));
+                new SnapshotSpan(_snapshot, name.FileSpan.Span.Start, name.FileSpan.Span.Length));
 
             var itemDisplay = new NavigateToItemDisplay(icon.GetIcon(_glyphService),
                 nameText, description, null, navigateCallback);

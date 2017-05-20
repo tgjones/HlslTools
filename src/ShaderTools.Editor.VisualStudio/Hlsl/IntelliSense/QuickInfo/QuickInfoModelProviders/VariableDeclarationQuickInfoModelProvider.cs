@@ -15,7 +15,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
                 if (!declarator.Identifier.SourceRange.ContainsOrTouches(position))
                     continue;
 
-                if (!declarator.Identifier.Span.IsInRootFile)
+                if (!declarator.Identifier.FileSpan.IsInRootFile)
                     continue;
 
                 if (declarator.Identifier.MacroReference != null)
@@ -25,7 +25,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo.QuickInfoM
                 if (symbol == null)
                     break;
 
-                return QuickInfoModel.ForSymbol(semanticModel, declarator.Identifier.Span, symbol);
+                return QuickInfoModel.ForSymbol(semanticModel, declarator.Identifier.FileSpan, symbol);
             }
 
             return null;

@@ -31,7 +31,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing, bool includeNonRootFile, bool ignoreMacroReferences)
         {
-            if (Span.File.IsRootFile || includeNonRootFile)
+            if (FileSpan.File.IsRootFile || includeNonRootFile)
                 sb.Append(Text);
         }
     }

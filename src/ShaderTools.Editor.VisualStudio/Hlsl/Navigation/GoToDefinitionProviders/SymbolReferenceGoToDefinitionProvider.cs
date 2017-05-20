@@ -17,7 +17,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation.GoToDefinitionProvider
             if (!nameToken.SourceRange.ContainsOrTouches(position))
                 return null;
 
-            if (!nameToken.Span.IsInRootFile)
+            if (!nameToken.FileSpan.IsInRootFile)
                 return null;
 
             var symbol = semanticModel.GetSymbol(node);
