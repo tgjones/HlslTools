@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Diagnostics;
@@ -6,6 +7,7 @@ using ShaderTools.CodeAnalysis.Hlsl.Binding;
 using ShaderTools.CodeAnalysis.Hlsl.Binding.BoundNodes;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
@@ -23,6 +25,53 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
         {
             Compilation = compilation;
             _bindingResult = bindingResult;
+        }
+
+        public override ISymbol GetDeclaredSymbol(SyntaxNodeBase declaration)
+        {
+            var node = (SyntaxNode) declaration;
+
+            var parameter = node as ParameterSyntax;
+            if (parameter != null)
+                return GetDeclaredSymbol(parameter);
+
+            var @namespace = node as NamespaceSyntax;
+            if (@namespace != null)
+                return GetDeclaredSymbol(@namespace);
+
+            var interfaceType = node as InterfaceTypeSyntax;
+            if (interfaceType != null)
+                return GetDeclaredSymbol(interfaceType);
+
+            var structType = node as StructTypeSyntax;
+            if (structType != null)
+                return GetDeclaredSymbol(structType);
+
+            var variableDeclarator = node as VariableDeclaratorSyntax;
+            if (variableDeclarator != null)
+                return GetDeclaredSymbol(variableDeclarator);
+
+            var typeAlias = node as TypeAliasSyntax;
+            if (typeAlias != null)
+                return GetDeclaredSymbol(typeAlias);
+
+            var constantBuffer = node as ConstantBufferSyntax;
+            if (constantBuffer != null)
+                return GetDeclaredSymbol(constantBuffer);
+
+            var functionDeclaration = node as FunctionDeclarationSyntax;
+            if (functionDeclaration != null)
+                return GetDeclaredSymbol(functionDeclaration);
+
+            var functionDefinition = node as FunctionDefinitionSyntax;
+            if (functionDefinition != null)
+                return GetDeclaredSymbol(functionDefinition);
+
+            var technique = node as TechniqueSyntax;
+            if (technique != null)
+                return GetDeclaredSymbol(technique);
+
+            return null;
         }
 
         public ParameterSymbol GetDeclaredSymbol(ParameterSyntax syntax)
@@ -83,6 +132,35 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
         {
             var result = _bindingResult.GetBoundNode(syntax) as BoundTechnique;
             return result?.TechniqueSymbol;
+        }
+
+        public override SymbolInfo GetSymbolInfo(SyntaxNodeBase node)
+        {
+            Symbol getSymbol()
+            {
+                var identifierDeclarationName = node as IdentifierDeclarationNameSyntax;
+                if (identifierDeclarationName != null)
+                    return GetSymbol(identifierDeclarationName);
+
+                var semantic = node as SemanticSyntax;
+                if (semantic != null)
+                    return GetSymbol(semantic);
+
+                var attribute = node as AttributeSyntax;
+                if (attribute != null)
+                    return GetSymbol(attribute);
+
+                var expression = node as ExpressionSyntax;
+                if (expression != null)
+                    return GetSymbol(expression);
+
+                return null;
+            }
+
+            var symbol = getSymbol();
+            return symbol != null
+                ? new SymbolInfo(symbol)
+                : SymbolInfo.None;
         }
 
         public Symbol GetSymbol(IdentifierDeclarationNameSyntax syntax)
@@ -173,6 +251,20 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
             return expression.Symbol;
         }
 
+        public override TypeInfo GetTypeInfo(SyntaxNodeBase node)
+        {
+            var expression = node as ExpressionSyntax;
+            if (expression != null)
+            {
+                var expressionType = GetExpressionType(expression);
+                return expressionType != null
+                    ? new TypeInfo(expressionType, expressionType)
+                    : TypeInfo.None;
+            }
+
+            return TypeInfo.None;
+        }
+
         public TypeSymbol GetExpressionType(ExpressionSyntax expression)
         {
             var boundExpression = GetBoundExpression(expression);
@@ -183,6 +275,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
         {
             return _bindingResult.GetBoundNode(expression) as BoundExpression;
         }
+
+        //public override IAliasSymbol GetAliasSymbol(SyntaxNodeBase node)
+        //{
+        //    var nameSyntax = node as IdentifierNameSyntax;
+        //    return nameSyntax == null ? null : GetAliasInfo(nameSyntax);
+        //}
 
         public override IEnumerable<Diagnostic> GetDiagnostics()
         {

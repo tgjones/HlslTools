@@ -2,6 +2,7 @@
 using ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
@@ -21,6 +22,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             Documentation = documentation;
             Parent = parent;
         }
+
+        public abstract SourceRange? Location { get; }
 
         public sealed override string ToString()
         {

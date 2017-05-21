@@ -1,10 +1,13 @@
 using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
     public sealed class SemanticSymbol : Symbol
     {
+        public override SourceRange? Location => null;
+
         internal SemanticSymbol(string name, string documentation, bool allowsMultiple, SemanticUsages usages, params TypeSymbol[] valueTypes)
             : base(SymbolKind.Semantic, name, documentation, null)
         {

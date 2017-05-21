@@ -17,5 +17,7 @@ namespace ShaderTools.CodeAnalysis.Syntax
 
         SourceRange SourceRange { get; }
         SourceRange FullSourceRange { get; }
+
+        string Language { get; }
     }
 }

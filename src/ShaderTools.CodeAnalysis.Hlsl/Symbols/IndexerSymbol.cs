@@ -1,4 +1,5 @@
 ﻿using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
@@ -15,6 +16,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public TypeSymbol IndexType { get; }
         public TypeSymbol ValueType { get; }
         public bool ReadOnly { get; }
+
+        public override SourceRange? Location => null;
 
         private bool Equals(IndexerSymbol other)
         {

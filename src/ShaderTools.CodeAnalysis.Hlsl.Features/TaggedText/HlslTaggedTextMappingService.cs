@@ -1,7 +1,7 @@
 ﻿using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Hlsl.Classification;
 
-namespace ShaderTools.CodeAnalysis.Hlsl.TaggedText
+namespace ShaderTools.CodeAnalysis.Hlsl
 {
     [ExportLanguageService(typeof(ITaggedTextMappingService), LanguageNames.Hlsl)]
     internal sealed class HlslTaggedTextMappingService : AbstractTaggedTextMappingService

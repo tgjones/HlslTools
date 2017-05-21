@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
@@ -7,6 +9,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
     {
         public TypeSymbol ValueType { get; }
         public int? Dimension { get; }
+
+        public override SourceRange? Location => ValueType.Location;
 
         internal ArraySymbol(TypeSymbol valueType, int? dimension)
             : base(SymbolKind.Array, $"{valueType.FullName}[{dimension?.ToString() ?? string.Empty}]", "Array of " + valueType.Name, null)

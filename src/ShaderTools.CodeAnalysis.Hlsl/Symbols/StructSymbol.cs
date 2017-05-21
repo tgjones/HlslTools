@@ -4,6 +4,7 @@ using System.Linq;
 using ShaderTools.CodeAnalysis.Hlsl.Binding;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
@@ -13,6 +14,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public ImmutableArray<InterfaceSymbol> BaseInterfaces { get; }
 
         public StructTypeSyntax Syntax { get; }
+
+        public override SourceRange? Location => Syntax.Name.SourceRange;
 
         internal StructSymbol(StructTypeSyntax syntax, Symbol parent, StructSymbol baseType, ImmutableArray<InterfaceSymbol> baseInterfaces, Binder binder)
             : base(syntax.IsClass ? SymbolKind.Class : SymbolKind.Struct, (syntax.Name != null) ? syntax.Name.Text : "<anonymous struct>", string.Empty, parent)

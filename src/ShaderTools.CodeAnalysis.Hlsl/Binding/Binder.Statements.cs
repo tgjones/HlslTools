@@ -154,7 +154,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                         _symbols.Remove(d.Identifier.Text);
                     Diagnostics.ReportLoopControlVariableConflict(d);
                 }
-                return new VariableSymbol(d, parent, t);
+                return new SourceVariableSymbol(d, parent, t);
             });
         }
 

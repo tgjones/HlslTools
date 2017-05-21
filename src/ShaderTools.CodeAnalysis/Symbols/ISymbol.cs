@@ -1,4 +1,5 @@
 ﻿using ShaderTools.CodeAnalysis.Symbols.Markup;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Symbols
 {
@@ -8,6 +9,11 @@ namespace ShaderTools.CodeAnalysis.Symbols
         string Name { get; }
         string Documentation { get; }
         ISymbol Parent { get; }
+
+        /// <summary>
+        /// If this symbol is defined in source code, gets the location.
+        /// </summary>
+        SourceRange? Location { get; }
 
         SymbolMarkup ToMarkup();
     }

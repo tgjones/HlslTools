@@ -51,7 +51,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
 
         private BoundNode BindTechniqueDeclaration(TechniqueSyntax declaration)
         {
-            var techniqueSymbol = new TechniqueSymbol(declaration.Name.Text);
+            var techniqueSymbol = new TechniqueSymbol(declaration);
             AddSymbol(techniqueSymbol, declaration.Name.SourceRange);
 
             var techniqueBinder = new Binder(_sharedBinderState, this);
@@ -111,7 +111,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent)
         {
-            return BindVariableDeclaration(syntax, parent, (d, t) => new VariableSymbol(d, parent, t));
+            return BindVariableDeclaration(syntax, parent, (d, t) => new SourceVariableSymbol(d, parent, t));
         }
 
         private BoundMultipleVariableDeclarations BindVariableDeclaration(VariableDeclarationSyntax syntax, Symbol parent, Func<VariableDeclaratorSyntax, TypeSymbol, VariableSymbol> createSymbol)

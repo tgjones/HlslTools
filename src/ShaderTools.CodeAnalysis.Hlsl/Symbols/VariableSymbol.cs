@@ -1,15 +1,11 @@
-using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
     public class VariableSymbol : Symbol
     {
-        internal VariableSymbol(VariableDeclaratorSyntax syntax, Symbol parent, TypeSymbol valueType)
-            : base(SymbolKind.Variable, syntax.Identifier.Text, string.Empty, parent)
-        {
-            ValueType = valueType;
-        }
+        public override SourceRange? Location => null;
 
         internal VariableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol valueType)
             : base(kind, name, documentation, parent)

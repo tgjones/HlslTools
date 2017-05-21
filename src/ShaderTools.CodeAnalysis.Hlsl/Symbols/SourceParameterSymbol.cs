@@ -1,4 +1,5 @@
 ﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
@@ -15,5 +16,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public override bool HasDefaultValue => Syntax.Declarator.Initializer != null;
 
         public override string DefaultValueText => Syntax.Declarator.Initializer?.ToString();
+
+        public override SourceRange? Location => Syntax.Declarator.Identifier.SourceRange;
     }
 }
