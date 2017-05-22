@@ -72,6 +72,17 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
             base.VisitFunctionDefinition(node);
         }
 
+        public override void VisitFunctionDeclaration(FunctionDeclarationSyntax node)
+        {
+            var symbol = _semanticModel.GetDeclaredSymbol(node);
+            if (symbol != null)
+                CreateTag(node.Name.GetUnqualifiedName().Name, symbol.Parent != null && (symbol.Parent.Kind == SymbolKind.Class || symbol.Parent.Kind == SymbolKind.Struct)
+                    ? HlslClassificationTypeNames.MethodIdentifier
+                    : HlslClassificationTypeNames.FunctionIdentifier);
+
+            base.VisitFunctionDeclaration(node);
+        }
+
         public override void VisitVariableDeclarator(VariableDeclaratorSyntax node)
         {
             var symbol = _semanticModel.GetDeclaredSymbol(node);

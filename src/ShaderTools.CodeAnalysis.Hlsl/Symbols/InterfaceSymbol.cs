@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+﻿using System.Collections.Immutable;
+using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Text;
 
@@ -6,12 +7,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
     public sealed class InterfaceSymbol : TypeSymbol
     {
-        public override SourceRange? Location { get; }
+        public override ImmutableArray<SourceRange> Locations { get; }
 
         internal InterfaceSymbol(InterfaceTypeSyntax syntax, Symbol parent)
             : base(SymbolKind.Interface, syntax.Name.Text, string.Empty, parent)
         {
-            Location = syntax.Name.SourceRange;
+            Locations = ImmutableArray.Create(syntax.Name.SourceRange);
         }
     }
 }

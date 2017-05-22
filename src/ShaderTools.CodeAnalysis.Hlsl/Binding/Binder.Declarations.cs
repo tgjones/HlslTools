@@ -52,7 +52,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         private BoundNode BindTechniqueDeclaration(TechniqueSyntax declaration)
         {
             var techniqueSymbol = new TechniqueSymbol(declaration);
-            AddSymbol(techniqueSymbol, declaration.Name.SourceRange);
+            if (techniqueSymbol.Name != null)
+                AddSymbol(techniqueSymbol, declaration.Name.SourceRange);
 
             var techniqueBinder = new Binder(_sharedBinderState, this);
             var boundPasses = declaration.Passes.Select(x => techniqueBinder.Bind(x, techniqueBinder.BindPass));

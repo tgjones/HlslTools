@@ -183,6 +183,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
 
         public Symbol GetSymbol(ExpressionSyntax expression)
         {
+            if (expression is IdentifierNameSyntax && expression.Parent.Kind == SyntaxKind.FunctionInvocationExpression)
+                expression = (ExpressionSyntax) expression.Parent;
+
             var boundExpression = GetBoundExpression(expression);
             return boundExpression == null ? null : GetSymbol(boundExpression);
         }

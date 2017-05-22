@@ -8,9 +8,9 @@ using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
 {
-    [Export(typeof(IQuickInfoSourceProvider))]
-    [Name("QuickInfoSourceProvider")]
-    [ContentType(HlslConstants.ContentTypeName)]
+    //[Export(typeof(IQuickInfoSourceProvider))]
+    //[Name("QuickInfoSourceProvider")]
+    //[ContentType(HlslConstants.ContentTypeName)]
     internal sealed class QuickInfoSourceProvider : IQuickInfoSourceProvider
     {
         [Import]

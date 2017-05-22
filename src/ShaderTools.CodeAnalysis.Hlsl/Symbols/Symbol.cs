@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
@@ -23,7 +24,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             Parent = parent;
         }
 
-        public abstract SourceRange? Location { get; }
+        public abstract ImmutableArray<SourceRange> Locations { get; }
 
         public sealed override string ToString()
         {

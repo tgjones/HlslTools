@@ -100,6 +100,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.Local:
                     return StandardGlyphGroup.GlyphGroupVariable;
 
+                case Glyph.Macro:
+                    return StandardGlyphGroup.GlyphGroupMacro;
+
                 case Glyph.Namespace:
                     return StandardGlyphGroup.GlyphGroupNamespace;
 
@@ -324,6 +327,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.Label:
                     return KnownMonikers.Label;
 
+                case Glyph.Macro:
+                    return KnownMonikers.MacroPublic;
+
                 case Glyph.Parameter:
                 case Glyph.Local:
                     return KnownMonikers.LocalVariable;
@@ -379,6 +385,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.StructureInternal:
                     return KnownMonikers.ValueTypeInternal;
 
+                case Glyph.Typedef:
+                    return KnownMonikers.TypeDefinitionPublic;
+
                 case Glyph.TypeParameter:
                     return KnownMonikers.Type;
 
@@ -393,7 +402,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 
                 case Glyph.NuGet:
                     return KnownMonikers.NuGet;
-
                 default:
                     throw new ArgumentException("glyph");
             }

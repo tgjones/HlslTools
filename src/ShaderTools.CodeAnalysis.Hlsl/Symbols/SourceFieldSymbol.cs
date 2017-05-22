@@ -1,4 +1,6 @@
+using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
@@ -8,8 +10,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             : base(syntax.Identifier.Text, string.Empty, parent, valueType)
         {
             Syntax = syntax;
+
+            Locations = ImmutableArray.Create(Syntax.Identifier.SourceRange);
         }
 
         public VariableDeclaratorSyntax Syntax { get; }
+
+        public override ImmutableArray<SourceRange> Locations { get; }
     }
 }

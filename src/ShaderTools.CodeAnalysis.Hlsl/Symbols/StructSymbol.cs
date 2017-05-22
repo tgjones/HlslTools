@@ -15,7 +15,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
         public StructTypeSyntax Syntax { get; }
 
-        public override SourceRange? Location => Syntax.Name.SourceRange;
+        public override ImmutableArray<SourceRange> Locations { get; }
 
         internal StructSymbol(StructTypeSyntax syntax, Symbol parent, StructSymbol baseType, ImmutableArray<InterfaceSymbol> baseInterfaces, Binder binder)
             : base(syntax.IsClass ? SymbolKind.Class : SymbolKind.Struct, (syntax.Name != null) ? syntax.Name.Text : "<anonymous struct>", string.Empty, parent)
@@ -24,6 +24,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             BaseType = baseType;
             BaseInterfaces = baseInterfaces;
             Binder = binder;
+
+            Locations = ImmutableArray.Create(syntax.Name.SourceRange);
         }
 
         public override IEnumerable<T> LookupMembers<T>(string name)

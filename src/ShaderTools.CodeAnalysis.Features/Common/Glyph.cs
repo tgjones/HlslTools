@@ -67,6 +67,8 @@ namespace ShaderTools.CodeAnalysis
 
         Local,
 
+        Macro,
+
         Namespace,
 
         MethodPublic,

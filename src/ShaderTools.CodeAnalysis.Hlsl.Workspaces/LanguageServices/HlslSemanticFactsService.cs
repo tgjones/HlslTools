@@ -17,7 +17,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
             var location = token.SourceRange;
             var q = from node in ((SyntaxToken) token).Ancestors()
                     let symbol = semanticModel.GetDeclaredSymbol(node)
-                    where symbol != null && symbol.Location == location
+                    where symbol != null && symbol.Locations.Contains(location)
                     select symbol;
 
             return q.FirstOrDefault();

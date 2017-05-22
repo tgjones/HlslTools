@@ -27,6 +27,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 case SyntaxKind.PredefinedObjectType:
                     return new BoundObjectType(BindObjectType((PredefinedObjectTypeSyntax) syntax));
                 case SyntaxKind.StructType:
+                case SyntaxKind.ClassType:
                     {
                         // Inline struct.
                         return BindStructDeclaration((StructTypeSyntax) syntax, parent);

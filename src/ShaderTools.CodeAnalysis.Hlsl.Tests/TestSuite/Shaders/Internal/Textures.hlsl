@@ -18,12 +18,16 @@ namespace Outer
 
 		class MyClass
 		{
-			int TestFunc();
-		};
+            int TestFunc();
+        };
 	}
 
 	static const int bar = 4;
 }
+
+#define FOO 1
+
+float myFoo = FOO;
 
 void Outer::foo() { }
 
@@ -55,6 +59,11 @@ struct PixelShaderInput
 	float2 tex : TEXCOORD;
 };
 
+cbuffer MyCBuffer
+{
+    float CBufferVariable;
+};
+
 // This is a line comment.
 
 float Scalar1;
@@ -79,6 +88,11 @@ SamplerComparisonState PictureSamplerComparison;
 
 snorm float4 fourComponentSNormFloat;
 unorm float4 fourComponentUNormFloat;
+
+technique MyTechnique
+{
+    
+}
 
 /* This is a asdfsssdfsd  sdfsd  sss
 
@@ -105,6 +119,8 @@ PixelShaderInput VS(Outer::Nested::VertexShaderInput input)
 	return output;
 }
 
+float4 PS(PixelShaderInput input);
+
 float4 PS(PixelShaderInput input) : SV_Target
 {
 	Outer::foo();
@@ -127,7 +143,8 @@ float4 PS(PixelShaderInput input) : SV_Target
 	float4 sampleGrad = Picture.SampleGrad(PictureSampler, input.tex, 0.1, 0.2);
 	float4 sampleLevel = Picture.SampleLevel(PictureSampler, input.tex, 1.5);
 
-	return float4(lod, lodUnclamped, width, height)
+    [unroll]
+    return float4(lod, lodUnclamped, width, height)
 		+ gathered
 		+ float4(samplePos, 0, 0)
 		+ sampled

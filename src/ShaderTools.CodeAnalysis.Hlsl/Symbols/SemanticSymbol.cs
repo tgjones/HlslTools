@@ -6,7 +6,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
     public sealed class SemanticSymbol : Symbol
     {
-        public override SourceRange? Location => null;
+        public override ImmutableArray<SourceRange> Locations { get; } = ImmutableArray<SourceRange>.Empty;
 
         internal SemanticSymbol(string name, string documentation, bool allowsMultiple, SemanticUsages usages, params TypeSymbol[] valueTypes)
             : base(SymbolKind.Semantic, name, documentation, null)

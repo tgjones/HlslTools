@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="14.3.25407" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="14.1.7" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />
   </ItemGroup>

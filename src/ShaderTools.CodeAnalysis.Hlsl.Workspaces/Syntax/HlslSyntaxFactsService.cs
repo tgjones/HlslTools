@@ -23,6 +23,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         {
             var token = (SyntaxToken) rawToken;
 
+            if (token.MacroReference != null)
+            {
+                return false;
+            }
+
             if (token.IsWord() || token.Kind.IsLiteral() || token.Kind.IsOperator())
             {
                 switch (token.Kind)
@@ -83,6 +88,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 if (objectCreation != null)
                 {
                     if (objectCreation.Type == node)
+                    {
+                        node = parent;
+                        break;
+                    }
+                }
+
+                var attribute = parent as AttributeSyntax;
+                if (attribute != null)
+                {
+                    if (attribute.Name == node)
                     {
                         node = parent;
                         break;

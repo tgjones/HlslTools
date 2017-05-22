@@ -4,10 +4,10 @@ using Microsoft.VisualStudio.Utilities;
 
 namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.QuickInfo
 {
-    [Export(typeof(IWpfTextViewCreationListener))]
-    [Name("QuickInfoTriggerProvider")]
-    [ContentType(HlslConstants.ContentTypeName)]
-    [TextViewRole(PredefinedTextViewRoles.Interactive)]
+    //[Export(typeof(IWpfTextViewCreationListener))]
+    //[Name("QuickInfoTriggerProvider")]
+    //[ContentType(HlslConstants.ContentTypeName)]
+    //[TextViewRole(PredefinedTextViewRoles.Interactive)]
     internal sealed class QuickInfoTriggerProvider : IWpfTextViewCreationListener
     {
         [Import]

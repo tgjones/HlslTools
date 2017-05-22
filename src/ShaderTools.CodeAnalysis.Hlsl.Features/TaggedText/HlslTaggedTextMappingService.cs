@@ -1,5 +1,6 @@
 ﻿using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Hlsl.Classification;
+using ShaderTools.CodeAnalysis.Classification;
 
 namespace ShaderTools.CodeAnalysis.Hlsl
 {
@@ -57,6 +58,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl
 
                 case TextTags.ConstantBuffer:
                     return HlslClassificationTypeNames.ConstantBufferIdentifier;
+
+                case TextTags.Technique:
+                    return ClassificationTypeNames.Text;
 
                 default:
                     return base.GetClassificationTypeName(taggedTextTag);

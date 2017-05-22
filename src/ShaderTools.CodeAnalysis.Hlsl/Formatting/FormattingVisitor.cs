@@ -221,7 +221,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
             Visit(node.Name);
 
-            Visit(node.ArgumentList);
+            if (node.ArgumentList != null)
+                Visit(node.ArgumentList);
 
             FormatToken(node.CloseBracketToken, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
         }

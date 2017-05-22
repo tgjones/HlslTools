@@ -49,6 +49,11 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
             var sourceLocation = tree.MapRootFilePosition(position);
             var token = await tree.GetTouchingTokenAsync(sourceLocation, cancellationToken, findInsideTrivia: true).ConfigureAwait(false);
 
+            if (token == null)
+            {
+                return null;
+            }
+
             var state = await GetQuickInfoItemAsync(document, tree, token, sourceLocation, cancellationToken).ConfigureAwait(false);
             if (state != null)
             {

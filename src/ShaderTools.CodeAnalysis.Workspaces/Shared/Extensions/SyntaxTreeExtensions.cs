@@ -44,7 +44,7 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
 
             token = token.GetPreviousToken();
 
-            if (token.SourceRange.End == position && predicate(token))
+            if (token != default(ISyntaxToken) && token.SourceRange.End == position && predicate(token))
             {
                 return token;
             }

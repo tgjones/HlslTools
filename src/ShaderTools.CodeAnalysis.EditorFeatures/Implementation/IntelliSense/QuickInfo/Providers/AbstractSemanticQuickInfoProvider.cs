@@ -99,7 +99,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
             else if (symbols.Any())
             {
                 var documentationBuilder = new List<TaggedText>();
-                documentationBuilder.AddText(symbols.First().Documentation);
+                var firstSymbol = symbols.First();
+                if (!string.IsNullOrEmpty(firstSymbol.Documentation))
+                    documentationBuilder.AddText(firstSymbol.Documentation);
                 return CreateClassifiableDeferredContent(documentationBuilder);
             }
 

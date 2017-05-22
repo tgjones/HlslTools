@@ -53,7 +53,7 @@ namespace ShaderTools.CodeAnalysis
             }
 
             return displayParts.Select(d =>
-                new TaggedText(SymbolMarkupKindTags.GetTag(d.Kind), d.ToString())).ToImmutableArray();
+                new TaggedText(SymbolMarkupKindTags.GetTag(d.Kind), d.Text)).ToImmutableArray();
         }
 
         public static string JoinText(this ImmutableArray<TaggedText> values)
