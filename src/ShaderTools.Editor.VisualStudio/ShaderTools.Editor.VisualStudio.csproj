@@ -376,8 +376,6 @@
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingCommandTarget.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingNavigationManager.cs" />
     <Compile Include="Hlsl\Tagging\Highlighting\HighlightingNavigationManagerProvider.cs" />
-    <Compile Include="Hlsl\Tagging\Outlining\OutliningTextViewCreationListener.cs" />
-    <Compile Include="Hlsl\Tagging\Outlining\OutliningCommandTarget.cs" />
     <Compile Include="Core\Util\CommandTargetBase.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />
     <Compile Include="Hlsl\Util\ContextQuery\SyntaxTreeExtensions.cs" />

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Editor;
+using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.VisualStudio.LanguageServices.Implementation
@@ -55,6 +56,9 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             {
                 case VSConstants.VSStd2KCmdID.QUICKINFO:
                     return QueryQuickInfoStatus(prgCmds);
+
+                case VSConstants.VSStd2KCmdID.OUTLN_START_AUTOHIDING:
+                    return QueryStartAutomaticOutliningStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
 
                 default:
                     return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
@@ -113,7 +117,14 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
             return VSConstants.S_OK;
         }
-        
+
+        private int QueryStartAutomaticOutliningStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
+        {
+            return GetCommandState(
+                (v, b) => new StartAutomaticOutliningCommandArgs(v, b),
+                ref pguidCmdGroup, commandCount, prgCmds, commandText);
+        }
+
         private static unsafe string GetText(IntPtr pCmdTextInt)
         {
             if (pCmdTextInt == IntPtr.Zero)

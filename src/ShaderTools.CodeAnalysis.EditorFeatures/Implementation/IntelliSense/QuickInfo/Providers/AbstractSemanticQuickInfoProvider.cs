@@ -116,14 +116,17 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
             var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
-            var symbols = semanticModel.GetSemanticInfo(token, document.Workspace, cancellationToken)
-                                       .GetSymbols(includeType: true);
-
-            symbols = symbols.Distinct().ToImmutableArray();
-
-            if (symbols.Any())
+            if (semanticModel != null)
             {
-                return ValueTuple.Create(semanticModel, symbols);
+                var symbols = semanticModel.GetSemanticInfo(token, document.Workspace, cancellationToken)
+                                           .GetSymbols(includeType: true);
+
+                symbols = symbols.Distinct().ToImmutableArray();
+
+                if (symbols.Any())
+                {
+                    return ValueTuple.Create(semanticModel, symbols);
+                }
             }
 
             return ValueTuple.Create(semanticModel, ImmutableArray<ISymbol>.Empty);
