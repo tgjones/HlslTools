@@ -9,6 +9,7 @@ using ShaderTools.Editor.VisualStudio.Core.Navigation;
 using ShaderTools.Editor.VisualStudio.Core.Util.Extensions;
 using ShaderTools.VisualStudio.LanguageServices;
 using ShaderTools.VisualStudio.LanguageServices.Registration;
+using ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection;
 
 namespace ShaderTools.Editor.VisualStudio.ShaderLab
 {
