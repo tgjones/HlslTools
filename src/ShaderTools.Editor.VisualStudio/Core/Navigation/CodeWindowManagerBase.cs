@@ -41,6 +41,11 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
                 RemoveDropDownBar();
         }
 
+        private void SetupView(IVsTextView view)
+        {
+            _languagePackage.LanguageInfo.SetupNewTextView(view);
+        }
+
         public IVsCodeWindow CodeWindow { get; }
         public SVsServiceProvider ServiceProvider { get; }
 
@@ -75,6 +80,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
 
         public int OnNewView(IVsTextView view)
         {
+            SetupView(view);
+
             return VSConstants.S_OK;
         }
 

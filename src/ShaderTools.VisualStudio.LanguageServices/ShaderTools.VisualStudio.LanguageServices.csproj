@@ -36,6 +36,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -55,6 +56,11 @@
     <Compile Include="ErrorList\ErrorsSnapshot.cs" />
     <Compile Include="ErrorList\ErrorsSnapshotFactory.cs" />
     <Compile Include="Guids.cs" />
+    <Compile Include="Implementation\AbstractOleCommandTarget.cs" />
+    <Compile Include="Implementation\AbstractOleCommandTarget.Execute.cs" />
+    <Compile Include="Implementation\AbstractOleCommandTarget.Query.cs" />
+    <Compile Include="Implementation\GCManager.cs" />
+    <Compile Include="Implementation\StandaloneCommandFilter.cs" />
     <Compile Include="Options\UI\AbstractCheckBoxViewModel.cs" />
     <Compile Include="Options\UI\AbstractOptionPage.cs" />
     <Compile Include="Options\UI\AbstractOptionPageControl.cs" />
@@ -119,6 +125,9 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.CoreUtility, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.CoreUtility.14.3.25407\lib\net45\Microsoft.VisualStudio.CoreUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Editor, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Editor.14.3.25407\lib\net45\Microsoft.VisualStudio.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
