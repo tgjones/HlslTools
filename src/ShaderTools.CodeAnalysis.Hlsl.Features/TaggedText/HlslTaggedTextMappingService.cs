@@ -60,7 +60,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl
                     return HlslClassificationTypeNames.ConstantBufferIdentifier;
 
                 case TextTags.Technique:
-                    return ClassificationTypeNames.Text;
+                    return ClassificationTypeNames.Identifier;
 
                 default:
                     return base.GetClassificationTypeName(taggedTextTag);
