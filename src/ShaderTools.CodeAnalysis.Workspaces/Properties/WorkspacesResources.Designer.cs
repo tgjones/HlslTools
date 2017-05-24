@@ -135,6 +135,15 @@ namespace ShaderTools.CodeAnalysis.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified document is not a version of this document..
+        /// </summary>
+        internal static string The_specified_document_is_not_a_version_of_this_document {
+            get {
+                return ResourceManager.GetString("The_specified_document_is_not_a_version_of_this_document", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The workspace does not contain the specified document..
         /// </summary>
         internal static string The_workspace_does_not_contain_the_specified_document {

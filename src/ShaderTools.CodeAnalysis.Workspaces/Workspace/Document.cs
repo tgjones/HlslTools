@@ -1,11 +1,17 @@
-﻿using System.IO;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Utilities.Collections;
+using ShaderTools.Utilities.ErrorReporting;
 using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.CodeAnalysis
@@ -118,6 +124,58 @@ namespace ShaderTools.CodeAnalysis
         public Document WithFilePath(string filePath)
         {
             return new Document(_languageServices, Id, SourceText, filePath);
+        }
+
+        /// <summary>
+        /// Get the text changes between this document and a prior version of the same document.
+        /// The changes, when applied to the text of the old document, will produce the text of the current document.
+        /// </summary>
+        public async Task<IEnumerable<TextChange>> GetTextChangesAsync(Document oldDocument, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            try
+            {
+                //using (Logger.LogBlock(FunctionId.Workspace_Document_GetTextChanges, this.Name, cancellationToken))
+                {
+                    if (oldDocument == this)
+                    {
+                        // no changes
+                        return SpecializedCollections.EmptyEnumerable<TextChange>();
+                    }
+
+                    if (this.Id != oldDocument.Id)
+                    {
+                        throw new ArgumentException(WorkspacesResources.The_specified_document_is_not_a_version_of_this_document);
+                    }
+
+                    // first try to see if text already knows its changes
+                    IList<TextChange> textChanges = null;
+                    var text = this.SourceText;
+                    var oldText = oldDocument.SourceText;
+
+                    if (text == oldText)
+                    {
+                        return SpecializedCollections.EmptyEnumerable<TextChange>();
+                    }
+
+                    var container = text.Container;
+                    if (container != null)
+                    {
+                        textChanges = text.GetTextChanges(oldText).ToList();
+
+                        // if changes are significant (not the whole document being replaced) then use these changes
+                        if (textChanges.Count > 1 || (textChanges.Count == 1 && textChanges[0].Span != new TextSpan(0, oldText.Length)))
+                        {
+                            return textChanges;
+                        }
+                    }
+
+                    return text.GetTextChanges(oldText).ToList();
+                }
+            }
+            catch (Exception e) when (FatalError.ReportUnlessCanceled(e))
+            {
+                throw ExceptionUtilities.Unreachable;
+            }
         }
 
         private AsyncLazy<DocumentOptionSet> _cachedOptions;

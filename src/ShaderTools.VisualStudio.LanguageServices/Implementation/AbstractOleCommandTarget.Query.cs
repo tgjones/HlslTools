@@ -54,6 +54,14 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             switch ((VSConstants.VSStd2KCmdID) prgCmds[0].cmdID)
             {
+                case VSConstants.VSStd2KCmdID.COMMENT_BLOCK:
+                case VSConstants.VSStd2KCmdID.COMMENTBLOCK:
+                    return QueryCommentBlockStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
+
+                case VSConstants.VSStd2KCmdID.UNCOMMENT_BLOCK:
+                case VSConstants.VSStd2KCmdID.UNCOMMENTBLOCK:
+                    return QueryUncommentBlockStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
+
                 case CmdidNextHighlightedReference:
                 case CmdidPreviousHighlightedReference:
                     return QueryNavigateHighlightedReferenceStatus(prgCmds);
@@ -123,6 +131,20 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
             return VSConstants.S_OK;
+        }
+
+        private int QueryUncommentBlockStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
+        {
+            return GetCommandState(
+                (v, b) => new UncommentSelectionCommandArgs(v, b),
+                ref pguidCmdGroup, commandCount, prgCmds, commandText);
+        }
+
+        private int QueryCommentBlockStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
+        {
+            return GetCommandState(
+                (v, b) => new CommentSelectionCommandArgs(v, b),
+                ref pguidCmdGroup, commandCount, prgCmds, commandText);
         }
 
         private int QueryQuickInfoStatus(OLECMD[] prgCmds)

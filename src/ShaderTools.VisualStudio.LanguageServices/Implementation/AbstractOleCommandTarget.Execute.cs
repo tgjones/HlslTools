@@ -119,6 +119,16 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                     ExecutePreviousHighlightedReference(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
+                case VSConstants.VSStd2KCmdID.COMMENTBLOCK:
+                case VSConstants.VSStd2KCmdID.COMMENT_BLOCK:
+                    ExecuteCommentBlock(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.UNCOMMENTBLOCK:
+                case VSConstants.VSStd2KCmdID.UNCOMMENT_BLOCK:
+                    ExecuteUncommentBlock(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 case VSConstants.VSStd2KCmdID.PARAMINFO:
                     GCManager.UseLowLatencyModeForProcessingUserInput();
                     ExecuteParameterInfo(subjectBuffer, contentType, executeNextCommandTarget);
@@ -147,6 +157,20 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             CurrentHandlers.Execute(contentType,
                 args: new InvokeSignatureHelpCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteUncommentBlock(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new UncommentSelectionCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteCommentBlock(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new CommentSelectionCommandArgs(ConvertTextView(), subjectBuffer),
                 lastHandler: executeNextCommandTarget);
         }
 
