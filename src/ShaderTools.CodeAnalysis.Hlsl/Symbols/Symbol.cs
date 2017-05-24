@@ -31,10 +31,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             return ToMarkup().ToString();
         }
 
-        public SymbolMarkup ToMarkup()
+        public SymbolMarkup ToMarkup(SymbolDisplayFormat format = SymbolDisplayFormat.QuickInfo)
         {
             var nodes = new List<SymbolMarkupToken>();
-            nodes.AppendSymbol(this);
+            nodes.AppendSymbol(this, format);
             return new SymbolMarkup(nodes);
         }
 

@@ -1,15 +1,13 @@
 namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public class FunctionInvocationExpressionSyntax : ExpressionSyntax
+    public class FunctionInvocationExpressionSyntax : InvocationExpressionSyntax
     {
         public readonly NameSyntax Name;
-        public readonly ArgumentListSyntax ArgumentList;
 
         public FunctionInvocationExpressionSyntax(NameSyntax name, ArgumentListSyntax argumentList)
-            : base(SyntaxKind.FunctionInvocationExpression)
+            : base(SyntaxKind.FunctionInvocationExpression, argumentList)
         {
             RegisterChildNode(out Name, name);
-            RegisterChildNode(out ArgumentList, argumentList);
         }
 
         public override void Accept(SyntaxVisitor visitor)

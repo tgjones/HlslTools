@@ -25,7 +25,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Navigation
 
         private IVsDropdownBarClient CreateDropdownBarClient()
         {
-            var componentModel = ServiceProvider.GetComponentModel();
+            var componentModel = ComponentModel;
+
             var editorAdaptersFactory = componentModel.DefaultExportProvider.GetExportedValueOrDefault<IVsEditorAdaptersFactoryService>();
             var bufferGraphFactoryService = componentModel.DefaultExportProvider.GetExportedValue<IBufferGraphFactoryService>();
 

@@ -92,6 +92,21 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 
             switch ((VSConstants.VSStd2KCmdID) commandId)
             {
+                case VSConstants.VSStd2KCmdID.TYPECHAR:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteTypeCharacter(pvaIn, subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.UP:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteUp(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.DOWN:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteDown(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 case VSConstants.VSStd2KCmdID.CANCEL:
                     ExecuteCancel(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
@@ -102,6 +117,11 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 
                 case CmdidPreviousHighlightedReference:
                     ExecutePreviousHighlightedReference(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.PARAMINFO:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteParameterInfo(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
                 case VSConstants.VSStd2KCmdID.QUICKINFO:
@@ -123,6 +143,13 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 lastHandler: executeNextCommandTarget);
         }
 
+        protected void ExecuteParameterInfo(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new InvokeSignatureHelpCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
         protected void ExecutePreviousHighlightedReference(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
         {
             CurrentHandlers.Execute(contentType,
@@ -141,6 +168,28 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             CurrentHandlers.Execute(contentType,
                 args: new EscapeKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteDown(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new DownKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteUp(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new UpKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteTypeCharacter(IntPtr pvaIn, ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            var typedChar = (char) (ushort) Marshal.GetObjectForNativeVariant(pvaIn);
+            CurrentHandlers.Execute(contentType,
+                args: new TypeCharCommandArgs(ConvertTextView(), subjectBuffer, typedChar),
                 lastHandler: executeNextCommandTarget);
         }
 

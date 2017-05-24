@@ -1,6 +1,4 @@
-﻿using System;
-using ShaderTools.CodeAnalysis.Hlsl.Syntax;
-using ShaderTools.CodeAnalysis.Host.Mef;
+﻿using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
@@ -116,5 +114,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
             return node;
         }
+
+        public bool IsCaseSensitive => true;
     }
 }

@@ -1,15 +1,13 @@
 ﻿namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public class NumericConstructorInvocationExpressionSyntax : ExpressionSyntax
+    public class NumericConstructorInvocationExpressionSyntax : InvocationExpressionSyntax
     {
         public readonly NumericTypeSyntax Type;
-        public readonly ArgumentListSyntax ArgumentList;
 
         public NumericConstructorInvocationExpressionSyntax(NumericTypeSyntax type, ArgumentListSyntax argumentList)
-            : base(SyntaxKind.NumericConstructorInvocationExpression)
+            : base(SyntaxKind.NumericConstructorInvocationExpression, argumentList)
         {
             RegisterChildNode(out Type, type);
-            RegisterChildNode(out ArgumentList, argumentList);
         }
 
         public override void Accept(SyntaxVisitor visitor)

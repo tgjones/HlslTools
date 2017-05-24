@@ -181,5 +181,15 @@ namespace ShaderTools.Utilities.Collections
         {
             return ImmutableArray.CreateRange(items, map);
         }
+
+        internal static ImmutableArray<T> Concat<T>(this ImmutableArray<T> first, ImmutableArray<T> second)
+        {
+            return first.AddRange(second);
+        }
+
+        internal static ImmutableArray<T> Concat<T>(this ImmutableArray<T> first, T second)
+        {
+            return first.Add(second);
+        }
     }
 }

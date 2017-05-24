@@ -18,5 +18,7 @@ namespace ShaderTools.CodeAnalysis.Syntax
         /// will return constructor symbols.
         /// </summary>
         SyntaxNodeBase GetBindableParent(ISyntaxToken token);
+
+        bool IsCaseSensitive { get; }
     }
 }

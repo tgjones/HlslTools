@@ -6,6 +6,7 @@
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Features")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Hlsl")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Hlsl.EditorFeatures")]
+[assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Hlsl.Features")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Workspaces")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Workspaces.Desktop")]
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio")]

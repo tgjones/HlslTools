@@ -2,6 +2,7 @@
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Compilation
 {
@@ -17,5 +18,7 @@ namespace ShaderTools.CodeAnalysis.Compilation
         public abstract TypeInfo GetTypeInfo(SyntaxNodeBase node);
 
         //public abstract IAliasSymbol GetAliasSymbol(SyntaxNodeBase nameSyntax);
+
+        public abstract IEnumerable<ISymbol> LookupSymbols(SourceLocation position);
     }
 }

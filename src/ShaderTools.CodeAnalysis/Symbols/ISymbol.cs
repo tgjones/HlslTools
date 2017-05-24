@@ -17,6 +17,13 @@ namespace ShaderTools.CodeAnalysis.Symbols
         /// </summary>
         ImmutableArray<SourceRange> Locations { get; }
 
-        SymbolMarkup ToMarkup();
+        SymbolMarkup ToMarkup(SymbolDisplayFormat format = SymbolDisplayFormat.QuickInfo);
+    }
+
+    public enum SymbolDisplayFormat
+    {
+        QuickInfo,
+        MinimallyQualified,
+        MinimallyQualifiedWithoutParameters
     }
 }

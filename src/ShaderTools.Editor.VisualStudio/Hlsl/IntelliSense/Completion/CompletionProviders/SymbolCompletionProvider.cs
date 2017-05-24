@@ -58,7 +58,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
             if (!((SyntaxTree) semanticModel.SyntaxTree).PossiblyInTypeName(position))
                 symbols = symbols.Where(x => !(x is TypeSymbol));
 
-            return CreateSymbolCompletions(symbols);
+            return CreateSymbolCompletions(symbols.Cast<Symbol>());
         }
 
         private static IEnumerable<CompletionItem> GetMemberCompletions(SemanticModel semanticModel, FieldAccessExpressionSyntax propertyAccessExpression)

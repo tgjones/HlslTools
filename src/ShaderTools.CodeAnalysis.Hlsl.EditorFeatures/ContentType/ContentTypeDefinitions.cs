@@ -12,5 +12,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.ContentType
         [Name(ContentTypeNames.HlslContentType)]
         [BaseDefinition(ContentTypeNames.ShaderToolsContentType)]
         public static readonly ContentTypeDefinition HlslContentTypeDefinition;
+
+        [Export]
+        [Name(ContentTypeNames.HlslSignatureHelpContentType)]
+        [BaseDefinition("sighelp")]
+        public static readonly ContentTypeDefinition SignatureHelpContentTypeDefinition;
     }
 }

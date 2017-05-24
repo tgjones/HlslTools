@@ -58,6 +58,9 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 case CmdidPreviousHighlightedReference:
                     return QueryNavigateHighlightedReferenceStatus(prgCmds);
 
+                case VSConstants.VSStd2KCmdID.PARAMINFO:
+                    return QueryParameterInfoStatus(prgCmds);
+
                 case VSConstants.VSStd2KCmdID.QUICKINFO:
                     return QueryQuickInfoStatus(prgCmds);
 
@@ -123,6 +126,12 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         }
 
         private int QueryQuickInfoStatus(OLECMD[] prgCmds)
+        {
+            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
+            return VSConstants.S_OK;
+        }
+
+        private int QueryParameterInfoStatus(OLECMD[] prgCmds)
         {
             prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
             return VSConstants.S_OK;

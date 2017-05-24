@@ -20,6 +20,7 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 
         public ProjectionTextViewModel(
             IProjectionBufferFactoryService projectionBufferFactoryService,
+            IContentTypeRegistryService contentTypeRegistryService,
             ITextDataModel dataModel)
         {
             DataModel = dataModel;
@@ -32,10 +33,13 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
                 new Span(0, snapshot.Length), 
                 SpanTrackingMode.EdgeExclusive);
 
+            var projectionContentType = contentTypeRegistryService.GetContentType(ContentTypeNames.ShaderLabProjectionContentType);
+
             var projectionBuffer = projectionBufferFactoryService.CreateProjectionBuffer(
                 null,
                 new List<object> { span },
-                ProjectionBufferOptions.None);
+                ProjectionBufferOptions.None,
+                projectionContentType);
 
             EditBuffer = VisualBuffer = projectionBuffer;
 

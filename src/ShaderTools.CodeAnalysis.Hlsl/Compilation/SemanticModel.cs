@@ -290,7 +290,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
             return _bindingResult.Diagnostics;
         }
 
-        public IEnumerable<Symbol> LookupSymbols(SourceLocation position)
+        public override IEnumerable<ISymbol> LookupSymbols(SourceLocation position)
         {
             var node = FindClosestNodeWithBinder(_bindingResult.Root, position);
             var binder = node == null ? null : _bindingResult.GetBinder(node);

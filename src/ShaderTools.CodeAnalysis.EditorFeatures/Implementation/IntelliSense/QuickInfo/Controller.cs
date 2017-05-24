@@ -77,7 +77,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
             {
                 // We want the span to actually only go up to the caret.  So get the expected span
                 // and then update its end point accordingly.
-                ITrackingSpan trackingSpan;
+                ITrackingSpan trackingSpan = null;
                 QuickInfoItem item = null;
 
                 // Whether or not we have an item to show, we need to start the session.
@@ -91,10 +91,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                 }
                 else
                 {
-                    var caret = this.TextView.GetCaretPoint(this.SubjectBuffer).Value;
-                    trackingSpan = caret.Snapshot.CreateTrackingSpan(caret.Position, 0, SpanTrackingMode.EdgeInclusive, TrackingFidelityMode.Forward);
+                    var caret = this.TextView.GetCaretPoint(this.SubjectBuffer);
+                    if (caret != null)
+                        trackingSpan = caret.Value.Snapshot.CreateTrackingSpan(caret.Value.Position, 0, SpanTrackingMode.EdgeInclusive, TrackingFidelityMode.Forward);
                 }
-                sessionOpt.PresenterSession.PresentItem(trackingSpan, item, modelOpt.TrackMouse);
+                if (trackingSpan != null)
+                    sessionOpt.PresenterSession.PresentItem(trackingSpan, item, modelOpt.TrackMouse);
             }
         }
 

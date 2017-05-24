@@ -8,7 +8,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
 {
     internal static class SymbolMarkupExtensions
     {
-        public static void AppendSymbol(this ICollection<SymbolMarkupToken> markup, Symbol symbol)
+        public static void AppendSymbol(this ICollection<SymbolMarkupToken> markup, Symbol symbol, SymbolDisplayFormat format)
         {
             switch (symbol.Kind)
             {
@@ -18,13 +18,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
                     markup.AppendFieldSymbolInfo((FieldSymbol) symbol);
                     break;
                 case SymbolKind.Function:
-                    markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol);
+                    markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol, format);
                     break;
                 case SymbolKind.Variable:
                     markup.AppendVariableSymbolInfo((VariableSymbol) symbol);
                     break;
                 case SymbolKind.Parameter:
-                    markup.AppendParameterSymbolInfo((ParameterSymbol) symbol, true);
+                    markup.AppendParameterSymbolInfo((ParameterSymbol) symbol, true, format);
                     break;
                 case SymbolKind.Indexer:
                     break;
@@ -50,7 +50,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
                     markup.AppendTypeAlias((TypeAliasSymbol) symbol);
                     break;
                 case SymbolKind.Attribute:
-                    markup.AppendAttribute((AttributeSymbol) symbol);
+                    markup.AppendAttribute((AttributeSymbol) symbol, format);
                     break;
                 case SymbolKind.ConstantBuffer:
                     markup.AppendConstantBuffer((ConstantBufferSymbol) symbol);
@@ -60,7 +60,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             }
         }
 
-        private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol)
+        private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol, SymbolDisplayFormat format)
         {
             markup.AppendType(symbol.ReturnType, false);
             markup.AppendSpace();
@@ -76,10 +76,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             else
                 markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
 
-            markup.AppendParameters(symbol.Parameters);
+            if (format == SymbolDisplayFormat.MinimallyQualifiedWithoutParameters)
+                return;
+
+            markup.AppendParameters(symbol.Parameters, format);
         }
 
-        private static void AppendParameters(this ICollection<SymbolMarkupToken> markup, ImmutableArray<ParameterSymbol> parameters)
+        private static void AppendParameters(this ICollection<SymbolMarkupToken> markup, ImmutableArray<ParameterSymbol> parameters, SymbolDisplayFormat format)
         {
             markup.AppendPunctuation("(");
 
@@ -94,15 +97,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
                     markup.AppendSpace();
                 }
 
-                markup.AppendParameterSymbolInfo(parameterSymbol, false);
+                markup.AppendParameterSymbolInfo(parameterSymbol, false, format);
             }
 
             markup.AppendPunctuation(")");
         }
 
-        private static void AppendParameterSymbolInfo(this ICollection<SymbolMarkupToken> markup, ParameterSymbol symbol, bool includeInfo)
+        private static void AppendParameterSymbolInfo(this ICollection<SymbolMarkupToken> markup, ParameterSymbol symbol, bool includeInfo, SymbolDisplayFormat format)
         {
-            if (includeInfo)
+            if (includeInfo && format == SymbolDisplayFormat.QuickInfo)
             {
                 markup.AppendPlainText("(parameter)");
                 markup.AppendSpace();
@@ -268,10 +271,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             markup.AppendName(SymbolMarkupKind.ConstantBufferVariableName, symbol.Name);
         }
 
-        private static void AppendAttribute(this ICollection<SymbolMarkupToken> markup, AttributeSymbol symbol)
+        private static void AppendAttribute(this ICollection<SymbolMarkupToken> markup, AttributeSymbol symbol, SymbolDisplayFormat format)
         {
             markup.AppendName(SymbolMarkupKind.FunctionName, symbol.Name);
-            markup.AppendParameters(symbol.Parameters);
+            markup.AppendParameters(symbol.Parameters, format);
         }
 
         private static void AppendTechnique(this ICollection<SymbolMarkupToken> markup, TechniqueSymbol symbol)

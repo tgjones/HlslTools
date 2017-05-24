@@ -12,17 +12,22 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
     internal sealed class ProjectionTextViewModelProvider : ITextViewModelProvider
     {
         private readonly IProjectionBufferFactoryService _projectionBufferFactoryService;
+        private readonly IContentTypeRegistryService _contentTypeRegistryService;
 
         [ImportingConstructor]
-        public ProjectionTextViewModelProvider(IProjectionBufferFactoryService projectionBufferFactoryService)
+        public ProjectionTextViewModelProvider(
+            IProjectionBufferFactoryService projectionBufferFactoryService,
+            IContentTypeRegistryService contentTypeRegistryService)
         {
             _projectionBufferFactoryService = projectionBufferFactoryService;
+            _contentTypeRegistryService = contentTypeRegistryService;
         }
 
         public ITextViewModel CreateTextViewModel(ITextDataModel dataModel, ITextViewRoleSet roles)
         {
             return new ProjectionTextViewModel(
                 _projectionBufferFactoryService,
+                _contentTypeRegistryService,
                 dataModel);
         }
     }

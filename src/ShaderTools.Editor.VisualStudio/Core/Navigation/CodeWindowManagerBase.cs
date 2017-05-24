@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis.Editor.Options;
@@ -13,6 +14,8 @@ namespace ShaderTools.Editor.VisualStudio.Core.Navigation
         private readonly LanguagePackageBase _languagePackage;
         private readonly IOptionService _optionService;
         private IVsDropdownBarClient _dropdownBarClient;
+
+        protected IComponentModel ComponentModel => _languagePackage.ComponentModel;
 
         protected CodeWindowManagerBase(LanguagePackageBase languagePackage, IVsCodeWindow codeWindow, SVsServiceProvider serviceProvider)
         {
