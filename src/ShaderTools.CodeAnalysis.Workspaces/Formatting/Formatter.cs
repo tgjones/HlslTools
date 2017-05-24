@@ -28,6 +28,21 @@ namespace ShaderTools.CodeAnalysis.Formatting
             return document.WithText(SourceText.From(formatted, document.SourceText.FilePath));
         }
 
+        public static async Task<Document> FormatAsync(Document document, IEnumerable<TextSpan> spans, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var documentOptions = options ?? await document.GetOptionsAsync(cancellationToken).ConfigureAwait(false);
+
+            var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
+
+            var formatter = document.LanguageServices.GetService<ISyntaxFormattingService>();
+
+            var formattingResult = await formatter.FormatAsync(syntaxTree, syntaxTree.Root, spans, documentOptions, cancellationToken).ConfigureAwait(false);
+
+            var newText = document.SourceText.WithChanges(formattingResult.GetTextChanges(cancellationToken));
+
+            return document.WithText(newText);
+        }
+
         internal static IList<TextChange> GetFormattedTextChanges(SyntaxTreeBase tree, SyntaxNodeBase node, IEnumerable<TextSpan> spans, Workspace workspace, OptionSet options, CancellationToken cancellationToken)
         {
             return GetFormattedTextChangesAsync(tree, node, spans, workspace, options, cancellationToken).WaitAndGetResult(cancellationToken);

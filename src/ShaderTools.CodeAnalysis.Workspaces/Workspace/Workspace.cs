@@ -189,8 +189,6 @@ namespace ShaderTools.CodeAnalysis
                     ApplyDocumentTextChanged(currentDocument.Id, newDocument.SourceText);
             }
 
-            SetCurrentDocuments(newDocuments); // TODO: Is this safe?
-
             return true;
         }
 

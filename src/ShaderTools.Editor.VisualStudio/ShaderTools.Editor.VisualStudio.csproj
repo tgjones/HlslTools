@@ -306,10 +306,6 @@
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="SetupPackage.cs" />
-    <Compile Include="Hlsl\Editing\Commenting\CommentCommandTarget.cs" />
-    <Compile Include="Hlsl\Editing\Commenting\CommentingExtensions.cs" />
-    <Compile Include="Hlsl\Editing\Commenting\CommentingTextViewCreationListener.cs" />
-    <Compile Include="Hlsl\Editing\Commenting\UncommentCommandTarget.cs" />
     <Compile Include="Hlsl\Formatting\FormattingExtensions.cs" />
     <Compile Include="Hlsl\Formatting\FormatCommandTarget.cs" />
     <Compile Include="Hlsl\Formatting\FormattingTextViewCreationListener.cs" />
