@@ -6,6 +6,7 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
     <PackageReference Include="Microsoft.VisualStudio.Text.Logic" Version="14.3.25407" />
+    <PackageReference Include="RoslynDependencies.Microsoft.VisualStudio.Text.Internal" Version="14.3.25407" />
     <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj" />

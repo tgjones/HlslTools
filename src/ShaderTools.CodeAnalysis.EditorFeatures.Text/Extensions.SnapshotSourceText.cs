@@ -114,6 +114,21 @@ namespace ShaderTools.CodeAnalysis.Text
                 return text;
             }
 
+            protected static ITextBufferCloneService TextBufferFactory
+            {
+                get
+                {
+                    // simplest way to get text factory
+                    var ws = PrimaryWorkspace.Workspace;
+                    if (ws != null)
+                    {
+                        return ws.Services.GetService<ITextBufferCloneService>();
+                    }
+
+                    return null;
+                }
+            }
+
             public override SourceTextContainer Container
             {
                 get
@@ -195,6 +210,81 @@ namespace ShaderTools.CodeAnalysis.Text
                 var editorSpan = new Span(textSpan.Start, textSpan.Length);
                 var res = this.EditorSnapshot.GetText(editorSpan);
                 return res;
+            }
+
+            public override SourceText WithChanges(IEnumerable<TextChange> changes)
+            {
+                if (changes == null)
+                {
+                    throw new ArgumentNullException(nameof(changes));
+                }
+
+                if (!changes.Any())
+                {
+                    return this;
+                }
+
+                // check whether we can use text buffer factory
+                var factory = TextBufferFactory;
+                if (factory == null)
+                {
+                    // if we can't get the factory, use the default implementation
+                    return base.WithChanges(changes);
+                }
+
+                // otherwise, create a new cloned snapshot
+                var buffer = factory.Clone(EditorSnapshot.GetFullSpan());
+                var baseSnapshot = buffer.CurrentSnapshot;
+
+                // apply the change to the buffer
+                using (var edit = buffer.CreateEdit())
+                {
+                    foreach (var change in changes)
+                    {
+                        edit.Replace(change.Span.ToSpan(), change.NewText);
+                    }
+
+                    edit.Apply();
+                }
+
+                return new ChangedSourceText(this, baseSnapshot, buffer.CurrentSnapshot);
+            }
+
+            /// <summary>
+            /// Perf: Optimize calls to GetChangeRanges after WithChanges by using editor snapshots
+            /// </summary>
+            private class ChangedSourceText : SnapshotSourceText
+            {
+                private readonly SnapshotSourceText _baseText;
+                private readonly ITextSnapshot _baseSnapshot;
+
+                public ChangedSourceText(SnapshotSourceText baseText, ITextSnapshot baseSnapshot, ITextSnapshot currentSnapshot)
+                    : base(currentSnapshot, containerOpt: null)
+                {
+                    _baseText = baseText;
+                    _baseSnapshot = baseSnapshot;
+                }
+
+                public override IReadOnlyList<TextChangeRange> GetChangeRanges(SourceText oldText)
+                {
+                    if (oldText == null)
+                    {
+                        throw new ArgumentNullException(nameof(oldText));
+                    }
+
+                    // if they are the same text there is no change.
+                    if (oldText == this)
+                    {
+                        return TextChangeRange.NoChanges;
+                    }
+
+                    if (oldText != _baseText)
+                    {
+                        return new[] { new TextChangeRange(new TextSpan(0, oldText.Length), this.Length) };
+                    }
+
+                    return GetChangeRanges(_baseSnapshot, _baseSnapshot.Length, this.EditorSnapshot);
+                }
             }
 
             public override void CopyTo(int sourceIndex, char[] destination, int destinationIndex, int count)

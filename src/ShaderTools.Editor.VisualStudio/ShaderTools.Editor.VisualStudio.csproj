@@ -278,6 +278,8 @@
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj">
       <Project>{2ad2617f-db08-4ac7-8c8a-f6f1325df2ef}</Project>
       <Name>ShaderTools.CodeAnalysis.EditorFeatures.Text</Name>
+      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
+      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
     </ProjectReference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj">
       <Name>ShaderTools.CodeAnalysis.Hlsl</Name>
