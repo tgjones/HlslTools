@@ -35,10 +35,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
             var signatureHelpItems = functionSymbols
                 .Select(ConvertFunctionSymbol).ToList();
 
-            var sourceRange = SignatureHelpUtilities.GetSignatureHelpSpan(node.ArgumentList);
+            var sourceRange = SignatureHelpUtilities.GetSignatureHelpSpan(node.ArgumentListSyntax);
             var textSpan = semanticModel.SyntaxTree.GetSourceFileSpan(sourceRange);
 
-            var currentState = SignatureHelpUtilities.GetSignatureHelpState(node.ArgumentList, position);
+            var currentState = SignatureHelpUtilities.GetSignatureHelpState(node.ArgumentListSyntax, position);
 
             return CreateSignatureHelpItems(
                 signatureHelpItems,

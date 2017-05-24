@@ -2,12 +2,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
     public abstract class InvocationExpressionSyntax : ExpressionSyntax
     {
-        public readonly ArgumentListSyntax ArgumentList;
+        public abstract ArgumentListSyntax ArgumentListSyntax { get; }
 
-        protected InvocationExpressionSyntax(SyntaxKind kind, ArgumentListSyntax argumentList)
+        protected InvocationExpressionSyntax(SyntaxKind kind)
             : base(kind)
         {
-            RegisterChildNode(out ArgumentList, argumentList);
+            
         }
     }
 }
