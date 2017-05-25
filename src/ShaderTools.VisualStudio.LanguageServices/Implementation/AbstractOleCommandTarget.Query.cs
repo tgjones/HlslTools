@@ -54,6 +54,12 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             switch ((VSConstants.VSStd2KCmdID) prgCmds[0].cmdID)
             {
+                case VSConstants.VSStd2KCmdID.FORMATDOCUMENT:
+                    return QueryFormatDocumentStatus(prgCmds);
+
+                case VSConstants.VSStd2KCmdID.FORMATSELECTION:
+                    return QueryFormatSelectionStatus(prgCmds);
+
                 case VSConstants.VSStd2KCmdID.COMMENT_BLOCK:
                 case VSConstants.VSStd2KCmdID.COMMENTBLOCK:
                     return QueryCommentBlockStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
@@ -145,6 +151,18 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             return GetCommandState(
                 (v, b) => new CommentSelectionCommandArgs(v, b),
                 ref pguidCmdGroup, commandCount, prgCmds, commandText);
+        }
+
+        private int QueryFormatDocumentStatus(OLECMD[] prgCmds)
+        {
+            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
+            return VSConstants.S_OK;
+        }
+
+        private int QueryFormatSelectionStatus(OLECMD[] prgCmds)
+        {
+            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
+            return VSConstants.S_OK;
         }
 
         private int QueryQuickInfoStatus(OLECMD[] prgCmds)

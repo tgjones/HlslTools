@@ -18,11 +18,12 @@
 //*********************************************************//
 
 using Microsoft.VisualStudio.Text;
-using ShaderTools.Editor.VisualStudio.Hlsl.Editing.Commenting;
+//using ShaderTools.Editor.VisualStudio.Hlsl.Editing.Commenting;
 using ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support;
 using ShaderTools.Editor.VisualStudio.Tests.Support;
 using Xunit;
 
+#if false
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.Commenting
 {
     public class CommentingTests : MefTestsBase
@@ -340,3 +341,4 @@ float f;",
         }
     }
 }
+#endif

@@ -61,6 +61,15 @@ namespace ShaderTools.CodeAnalysis.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Automatic Formatting.
+        /// </summary>
+        internal static string Automatic_Formatting {
+            get {
+                return ResourceManager.GetString("Automatic_Formatting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comment Selection.
         /// </summary>
         internal static string Comment_Selection {
@@ -75,6 +84,69 @@ namespace ShaderTools.CodeAnalysis.Editor.Properties {
         internal static string Commenting_currently_selected_text {
             get {
                 return ResourceManager.GetString("Commenting_currently_selected_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format Document.
+        /// </summary>
+        internal static string Format_Document {
+            get {
+                return ResourceManager.GetString("Format_Document", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format Paste.
+        /// </summary>
+        internal static string Format_Paste {
+            get {
+                return ResourceManager.GetString("Format_Paste", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Format Selection.
+        /// </summary>
+        internal static string Format_Selection {
+            get {
+                return ResourceManager.GetString("Format_Selection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formatting.
+        /// </summary>
+        internal static string Formatting {
+            get {
+                return ResourceManager.GetString("Formatting", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formatting currently selected text....
+        /// </summary>
+        internal static string Formatting_currently_selected_text {
+            get {
+                return ResourceManager.GetString("Formatting_currently_selected_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formatting document....
+        /// </summary>
+        internal static string Formatting_document {
+            get {
+                return ResourceManager.GetString("Formatting_document", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Formatting pasted text....
+        /// </summary>
+        internal static string Formatting_pasted_text {
+            get {
+                return ResourceManager.GetString("Formatting_pasted_text", resourceCulture);
             }
         }
         

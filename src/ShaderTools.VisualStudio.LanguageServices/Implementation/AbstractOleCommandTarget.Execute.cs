@@ -40,6 +40,10 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 {
                     return ExecuteVisualStudio2000(ref pguidCmdGroup, commandId, executeInformation, pvaIn, pvaOut, subjectBuffer, contentType);
                 }
+                else if (pguidCmdGroup == VSConstants.GUID_VSStandardCommandSet97)
+                {
+                    return ExecuteVisualStudio97(ref pguidCmdGroup, commandId, executeInformation, pvaIn, pvaOut, subjectBuffer, contentType);
+                }
                 else if (pguidCmdGroup == VSConstants.GUID_AppCommand)
                 {
                     return ExecuteAppCommand(ref pguidCmdGroup, commandId, executeInformation, pvaIn, pvaOut, subjectBuffer, contentType);
@@ -81,6 +85,29 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             return result;
         }
 
+        private int ExecuteVisualStudio97(ref Guid pguidCmdGroup, uint commandId, uint executeInformation, IntPtr pvaIn, IntPtr pvaOut, ITextBuffer subjectBuffer, IContentType contentType)
+        {
+            int result = VSConstants.S_OK;
+            var guidCmdGroup = pguidCmdGroup;
+            Action executeNextCommandTarget = () =>
+            {
+                result = NextCommandTarget.Exec(ref guidCmdGroup, commandId, executeInformation, pvaIn, pvaOut);
+            };
+
+            switch ((VSConstants.VSStd97CmdID)commandId)
+            {
+                case VSConstants.VSStd97CmdID.Paste:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecutePaste(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                default:
+                    return NextCommandTarget.Exec(ref pguidCmdGroup, commandId, executeInformation, pvaIn, pvaOut);
+            }
+
+            return result;
+        }
+
         protected virtual int ExecuteVisualStudio2000(ref Guid pguidCmdGroup, uint commandId, uint executeInformation, IntPtr pvaIn, IntPtr pvaOut, ITextBuffer subjectBuffer, IContentType contentType)
         {
             int result = VSConstants.S_OK;
@@ -97,6 +124,11 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                     ExecuteTypeCharacter(pvaIn, subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
+                case VSConstants.VSStd2KCmdID.RETURN:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteReturn(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 case VSConstants.VSStd2KCmdID.UP:
                     GCManager.UseLowLatencyModeForProcessingUserInput();
                     ExecuteUp(subjectBuffer, contentType, executeNextCommandTarget);
@@ -109,6 +141,14 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 
                 case VSConstants.VSStd2KCmdID.CANCEL:
                     ExecuteCancel(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.FORMATDOCUMENT:
+                    ExecuteFormatDocument(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.FORMATSELECTION:
+                    ExecuteFormatSelection(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
                 case CmdidNextHighlightedReference:
@@ -137,6 +177,11 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 case VSConstants.VSStd2KCmdID.QUICKINFO:
                     GCManager.UseLowLatencyModeForProcessingUserInput();
                     ExecuteQuickInfo(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.PASTE:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecutePaste(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
                 default:
@@ -188,6 +233,20 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 lastHandler: executeNextCommandTarget);
         }
 
+        protected void ExecuteFormatDocument(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new FormatDocumentCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteFormatSelection(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new FormatSelectionCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
         protected void ExecuteCancel(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
         {
             CurrentHandlers.Execute(contentType,
@@ -209,11 +268,25 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 lastHandler: executeNextCommandTarget);
         }
 
+        protected void ExecuteReturn(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new ReturnKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
         protected void ExecuteTypeCharacter(IntPtr pvaIn, ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
         {
             var typedChar = (char) (ushort) Marshal.GetObjectForNativeVariant(pvaIn);
             CurrentHandlers.Execute(contentType,
                 args: new TypeCharCommandArgs(ConvertTextView(), subjectBuffer, typedChar),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecutePaste(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new PasteCommandArgs(ConvertTextView(), subjectBuffer),
                 lastHandler: executeNextCommandTarget);
         }
 

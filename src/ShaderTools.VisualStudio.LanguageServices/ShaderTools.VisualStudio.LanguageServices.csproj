@@ -88,6 +88,7 @@
     <Compile Include="Utilities\VisualStudioWaitContext.Callback.cs" />
     <Compile Include="Utilities\VisualStudioWaitContext.cs" />
     <Compile Include="Utilities\VisualStudioWaitIndicator.cs" />
+    <Compile Include="Workspace\VisualStudioFormattingRuleFactoryServiceFactory.cs" />
     <Compile Include="Workspace\VisualStudioWorkspace.cs" />
     <Compile Include="Workspace\WorkspaceBufferListener.cs" />
   </ItemGroup>

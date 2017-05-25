@@ -132,4 +132,28 @@
   <data name="Uncomment_Selection" xml:space="preserve">
     <value>Uncomment Selection</value>
   </data>
+  <data name="Formatting" xml:space="preserve">
+    <value>Formatting</value>
+  </data>
+  <data name="Formatting_currently_selected_text" xml:space="preserve">
+    <value>Formatting currently selected text...</value>
+  </data>
+  <data name="Formatting_document" xml:space="preserve">
+    <value>Formatting document...</value>
+  </data>
+  <data name="Formatting_pasted_text" xml:space="preserve">
+    <value>Formatting pasted text...</value>
+  </data>
+  <data name="Format_Document" xml:space="preserve">
+    <value>Format Document</value>
+  </data>
+  <data name="Format_Paste" xml:space="preserve">
+    <value>Format Paste</value>
+  </data>
+  <data name="Format_Selection" xml:space="preserve">
+    <value>Format Selection</value>
+  </data>
+  <data name="Automatic_Formatting" xml:space="preserve">
+    <value>Automatic Formatting</value>
+  </data>
 </root>
