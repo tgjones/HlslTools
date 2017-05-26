@@ -18,6 +18,7 @@ using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.LanguageServer.Protocol.Services.SignatureHelp;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
@@ -67,6 +68,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             this.SetEventHandler(DidChangeTextDocumentNotification.Type, this.HandleDidChangeTextDocumentNotification);
 
             this.SetRequestHandler(DocumentHighlightRequest.Type, this.HandleDocumentHighlightRequest);
+            this.SetRequestHandler(SignatureHelpRequest.Type, this.HandleSignatureHelpRequest);
         }
 
         /// <summary>
@@ -106,10 +108,10 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                         //    ResolveProvider = true,
                         //    TriggerCharacters = new string[] { ".", "-", ":", "\\" }
                         //},
-                        //SignatureHelpProvider = new SignatureHelpOptions
-                        //{
-                        //    TriggerCharacters = new string[] { " " } // TODO: Other characters here?
-                        //}
+                        SignatureHelpProvider = new SignatureHelpOptions
+                        {
+                            TriggerCharacters = new[] { "(" }
+                        }
                     }
                 });
         }
@@ -224,6 +226,22 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
             await requestContext.SendResult(result.ToArray());
         }
+
+        private async Task HandleSignatureHelpRequest(
+            TextDocumentPositionParams textDocumentPositionParams,
+            RequestContext<SignatureHelp> requestContext)
+        {
+            var document = GetDocument(textDocumentPositionParams.TextDocument);
+            var position = ConvertPosition(document, textDocumentPositionParams.Position);
+
+            var signatureHelpHandler = document.Workspace.Services.GetService<SignatureHelpHandler>();
+
+            var result = await signatureHelpHandler.GetResultAsync(document, position, CancellationToken.None);
+
+            await requestContext.SendResult(result);
+        }
+
+        
 
         private static Range ConvertTextSpanToRange(SourceText sourceText, TextSpan textSpan)
         {
