@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Runtime.CompilerServices;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Text;
@@ -17,11 +21,19 @@ namespace ShaderTools.VisualStudio.LanguageServices
     [Export(typeof(VisualStudioWorkspace))]
     internal sealed class VisualStudioWorkspace : Workspace
     {
+        private readonly IServiceProvider _serviceProvider;
         private readonly ITextDocumentFactoryService _textDocumentFactoryService;
         private readonly BackgroundParser _backgroundParser;
         private readonly ConditionalWeakTable<ITextBuffer, ITextDocument> _textBufferToTextDocumentMap;
         private readonly ConditionalWeakTable<ITextBuffer, DocumentId> _textBufferToDocumentIdMap;
         private readonly ConditionalWeakTable<ITextBuffer, List<ITextView>> _textBufferToViewsMap;
+
+        /// <summary>
+        /// A <see cref="ForegroundThreadAffinitizedObject"/> to make assertions that stuff is on the right thread.
+        /// This is Lazy because it might be created on a background thread when nothing is initialized yet.
+        /// </summary>
+        private readonly Lazy<ForegroundThreadAffinitizedObject> _foregroundObject
+            = new Lazy<ForegroundThreadAffinitizedObject>(() => new ForegroundThreadAffinitizedObject());
 
         [ImportingConstructor]
         public VisualStudioWorkspace(
@@ -31,6 +43,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
         {
             PrimaryWorkspace.Register(this);
 
+            _serviceProvider = serviceProvider;
             _textDocumentFactoryService = textDocumentFactoryService;
 
             _backgroundParser = new BackgroundParser(this);
@@ -39,6 +52,53 @@ namespace ShaderTools.VisualStudio.LanguageServices
             _textBufferToTextDocumentMap = new ConditionalWeakTable<ITextBuffer, ITextDocument>();
             _textBufferToDocumentIdMap = new ConditionalWeakTable<ITextBuffer, DocumentId>();
             _textBufferToViewsMap = new ConditionalWeakTable<ITextBuffer, List<ITextView>>();
+        }
+
+        public override bool CanOpenDocuments => true;
+
+        public override void OpenDocument(DocumentId documentId, bool activate = true)
+        {
+            if (documentId == null)
+            {
+                throw new ArgumentNullException(nameof(documentId));
+            }
+
+            if (!_foregroundObject.Value.IsForeground())
+            {
+                throw new InvalidOperationException("This workspace only supports opening documents on the UI thread.");
+            }
+
+            var document = CurrentDocuments.GetDocument(documentId);
+            if (document == null)
+            {
+                return;
+            }
+
+            uint itemID;
+            IVsUIHierarchy hierarchy;
+            IVsWindowFrame docFrame;
+            IVsTextView textView;
+
+            try
+            {
+                VsShellUtilities.OpenDocument(
+                    _serviceProvider, document.FilePath, VSConstants.LOGVIEWID_Code,
+                    out hierarchy, out itemID, out docFrame, out textView);
+            }
+            catch
+            {
+                // File might not exist, etc.
+                return;
+            }
+
+            if (activate)
+            {
+                docFrame.Show();
+            }
+            else
+            {
+                docFrame.ShowNoActivate();
+            }
         }
 
         private static ExportProvider GetExportProvider(SVsServiceProvider serviceProvider)

@@ -70,6 +70,15 @@ namespace ShaderTools.CodeAnalysis.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot navigate to the symbol under the caret..
+        /// </summary>
+        internal static string Cannot_navigate_to_the_symbol_under_the_caret {
+            get {
+                return ResourceManager.GetString("Cannot_navigate_to_the_symbol_under_the_caret", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Comment Selection.
         /// </summary>
         internal static string Comment_Selection {
@@ -147,6 +156,24 @@ namespace ShaderTools.CodeAnalysis.Editor.Properties {
         internal static string Formatting_pasted_text {
             get {
                 return ResourceManager.GetString("Formatting_pasted_text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Go to Definition.
+        /// </summary>
+        internal static string Go_to_Definition {
+            get {
+                return ResourceManager.GetString("Go_to_Definition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigating to definition....
+        /// </summary>
+        internal static string Navigating_to_definition {
+            get {
+                return ResourceManager.GetString("Navigating_to_definition", resourceCulture);
             }
         }
         

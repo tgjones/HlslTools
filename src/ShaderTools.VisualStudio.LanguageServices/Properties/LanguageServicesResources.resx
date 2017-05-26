@@ -117,52 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="Commenting_currently_selected_text" xml:space="preserve">
-    <value>Commenting currently selected text...</value>
-  </data>
-  <data name="Comment_Selection" xml:space="preserve">
-    <value>Comment Selection</value>
-  </data>
-  <data name="The_transaction_is_already_complete" xml:space="preserve">
-    <value>The transaction is already complete.</value>
-  </data>
-  <data name="Uncommenting_currently_selected_text" xml:space="preserve">
-    <value>Uncommenting currently selected text...</value>
-  </data>
-  <data name="Uncomment_Selection" xml:space="preserve">
-    <value>Uncomment Selection</value>
-  </data>
-  <data name="Formatting" xml:space="preserve">
-    <value>Formatting</value>
-  </data>
-  <data name="Formatting_currently_selected_text" xml:space="preserve">
-    <value>Formatting currently selected text...</value>
-  </data>
-  <data name="Formatting_document" xml:space="preserve">
-    <value>Formatting document...</value>
-  </data>
-  <data name="Formatting_pasted_text" xml:space="preserve">
-    <value>Formatting pasted text...</value>
-  </data>
-  <data name="Format_Document" xml:space="preserve">
-    <value>Format Document</value>
-  </data>
-  <data name="Format_Paste" xml:space="preserve">
-    <value>Format Paste</value>
-  </data>
-  <data name="Format_Selection" xml:space="preserve">
-    <value>Format Selection</value>
-  </data>
-  <data name="Automatic_Formatting" xml:space="preserve">
-    <value>Automatic Formatting</value>
-  </data>
-  <data name="Cannot_navigate_to_the_symbol_under_the_caret" xml:space="preserve">
-    <value>Cannot navigate to the symbol under the caret.</value>
-  </data>
-  <data name="Go_to_Definition" xml:space="preserve">
-    <value>Go to Definition</value>
-  </data>
-  <data name="Navigating_to_definition" xml:space="preserve">
-    <value>Navigating to definition...</value>
+  <data name="Navigation_must_be_performed_on_the_foreground_thread" xml:space="preserve">
+    <value>Navigation must be performed on the foreground thread.</value>
   </data>
 </root>

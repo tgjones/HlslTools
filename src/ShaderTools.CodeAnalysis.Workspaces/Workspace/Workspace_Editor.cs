@@ -217,5 +217,26 @@ namespace ShaderTools.CodeAnalysis
                     this.GetDocumentName(documentId)));
             }
         }
+
+        /// <summary>
+        /// True if this workspace supports manually opening and closing documents.
+        /// </summary>
+        public virtual bool CanOpenDocuments => false;
+
+        /// <summary>
+        /// Open the specified document in the host environment.
+        /// </summary>
+        public virtual void OpenDocument(DocumentId documentId, bool activate = true)
+        {
+            this.CheckCanOpenDocuments();
+        }
+
+        protected void CheckCanOpenDocuments()
+        {
+            if (!this.CanOpenDocuments)
+            {
+                throw new NotSupportedException("This workspace does not support opening and closing documents");
+            }
+        }
     }
 }
