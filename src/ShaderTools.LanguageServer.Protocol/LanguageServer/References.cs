@@ -10,11 +10,11 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     public class ReferencesRequest
     {
         public static readonly
-            RequestType<ReferencesParams, Location[]> Type =
-            RequestType<ReferencesParams, Location[]>.Create("textDocument/references");
+            RequestType<ReferencesParams, Location[], object, TextDocumentRegistrationOptions> Type =
+                RequestType<ReferencesParams, Location[], object, TextDocumentRegistrationOptions>.Create("textDocument/references");
     }
 
-    public class ReferencesParams : TextDocumentPosition
+    public class ReferencesParams : TextDocumentPositionParams
     {
         public ReferencesContext Context { get; set; }
     }

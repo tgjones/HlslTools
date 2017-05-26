@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,7 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
 using ShaderTools.LanguageServer.Protocol.Utilities;
 using System.IO;
 using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
@@ -23,7 +25,6 @@ namespace ShaderTools.LanguageServer.Protocol.Server
     {
         private readonly static string DiagnosticSourceName = "ShaderToolsEditorServices";
 
-        private readonly ChannelBase serverChannel;
         private readonly LanguageServerWorkspace _workspace;
 
         private string _workspacePath;
@@ -33,7 +34,6 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         public LanguageServerBase(ChannelBase serverChannel, LanguageServerWorkspace workspace)
             :  base(serverChannel, MessageProtocolType.LanguageServer)
         {
-            this.serverChannel = serverChannel;
             _workspace = workspace;
         }
 
@@ -65,6 +65,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             this.SetEventHandler(DidOpenTextDocumentNotification.Type, this.HandleDidOpenTextDocumentNotification);
             this.SetEventHandler(DidCloseTextDocumentNotification.Type, this.HandleDidCloseTextDocumentNotification);
             this.SetEventHandler(DidChangeTextDocumentNotification.Type, this.HandleDidChangeTextDocumentNotification);
+
+            this.SetRequestHandler(DocumentHighlightRequest.Type, this.HandleDocumentHighlightRequest);
         }
 
         /// <summary>
@@ -80,7 +82,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         }
 
         private async Task HandleInitializeRequest(
-            InitializeRequest initializeParams,
+            InitializeParams initializeParams,
             RequestContext<InitializeResult> requestContext)
         {
             // Grab the workspace path from the parameters
@@ -94,7 +96,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                         TextDocumentSync = TextDocumentSyncKind.Incremental,
                         //DefinitionProvider = true,
                         //ReferencesProvider = true,
-                        //DocumentHighlightProvider = true,
+                        DocumentHighlightProvider = true,
                         //DocumentSymbolProvider = true,
                         //WorkspaceSymbolProvider = true,
                         //HoverProvider = true,
@@ -113,12 +115,12 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         }
 
         private Task HandleDidOpenTextDocumentNotification(
-            DidOpenTextDocumentNotification openParams,
+            DidOpenTextDocumentParams openParams,
             EventContext eventContext)
         {
             var openedDocument = _workspace.OpenDocument(
-                DocumentId.CreateNewId(ResolveFilePath(openParams.Uri)),
-                SourceText.From(openParams.Text));
+                DocumentId.CreateNewId(ResolveFilePath(openParams.TextDocument.Uri)),
+                SourceText.From(openParams.TextDocument.Text, ResolveFilePath(openParams.TextDocument.Uri)));
 
             // TODO: Get all recently edited files in the workspace
             this.RunScriptDiagnostics(new Document[] { openedDocument });
@@ -129,11 +131,11 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         }
 
         private async Task HandleDidCloseTextDocumentNotification(
-            TextDocumentIdentifier closeParams,
+            DidCloseTextDocumentParams closeParams,
             EventContext eventContext)
         {
             // Find and close the file in the current session
-            var fileToClose = _workspace.CurrentDocuments.GetDocumentsWithFilePath(closeParams.Uri).FirstOrDefault();
+            var fileToClose = GetDocument(closeParams.TextDocument);
 
             if (fileToClose != null)
             {
@@ -148,28 +150,96 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             DidChangeTextDocumentParams textChangeParams,
             EventContext eventContext)
         {
-            var changedFiles = new List<Document>();
+            var fileToChange = GetDocument(textChangeParams.TextDocument);
 
-            // A text change notification can batch multiple change requests
-            foreach (var textChange in textChangeParams.ContentChanges)
+            if (fileToChange == null)
             {
-                var fileToChange = _workspace.CurrentDocuments.GetDocumentsWithFilePath(textChangeParams.Uri).FirstOrDefault();
-                if (fileToChange == null)
-                    continue;
-
-                var changedFile = _workspace.UpdateDocument(fileToChange,
-                    GetFileChangeDetails(
-                        fileToChange,
-                        textChange.Range.Value,
-                        textChange.Text));
-
-                changedFiles.Add(changedFile);
+                return Task.FromResult(true);
             }
 
+            // A text change notification can batch multiple change requests
+            _workspace.UpdateDocument(fileToChange,
+                textChangeParams.ContentChanges.Select(x =>
+                    GetFileChangeDetails(
+                    fileToChange,
+                    x.Range.Value,
+                    x.Text)));
+
             // TODO: Get all recently edited files in the workspace
-            this.RunScriptDiagnostics(changedFiles.ToArray());
+            this.RunScriptDiagnostics(new[] { fileToChange } );
 
             return Task.FromResult(true);
+        }
+
+        protected async Task HandleDocumentHighlightRequest(
+            TextDocumentPositionParams textDocumentPositionParams,
+            RequestContext<DocumentHighlight[]> requestContext)
+        {
+            var document = GetDocument(textDocumentPositionParams.TextDocument);
+            var position = ConvertPosition(document, textDocumentPositionParams.Position);
+
+            var documentHighlightsService = document.Workspace.Services.GetService<IDocumentHighlightsService>();
+            
+            var documentHighlightsList = await documentHighlightsService.GetDocumentHighlightsAsync(
+                document, position,
+                ImmutableHashSet<Document>.Empty,
+                CancellationToken.None);
+
+            var result = new List<DocumentHighlight>();
+
+            foreach (var documentHighlights in documentHighlightsList)
+            {
+                if (documentHighlights.Document != document)
+                {
+                    continue;
+                }
+
+                foreach (var highlightSpan in documentHighlights.HighlightSpans)
+                {
+                    result.Add(new DocumentHighlight
+                    {
+                        Kind = highlightSpan.Kind == HighlightSpanKind.Definition
+                            ? DocumentHighlightKind.Write
+                            : DocumentHighlightKind.Read,
+                        Range = ConvertTextSpanToRange(document.SourceText, highlightSpan.TextSpan)
+                    });
+                }
+            }
+
+            await requestContext.SendResult(result.ToArray());
+        }
+
+        private static Range ConvertTextSpanToRange(SourceText sourceText, TextSpan textSpan)
+        {
+            var linePositionSpan = sourceText.Lines.GetLinePositionSpan(textSpan);
+
+            return new Range
+            {
+                Start = new Position
+                {
+                    Line = linePositionSpan.Start.Line,
+                    Character = linePositionSpan.Start.Character
+                },
+                End = new Position
+                {
+                    Line = linePositionSpan.End.Line,
+                    Character = linePositionSpan.End.Character
+                }
+            };
+        }
+
+        private Document GetDocument(TextDocumentIdentifier documentIdentifier)
+        {
+            var filePath = ResolveFilePath(documentIdentifier.Uri);
+
+            return _workspace.CurrentDocuments
+                .GetDocumentsWithFilePath(filePath)
+                .FirstOrDefault();
+        }
+
+        private int ConvertPosition(Document document, Position position)
+        {
+            return document.SourceText.Lines.GetPosition(new LinePosition(position.Line, position.Character));
         }
 
         private static TextChange GetFileChangeDetails(Document document, Range changeRange, string insertString)
@@ -208,7 +278,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         private Task RunScriptDiagnostics(
             Document[] filesToAnalyze,
-            Func<EventType<PublishDiagnosticsNotification>, PublishDiagnosticsNotification, Task> eventSender)
+            Func<NotificationType<PublishDiagnosticsNotification, object>, PublishDiagnosticsNotification, Task> eventSender)
         {
             // If there's an existing task, attempt to cancel it
             try
@@ -260,7 +330,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         private static async Task DelayThenInvokeDiagnostics(
             int delayMilliseconds,
             Document[] filesToAnalyze,
-            Func<EventType<PublishDiagnosticsNotification>, PublishDiagnosticsNotification, Task> eventSender,
+            Func<NotificationType<PublishDiagnosticsNotification, object>, PublishDiagnosticsNotification, Task> eventSender,
             CancellationToken cancellationToken)
         {
             // First of all, wait for the desired delay period before
@@ -304,7 +374,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         private static async Task PublishScriptDiagnostics(
             Document scriptFile, Func<SyntaxTreeBase> syntaxTree,
             CodeAnalysis.Diagnostics.Diagnostic[] markers,
-            Func<EventType<PublishDiagnosticsNotification>, PublishDiagnosticsNotification, Task> eventSender)
+            Func<NotificationType<PublishDiagnosticsNotification, object>, PublishDiagnosticsNotification, Task> eventSender)
         {
             List<Diagnostic> diagnostics = new List<Diagnostic>();
 
@@ -370,7 +440,6 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         }
 
         private async Task HandleShutdownRequest(
-            object shutdownParams,
             RequestContext<object> requestContext)
         {
             // Allow the implementor to shut down gracefully

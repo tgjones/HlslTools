@@ -14,8 +14,8 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     public class ShutdownRequest
     {
         public static readonly
-            RequestType<object, object> Type =
-            RequestType<object, object>.Create("shutdown");
+            RequestType0<object, object, object> Type =
+                RequestType0<object, object, object>.Create("shutdown");
     }
 
     /// <summary>
@@ -25,8 +25,8 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     public class ExitNotification
     {
         public static readonly
-            EventType<object> Type =
-            EventType<object>.Create("exit");
+            NotificationType<object, object> Type =
+                NotificationType<object, object>.Create("exit");
     }
 }
 

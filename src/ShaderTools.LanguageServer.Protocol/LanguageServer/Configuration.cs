@@ -7,11 +7,11 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 
 namespace ShaderTools.LanguageServer.Protocol.LanguageServer
 {
-    public class DidChangeConfigurationNotification<TConfig> 
+    public class DidChangeConfigurationNotification<TConfig>
     {
         public static readonly
-            EventType<DidChangeConfigurationParams<TConfig>> Type =
-            EventType<DidChangeConfigurationParams<TConfig>>.Create("workspace/didChangeConfiguration");
+            NotificationType<DidChangeConfigurationParams<TConfig>, object> Type =
+                NotificationType<DidChangeConfigurationParams<TConfig>, object>.Create("workspace/didChangeConfiguration");
     }
 
     public class DidChangeConfigurationParams<TConfig>

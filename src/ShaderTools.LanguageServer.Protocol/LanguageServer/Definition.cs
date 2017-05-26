@@ -10,8 +10,8 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     public class DefinitionRequest
     {
         public static readonly
-            RequestType<TextDocumentPosition, Location[]> Type =
-            RequestType<TextDocumentPosition, Location[]>.Create("textDocument/definition");
+            RequestType<TextDocumentPositionParams, Location[], object, TextDocumentRegistrationOptions> Type =
+                RequestType<TextDocumentPositionParams, Location[], object, TextDocumentRegistrationOptions>.Create("textDocument/definition");
     }
 }
 

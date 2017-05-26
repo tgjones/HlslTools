@@ -12,6 +12,9 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     /// </summary>
     public class ClientCapabilities
     {
+        public WorkspaceClientCapabilities Workspace { get; set; }
+        public TextDocumentClientCapabilities TextDocument { get; set; }
+        public object Experimental { get; set; }
     }
 }
 

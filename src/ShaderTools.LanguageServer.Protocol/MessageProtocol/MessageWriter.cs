@@ -21,7 +21,7 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
         private IMessageSerializer messageSerializer;
         private AsyncLock writeLock = new AsyncLock();
 
-        private JsonSerializer contentSerializer = 
+        private JsonSerializer contentSerializer =
             JsonSerializer.Create(
                 Constants.JsonSerializerSettings);
 
@@ -71,7 +71,7 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                     Constants.JsonSerializerSettings);
 
             byte[] messageBytes = Encoding.UTF8.GetBytes(serializedMessage);
-            byte[] headerBytes = 
+            byte[] headerBytes =
                 Encoding.ASCII.GetBytes(
                     string.Format(
                         Constants.ContentLengthFormatString,
@@ -89,8 +89,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
             }
         }
 
-        public async Task WriteRequest<TParams, TResult>(
-            RequestType<TParams, TResult> requestType, 
+        public async Task WriteRequest<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             TParams requestParams,
             int requestId)
         {
@@ -102,8 +102,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 
             await this.WriteMessage(
                 Message.Request(
-                    requestId.ToString(), 
-                    requestType.MethodName,
+                    requestId.ToString(),
+                    requestType.Method,
                     contentObject));
         }
 
@@ -122,7 +122,7 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                     contentObject));
         }
 
-        public async Task WriteEvent<TParams>(EventType<TParams> eventType, TParams eventParams)
+        public async Task WriteEvent<TParams, TRegistrationOptions>(NotificationType<TParams, TRegistrationOptions> eventType, TParams eventParams)
         {
             // Allow null content
             JToken contentObject =
@@ -132,7 +132,7 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 
             await this.WriteMessage(
                 Message.Event(
-                    eventType.MethodName,
+                    eventType.Method,
                     contentObject));
         }
 

@@ -9,12 +9,12 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 {
     internal interface IMessageSender
     {
-        Task SendEvent<TParams>(
-            EventType<TParams> eventType,
+        Task SendEvent<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             TParams eventParams);
 
-        Task<TResult> SendRequest<TParams, TResult>(
-            RequestType<TParams, TResult> requestType,
+        Task<TResult> SendRequest<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             TParams requestParams,
             bool waitForResponse);
     }

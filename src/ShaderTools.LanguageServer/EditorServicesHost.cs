@@ -27,22 +27,12 @@ namespace ShaderTools.LanguageServer
     /// </summary>
     public sealed class EditorServicesHost
     {
-        #region Private Fields
-
         private readonly Func<ChannelBase, LanguageServerBase> _createLanguageServer;
         private LanguageServerBase languageServer;
-
-        #endregion
-
-        #region Properties
 
         public EditorServicesHostStatus Status { get; private set; }
 
         public int LanguageServicePort { get; private set; }
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance of the EditorServicesHost class and waits for
@@ -65,10 +55,6 @@ namespace ShaderTools.LanguageServer
             }
 #endif
         }
-
-        #endregion
-
-        #region Public Methods
 
         /// <summary>
         /// Starts the Logger for the specified file path and log level.
@@ -139,7 +125,5 @@ namespace ShaderTools.LanguageServer
                 this.languageServer.WaitForExit();
             }
         }
-
-        #endregion
     }
 }

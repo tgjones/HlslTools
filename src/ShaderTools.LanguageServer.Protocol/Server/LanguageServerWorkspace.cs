@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis;
+﻿using System.Collections.Generic;
+using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Text;
 
@@ -21,9 +22,9 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             return document;
         }
 
-        public Document UpdateDocument(Document document, TextChange change)
+        public Document UpdateDocument(Document document, IEnumerable<TextChange> changes)
         {
-            var newText = document.SourceText.WithChanges(change);
+            var newText = document.SourceText.WithChanges(changes);
             throw new System.NotImplementedException();
             //return OnDocumentTextChanged(document.Id, newText);
         }

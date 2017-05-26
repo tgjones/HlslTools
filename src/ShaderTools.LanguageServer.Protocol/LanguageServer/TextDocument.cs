@@ -9,6 +9,38 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 namespace ShaderTools.LanguageServer.Protocol.LanguageServer
 {
     /// <summary>
+    /// An item to transfer a text document from the client to the server
+    /// </summary>
+    [DebuggerDisplay("TextDocumentItem = {Uri}:{LanguageId}:{Version}:{Text}")]
+    public class TextDocumentItem
+    {
+        /// <summary>
+        /// Gets or sets the URI which identifies the path of the
+        /// text document.
+        /// </summary>
+        public string Uri { get; set; }
+
+        /// <summary>
+        /// The text document's language identifier.
+        /// </summary>
+        /// <returns></returns>
+        public string LanguageId { get; set; }
+
+        /// <summary>
+        /// The version number of this document, which will strictly increase after each change, including
+        /// undo/redo.
+        /// </summary>
+        /// <returns></returns>
+        public int Version { get; set; }
+
+        /// <summary>
+        /// The content of the opened text document.
+        /// </summary>
+        /// <returns></returns>
+        public string Text { get; set; }
+    }
+
+    /// <summary>
     /// Defines a base parameter class for identifying a text document.
     /// </summary>
     [DebuggerDisplay("TextDocumentIdentifier = {Uri}")]
@@ -20,47 +52,176 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
         /// </summary>
         public string Uri { get; set; }
     }
-
     /// <summary>
-    /// Defines a position in a text document.
+    /// An identifier to denote a specific version of a text document.
     /// </summary>
-    [DebuggerDisplay("TextDocumentPosition = {Position.Line}:{Position.Character}")]
-    public class TextDocumentPosition : TextDocumentIdentifier
+    public class VersionedTextDocumentIdentifier : TextDocumentIdentifier
     {
         /// <summary>
-        /// Gets or sets the position in the document.
+        /// The version number of this document.
         /// </summary>
+        public int Version { get; set; }
+    }
+    /// <summary>
+    /// A parameter literal used in requests to pass a text document and a position inside that document.
+    /// </summary>
+    public class TextDocumentPositionParams
+    {
+        /// <summary>
+        /// The text document.
+        /// </summary>
+        /// <returns></returns>
+        public TextDocumentIdentifier TextDocument { get; set; }
+        /// <summary>
+        /// The position inside the text document.
+        /// </summary>
+        /// <returns></returns>
         public Position Position { get; set; }
     }
-
-    public class DidOpenTextDocumentNotification : TextDocumentIdentifier
+    public class DidOpenTextDocumentNotification
     {
         public static readonly
-            EventType<DidOpenTextDocumentNotification> Type =
-            EventType<DidOpenTextDocumentNotification>.Create("textDocument/didOpen");
+            NotificationType<DidOpenTextDocumentParams, TextDocumentRegistrationOptions> Type =
+                NotificationType<DidOpenTextDocumentParams, TextDocumentRegistrationOptions>.Create("textDocument/didOpen");
+    }
+
+    /// <summary>
+    /// The parameters sent in an open text document notification
+    /// </summary>
+    public class DidOpenTextDocumentParams
+    {
+        /// <summary>
+        /// The document that was opened.
+        /// </summary>
+        public TextDocumentItem TextDocument { get; set; }
+    }
+
+    /// <summary>
+    /// General text document registration options.
+    /// </summary>
+    public class TextDocumentRegistrationOptions
+    {
+        /// <summary>
+        /// A document selector to identify the scope of the registration. If set to null the document
+        /// selector provided on the client side will be used.
+        /// </summary>
+        public DocumentFilter[] DocumentSelector { get; set; }
+    }
+
+    /// <summary>
+    /// A document filter denotes a document by different properties like the language, the scheme
+    /// of its resource, or a glob-pattern that is applied to the path.
+    /// </summary>
+    public class DocumentFilter
+    {
+        /// <summary>
+        /// A language id, like `powershell`
+        /// </summary>
+        public string Language { get; set; }
 
         /// <summary>
-        /// Gets or sets the full content of the opened document.
+        /// A Uri, like `file` or `untitled`
         /// </summary>
-        public string Text { get; set; }
+        public string Scheme { get; set; }
+
+        /// <summary>
+        /// A glob pattern, like `*.{ps1,psd1}`
+        /// </summary>
+        public string Pattern { get; set; }
     }
 
     public class DidCloseTextDocumentNotification
     {
         public static readonly
-            EventType<TextDocumentIdentifier> Type =
-            EventType<TextDocumentIdentifier>.Create("textDocument/didClose");
+            NotificationType<DidCloseTextDocumentParams, TextDocumentRegistrationOptions> Type =
+                NotificationType<DidCloseTextDocumentParams, TextDocumentRegistrationOptions>.Create("textDocument/didClose");
+    }
+
+    /// <summary>
+    /// The parameters sent in a close text document notification.
+    /// </summary>
+    public class DidCloseTextDocumentParams
+    {
+        /// <summary>
+        /// The document that was closed.
+        /// </summary>
+        public TextDocumentIdentifier TextDocument { get; set; }
+    }
+
+    public class DidSaveTextDocumentNotification
+    {
+        public static readonly
+            NotificationType<DidSaveTextDocumentParams, TextDocumentSaveRegistrationOptions> Type =
+                NotificationType<DidSaveTextDocumentParams, TextDocumentSaveRegistrationOptions>.Create("textDocument/didSave");
+    }
+
+    /// <summary>
+    /// Save options.
+    /// </summary>
+    public class SaveOptions
+    {
+        /// <summary>
+        /// The client is supposed to include the content on save.
+        /// </summary>
+        public bool? IncludeText { get; set; }
+    }
+
+    public class TextDocumentSaveRegistrationOptions : TextDocumentRegistrationOptions
+    {
+        // We cannot inherit from two base classes (SaveOptions and TextDocumentRegistrationOptions)
+        // simultaneously, hence we repeat this IncludeText flag here.
+        /// <summary>
+        /// The client is supposed to include the content on save.
+        /// </summary>
+        public bool? IncludeText { get; set; }
+    }
+
+    /// <summary>
+    /// The parameters sent in a save text document notification.
+    /// </summary>
+    public class DidSaveTextDocumentParams
+    {
+        /// <summary>
+        /// The document that was saved.
+        /// </summary>
+        public VersionedTextDocumentIdentifier TextDocument { get; set; }
+
+        /// <summary>
+        /// Optional content when saved. Depends on the includeText value when the save notification was
+        /// included.
+        /// </summary>
+        public string Text { get; set; }
     }
 
     public class DidChangeTextDocumentNotification
     {
         public static readonly
-            EventType<DidChangeTextDocumentParams> Type =
-            EventType<DidChangeTextDocumentParams>.Create("textDocument/didChange");
+            NotificationType<DidChangeTextDocumentParams, TextDocumentChangeRegistrationOptions> Type =
+                NotificationType<DidChangeTextDocumentParams, TextDocumentChangeRegistrationOptions>.Create("textDocument/didChange");
     }
 
-    public class DidChangeTextDocumentParams : TextDocumentIdentifier
+    /// <summary>
+    /// Describe options to be used when registered for text document change events.
+    /// </summary>
+    public class TextDocumentChangeRegistrationOptions : TextDocumentRegistrationOptions
     {
+        /// <summary>
+        /// How documents are synced to the server.
+        /// </summary>
+        public TextDocumentSyncKind SyncKind { get; set; }
+    }
+
+    /// <summary>
+    /// The change text document notification's paramters.
+    /// </summary>
+    public class DidChangeTextDocumentParams
+    {
+        /// <summary>
+        /// The document that did change. The version number points to the version after
+        /// all provided content changes have been applied.
+        /// </summary>
+        public VersionedTextDocumentIdentifier TextDocument;
+
         /// <summary>
         /// Gets or sets the list of changes to the document content.
         /// </summary>
@@ -77,7 +238,7 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
 
         /// <summary>
         /// Gets or sets the length of the Range being replaced in the
-        /// document.  Will be null if the server's TextDocumentSyncKind is 
+        /// document.  Will be null if the server's TextDocumentSyncKind is
         /// Full.
         /// </summary>
         public int? RangeLength { get; set; }

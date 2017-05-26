@@ -7,17 +7,28 @@ using System.Diagnostics;
 
 namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 {
-    [DebuggerDisplay("RequestType MethodName = {MethodName}")]
-    public class RequestType<TParams, TResult>
+    [DebuggerDisplay("RequestType Method = {Method}")]
+    public class RequestType<TParams, TResult, TError, TRegistrationOptions> : AbstractMessageType
     {
-        public string MethodName { get; private set; }
-
-        public static RequestType<TParams, TResult> Create(string typeName)
+        private RequestType(string method) : base(method, 1)
         {
-            return new RequestType<TParams, TResult>()
+
+        }
+
+        public static RequestType<TParams, TResult, TError, TRegistrationOptions> ConvertToRequestType(
+            RequestType0<TResult, TError, TRegistrationOptions> requestType0)
+        {
+            return RequestType<TParams, TResult, TError, TRegistrationOptions>.Create(requestType0.Method);
+        }
+
+        public static RequestType<TParams, TResult, TError, TRegistrationOptions> Create(string method)
+        {
+            if (method == null)
             {
-                MethodName = typeName
-            };
+                throw new System.ArgumentNullException(nameof(method));
+            }
+
+            return new RequestType<TParams, TResult, TError, TRegistrationOptions>(method);
         }
     }
 }

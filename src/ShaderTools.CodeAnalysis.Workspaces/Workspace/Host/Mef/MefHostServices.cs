@@ -99,8 +99,12 @@ namespace ShaderTools.CodeAnalysis.Host.Mef
             // build a MEF composition using the main workspaces assemblies.
             var assemblyNames = new string[]
             {
-                "ShaderTools.EditorSerices",
-                "ShaderTools.EditorSerices.Hlsl"
+                "ShaderTools.CodeAnalysis.Workspaces",
+                "ShaderTools.CodeAnalysis.Hlsl.Workspaces",
+                "ShaderTools.CodeAnalysis.ShaderLab.Workspaces",
+                "ShaderTools.CodeAnalysis.Features",
+                "ShaderTools.CodeAnalysis.Hlsl.Features",
+                "ShaderTools.CodeAnalysis.ShaderLab.Features"
             };
 
             return LoadNearbyAssemblies(assemblyNames);

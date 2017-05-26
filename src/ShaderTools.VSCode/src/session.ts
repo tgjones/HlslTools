@@ -29,12 +29,14 @@ export class SessionManager {
 
     private hostVersion: string;
     private isWindowsOS: boolean;
+    private sessionFilePath: string;
     private sessionStatus: SessionStatus;
     private editorServicesHostProcess: cp.ChildProcess;
     private statusBarItem: vscode.StatusBarItem;
     private registeredCommands: vscode.Disposable[] = [];
     private languageServerClient: LanguageClient = undefined;
     private sessionSettings: Settings.ISettings = undefined;
+    private sessionDetails: utils.EditorServicesSessionDetails;
 
     // When in development mode, VS Code's session ID is a fake
     // value of "someValue.machineId".  Use that to detect dev
@@ -58,21 +60,20 @@ export class SessionManager {
                 .version;
 
         this.registerCommands();
-        this.createStatusBarItem();
     }
 
     public start() {
         this.sessionSettings = Settings.load(this.language);
         this.log.startNewLog(this.sessionSettings.developer.editorServicesLogLevel);
 
-        if (this.inDevelopmentMode) {
-            // TODO: Make sure the bin path exists
-        }
+        this.createStatusBarItem();
+
+        this.sessionFilePath = utils.getSessionFilePath(Math.floor(100000 + Math.random() * 900000));
 
         var startArgs = [];
 
         if (this.sessionSettings.developer.editorServicesLogLevel) {
-            startArgs.push("--logLevel", this.sessionSettings.developer.editorServicesLogLevel);
+            //startArgs.push("--LogLevel", this.sessionSettings.developer.editorServicesLogLevel);
         }
 
         this.startEditorServices(
@@ -100,9 +101,9 @@ export class SessionManager {
         }
 
         // Clean up the session file
-        utils.deleteSessionFile();
+        utils.deleteSessionFile(this.sessionFilePath);
 
-        // Kill the PowerShell process we spawned via the console
+        // Kill the process we spawned via the console
         if (this.editorServicesHostProcess !== undefined) {
             this.log.write(os.EOL + "Terminating Editor Services host process...");
             this.editorServicesHostProcess.kill();
@@ -110,6 +111,10 @@ export class SessionManager {
         }
 
         this.sessionStatus = SessionStatus.NotStarted;
+    }
+
+    public getSessionDetails(): utils.EditorServicesSessionDetails {
+        return this.sessionDetails;
     }
 
     public dispose() : void {
@@ -150,19 +155,28 @@ export class SessionManager {
         try
         {
             this.setSessionStatus(
-                "Starting Editor Services...",
+                "Starting ShaderTools Editor Services...",
                 SessionStatus.Initializing);
 
             var editorServicesLogPath = this.log.getLogFilePath("EditorServices");
 
-            var editorServicesHostExePath = path.resolve(__dirname, '../../bin/Desktop/ShaderTools.EditorServices.Host.Hlsl.exe');
+            var editorServicesHostExePath = path.resolve(__dirname, '../../ShaderTools.LanguageServer/bin/Debug/netcoreapp1.1/ShaderTools.LanguageServer.dll');
 
-            startArgs.push("--logFilePath", "'" + editorServicesLogPath + "'");
+            startArgs.unshift(editorServicesHostExePath);
+            startArgs.push("--language", this.language);
+            startArgs.push("--logfilepath", editorServicesLogPath);
+
+            startArgs.push("--waitfordebugger", 'true');
+
+            this.log.write(`${utils.getTimestampString()} Language server starting...`);
+
+            // Make sure no old session file exists
+            utils.deleteSessionFile(this.sessionFilePath);
 
             // Launch Editor Services host as child process
             this.editorServicesHostProcess =
                 cp.spawn(
-                    editorServicesHostExePath,
+                    'dotnet',
                     startArgs,
                     { env: process.env });
 
@@ -174,10 +188,12 @@ export class SessionManager {
                     var response = JSON.parse(decoder.write(data).trim());
 
                     if (response["status"] === "started") {
-                        let sessionDetails: utils.EditorServicesSessionDetails = response;
+                        this.log.write(`${utils.getTimestampString()} Language server started.`);
+
+                        this.sessionDetails = response;
 
                         // Start the language service client
-                        this.startLanguageClient(sessionDetails);
+                        this.startLanguageClient(this.sessionDetails);
                     }
                     else if (response["status"] === "failed") {
                         this.setSessionFailure(`Editor Services host could not be started for an unknown reason '${response["reason"]}'`)
@@ -215,9 +231,9 @@ export class SessionManager {
                     }
                 });
 
-          console.log("ShaderTools.EditorServices.Host.exe started, pid: " + this.editorServicesHostProcess.pid + ", exe: " + editorServicesHostExePath);
+          console.log("ShaderTools.LanguageServer.exe started, pid: " + this.editorServicesHostProcess.pid + ", exe: " + editorServicesHostExePath);
           this.log.write(
-              "ShaderTools.EditorServices.Host.exe started --",
+              "ShaderTools.LanguageServer.exe started --",
               "    pid: " + this.editorServicesHostProcess.pid,
               "    exe: " + editorServicesHostExePath,
               "    args: " + startArgs.join(" ") + os.EOL + os.EOL);
@@ -250,9 +266,6 @@ export class SessionManager {
                         socket.on(
                             'connect',
                             () => {
-                                // Write out the session configuration file
-                                utils.writeSessionFile(sessionDetails);
-
                                 this.log.write("Language service connected.");
                                 resolve({writer: socket, reader: socket})
                             });
@@ -309,7 +322,7 @@ export class SessionManager {
             this.statusBarItem.show();
             vscode.window.onDidChangeActiveTextEditor(textEditor => {
                 if (textEditor === undefined
-                    || textEditor.document.languageId !== "hlsl") {
+                    || textEditor.document.languageId !== this.language) {
                     this.statusBarItem.hide();
                 }
                 else {

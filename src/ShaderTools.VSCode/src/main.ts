@@ -17,9 +17,6 @@ var requiredEditorServicesVersion = "0.9.0";
 var logger: Logger = undefined;
 var sessionManager: SessionManager = undefined;
 
-// Clean up the session file just in case one lingers from a previous session
-utils.deleteSessionFile();
-
 export function activate(context: vscode.ExtensionContext): void {
 
     vscode.languages.setLanguageConfiguration(
@@ -35,8 +32,8 @@ export function activate(context: vscode.ExtensionContext): void {
             },
 
             comments: {
-                lineComment: '#',
-                blockComment: ['<#', '#>']
+                lineComment: '//',
+                blockComment: ['/*', '*/']
             },
 
             brackets: [

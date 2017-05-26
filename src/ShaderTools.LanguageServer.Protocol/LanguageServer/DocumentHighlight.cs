@@ -7,16 +7,16 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 
 namespace ShaderTools.LanguageServer.Protocol.LanguageServer
 {
-    public enum DocumentHighlightKind 
+    public enum DocumentHighlightKind
     {
         Text = 1,
         Read = 2,
         Write = 3
     }
 
-    public class DocumentHighlight 
+    public class DocumentHighlight
     {
-	    public Range Range { get; set; }
+        public Range Range { get; set; }
 
         public DocumentHighlightKind Kind { get; set; }
     }
@@ -24,8 +24,8 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     public class DocumentHighlightRequest
     {
         public static readonly
-            RequestType<TextDocumentPosition, DocumentHighlight[]> Type =
-            RequestType<TextDocumentPosition, DocumentHighlight[]>.Create("textDocument/documentHighlight");
+            RequestType<TextDocumentPositionParams, DocumentHighlight[], object, TextDocumentRegistrationOptions> Type =
+                RequestType<TextDocumentPositionParams, DocumentHighlight[], object, TextDocumentRegistrationOptions>.Create("textDocument/documentHighlight");
     }
 }
 

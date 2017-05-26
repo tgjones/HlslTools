@@ -29,8 +29,8 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
     public class HoverRequest
     {
         public static readonly
-            RequestType<TextDocumentPosition, Hover> Type =
-            RequestType<TextDocumentPosition, Hover>.Create("textDocument/hover");
+            RequestType<TextDocumentPositionParams, Hover, object, TextDocumentRegistrationOptions> Type =
+                RequestType<TextDocumentPositionParams, Hover, object, TextDocumentRegistrationOptions>.Create("textDocument/hover");
 
     }
 }

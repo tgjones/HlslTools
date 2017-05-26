@@ -7,7 +7,7 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 
 namespace ShaderTools.LanguageServer.Protocol.LanguageServer
 {
-    public enum SymbolKind 
+    public enum SymbolKind
     {
         File = 1,
         Module = 2,
@@ -29,7 +29,7 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
         Array = 18,
     }
 
-    public class SymbolInformation 
+    public class SymbolInformation
     {
         public string Name { get; set; }
 
@@ -37,26 +37,37 @@ namespace ShaderTools.LanguageServer.Protocol.LanguageServer
 
         public Location Location { get; set; }
 
-        public string ContainerName { get; set;}
+        public string ContainerName { get; set; }
     }
 
     public class DocumentSymbolRequest
     {
         public static readonly
-            RequestType<TextDocumentIdentifier, SymbolInformation[]> Type =
-            RequestType<TextDocumentIdentifier, SymbolInformation[]>.Create("textDocument/documentSymbol");
+            RequestType<DocumentSymbolParams, SymbolInformation[], object, TextDocumentRegistrationOptions> Type =
+                RequestType<DocumentSymbolParams, SymbolInformation[], object, TextDocumentRegistrationOptions>.Create("textDocument/documentSymbol");
+    }
+
+    /// <summary>
+    /// Parameters for a DocumentSymbolRequest
+    /// </summary>
+    public class DocumentSymbolParams
+    {
+        /// <summary>
+        /// The text document.
+        /// </summary>
+        public TextDocumentIdentifier TextDocument { get; set; }
     }
 
     public class WorkspaceSymbolRequest
     {
         public static readonly
-            RequestType<WorkspaceSymbolParams, SymbolInformation[]> Type =
-            RequestType<WorkspaceSymbolParams, SymbolInformation[]>.Create("workspace/symbol");
+            RequestType<WorkspaceSymbolParams, SymbolInformation[], object, object> Type =
+                RequestType<WorkspaceSymbolParams, SymbolInformation[], object, object>.Create("workspace/symbol");
     }
 
     public class WorkspaceSymbolParams
     {
-        public string Query { get; set;}
+        public string Query { get; set; }
     }
 }
 

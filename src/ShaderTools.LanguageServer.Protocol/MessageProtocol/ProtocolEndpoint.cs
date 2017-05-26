@@ -59,7 +59,7 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
             this.messageProtocolType = messageProtocolType;
             this.originalSynchronizationContext = SynchronizationContext.Current;
         }
-        
+
         /// <summary>
         /// Starts the language server client and sends the Initialize method.
         /// </summary>
@@ -132,6 +132,15 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 
         #region Message Sending
 
+        public Task<TResult> SendRequest<TResult, TError, TRegistrationOptions>(
+            RequestType0<TResult, TError, TRegistrationOptions> requestType0)
+        {
+            return this.SendRequest(
+                RequestType<Object, TResult, TError, TRegistrationOptions>.ConvertToRequestType(requestType0),
+                null);
+        }
+
+
         /// <summary>
         /// Sends a request to the server
         /// </summary>
@@ -140,15 +149,15 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
         /// <param name="requestType"></param>
         /// <param name="requestParams"></param>
         /// <returns></returns>
-        public Task<TResult> SendRequest<TParams, TResult>(
-            RequestType<TParams, TResult> requestType, 
+        public Task<TResult> SendRequest<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             TParams requestParams)
         {
             return this.SendRequest(requestType, requestParams, true);
         }
 
-        public async Task<TResult> SendRequest<TParams, TResult>(
-            RequestType<TParams, TResult> requestType, 
+        public async Task<TResult> SendRequest<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             TParams requestParams,
             bool waitForResponse)
         {
@@ -173,13 +182,13 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
             {
                 responseTask = new TaskCompletionSource<Message>();
                 this.pendingRequests.Add(
-                    this.currentMessageId.ToString(), 
+                    this.currentMessageId.ToString(),
                     responseTask);
             }
 
-            await this.protocolChannel.MessageWriter.WriteRequest<TParams, TResult>(
-                requestType, 
-                requestParams, 
+            await this.protocolChannel.MessageWriter.WriteRequest<TParams, TResult, TError, TRegistrationOptions>(
+                requestType,
+                requestParams,
                 this.currentMessageId);
 
             if (responseTask != null)
@@ -205,8 +214,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
         /// <param name="eventType">The type of event being sent.</param>
         /// <param name="eventParams">The event parameters being sent.</param>
         /// <returns>A Task that tracks completion of the send operation.</returns>
-        public Task SendEvent<TParams>(
-            EventType<TParams> eventType,
+        public Task SendEvent<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             TParams eventParams)
         {
             // Some requests may still be in the SynchronizationContext queue
@@ -254,8 +263,20 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
 
         #region Message Handling
 
-        public void SetRequestHandler<TParams, TResult>(
-            RequestType<TParams, TResult> requestType,
+        public void SetRequestHandler<TResult, TError, TRegistrationOptions>(
+            RequestType0<TResult, TError, TRegistrationOptions> requestType0,
+            Func<RequestContext<TResult>, Task> requestHandler)
+        {
+            SetRequestHandler(
+                RequestType<Object, TResult, TError, TRegistrationOptions>.ConvertToRequestType(requestType0),
+                (param1, requestContext) =>
+                {
+                    return requestHandler(requestContext);
+                });
+        }
+
+        public void SetRequestHandler<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             Func<TParams, RequestContext<TResult>, Task> requestHandler)
         {
             this.MessageDispatcher.SetRequestHandler(
@@ -263,8 +284,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                 requestHandler);
         }
 
-        public void SetEventHandler<TParams>(
-            EventType<TParams> eventType,
+        public void SetEventHandler<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             Func<TParams, EventContext, Task> eventHandler)
         {
             this.MessageDispatcher.SetEventHandler(
@@ -273,8 +294,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                 false);
         }
 
-        public void SetEventHandler<TParams>(
-            EventType<TParams> eventType,
+        public void SetEventHandler<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             Func<TParams, EventContext, Task> eventHandler,
             bool overrideExisting)
         {

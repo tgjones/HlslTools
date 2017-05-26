@@ -21,8 +21,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
             this.messageWriter = messageWriter;
         }
 
-        public async Task SendEvent<TParams>(
-            EventType<TParams> eventType, 
+        public async Task SendEvent<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             TParams eventParams)
         {
             await this.messageWriter.WriteEvent(

@@ -7,7 +7,7 @@ import os = require('os');
 import path = require('path');
 import vscode = require('vscode');
 import utils = require('./utils');
-import { ILogger } from 'vscode-jsonrpc';
+import jsonrpc = require('vscode-jsonrpc');
 
 export enum LogLevel {
     Verbose,
@@ -49,13 +49,10 @@ export class Logger {
 
     public writeAtLevel(logLevel: LogLevel, message: string, ...additionalMessages: string[]) {
         if (logLevel >= this.MinimumLogLevel) {
-            // TODO: Add timestamp
-            this.logChannel.appendLine(message);
-            fs.appendFile(this.logFilePath, message + os.EOL);
+            this.writeLine(message)
 
             additionalMessages.forEach((line) => {
-                this.logChannel.appendLine(line);
-                fs.appendFile(this.logFilePath, line + os.EOL);
+                this.writeLine(line);
             });
         }
     }
@@ -138,9 +135,17 @@ export class Logger {
                 true);
         }
     }
+
+    private writeLine(message: string) {
+        // TODO: Add timestamp
+        this.logChannel.appendLine(message);
+        if (this.logFilePath) {
+            fs.appendFile(this.logFilePath, message + os.EOL);
+        }
+    }
 }
 
-export class LanguageClientLogger implements ILogger {
+export class LanguageClientLogger implements jsonrpc.Logger {
 
     constructor(private logger: Logger) { }
 

@@ -340,7 +340,6 @@
     <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToVisitor.cs" />
     <Compile Include="Core\Navigation\NavigationExtensions.cs" />
     <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
-    <Compile Include="Hlsl\Options\OptionsService.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
     <Compile Include="source.extension.cs">

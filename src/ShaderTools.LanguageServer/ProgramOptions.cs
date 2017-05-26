@@ -6,10 +6,7 @@ namespace ShaderTools.LanguageServer
     internal sealed class ProgramOptions
     {
         [Option]
-        public HostLanguage Language { get; set; }
-
-        [Option(HelpText = "Port to use for the language server")]
-        public int LanguageServerPort { get; set; }
+        public string Language { get; set; }
 
         [Option(HelpText = "Set whether to wait for the debugger or not")]
         public bool WaitForDebugger { get; set; }
@@ -21,9 +18,9 @@ namespace ShaderTools.LanguageServer
         public LogLevel LogLevel { get; set; }
     }
 
-    internal enum HostLanguage
+    internal static class HostLanguageNames
     {
-        Hlsl,
-        ShaderLab
+        public const string Hlsl = "hlsl";
+        public const string ShaderLab = "shaderlab";
     }
 }

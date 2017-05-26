@@ -9,24 +9,21 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
     /// Defines an event type with a particular method name.
     /// </summary>
     /// <typeparam name="TParams">The parameter type for this event.</typeparam>
-    public class EventType<TParams>
+    public class NotificationType<TParams, TRegistrationOptions> : AbstractMessageType
     {
-        /// <summary>
-        /// Gets the method name for the event type.
-        /// </summary>
-        public string MethodName { get; private set; }
+        private NotificationType(string method) : base(method, 1)
+        {
+
+        }
 
         /// <summary>
         /// Creates an EventType instance with the given parameter type and method name.
         /// </summary>
-        /// <param name="methodName">The method name of the event.</param>
+        /// <param name="method">The method name of the event.</param>
         /// <returns>A new EventType instance for the defined type.</returns>
-        public static EventType<TParams> Create(string methodName)
+        public static NotificationType<TParams, TRegistrationOptions> Create(string method)
         {
-            return new EventType<TParams>()
-            {
-                MethodName = methodName
-            };
+            return new NotificationType<TParams, TRegistrationOptions>(method);
         }
     }
 }

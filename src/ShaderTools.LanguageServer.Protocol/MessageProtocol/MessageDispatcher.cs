@@ -92,8 +92,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
             }
         }
 
-        public void SetRequestHandler<TParams, TResult>(
-            RequestType<TParams, TResult> requestType,
+        public void SetRequestHandler<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             Func<TParams, RequestContext<TResult>, Task> requestHandler)
         {
             this.SetRequestHandler(
@@ -102,19 +102,19 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                 false);
         }
 
-        public void SetRequestHandler<TParams, TResult>(
-            RequestType<TParams, TResult> requestType,
+        public void SetRequestHandler<TParams, TResult, TError, TRegistrationOptions>(
+            RequestType<TParams, TResult, TError, TRegistrationOptions> requestType,
             Func<TParams, RequestContext<TResult>, Task> requestHandler,
             bool overrideExisting)
         {
             if (overrideExisting)
             {
                 // Remove the existing handler so a new one can be set
-                this.requestHandlers.Remove(requestType.MethodName);
+                this.requestHandlers.Remove(requestType.Method);
             }
 
             this.requestHandlers.Add(
-                requestType.MethodName,
+                requestType.Method,
                 (requestMessage, messageWriter) =>
                 {
                     var requestContext =
@@ -133,8 +133,8 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                 });
         }
 
-        public void SetEventHandler<TParams>(
-            EventType<TParams> eventType,
+        public void SetEventHandler<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             Func<TParams, EventContext, Task> eventHandler)
         {
             this.SetEventHandler(
@@ -143,19 +143,19 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
                 false);
         }
 
-        public void SetEventHandler<TParams>(
-            EventType<TParams> eventType,
+        public void SetEventHandler<TParams, TRegistrationOptions>(
+            NotificationType<TParams, TRegistrationOptions> eventType,
             Func<TParams, EventContext, Task> eventHandler,
             bool overrideExisting)
         {
             if (overrideExisting)
             {
                 // Remove the existing handler so a new one can be set
-                this.eventHandlers.Remove(eventType.MethodName);
+                this.eventHandlers.Remove(eventType.Method);
             }
 
             this.eventHandlers.Add(
-                eventType.MethodName,
+                eventType.Method,
                 (eventMessage, messageWriter) =>
                 {
                     var eventContext = new EventContext(messageWriter);
@@ -263,7 +263,7 @@ namespace ShaderTools.LanguageServer.Protocol.MessageProtocol
         }
 
         protected async Task DispatchMessage(
-            Message messageToDispatch, 
+            Message messageToDispatch,
             MessageWriter messageWriter)
         {
             Task handlerToAwait = null;

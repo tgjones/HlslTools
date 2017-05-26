@@ -1,13 +1,11 @@
 ﻿using System.Composition;
-using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
-using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Options;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
+namespace ShaderTools.CodeAnalysis.Hlsl.Options
 {
     [Export(typeof(IHlslOptionsService))]
-    internal sealed class OptionsService : IHlslOptionsService
+    internal sealed class HlslOptionsService : IHlslOptionsService
     {
         public FormattingOptions GetFormattingOptions(OptionSet options)
         {
@@ -64,7 +62,7 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.Options
                     InsertSpaceWithinEmptySquareBrackets = options.GetOption(HlslFormattingOptions.SpaceWithinEmptySquareBrackets)
                 },
 
-                SpacesPerIndent = options.GetOption(CodeAnalysis.Formatting.FormattingOptions.IndentationSize, HlslConstants.LanguageName)
+                SpacesPerIndent = options.GetOption(CodeAnalysis.Formatting.FormattingOptions.IndentationSize, LanguageNames.Hlsl)
             };
         }
 

@@ -1,13 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>exe</OutputType>
     <TargetFramework>netcoreapp1.1</TargetFramework>
-    <StartupObject>ShaderTools.LanguageServer.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" version="2.1.1-beta" />
     <PackageReference Include="System.Diagnostics.FileVersionInfo" Version="4.3.0" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Features\ShaderTools.CodeAnalysis.Hlsl.Features.csproj" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab.Features\ShaderTools.CodeAnalysis.ShaderLab.Features.csproj" />
+    <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab.Workspaces\ShaderTools.CodeAnalysis.ShaderLab.Workspaces.csproj" />
     <ProjectReference Include="..\ShaderTools.LanguageServer.Protocol.Hlsl\ShaderTools.LanguageServer.Protocol.Hlsl.csproj" />
     <ProjectReference Include="..\ShaderTools.LanguageServer.Protocol\ShaderTools.LanguageServer.Protocol.csproj" />
   </ItemGroup>
