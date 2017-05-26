@@ -7,17 +7,14 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 {
     public sealed class LanguageServerWorkspace : Workspace
     {
-        private readonly string _languageName;
-
-        public LanguageServerWorkspace(string languageName)
+        public LanguageServerWorkspace()
             : base(MefHostServices.DefaultHost)
         {
-            _languageName = languageName;
         }
 
-        public Document OpenDocument(DocumentId documentId, SourceText sourceText)
+        public Document OpenDocument(DocumentId documentId, SourceText sourceText, string languageName)
         {
-            var document = CreateDocument(documentId, _languageName, sourceText, sourceText.FilePath);
+            var document = CreateDocument(documentId, languageName, sourceText, sourceText.FilePath);
             OnDocumentOpened(document);
             return document;
         }

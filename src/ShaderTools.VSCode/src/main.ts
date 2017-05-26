@@ -77,7 +77,6 @@ export function activate(context: vscode.ExtensionContext): void {
 
     sessionManager =
         new SessionManager(
-            HlslLanguageId,
             requiredEditorServicesVersion,
             logger);
 

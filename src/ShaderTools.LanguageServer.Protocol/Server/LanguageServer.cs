@@ -21,9 +21,9 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
-    public abstract class LanguageServerBase : ProtocolEndpoint
+    public sealed class LanguageServer : ProtocolEndpoint
     {
-        private readonly static string DiagnosticSourceName = "ShaderToolsEditorServices";
+        private static readonly string DiagnosticSourceName = "ShaderToolsEditorServices";
 
         private readonly LanguageServerWorkspace _workspace;
 
@@ -31,10 +31,10 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         private static CancellationTokenSource existingRequestCancellation;
 
-        public LanguageServerBase(ChannelBase serverChannel, LanguageServerWorkspace workspace)
-            :  base(serverChannel, MessageProtocolType.LanguageServer)
+        public LanguageServer(ChannelBase serverChannel)
+            : base(serverChannel, MessageProtocolType.LanguageServer)
         {
-            _workspace = workspace;
+            _workspace = new LanguageServerWorkspace();
         }
 
         protected override Task OnStart()
@@ -120,7 +120,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         {
             var openedDocument = _workspace.OpenDocument(
                 DocumentId.CreateNewId(ResolveFilePath(openParams.TextDocument.Uri)),
-                SourceText.From(openParams.TextDocument.Text, ResolveFilePath(openParams.TextDocument.Uri)));
+                SourceText.From(openParams.TextDocument.Text, ResolveFilePath(openParams.TextDocument.Uri)),
+                GetLanguageName(openParams.TextDocument.LanguageId));
 
             // TODO: Get all recently edited files in the workspace
             this.RunScriptDiagnostics(new Document[] { openedDocument });
@@ -128,6 +129,21 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             Logger.Write(LogLevel.Verbose, "Finished opening document.");
 
             return Task.FromResult(true);
+        }
+
+        private static string GetLanguageName(string languageId)
+        {
+            switch (languageId)
+            {
+                case "hlsl":
+                    return LanguageNames.Hlsl;
+
+                case "shaderlab":
+                    return LanguageNames.ShaderLab;
+
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(languageId), languageId, "Invalid languageId");
+            }
         }
 
         private async Task HandleDidCloseTextDocumentNotification(

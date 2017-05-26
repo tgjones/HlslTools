@@ -5,9 +5,6 @@ using System.Net.Sockets;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Json;
 using CommandLine;
-using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
-using ShaderTools.LanguageServer.Protocol.Server;
-using ShaderTools.LanguageServer.Protocol.Hlsl.Server;
 
 namespace ShaderTools.LanguageServer
 {
@@ -21,9 +18,7 @@ namespace ShaderTools.LanguageServer
                     EditorServicesHost editorServicesHost;
                     try
                     {
-                        editorServicesHost = new EditorServicesHost(
-                            x => CreateLanguageServer(options.Language, x), 
-                            options.WaitForDebugger);
+                        editorServicesHost = new EditorServicesHost(options.WaitForDebugger);
 
                         var languageServicePort = GetAvailablePort();
                         if (languageServicePort == null)
@@ -62,18 +57,6 @@ namespace ShaderTools.LanguageServer
                     return 0;
                 },
                 errors => 1);
-        }
-
-        private static LanguageServerBase CreateLanguageServer(string language, ChannelBase channel)
-        {
-            switch (language)
-            {
-                case HostLanguageNames.Hlsl:
-                    return new HlslLanguageServer(channel);
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(language));
-            }
         }
 
         private static readonly Random Random = new Random();

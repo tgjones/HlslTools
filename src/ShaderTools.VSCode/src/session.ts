@@ -45,7 +45,6 @@ export class SessionManager {
         vscode.env.sessionId === "someValue.sessionId";
 
     constructor(
-        private language: string,
         private requiredEditorServicesVersion: string,
         private log: Logger) {
 
@@ -63,7 +62,7 @@ export class SessionManager {
     }
 
     public start() {
-        this.sessionSettings = Settings.load(this.language);
+        this.sessionSettings = Settings.load(utils.ShaderToolsSettingsName);
         this.log.startNewLog(this.sessionSettings.developer.editorServicesLogLevel);
 
         this.createStatusBarItem();
@@ -126,7 +125,7 @@ export class SessionManager {
     }
 
     private onConfigurationUpdated() {
-        var settings = Settings.load(this.language);
+        var settings = Settings.load(utils.ShaderToolsSettingsName);
 
         // Detect any setting changes that would affect the session
         if (settings.developer.editorServicesLogLevel.toLowerCase() !== this.sessionSettings.developer.editorServicesLogLevel.toLowerCase()) {
@@ -163,7 +162,6 @@ export class SessionManager {
             var editorServicesHostExePath = path.resolve(__dirname, '../../ShaderTools.LanguageServer/bin/Debug/netcoreapp1.1/ShaderTools.LanguageServer.dll');
 
             startArgs.unshift(editorServicesHostExePath);
-            startArgs.push("--language", this.language);
             startArgs.push("--logfilepath", editorServicesLogPath);
 
             startArgs.push("--waitfordebugger", 'true');
@@ -273,9 +271,9 @@ export class SessionManager {
             };
 
             let clientOptions: LanguageClientOptions = {
-                documentSelector: [this.language],
+                documentSelector: utils.LanguageIds,
                 synchronize: {
-                    configurationSection: this.language,
+                    configurationSection: utils.LanguageIds,
                     //fileEvents: vscode.workspace.createFileSystemWatcher('**/.eslintrc')
                 }
             }
@@ -322,7 +320,7 @@ export class SessionManager {
             this.statusBarItem.show();
             vscode.window.onDidChangeActiveTextEditor(textEditor => {
                 if (textEditor === undefined
-                    || textEditor.document.languageId !== this.language) {
+                    || utils.LanguageIds.indexOf(textEditor.document.languageId) === -1) {
                     this.statusBarItem.hide();
                 }
                 else {

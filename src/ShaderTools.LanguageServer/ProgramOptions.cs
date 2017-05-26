@@ -5,9 +5,6 @@ namespace ShaderTools.LanguageServer
 {
     internal sealed class ProgramOptions
     {
-        [Option]
-        public string Language { get; set; }
-
         [Option(HelpText = "Set whether to wait for the debugger or not")]
         public bool WaitForDebugger { get; set; }
 
@@ -16,11 +13,5 @@ namespace ShaderTools.LanguageServer
 
         [Option]
         public LogLevel LogLevel { get; set; }
-    }
-
-    internal static class HostLanguageNames
-    {
-        public const string Hlsl = "hlsl";
-        public const string ShaderLab = "shaderlab";
     }
 }

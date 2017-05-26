@@ -9,7 +9,6 @@ using System.Threading;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
-using ShaderTools.LanguageServer.Protocol.Server;
 using ShaderTools.LanguageServer.Protocol.Utilities;
 
 namespace ShaderTools.LanguageServer
@@ -27,8 +26,7 @@ namespace ShaderTools.LanguageServer
     /// </summary>
     public sealed class EditorServicesHost
     {
-        private readonly Func<ChannelBase, LanguageServerBase> _createLanguageServer;
-        private LanguageServerBase languageServer;
+        private Protocol.Server.LanguageServer _languageServer;
 
         public EditorServicesHostStatus Status { get; private set; }
 
@@ -39,10 +37,8 @@ namespace ShaderTools.LanguageServer
         /// the debugger to attach if waitForDebugger is true.
         /// </summary>
         /// <param name="waitForDebugger">If true, causes the host to wait for the debugger to attach before proceeding.</param>
-        public EditorServicesHost(Func<ChannelBase, LanguageServerBase> createLanguageServer, bool waitForDebugger)
+        public EditorServicesHost(bool waitForDebugger)
         {
-            _createLanguageServer = createLanguageServer;
-
 #if DEBUG
             int waitsRemaining = 10;
             if (waitForDebugger)
@@ -92,9 +88,9 @@ namespace ShaderTools.LanguageServer
         /// <param name="languageServicePort">The port number for the language service.</param>
         public void StartLanguageService(int languageServicePort)
         {
-            this.languageServer = _createLanguageServer(new TcpSocketServerChannel(languageServicePort));
+            this._languageServer = new Protocol.Server.LanguageServer(new TcpSocketServerChannel(languageServicePort));
 
-            this.languageServer.Start().Wait();
+            this._languageServer.Start().Wait();
 
             Logger.Write(
                 LogLevel.Normal,
@@ -108,8 +104,8 @@ namespace ShaderTools.LanguageServer
         /// </summary>
         public void StopServices()
         {
-            this.languageServer?.Stop().Wait();
-            this.languageServer = null;
+            this._languageServer?.Stop().Wait();
+            this._languageServer = null;
         }
 
         /// <summary>
@@ -120,9 +116,9 @@ namespace ShaderTools.LanguageServer
             // Wait based on which server is started.  If the language server
             // hasn't been started then we may only need to wait on the debug
             // adapter to complete.
-            if (this.languageServer != null)
+            if (this._languageServer != null)
             {
-                this.languageServer.WaitForExit();
+                this._languageServer.WaitForExit();
             }
         }
     }
