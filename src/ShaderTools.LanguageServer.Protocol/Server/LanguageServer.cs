@@ -6,21 +6,21 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.GoToDefinition;
+using ShaderTools.CodeAnalysis.ReferenceHighlighting;
+using ShaderTools.CodeAnalysis.Shared.Extensions;
+using ShaderTools.CodeAnalysis.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.LanguageServer.Protocol.LanguageServer;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
-using ShaderTools.LanguageServer.Protocol.Utilities;
-using System.IO;
-using ShaderTools.CodeAnalysis;
-using ShaderTools.CodeAnalysis.ReferenceHighlighting;
-using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.LanguageServer.Protocol.Services.SignatureHelp;
-using ShaderTools.CodeAnalysis.Shared.Extensions;
-using ShaderTools.CodeAnalysis.GoToDefinition;
+using ShaderTools.LanguageServer.Protocol.Utilities;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
@@ -179,7 +179,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             }
 
             // A text change notification can batch multiple change requests
-            _workspace.UpdateDocument(fileToChange,
+            var updatedDocument = _workspace.UpdateDocument(fileToChange,
                 textChangeParams.ContentChanges.Select(x =>
                     GetFileChangeDetails(
                     fileToChange,
@@ -187,7 +187,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                     x.Text)));
 
             // TODO: Get all recently edited files in the workspace
-            this.RunScriptDiagnostics(new[] { fileToChange } );
+            this.RunScriptDiagnostics(new[] { updatedDocument } );
 
             return Task.FromResult(true);
         }
@@ -326,17 +326,17 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             // send empty diagnostic markers to clear any markers associated with the given file
             await PublishScriptDiagnostics(
                     scriptFile,
-                    new CodeAnalysis.Diagnostics.Diagnostic[0],
+                    ImmutableArray<CodeAnalysis.Diagnostics.MappedDiagnostic>.Empty,
                     eventContext);
         }
 
         private static async Task PublishScriptDiagnostics(
             Document scriptFile,
-            CodeAnalysis.Diagnostics.Diagnostic[] markers,
+            ImmutableArray<CodeAnalysis.Diagnostics.MappedDiagnostic> markers,
             EventContext eventContext)
         {
             await PublishScriptDiagnostics(
-                scriptFile, () => throw new NotSupportedException(),
+                scriptFile,
                 markers,
                 eventContext.SendEvent);
         }
@@ -428,31 +428,30 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             {
                 Logger.Write(LogLevel.Verbose, "Analyzing script file: " + scriptFile.FilePath);
 
-                var syntaxTree = await scriptFile.GetSyntaxTreeAsync(CancellationToken.None);
+                var diagnosticService = scriptFile.Workspace.Services.GetService<CodeAnalysis.Diagnostics.IDiagnosticService>();
 
-                var syntaxDiagnostics = syntaxTree.GetDiagnostics();
-                var semanticDiagnostics = (await scriptFile.GetSemanticModelAsync(CancellationToken.None)).GetDiagnostics();
+                var diagnostics = await diagnosticService.GetDiagnosticsAsync(scriptFile.Id, CancellationToken.None);
 
                 Logger.Write(LogLevel.Verbose, "Analysis complete.");
 
                 await PublishScriptDiagnostics(
-                    scriptFile, () => syntaxTree,
-                    syntaxDiagnostics.Concat(semanticDiagnostics).ToArray(),
+                    scriptFile,
+                    diagnostics,
                     eventSender);
             }
         }
 
         private static async Task PublishScriptDiagnostics(
-            Document scriptFile, Func<SyntaxTreeBase> syntaxTree,
-            CodeAnalysis.Diagnostics.Diagnostic[] markers,
+            Document scriptFile,
+            ImmutableArray<CodeAnalysis.Diagnostics.MappedDiagnostic> markers,
             Func<NotificationType<PublishDiagnosticsNotification, object>, PublishDiagnosticsNotification, Task> eventSender)
         {
-            List<Diagnostic> diagnostics = new List<Diagnostic>();
+            var diagnostics = new List<Diagnostic>();
 
             foreach (var marker in markers)
             {
                 // Does the marker contain a correction?
-                Diagnostic markerDiagnostic = GetDiagnosticFromMarker(syntaxTree(), marker);
+                var markerDiagnostic = GetDiagnosticFromMarker(marker);
 
                 diagnostics.Add(markerDiagnostic);
             }
@@ -463,35 +462,24 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                 PublishDiagnosticsNotification.Type,
                 new PublishDiagnosticsNotification
                 {
-                    Uri = scriptFile.FilePath,
+                    Uri = GetFileUri(scriptFile.FilePath),
                     Diagnostics = diagnostics.ToArray()
                 });
         }
 
-        private static Diagnostic GetDiagnosticFromMarker(SyntaxTreeBase syntaxTree, CodeAnalysis.Diagnostics.Diagnostic diagnostic)
+        private static Diagnostic GetDiagnosticFromMarker(CodeAnalysis.Diagnostics.MappedDiagnostic diagnostic)
         {
-            var sourceFileSpan = syntaxTree.GetSourceFileSpan(diagnostic.SourceRange);
-            var linePositionSpan = syntaxTree.Text.Lines.GetLinePositionSpan(sourceFileSpan.Span);
+            var sourceFileSpan = diagnostic.FileSpan;
+
+            var linePositionSpan = ConvertTextSpanToRange(sourceFileSpan.File.Text, sourceFileSpan.Span);
 
             return new Diagnostic
             {
-                Severity = MapDiagnosticSeverity(diagnostic.Severity),
-                Message = diagnostic.Message,
-                Code = diagnostic.Descriptor.Id,
+                Severity = MapDiagnosticSeverity(diagnostic.Diagnostic.Severity),
+                Message = diagnostic.Diagnostic.Message,
+                Code = diagnostic.Diagnostic.Descriptor.Id,
                 Source = DiagnosticSourceName,
-                Range = new Range
-                {
-                    Start = new Position
-                    {
-                        Line = linePositionSpan.Start.Line,
-                        Character = linePositionSpan.Start.Character
-                    },
-                    End = new Position
-                    {
-                        Line = linePositionSpan.End.Line,
-                        Character = linePositionSpan.End.Character
-                    }
-                }
+                Range = linePositionSpan
             };
         }
 

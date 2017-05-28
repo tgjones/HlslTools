@@ -32,8 +32,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         public Document UpdateDocument(Document document, IEnumerable<TextChange> changes)
         {
             var newText = document.SourceText.WithChanges(changes);
-            throw new System.NotImplementedException();
-            //return OnDocumentTextChanged(document.Id, newText);
+            OnDocumentTextChanged(document.Id, newText);
+            return CurrentDocuments.GetDocument(document.Id);
         }
 
         public void CloseDocument(DocumentId documentId)
