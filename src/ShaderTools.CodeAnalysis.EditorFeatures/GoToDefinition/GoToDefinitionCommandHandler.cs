@@ -27,10 +27,10 @@ namespace ShaderTools.CodeAnalysis.Editor.GoToDefinition
             _waitIndicator = waitIndicator;
         }
 
-        private (Document, IGoToDefinitionService) GetDocumentAndService(ITextSnapshot snapshot)
+        private (Document, IEditorGoToDefinitionService) GetDocumentAndService(ITextSnapshot snapshot)
         {
             var document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
-            return (document, document?.GetLanguageService<IGoToDefinitionService>());
+            return (document, document?.Workspace.Services.GetService<IEditorGoToDefinitionService>());
         }
 
         public CommandState GetCommandState(GoToDefinitionCommandArgs args, Func<CommandState> nextHandler)
@@ -62,9 +62,9 @@ namespace ShaderTools.CodeAnalysis.Editor.GoToDefinition
             => TryExecuteCommand(snapshot.GetOpenDocumentInCurrentContextWithChanges(), caretPosition);
 
         internal bool TryExecuteCommand(Document document, int caretPosition)
-            => TryExecuteCommand(document, caretPosition, document.GetLanguageService<IGoToDefinitionService>());
+            => TryExecuteCommand(document, caretPosition, document.Workspace.Services.GetService<IEditorGoToDefinitionService>());
 
-        internal bool TryExecuteCommand(Document document, int caretPosition, IGoToDefinitionService goToDefinitionService)
+        internal bool TryExecuteCommand(Document document, int caretPosition, IEditorGoToDefinitionService goToDefinitionService)
         {
             string errorMessage = null;
 

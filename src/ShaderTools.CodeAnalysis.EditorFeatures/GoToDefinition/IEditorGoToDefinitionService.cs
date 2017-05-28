@@ -5,7 +5,7 @@ using ShaderTools.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Editor
 {
-    internal interface IGoToDefinitionService : ILanguageService
+    internal interface IEditorGoToDefinitionService : IWorkspaceService
     {
         ///// <summary>
         ///// Finds the definitions for the symbol at the specific position in the document.
