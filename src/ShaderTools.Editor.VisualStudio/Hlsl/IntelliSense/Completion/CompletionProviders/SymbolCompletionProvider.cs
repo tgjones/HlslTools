@@ -53,7 +53,8 @@ namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.Completio
         {
             var symbols = semanticModel.LookupSymbols(position)
                 .Where(x => !(x is SemanticSymbol))
-                .Where(x => !(x is AttributeSymbol));
+                .Where(x => !(x is AttributeSymbol))
+                .Where(x => x.Locations.Length == 0 || x.Locations.Where(l => l.End < position).Any());
 
             if (!((SyntaxTree) semanticModel.SyntaxTree).PossiblyInTypeName(position))
                 symbols = symbols.Where(x => !(x is TypeSymbol));
