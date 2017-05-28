@@ -18,6 +18,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
         {
             SourceText text;
 
+            includeFilename = includeFilename
+                .Replace('/', Path.DirectorySeparatorChar)
+                .Replace('\\', Path.DirectorySeparatorChar);
+
             // Check for invalid path chars.
             if (includeFilename.Any(x => Path.GetInvalidPathChars().Contains(x)))
                 return null;
