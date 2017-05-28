@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +6,6 @@ using ShaderTools.CodeAnalysis.FindSymbols;
 using ShaderTools.CodeAnalysis.FindUsages;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.Utilities.Collections;
-using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.CodeAnalysis.GoToDefinition
 {
@@ -23,7 +20,7 @@ namespace ShaderTools.CodeAnalysis.GoToDefinition
             }
 
             // First try to compute the referenced symbol and attempt to go to definition for the symbol.
-            var symbol = FindSymbolAsync(document, position, cancellationToken).WaitAndGetResult(cancellationToken);
+            var symbol = await FindSymbolAsync(document, position, cancellationToken);
             if (symbol == null)
             {
                 return ImmutableArray<DefinitionItem>.Empty;
@@ -42,12 +39,7 @@ namespace ShaderTools.CodeAnalysis.GoToDefinition
             var workspace = document.Workspace;
             var options = workspace.Options;
 
-            var definitions = ImmutableArray.Create(symbol.ToDefinitionItem(workspace));
-
-            // Ignore any definitions that we can't navigate to.
-            definitions = definitions.WhereAsArray(d => d.CanNavigateTo());
-
-            return definitions;
+            return ImmutableArray.Create(symbol.ToDefinitionItem(workspace));
         }
 
         protected virtual Task<ImmutableArray<DefinitionItem>> GetSyntacticDefinitionsAsync(Document document, int position, CancellationToken cancellationToken)

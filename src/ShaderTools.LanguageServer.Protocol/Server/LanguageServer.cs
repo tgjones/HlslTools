@@ -19,6 +19,8 @@ using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.LanguageServer.Protocol.Services.SignatureHelp;
+using ShaderTools.CodeAnalysis.Shared.Extensions;
+using ShaderTools.CodeAnalysis.GoToDefinition;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
@@ -69,6 +71,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
             this.SetRequestHandler(DocumentHighlightRequest.Type, this.HandleDocumentHighlightRequest);
             this.SetRequestHandler(SignatureHelpRequest.Type, this.HandleSignatureHelpRequest);
+            this.SetRequestHandler(DefinitionRequest.Type, this.HandleDefinitionRequest);
         }
 
         /// <summary>
@@ -96,7 +99,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                     Capabilities = new ServerCapabilities
                     {
                         TextDocumentSync = TextDocumentSyncKind.Incremental,
-                        //DefinitionProvider = true,
+                        DefinitionProvider = true,
                         //ReferencesProvider = true,
                         DocumentHighlightProvider = true,
                         //DocumentSymbolProvider = true,
@@ -189,7 +192,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             return Task.FromResult(true);
         }
 
-        protected async Task HandleDocumentHighlightRequest(
+        private async Task HandleDocumentHighlightRequest(
             TextDocumentPositionParams textDocumentPositionParams,
             RequestContext<DocumentHighlight[]> requestContext)
         {
@@ -241,7 +244,41 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             await requestContext.SendResult(result);
         }
 
-        
+        private async Task HandleDefinitionRequest(
+            TextDocumentPositionParams textDocumentPositionParams,
+            RequestContext<Location[]> requestContext)
+        {
+            var document = GetDocument(textDocumentPositionParams.TextDocument);
+            var position = ConvertPosition(document, textDocumentPositionParams.Position);
+
+            var goToDefinitionService = document.GetLanguageService<IGoToDefinitionService>();
+            var definitions = await goToDefinitionService.FindDefinitionsAsync(document, position, CancellationToken.None);
+
+            // TODO: Handle spans within embedded HLSL blocks; the TextSpan is currently relative to the start of the embedded block.
+
+            var locations = definitions
+                .Select(x =>
+                {
+                    var sourceSpan = x.SourceSpans[0].SourceSpan;
+                    return new Location
+                    {
+                        Uri = GetFileUri(sourceSpan.File.FilePath),
+                        Range = ConvertTextSpanToRange(sourceSpan.File.Text, sourceSpan.Span)
+                    };
+                })
+                .ToArray();
+
+            await requestContext.SendResult(locations);
+        }
+
+        private static string GetFileUri(string filePath)
+        {
+            // If the file isn't untitled, return a URI-style path
+            return
+                !filePath.StartsWith("untitled")
+                    ? new Uri("file://" + filePath).AbsoluteUri
+                    : filePath;
+        }
 
         private static Range ConvertTextSpanToRange(SourceText sourceText, TextSpan textSpan)
         {
