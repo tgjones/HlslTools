@@ -27,7 +27,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             BaseInterfaces = baseInterfaces;
             Binder = binder;
 
-            Locations = ImmutableArray.Create(syntax.Name.SourceRange);
+            Locations = syntax.Name != null
+                ? ImmutableArray.Create(syntax.Name.SourceRange)
+                : ImmutableArray<SourceRange>.Empty;
         }
 
         public override IEnumerable<T> LookupMembers<T>(string name)
