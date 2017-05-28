@@ -141,7 +141,7 @@ You can customise this, and add additional preprocessor definitions, by creating
   "hlsl.additionalIncludeDirectories": [
     "C:\\Code\\MyDirectoryA",
     "C:\\Code\\MyDirectoryB",
-    ".", // Directory containing this config file
+    ".",
     "..\\RelativeDirectory"
   ]
 }
