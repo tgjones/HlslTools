@@ -15,9 +15,9 @@ namespace ShaderTools.CodeAnalysis
     internal struct DocumentSpan : IEquatable<DocumentSpan>
     {
         public Document Document { get; }
-        public TextSpan SourceSpan { get; }
+        public SourceFileSpan SourceSpan { get; }
 
-        public DocumentSpan(Document document, TextSpan sourceSpan)
+        public DocumentSpan(Document document, SourceFileSpan sourceSpan)
         {
             Document = document;
             SourceSpan = sourceSpan;

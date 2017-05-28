@@ -3,6 +3,7 @@ using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
@@ -24,6 +25,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             Parent = parent;
         }
 
+        public abstract SyntaxTreeBase SourceTree { get; }
         public abstract ImmutableArray<SourceRange> Locations { get; }
 
         public sealed override string ToString()

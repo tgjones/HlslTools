@@ -1,6 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
@@ -10,6 +12,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public TypeSymbol ValueType { get; }
         public int? Dimension { get; }
 
+        public override SyntaxTreeBase SourceTree => ValueType.SourceTree;
         public override ImmutableArray<SourceRange> Locations => ValueType.Locations;
 
         internal ArraySymbol(TypeSymbol valueType, int? dimension)

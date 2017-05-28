@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Symbols
@@ -10,6 +11,8 @@ namespace ShaderTools.CodeAnalysis.Symbols
         string Name { get; }
         string Documentation { get; }
         ISymbol Parent { get; }
+
+        SyntaxTreeBase SourceTree { get; }
 
         /// <summary>
         /// If this symbol is defined in source code, gets the location.

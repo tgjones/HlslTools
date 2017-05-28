@@ -21,6 +21,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
 
         public override SyntaxTreeBase SyntaxTree => Compilation.SyntaxTree;
 
+        public override string Language => SyntaxTree.Root.Language;
+
         internal SemanticModel(Compilation compilation, BindingResult bindingResult)
         {
             Compilation = compilation;

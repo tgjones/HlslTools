@@ -10,6 +10,8 @@ namespace ShaderTools.CodeAnalysis.Compilation
     {
         public abstract SyntaxTreeBase SyntaxTree { get; }
 
+        public abstract string Language { get; }
+
         public abstract IEnumerable<Diagnostic> GetDiagnostics();
 
         public abstract ISymbol GetDeclaredSymbol(SyntaxNodeBase node);

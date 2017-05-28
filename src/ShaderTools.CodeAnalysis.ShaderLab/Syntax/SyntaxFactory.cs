@@ -25,7 +25,12 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             var parser = new UnityParser(lexer);
 
             var result = new SyntaxTree(sourceText,
-                syntaxTree => parseFunc(parser));
+                syntaxTree =>
+                {
+                    var node = parseFunc(parser);
+                    node.SetSyntaxTree(syntaxTree);
+                    return node;
+                });
 
             Debug.WriteLine(DateTime.Now + " - Finished parsing");
 

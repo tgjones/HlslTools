@@ -304,7 +304,6 @@
   <ItemGroup>
     <Compile Include="Core\Navigation\CodeWindowManagerBase.cs" />
     <Compile Include="Core\LanguageInfoBase.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IGoToDefinitionProvider.cs" />
     <Compile Include="SetupPackage.cs" />
     <Compile Include="Hlsl\HlslPackage.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
@@ -324,15 +323,6 @@
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\ICompletionProvider.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandler.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionCommandTarget.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\FieldAccessGoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\FunctionInvocationGoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\GoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\IdentifierGoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\GoToDefinitionProviderService.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\MacroReferenceGoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\MethodInvocationGoToDefinitionProvider.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionProviders\SymbolReferenceGoToDefinitionProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionTextViewCreationListener.cs" />
     <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemDisplay.cs" />
     <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemProvider.cs" />

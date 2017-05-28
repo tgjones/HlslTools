@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using ShaderTools.CodeAnalysis.Properties;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Diagnostics;
 
@@ -49,6 +50,33 @@ namespace ShaderTools.CodeAnalysis
             return _idToDocumentMap.Values
                 .Where(x => string.Equals(x.FilePath, filePath, StringComparison.OrdinalIgnoreCase))
                 .ToImmutableArray();
+        }
+
+        /// <summary>
+        /// Gets the document in this solution with the specified syntax tree.
+        /// </summary>
+        public Document GetDocument(SyntaxTreeBase syntaxTree)
+        {
+            if (syntaxTree != null)
+            {
+                // is this tree known to be associated with a document?
+                var docId = Document.GetDocumentIdForTree(syntaxTree);
+                if (docId != null)
+                {
+                    // does this solution even have the document?
+                    var document = this.GetDocument(docId);
+                    if (document != null)
+                    {
+                        // does this document really have the syntax tree?
+                        if (document.TryGetSyntaxTree(out var documentTree) && documentTree == syntaxTree)
+                        {
+                            return document;
+                        }
+                    }
+                }
+            }
+
+            return null;
         }
 
         /// <summary>

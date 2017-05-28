@@ -11,31 +11,11 @@ namespace ShaderTools.CodeAnalysis.Navigation
         /// <summary>
         /// Determines whether it is possible to navigate to the given position in the specified document.
         /// </summary>
-        bool CanNavigateToSpan(Workspace workspace, DocumentId documentId, TextSpan textSpan);
-
-        /// <summary>
-        /// Determines whether it is possible to navigate to the given line/offset in the specified document.
-        /// </summary>
-        bool CanNavigateToLineAndOffset(Workspace workspace, DocumentId documentId, int lineNumber, int offset);
-
-        /// <summary>
-        /// Determines whether it is possible to navigate to the given virtual position in the specified document.
-        /// </summary>
-        bool CanNavigateToPosition(Workspace workspace, DocumentId documentId, int position, int virtualSpace = 0);
-
+        bool CanNavigateToSpan(Workspace workspace, DocumentId documentId, SourceFileSpan textSpan);
+        
         /// <summary>
         /// Navigates to the given position in the specified document, opening it if necessary.
         /// </summary>
-        bool TryNavigateToSpan(Workspace workspace, DocumentId documentId, TextSpan textSpan, OptionSet options = null);
-
-        /// <summary>
-        /// Navigates to the given line/offset in the specified document, opening it if necessary.
-        /// </summary>
-        bool TryNavigateToLineAndOffset(Workspace workspace, DocumentId documentId, int lineNumber, int offset, OptionSet options = null);
-
-        /// <summary>
-        /// Navigates to the given virtual position in the specified document, opening it if necessary.
-        /// </summary>
-        bool TryNavigateToPosition(Workspace workspace, DocumentId documentId, int position, int virtualSpace = 0, OptionSet options = null);
+        bool TryNavigateToSpan(Workspace workspace, DocumentId documentId, SourceFileSpan textSpan, OptionSet options = null);
     }
 }

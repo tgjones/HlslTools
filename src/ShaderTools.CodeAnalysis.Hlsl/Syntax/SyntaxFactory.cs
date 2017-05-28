@@ -38,9 +38,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             var parser = new HlslParser(lexer);
 
             var result = new SyntaxTree(sourceFile,
-                syntaxTree => new Tuple<SyntaxNode, List<FileSegment>>(
-                    parseFunc(parser),
-                    lexer.FileSegments));
+                syntaxTree =>
+                {
+                    var node = parseFunc(parser);
+                    node.SetSyntaxTree(syntaxTree);
+
+                    return new Tuple<SyntaxNode, List<FileSegment>>(
+                        node,
+                        lexer.FileSegments);
+                });
 
             Debug.WriteLine(DateTime.Now +  " - Finished parsing");
 

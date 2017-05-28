@@ -26,6 +26,10 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             {
                 return QueryVisualStudio2000Status(ref pguidCmdGroup, commandCount, prgCmds, commandText);
             }
+            else if (pguidCmdGroup == VSConstants.GUID_VSStandardCommandSet97)
+            {
+                return QueryVisualStudio97Status(ref pguidCmdGroup, commandCount, prgCmds, commandText);
+            }
             else if (pguidCmdGroup == VSConstants.GUID_AppCommand)
             {
                 return QueryAppCommandStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
@@ -44,6 +48,18 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 case VSConstants.AppCommandCmdID.BrowserForward:
                     prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
                     return VSConstants.S_OK;
+
+                default:
+                    return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
+            }
+        }
+
+        private int QueryVisualStudio97Status(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
+        {
+            switch ((VSConstants.VSStd97CmdID) prgCmds[0].cmdID)
+            {
+                case VSConstants.VSStd97CmdID.GotoDefn:
+                    return QueryGoToDefinitionStatus(prgCmds);
 
                 default:
                     return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
@@ -160,6 +176,12 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         }
 
         private int QueryFormatSelectionStatus(OLECMD[] prgCmds)
+        {
+            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
+            return VSConstants.S_OK;
+        }
+
+        private int QueryGoToDefinitionStatus(OLECMD[] prgCmds)
         {
             prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
             return VSConstants.S_OK;

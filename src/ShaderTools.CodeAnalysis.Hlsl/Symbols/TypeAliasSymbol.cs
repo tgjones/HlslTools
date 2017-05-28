@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
@@ -13,6 +15,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         {
             ValueType = valueType;
             Locations = ImmutableArray.Create(syntax.Identifier.SourceRange);
+            SourceTree = syntax.SyntaxTree;
         }
 
         public TypeSymbol ValueType { get; }
@@ -20,6 +23,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         ITypeSymbol IAliasSymbol.Target => ValueType;
 
         public override ImmutableArray<SourceRange> Locations { get; }
+
+        public override SyntaxTreeBase SourceTree { get; }
 
         public override IEnumerable<T> LookupMembers<T>(string name)
         {

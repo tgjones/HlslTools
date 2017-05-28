@@ -72,6 +72,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Host
                 return nonExternalItems[0].TryNavigateTo();
             }
 
+            // TODO: For now, always navigate to the first location, because the nice new IFindAllReferencesService API
+            // was only added in VS2017.
+            return nonExternalItems[0].TryNavigateTo();
+
             if (presenter != null)
             {
                 // We have multiple definitions, or we have definitions with multiple locations.

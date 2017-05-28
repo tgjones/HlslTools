@@ -1,20 +1,101 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.Diagnostics;
 using System.Linq;
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.Utilities.PooledObjects;
 
 namespace ShaderTools.CodeAnalysis.Syntax
 {
     public abstract class SyntaxNodeBase
     {
+        private SyntaxTreeBase _syntaxTree;
+
         public ushort RawKind { get; }
 
         public SourceRange SourceRange { get; protected set; }
         public SourceRange FullSourceRange { get; protected set; }
 
         public string DocumentationSummary;
+
+        /// <summary>
+        /// Returns SyntaxTree that owns the node or null if node does not belong to a
+        /// SyntaxTree
+        /// </summary>
+        public SyntaxTreeBase SyntaxTree
+        {
+            get
+            {
+                var result = this._syntaxTree ?? ComputeSyntaxTree(this);
+                Debug.Assert(result != null);
+                return result;
+            }
+        }
+
+        internal void SetSyntaxTree(SyntaxTreeBase syntaxTree)
+        {
+            _syntaxTree = syntaxTree;
+        }
+
+        private static SyntaxTreeBase ComputeSyntaxTree(SyntaxNodeBase node)
+        {
+            ArrayBuilder<SyntaxNodeBase> nodes = null;
+            SyntaxTreeBase tree = null;
+
+            // Find the nearest parent with a non-null syntax tree
+            while (true)
+            {
+                tree = node._syntaxTree;
+                if (tree != null)
+                {
+                    break;
+                }
+
+                var parent = node.Parent;
+                if (parent == null)
+                {
+                    // root node: unexpected, root node should have a tree.
+                    //Interlocked.CompareExchange(ref node._syntaxTree, CSharpSyntaxTree.CreateWithoutClone(node), null);
+                    //tree = node._syntaxTree;
+                    break;
+                }
+
+                tree = parent._syntaxTree;
+                if (tree != null)
+                {
+                    node._syntaxTree = tree;
+                    break;
+                }
+
+                (nodes ?? (nodes = ArrayBuilder<SyntaxNodeBase>.GetInstance())).Add(node);
+                node = parent;
+            }
+
+            // Propagate the syntax tree downwards if necessary
+            if (nodes != null)
+            {
+                Debug.Assert(tree != null);
+
+                foreach (var n in nodes)
+                {
+                    var existingTree = n._syntaxTree;
+                    if (existingTree != null)
+                    {
+                        Debug.Assert(existingTree == tree, "how could this node belong to a different tree?");
+
+                        // yield the race
+                        break;
+                    }
+                    n._syntaxTree = tree;
+                }
+
+                nodes.Free();
+            }
+
+            return tree;
+        }
 
         public SyntaxNodeBase Parent { get; internal set; }
 

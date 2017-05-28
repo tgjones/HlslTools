@@ -36,26 +36,5 @@ namespace ShaderTools.Editor.VisualStudio.Core.Util.Extensions
 
             return view;
         }
-
-        public static IWpfTextView GetWpfTextView(this IVsWindowFrame vsWindowFrame)
-        {
-            IWpfTextView wpfTextView = null;
-            var textView = VsShellUtilities.GetTextView(vsWindowFrame);
-            if (textView != null)
-            {
-                var riidKey = DefGuidList.guidIWpfTextViewHost;
-                object pvtData;
-                if (((IVsUserData)textView).GetData(ref riidKey, out pvtData) == 0 && pvtData != null)
-                    wpfTextView = ((IWpfTextViewHost)pvtData).TextView;
-            }
-            return wpfTextView;
-        }
-
-        public static ITextDocument GetTextDocument(this ITextBuffer textBuffer)
-        {
-            ITextDocument textDoc;
-            var rc = textBuffer.Properties.TryGetProperty(typeof(ITextDocument), out textDoc);
-            return (rc) ? textDoc : null;
-        }
     }
 }

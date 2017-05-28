@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.Composition;
 using System.Diagnostics;
 using System.Threading;
 using Microsoft.VisualStudio;
@@ -11,6 +12,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
+using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Navigation;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
@@ -22,11 +24,13 @@ using VsTextSpan = Microsoft.VisualStudio.TextManager.Interop.TextSpan;
 
 namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 {
+    [ExportWorkspaceService(typeof(IDocumentNavigationService))]
     internal sealed class VisualStudioDocumentNavigationService : ForegroundThreadAffinitizedObject, IDocumentNavigationService
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
 
+        [ImportingConstructor]
         public VisualStudioDocumentNavigationService(
             SVsServiceProvider serviceProvider,
             IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
@@ -35,15 +39,21 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             _editorAdaptersFactoryService = editorAdaptersFactoryService;
         }
 
-        public bool CanNavigateToSpan(Workspace workspace, DocumentId documentId, TextSpan textSpan)
+        public bool CanNavigateToSpan(Workspace workspace, DocumentId documentId, SourceFileSpan sourceFileSpan)
         {
             if (!IsSecondaryBuffer(workspace, documentId))
             {
                 return true;
             }
 
+            if (!sourceFileSpan.IsInRootFile)
+            {
+                return true;
+            }
+
             var document = workspace.CurrentDocuments.GetDocument(documentId);
             var text = document.SourceText;
+            var textSpan = sourceFileSpan.Span;
 
             var boundedTextSpan = GetSpanWithinDocumentBounds(textSpan, text.Length);
             if (boundedTextSpan != textSpan)
@@ -64,50 +74,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             return CanMapFromSecondaryBufferToPrimaryBuffer(workspace, documentId, vsTextSpan);
         }
 
-        public bool CanNavigateToLineAndOffset(Workspace workspace, DocumentId documentId, int lineNumber, int offset)
-        {
-            if (!IsSecondaryBuffer(workspace, documentId))
-            {
-                return true;
-            }
-
-            var document = workspace.CurrentDocuments.GetDocument(documentId);
-            var text = document.SourceText;
-            var vsTextSpan = text.GetVsTextSpanForLineOffset(lineNumber, offset);
-
-            return CanMapFromSecondaryBufferToPrimaryBuffer(workspace, documentId, vsTextSpan);
-        }
-
-        public bool CanNavigateToPosition(Workspace workspace, DocumentId documentId, int position, int virtualSpace = 0)
-        {
-            if (!IsSecondaryBuffer(workspace, documentId))
-            {
-                return true;
-            }
-
-            var document = workspace.CurrentDocuments.GetDocument(documentId);
-            var text = document.SourceText;
-
-            var boundedPosition = GetPositionWithinDocumentBounds(position, text.Length);
-            if (boundedPosition != position)
-            {
-                try
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                catch (ArgumentOutOfRangeException e) when (FatalError.ReportWithoutCrash(e))
-                {
-                }
-
-                return false;
-            }
-
-            var vsTextSpan = text.GetVsTextSpanForPosition(position, virtualSpace);
-
-            return CanMapFromSecondaryBufferToPrimaryBuffer(workspace, documentId, vsTextSpan);
-        }
-
-        public bool TryNavigateToSpan(Workspace workspace, DocumentId documentId, TextSpan textSpan, OptionSet options)
+        public bool TryNavigateToSpan(Workspace workspace, DocumentId documentId, SourceFileSpan sourceFileSpan, OptionSet options)
         {
             if (!IsForeground())
             {
@@ -120,8 +87,46 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 return false;
             }
 
-            var text = document.SourceText;
-            var textBuffer = text.Container.GetTextBuffer();
+            var text = sourceFileSpan.File.Text;
+
+            ITextBuffer textBuffer;
+            if (document.SourceText != text)
+            {
+                uint itemID;
+                IVsUIHierarchy hierarchy;
+                IVsWindowFrame docFrame;
+                IVsTextView textView;
+
+                try
+                {
+                    VsShellUtilities.OpenDocument(
+                        _serviceProvider, text.FilePath, VSConstants.LOGVIEWID_Code,
+                        out hierarchy, out itemID, out docFrame, out textView);
+                }
+                catch
+                {
+                    // File might not exist, etc.
+                    return false;
+                }
+
+                if (ErrorHandler.Failed(docFrame.Show()))
+                {
+                    return false;
+                }
+
+                if (ErrorHandler.Failed(textView.GetBuffer(out var vsTextBuffer)))
+                {
+                    return false;
+                }
+
+                textBuffer = _editorAdaptersFactoryService.GetDocumentBuffer(vsTextBuffer);
+            }
+            else
+            {
+                textBuffer = text.Container.GetTextBuffer();
+            }
+
+            var textSpan = sourceFileSpan.Span;
 
             var boundedTextSpan = GetSpanWithinDocumentBounds(textSpan, text.Length);
             if (boundedTextSpan != textSpan)
@@ -136,72 +141,6 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             }
 
             var vsTextSpan = text.GetVsTextSpanForSpan(boundedTextSpan);
-
-            if (IsSecondaryBuffer(workspace, documentId) &&
-                !vsTextSpan.TryMapSpanFromSecondaryBufferToPrimaryBuffer(workspace, documentId, out vsTextSpan))
-            {
-                return false;
-            }
-
-            return NavigateTo(textBuffer, vsTextSpan);
-        }
-
-        public bool TryNavigateToLineAndOffset(Workspace workspace, DocumentId documentId, int lineNumber, int offset, OptionSet options)
-        {
-            if (!IsForeground())
-            {
-                throw new InvalidOperationException(LanguageServicesResources.Navigation_must_be_performed_on_the_foreground_thread);
-            }
-
-            var document = OpenDocument(workspace, documentId, options);
-            if (document == null)
-            {
-                return false;
-            }
-
-            var text = document.SourceText;
-            var textBuffer = text.Container.GetTextBuffer();
-
-            var vsTextSpan = text.GetVsTextSpanForLineOffset(lineNumber, offset);
-
-            if (IsSecondaryBuffer(workspace, documentId) &&
-                !vsTextSpan.TryMapSpanFromSecondaryBufferToPrimaryBuffer(workspace, documentId, out vsTextSpan))
-            {
-                return false;
-            }
-
-            return NavigateTo(textBuffer, vsTextSpan);
-        }
-
-        public bool TryNavigateToPosition(Workspace workspace, DocumentId documentId, int position, int virtualSpace, OptionSet options)
-        {
-            if (!IsForeground())
-            {
-                throw new InvalidOperationException(LanguageServicesResources.Navigation_must_be_performed_on_the_foreground_thread);
-            }
-
-            var document = OpenDocument(workspace, documentId, options);
-            if (document == null)
-            {
-                return false;
-            }
-
-            var text = document.SourceText;
-            var textBuffer = text.Container.GetTextBuffer();
-
-            var boundedPosition = GetPositionWithinDocumentBounds(position, text.Length);
-            if (boundedPosition != position)
-            {
-                try
-                {
-                    throw new ArgumentOutOfRangeException();
-                }
-                catch (ArgumentOutOfRangeException e) when (FatalError.ReportWithoutCrash(e))
-                {
-                }
-            }
-
-            var vsTextSpan = text.GetVsTextSpanForPosition(boundedPosition, virtualSpace);
 
             if (IsSecondaryBuffer(workspace, documentId) &&
                 !vsTextSpan.TryMapSpanFromSecondaryBufferToPrimaryBuffer(workspace, documentId, out vsTextSpan))

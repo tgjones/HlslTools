@@ -56,7 +56,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
             return CreateItem(
                 function,
                 false,
-                c => function.Documentation != null
+                c => !string.IsNullOrEmpty(function.Documentation)
                     ? ImmutableArray.Create(new TaggedText(TextTags.Text, function.Documentation))
                     : ImmutableArray<TaggedText>.Empty,
                 GetMethodGroupPreambleParts(function),

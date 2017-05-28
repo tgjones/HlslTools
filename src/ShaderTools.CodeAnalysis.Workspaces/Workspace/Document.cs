@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Compilation;
@@ -11,6 +12,7 @@ using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
+using ShaderTools.Utilities.Diagnostics;
 using ShaderTools.Utilities.ErrorReporting;
 using ShaderTools.Utilities.Threading;
 
@@ -59,7 +61,12 @@ namespace ShaderTools.CodeAnalysis
             {
                 var syntaxTreeFactory = languageServices.GetRequiredService<ISyntaxTreeFactoryService>();
 
-                return syntaxTreeFactory.ParseSyntaxTree(sourceText, ct);
+                var syntaxTree = syntaxTreeFactory.ParseSyntaxTree(sourceText, ct);
+
+                // make sure there is an association between this tree and this doc id before handing it out
+                BindSyntaxTreeToId(syntaxTree, this.Id);
+
+                return syntaxTree;
             }, ct), true);
 
             _lazySemanticModel = new AsyncLazy<SemanticModelBase>(ct => Task.Run(async () =>
@@ -93,6 +100,16 @@ namespace ShaderTools.CodeAnalysis
         internal SyntaxTreeBase GetSyntaxTreeSynchronously(CancellationToken cancellationToken)
         {
             return _lazySyntaxTree.GetValue(cancellationToken);
+        }
+
+        /// <summary>
+        /// Get the current syntax tree for the document if the text is already loaded and the tree is already parsed.
+        /// In almost all cases, you should call <see cref="GetSyntaxTreeAsync"/> to fetch the tree, which will parse the tree
+        /// if it's not already parsed.
+        /// </summary>
+        public bool TryGetSyntaxTree(out SyntaxTreeBase syntaxTree)
+        {
+            return _lazySyntaxTree.TryGetValue(out syntaxTree);
         }
 
         public async Task<SemanticModelBase> GetSemanticModelAsync(CancellationToken cancellationToken)
@@ -202,6 +219,34 @@ namespace ShaderTools.CodeAnalysis
             }
 
             return _cachedOptions.GetValueAsync(cancellationToken);
+        }
+
+        private static readonly ReaderWriterLockSlim s_syntaxTreeToIdMapLock = new ReaderWriterLockSlim(LockRecursionPolicy.NoRecursion);
+        private static readonly ConditionalWeakTable<SyntaxTreeBase, DocumentId> s_syntaxTreeToIdMap =
+            new ConditionalWeakTable<SyntaxTreeBase, DocumentId>();
+
+        private static void BindSyntaxTreeToId(SyntaxTreeBase tree, DocumentId id)
+        {
+            using (s_syntaxTreeToIdMapLock.DisposableWrite())
+            {
+                if (s_syntaxTreeToIdMap.TryGetValue(tree, out var existingId))
+                {
+                    Contract.ThrowIfFalse(existingId == id);
+                }
+                else
+                {
+                    s_syntaxTreeToIdMap.Add(tree, id);
+                }
+            }
+        }
+
+        internal static DocumentId GetDocumentIdForTree(SyntaxTreeBase tree)
+        {
+            using (s_syntaxTreeToIdMapLock.DisposableRead())
+            {
+                s_syntaxTreeToIdMap.TryGetValue(tree, out var id);
+                return id;
+            }
         }
     }
 }

@@ -96,6 +96,10 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 
             switch ((VSConstants.VSStd97CmdID)commandId)
             {
+                case VSConstants.VSStd97CmdID.GotoDefn:
+                    ExecuteGoToDefinition(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 case VSConstants.VSStd97CmdID.Paste:
                     GCManager.UseLowLatencyModeForProcessingUserInput();
                     ExecutePaste(subjectBuffer, contentType, executeNextCommandTarget);
@@ -280,6 +284,13 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             var typedChar = (char) (ushort) Marshal.GetObjectForNativeVariant(pvaIn);
             CurrentHandlers.Execute(contentType,
                 args: new TypeCharCommandArgs(ConvertTextView(), subjectBuffer, typedChar),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        private void ExecuteGoToDefinition(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new GoToDefinitionCommandArgs(ConvertTextView(), subjectBuffer),
                 lastHandler: executeNextCommandTarget);
         }
 

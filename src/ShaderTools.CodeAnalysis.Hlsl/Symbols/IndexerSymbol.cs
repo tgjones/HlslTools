@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
@@ -18,6 +19,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public TypeSymbol ValueType { get; }
         public bool ReadOnly { get; }
 
+        public override SyntaxTreeBase SourceTree { get; } = null;
         public override ImmutableArray<SourceRange> Locations { get; } = ImmutableArray<SourceRange>.Empty;
 
         private bool Equals(IndexerSymbol other)
