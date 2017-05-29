@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.Language.Intellisense;
@@ -9,7 +8,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
-using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.ErrorReporting;
@@ -22,8 +21,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
     {
         private static readonly object s_quickInfoPropertyKey = new object();
 
-        private readonly IList<Lazy<IQuickInfoProvider, OrderableLanguageMetadata>> _allProviders;
-        private IList<IQuickInfoProvider> _providers;
+        private readonly IQuickInfoProviderCoordinatorFactory _providerCoordinatorFactory;
 
         public Controller(
             ITextView textView,
@@ -31,30 +29,17 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
             IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> presenter,
             IAsynchronousOperationListener asyncListener,
             IDocumentProvider documentProvider,
-            IList<Lazy<IQuickInfoProvider, OrderableLanguageMetadata>> allProviders)
+            IQuickInfoProviderCoordinatorFactory providerCoordinatorFactory)
             : base(textView, subjectBuffer, presenter, asyncListener, documentProvider, "QuickInfo")
         {
-            _allProviders = allProviders;
-        }
-
-        // For testing purposes
-        internal Controller(
-            ITextView textView,
-            ITextBuffer subjectBuffer,
-            IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> presenter,
-            IAsynchronousOperationListener asyncListener,
-            IDocumentProvider documentProvider,
-            IList<IQuickInfoProvider> providers)
-            : base(textView, subjectBuffer, presenter, asyncListener, documentProvider, "QuickInfo")
-        {
-            _providers = providers;
+            _providerCoordinatorFactory = providerCoordinatorFactory;
         }
 
         internal static Controller GetInstance(
             CommandArgs args,
             IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> presenter,
             IAsynchronousOperationListener asyncListener,
-            IList<Lazy<IQuickInfoProvider, OrderableLanguageMetadata>> allProviders)
+            IQuickInfoProviderCoordinatorFactory providerCoordinatorFactory)
         {
             var textView = args.TextView;
             var subjectBuffer = args.SubjectBuffer;
@@ -63,7 +48,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                     presenter,
                     asyncListener,
                     new DocumentProvider(),
-                    allProviders));
+                    providerCoordinatorFactory));
         }
 
         internal override void OnModelUpdated(Model modelOpt)
@@ -107,8 +92,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
         {
             AssertIsForeground();
 
-            var providers = GetProviders();
-            if (providers == null)
+            var providerCoordinator = GetProviderCoordinator();
+            if (providerCoordinator == null)
             {
                 return;
             }
@@ -118,30 +103,27 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                 this.Presenter.CreateSession(this.TextView, this.SubjectBuffer, augmentSession));
 
             this.sessionOpt.Computation.ChainTaskAndNotifyControllerWhenFinished(
-                (model, cancellationToken) => ComputeModelInBackgroundAsync(position, snapshot, providers, trackMouse, cancellationToken));
+                (model, cancellationToken) => ComputeModelInBackgroundAsync(position, snapshot, providerCoordinator, trackMouse, cancellationToken));
         }
 
-        public IList<IQuickInfoProvider> GetProviders()
+        private IQuickInfoProviderCoordinator GetProviderCoordinator()
         {
             this.AssertIsForeground();
 
-            if (_providers == null)
+            var snapshot = this.SubjectBuffer.CurrentSnapshot;
+            var document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
+            if (document != null)
             {
-                var snapshot = this.SubjectBuffer.CurrentSnapshot;
-                var document = snapshot.GetOpenDocumentInCurrentContextWithChanges();
-                if (document != null)
-                {
-                    _providers = document.LanguageServices.WorkspaceServices.SelectMatchingExtensionValues(_allProviders, this.SubjectBuffer.ContentType);
-                }
+                return _providerCoordinatorFactory.CreateCoordinator(document);
             }
 
-            return _providers;
+            return null;
         }
 
         private async Task<Model> ComputeModelInBackgroundAsync(
                int position,
                ITextSnapshot snapshot,
-               IList<IQuickInfoProvider> providers,
+               IQuickInfoProviderCoordinator providerCoordinator,
                bool trackMouse,
                CancellationToken cancellationToken)
         {
@@ -159,18 +141,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                         return null;
                     }
 
-                    foreach (var provider in providers)
-                    {
-                        // TODO(cyrusn): We're calling into extensions, we need to make ourselves resilient
-                        // to the extension crashing.
-                        var item = await provider.GetItemAsync(document, position, cancellationToken).ConfigureAwait(false);
-                        if (item != null)
-                        {
-                            return new Model(snapshot.Version, item, provider, trackMouse);
-                        }
-                    }
-
-                    return new Model(snapshot.Version, null, null, trackMouse);
+                    var (item, provider) = await providerCoordinator.GetItemAsync(document, position, cancellationToken).ConfigureAwait(false);
+                    return new Model(snapshot.Version, item, provider, trackMouse);
                 }
             }
             catch (Exception e) when (FatalError.ReportUnlessCanceled(e))

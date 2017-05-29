@@ -19,17 +19,19 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.
         private static readonly object s_augmentSessionKey = new object();
 
         private readonly IQuickInfoBroker _quickInfoBroker;
+        private readonly QuickInfoContentConverter _contentConverter;
 
         [ImportingConstructor]
-        public QuickInfoPresenter(IQuickInfoBroker quickInfoBroker)
+        public QuickInfoPresenter(IQuickInfoBroker quickInfoBroker, QuickInfoContentConverter contentConverter)
         {
             _quickInfoBroker = quickInfoBroker;
+            _contentConverter = contentConverter;
         }
 
         IQuickInfoPresenterSession IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession>.CreateSession(ITextView textView, ITextBuffer subjectBuffer, IQuickInfoSession sessionOpt)
         {
             AssertIsForeground();
-            return new QuickInfoPresenterSession(_quickInfoBroker, textView, subjectBuffer, sessionOpt);
+            return new QuickInfoPresenterSession(_quickInfoBroker, textView, subjectBuffer, sessionOpt, _contentConverter);
         }
 
         IQuickInfoSource IQuickInfoSourceProvider.TryCreateQuickInfoSource(ITextBuffer textBuffer)

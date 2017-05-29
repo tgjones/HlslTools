@@ -3,7 +3,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace ShaderTools.CodeAnalysis.Editor
+namespace ShaderTools.CodeAnalysis.QuickInfo
 {
     internal interface IQuickInfoProvider
     {

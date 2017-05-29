@@ -6,35 +6,18 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Language.Intellisense;
-using Microsoft.VisualStudio.Text.Editor;
-using Microsoft.VisualStudio.Text.Projection;
 using ShaderTools.CodeAnalysis.Compilation;
-using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
 using ShaderTools.CodeAnalysis.LanguageServices;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.Utilities.Collections;
 
-namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
+namespace ShaderTools.CodeAnalysis.QuickInfo
 {
-    internal abstract partial class AbstractSemanticQuickInfoProvider : AbstractQuickInfoProvider
+    internal abstract class AbstractSemanticQuickInfoProvider : AbstractQuickInfoProvider
     {
-        public AbstractSemanticQuickInfoProvider(
-            IProjectionBufferFactoryService projectionBufferFactoryService,
-            IEditorOptionsFactoryService editorOptionsFactoryService,
-            ITextEditorFactoryService textEditorFactoryService,
-            IGlyphService glyphService,
-            ClassificationTypeMap typeMap,
-            ITaggedTextMappingService taggedTextMappingService)
-            : base(projectionBufferFactoryService, editorOptionsFactoryService,
-                   textEditorFactoryService, glyphService, typeMap,
-                   taggedTextMappingService)
-        {
-        }
-
-        protected override async Task<IDeferredQuickInfoContent> BuildContentAsync(
+        protected override async Task<QuickInfoContent> BuildContentAsync(
             Document document,
             ISyntaxToken token,
             CancellationToken cancellationToken)
@@ -52,7 +35,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                 cancellationToken: cancellationToken).ConfigureAwait(false);
         }
 
-        protected async Task<IDeferredQuickInfoContent> CreateContentAsync(
+        protected async Task<QuickInfoContent> CreateContentAsync(
             Workspace workspace,
             ISyntaxToken token,
             SemanticModelBase semanticModel,
@@ -69,43 +52,34 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                 mainDescriptionBuilder.AddRange(sections[SymbolDescriptionGroups.MainDescription]);
             }
 
-            var documentationContent = GetDocumentationContent(symbols, sections, token, cancellationToken);
-            var showSymbolGlyph = true;
+            var documentationContent = GetDocumentationContent(symbols, sections);
 
-            return this.CreateQuickInfoDisplayDeferredContent(
-                symbol: symbols.First(),
-                showWarningGlyph: false,
-                showSymbolGlyph: showSymbolGlyph,
-                mainDescription: mainDescriptionBuilder,
-                documentation: documentationContent,
-                typeParameterMap: SpecializedCollections.EmptyList<TaggedText>(),
-                anonymousTypes: SpecializedCollections.EmptyList<TaggedText>(),
-                usageText: SpecializedCollections.EmptyList<TaggedText>(),
-                exceptionText: SpecializedCollections.EmptyList<TaggedText>());
+            return new QuickInfoDisplayContent(
+                semanticModel.Language,
+                glyph: symbols?.First().GetGlyph() ?? Glyph.None,
+                mainDescription: ImmutableArray.CreateRange(mainDescriptionBuilder),
+                documentation: documentationContent);
         }
 
-        private IDeferredQuickInfoContent GetDocumentationContent(
+        private ImmutableArray<TaggedText> GetDocumentationContent(
             IEnumerable<ISymbol> symbols,
-            IDictionary<SymbolDescriptionGroups, ImmutableArray<TaggedText>> sections,
-            ISyntaxToken token,
-            CancellationToken cancellationToken)
+            IDictionary<SymbolDescriptionGroups, ImmutableArray<TaggedText>> sections)
         {
             if (sections.ContainsKey(SymbolDescriptionGroups.Documentation))
             {
-                var documentationBuilder = new List<TaggedText>();
-                documentationBuilder.AddRange(sections[SymbolDescriptionGroups.Documentation]);
-                return CreateClassifiableDeferredContent(documentationBuilder);
+                return sections[SymbolDescriptionGroups.Documentation];
             }
-            else if (symbols.Any())
+
+            if (symbols.Any())
             {
                 var documentationBuilder = new List<TaggedText>();
                 var firstSymbol = symbols.First();
                 if (!string.IsNullOrEmpty(firstSymbol.Documentation))
                     documentationBuilder.AddText(firstSymbol.Documentation);
-                return CreateClassifiableDeferredContent(documentationBuilder);
+                return ImmutableArray.CreateRange(documentationBuilder);
             }
 
-            return CreateDocumentationCommentDeferredContent(null);
+            return ImmutableArray<TaggedText>.Empty;
         }
 
         private async Task<ValueTuple<SemanticModelBase, ImmutableArray<ISymbol>>> BindTokenAsync(
@@ -113,7 +87,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
             ISyntaxToken token,
             CancellationToken cancellationToken)
         {
-            var syntaxTree = await document.GetSyntaxTreeAsync(cancellationToken).ConfigureAwait(false);
             var semanticModel = await document.GetSemanticModelAsync(cancellationToken).ConfigureAwait(false);
 
             if (semanticModel != null)

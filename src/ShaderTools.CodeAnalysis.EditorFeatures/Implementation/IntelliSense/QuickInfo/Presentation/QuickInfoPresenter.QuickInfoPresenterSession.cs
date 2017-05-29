@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
+using ShaderTools.CodeAnalysis.QuickInfo;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.Presentation
 {
@@ -19,23 +20,25 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.
             private readonly ITextBuffer _subjectBuffer;
 
             private IQuickInfoSession _editorSessionOpt;
+            private readonly QuickInfoContentConverter _contentConverter;
 
             private QuickInfoItem _item;
             private ITrackingSpan _triggerSpan;
 
             public event EventHandler<EventArgs> Dismissed;
 
-            public QuickInfoPresenterSession(IQuickInfoBroker quickInfoBroker, ITextView textView, ITextBuffer subjectBuffer)
-                : this(quickInfoBroker, textView, subjectBuffer, null)
+            public QuickInfoPresenterSession(IQuickInfoBroker quickInfoBroker, ITextView textView, ITextBuffer subjectBuffer, QuickInfoContentConverter contentConverter)
+                : this(quickInfoBroker, textView, subjectBuffer, null, contentConverter)
             {
             }
 
-            public QuickInfoPresenterSession(IQuickInfoBroker quickInfoBroker, ITextView textView, ITextBuffer subjectBuffer, IQuickInfoSession sessionOpt)
+            public QuickInfoPresenterSession(IQuickInfoBroker quickInfoBroker, ITextView textView, ITextBuffer subjectBuffer, IQuickInfoSession sessionOpt, QuickInfoContentConverter contentConverter)
             {
                 _quickInfoBroker = quickInfoBroker;
                 _textView = textView;
                 _subjectBuffer = subjectBuffer;
                 _editorSessionOpt = sessionOpt;
+                _contentConverter = contentConverter;
             }
 
             public void PresentItem(ITrackingSpan triggerSpan, QuickInfoItem item, bool trackMouse)
@@ -107,7 +110,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.
                 }
 
                 applicableToSpan = _triggerSpan;
-                quickInfoContent.Add(_item.Content.Create());
+
+                var frameworkElement = _contentConverter.CreateFrameworkElement(_item.Content);
+                quickInfoContent.Add(frameworkElement);
             }
         }
     }

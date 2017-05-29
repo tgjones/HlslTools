@@ -11,6 +11,7 @@ using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
 using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
 
@@ -28,17 +29,17 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         //private readonly IInlineRenameService _inlineRenameService;
         private readonly IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> _presenter;
         private readonly IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> _asyncListeners;
-        private readonly IList<Lazy<IQuickInfoProvider, OrderableLanguageMetadata>> _providers;
+        private readonly IQuickInfoProviderCoordinatorFactory _providerCoordinatorFactory;
 
         [ImportingConstructor]
         public QuickInfoCommandHandlerAndSourceProvider(
             //IInlineRenameService inlineRenameService,
-            [ImportMany] IEnumerable<Lazy<IQuickInfoProvider, OrderableLanguageMetadata>> providers,
+            IQuickInfoProviderCoordinatorFactory providerCoordinatorFactory,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners,
             [ImportMany] IEnumerable<Lazy<IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession>, OrderableMetadata>> presenters)
             : this(//inlineRenameService,
                    ExtensionOrderer.Order(presenters).Select(lazy => lazy.Value).FirstOrDefault(),
-                   providers, asyncListeners)
+                   providerCoordinatorFactory, asyncListeners)
         {
         }
 
@@ -46,11 +47,11 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         public QuickInfoCommandHandlerAndSourceProvider(
             //IInlineRenameService inlineRenameService,
             IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> presenter,
-            [ImportMany] IEnumerable<Lazy<IQuickInfoProvider, OrderableLanguageMetadata>> providers,
+            IQuickInfoProviderCoordinatorFactory providerCoordinatorFactory,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners)
         {
             //_inlineRenameService = inlineRenameService;
-            _providers = ExtensionOrderer.Order(providers);
+            _providerCoordinatorFactory = providerCoordinatorFactory;
             _asyncListeners = asyncListeners;
             _presenter = presenter;
         }
@@ -79,7 +80,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             controller = Controller.GetInstance(
                 args, _presenter,
                 new AggregateAsynchronousOperationListener(_asyncListeners, FeatureAttribute.QuickInfo),
-                _providers);
+                _providerCoordinatorFactory);
             return true;
         }
 

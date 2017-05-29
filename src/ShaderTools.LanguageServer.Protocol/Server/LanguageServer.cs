@@ -8,14 +8,17 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.GoToDefinition;
+using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
-using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
+using ShaderTools.CodeAnalysis.Utilities;
 using ShaderTools.LanguageServer.Protocol.LanguageServer;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
@@ -28,6 +31,18 @@ namespace ShaderTools.LanguageServer.Protocol.Server
     {
         private static readonly string DiagnosticSourceName = "ShaderToolsEditorServices";
 
+        private static readonly BidirectionalMap<string, string> VsCodeLanguageToLanguageNameMap;
+
+        static LanguageServer()
+        {
+            VsCodeLanguageToLanguageNameMap = new BidirectionalMap<string, string>(new[]
+            {
+                new KeyValuePair<string, string>("hlsl", LanguageNames.Hlsl),
+                new KeyValuePair<string, string>("shaderlab", LanguageNames.ShaderLab)
+            });
+        }
+
+        private readonly IMefHostExportProvider _exportProvider;
         private readonly LanguageServerWorkspace _workspace;
 
         private string _workspacePath;
@@ -37,7 +52,17 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         public LanguageServer(ChannelBase serverChannel)
             : base(serverChannel, MessageProtocolType.LanguageServer)
         {
-            _workspace = new LanguageServerWorkspace();
+            var hostServices = CreateHostServices();
+            _exportProvider = hostServices;
+            _workspace = new LanguageServerWorkspace(hostServices);
+        }
+
+        private static MefHostServices CreateHostServices()
+        {
+            var assemblies = MefHostServices.DefaultAssemblies
+                .Union(new[] { typeof(LanguageServerWorkspace).GetTypeInfo().Assembly });
+
+            return MefHostServices.Create(assemblies);
         }
 
         protected override Task OnStart()
@@ -54,24 +79,25 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         protected override async Task OnStop()
         {
-            await this.Shutdown();
+            await Shutdown();
         }
 
         /// <summary>
         /// Overridden by the subclass to provide initialization
         /// logic after the server channel is started.
         /// </summary>
-        protected void Initialize()
+        private void Initialize()
         {
-            this.SetRequestHandler(InitializeRequest.Type, this.HandleInitializeRequest);
+            SetRequestHandler(InitializeRequest.Type, this.HandleInitializeRequest);
 
-            this.SetEventHandler(DidOpenTextDocumentNotification.Type, this.HandleDidOpenTextDocumentNotification);
-            this.SetEventHandler(DidCloseTextDocumentNotification.Type, this.HandleDidCloseTextDocumentNotification);
-            this.SetEventHandler(DidChangeTextDocumentNotification.Type, this.HandleDidChangeTextDocumentNotification);
+            SetEventHandler(DidOpenTextDocumentNotification.Type, this.HandleDidOpenTextDocumentNotification);
+            SetEventHandler(DidCloseTextDocumentNotification.Type, this.HandleDidCloseTextDocumentNotification);
+            SetEventHandler(DidChangeTextDocumentNotification.Type, this.HandleDidChangeTextDocumentNotification);
 
-            this.SetRequestHandler(DocumentHighlightRequest.Type, this.HandleDocumentHighlightRequest);
-            this.SetRequestHandler(SignatureHelpRequest.Type, this.HandleSignatureHelpRequest);
-            this.SetRequestHandler(DefinitionRequest.Type, this.HandleDefinitionRequest);
+            SetRequestHandler(DocumentHighlightRequest.Type, this.HandleDocumentHighlightRequest);
+            SetRequestHandler(SignatureHelpRequest.Type, this.HandleSignatureHelpRequest);
+            SetRequestHandler(DefinitionRequest.Type, this.HandleDefinitionRequest);
+            SetRequestHandler(HoverRequest.Type, this.HandleHoverRequest);
         }
 
         /// <summary>
@@ -79,7 +105,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         /// logic before the server exits.  Subclasses do not need
         /// to invoke or return the value of the base implementation.
         /// </summary>
-        protected Task Shutdown()
+        private Task Shutdown()
         {
             Logger.Write(LogLevel.Normal, "Language service is shutting down...");
 
@@ -104,7 +130,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                         DocumentHighlightProvider = true,
                         //DocumentSymbolProvider = true,
                         //WorkspaceSymbolProvider = true,
-                        //HoverProvider = true,
+                        HoverProvider = true,
                         //CodeActionProvider = true,
                         //CompletionProvider = new CompletionOptions
                         //{
@@ -138,17 +164,12 @@ namespace ShaderTools.LanguageServer.Protocol.Server
 
         private static string GetLanguageName(string languageId)
         {
-            switch (languageId)
+            if (VsCodeLanguageToLanguageNameMap.TryGetValue(languageId, out var languageName))
             {
-                case "hlsl":
-                    return LanguageNames.Hlsl;
-
-                case "shaderlab":
-                    return LanguageNames.ShaderLab;
-
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(languageId), languageId, "Invalid languageId");
+                return languageName;
             }
+
+            throw new ArgumentOutOfRangeException(nameof(languageId), languageId, "Invalid languageId");
         }
 
         private async Task HandleDidCloseTextDocumentNotification(
@@ -271,6 +292,57 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             await requestContext.SendResult(locations);
         }
 
+        private async Task HandleHoverRequest(
+            TextDocumentPositionParams textDocumentPositionParams,
+            RequestContext<Hover> requestContext)
+        {
+            var document = GetDocument(textDocumentPositionParams.TextDocument);
+            var position = ConvertPosition(document, textDocumentPositionParams.Position);
+
+            var providerCoordinatorFactory = GetGlobalService<IQuickInfoProviderCoordinatorFactory>();
+            var providerCoordinator = providerCoordinatorFactory.CreateCoordinator(document);
+
+            var (item, _) = await providerCoordinator.GetItemAsync(document, position, CancellationToken.None);
+
+            var symbolInfo = new List<MarkedString>();
+            Range? symbolRange = null;
+
+            if (item != null)
+            {
+                switch (item.Content)
+                {
+                    case QuickInfoDisplayContent c:
+                        symbolInfo.Add(new MarkedString
+                        {
+                            Language = VsCodeLanguageToLanguageNameMap.GetKeyOrDefault(document.Language),
+                            Value = c.MainDescription.GetFullText()
+                        });
+
+                        if (!c.Documentation.IsEmpty)
+                        {
+                            symbolInfo.Add(new MarkedString
+                            {
+                                Value = c.Documentation.GetFullText()
+                            });
+                        }
+
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                symbolRange = ConvertTextSpanToRange(document.SourceText, item.TextSpan);
+            }
+
+            await requestContext.SendResult(
+                new Hover
+                {
+                    Contents = symbolInfo.ToArray(),
+                    Range = symbolRange
+                });
+        }
+
         private static string GetFileUri(string filePath)
         {
             // If the file isn't untitled, return a URI-style path
@@ -297,6 +369,12 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                     Character = linePositionSpan.End.Character
                 }
             };
+        }
+
+        private T GetGlobalService<T>()
+            where T : class
+        {
+            return _exportProvider.GetExports<T>().FirstOrDefault()?.Value;
         }
 
         private Document GetDocument(TextDocumentIdentifier documentIdentifier)
