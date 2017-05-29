@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
-using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace Microsoft.CodeAnalysis.Navigation
+namespace ShaderTools.CodeAnalysis.Navigation
 {
     internal interface INavigableItem
     {
@@ -29,7 +28,7 @@ namespace Microsoft.CodeAnalysis.Navigation
         bool IsImplicitlyDeclared { get; }
 
         Document Document { get; }
-        TextSpan SourceSpan { get; }
+        SourceFileSpan SourceSpan { get; }
 
         ImmutableArray<INavigableItem> ChildItems { get; }
     }

@@ -64,6 +64,7 @@
     <Compile Include="Implementation\Extensions\VsTextSpanExtensions.cs" />
     <Compile Include="Implementation\GCManager.cs" />
     <Compile Include="Implementation\StandaloneCommandFilter.cs" />
+    <Compile Include="NavigateTo\VisualStudioNavigateToPreviewService.cs" />
     <Compile Include="Notification\VSNotificationServiceFactory.cs" />
     <Compile Include="Options\UI\AbstractCheckBoxViewModel.cs" />
     <Compile Include="Options\UI\AbstractOptionPage.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Utilities\VisualStudioWaitContext.cs" />
     <Compile Include="Utilities\VisualStudioWaitIndicator.cs" />
     <Compile Include="Workspace\VisualStudioDocumentNavigationService.cs" />
+    <Compile Include="Workspace\VisualStudioDocumentTrackingService.cs" />
     <Compile Include="Workspace\VisualStudioFormattingRuleFactoryServiceFactory.cs" />
     <Compile Include="Workspace\VisualStudioWorkspace.cs" />
     <Compile Include="Workspace\WorkspaceBufferListener.cs" />
@@ -145,6 +147,10 @@
     </Reference>
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.NavigateTo.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\RoslynDependencies.Microsoft.VisualStudio.Language.NavigateTo.Interfaces.14.3.25407\lib\net46\Microsoft.VisualStudio.Language.NavigateTo.Interfaces.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.OLE.Interop, Version=7.1.40304.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.OLE.Interop.7.10.6070\lib\Microsoft.VisualStudio.OLE.Interop.dll</HintPath>

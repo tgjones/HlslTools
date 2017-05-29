@@ -11,6 +11,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Editor.Implementation;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
@@ -52,6 +53,8 @@ namespace ShaderTools.VisualStudio.LanguageServices
             _textBufferToTextDocumentMap = new ConditionalWeakTable<ITextBuffer, ITextDocument>();
             _textBufferToDocumentIdMap = new ConditionalWeakTable<ITextBuffer, DocumentId>();
             _textBufferToViewsMap = new ConditionalWeakTable<ITextBuffer, List<ITextView>>();
+
+            Services.GetService<IDocumentTrackingService>();
         }
 
         public override bool CanOpenDocuments => true;

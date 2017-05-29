@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using ShaderTools.CodeAnalysis.Editor;
+using ShaderTools.CodeAnalysis.Editor.Implementation;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.VisualStudio.LanguageServices.Classification;
 using ShaderTools.VisualStudio.LanguageServices.ErrorList;
@@ -15,6 +16,8 @@ namespace ShaderTools.VisualStudio.LanguageServices
     {
         // Updated by build process.
         public const string Version = "1.0.0";
+
+        private VisualStudioWorkspace _workspace;
 
         private IComponentModel _componentModel;
 
@@ -35,12 +38,15 @@ namespace ShaderTools.VisualStudio.LanguageServices
         {
             base.Initialize();
 
+            var componentModel = this.ComponentModel;
+            _workspace = componentModel.GetService<VisualStudioWorkspace>();
+
             // Ensure the options persisters are loaded since we have to fetch options from the shell
-            ComponentModel.GetExtensions<IOptionPersister>();
+            componentModel.GetExtensions<IOptionPersister>();
 
             // Force-load services that don't load themselves.
-            ComponentModel.GetService<ThemeColorFixer>();
-            ComponentModel.GetService<ErrorsTableDataSource>();
+            componentModel.GetService<ThemeColorFixer>();
+            componentModel.GetService<ErrorsTableDataSource>();
 
             System.Threading.Tasks.Task.Run(() => LoadComponentsBackground());
         }
@@ -50,6 +56,14 @@ namespace ShaderTools.VisualStudio.LanguageServices
             // Perf: Initialize the command handlers.
             var commandHandlerServiceFactory = ComponentModel.GetService<ICommandHandlerServiceFactory>();
             commandHandlerServiceFactory.Initialize(ContentTypeNames.ShaderToolsContentType);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            var documentTrackingService = _workspace.Services.GetService<IDocumentTrackingService>() as VisualStudioDocumentTrackingService;
+            documentTrackingService.Dispose();
+
+            base.Dispose(disposing);
         }
     }
 }
