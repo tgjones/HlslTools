@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.GoToDefinition;
 using ShaderTools.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.NavigateTo;
 using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
@@ -98,6 +99,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             SetRequestHandler(SignatureHelpRequest.Type, this.HandleSignatureHelpRequest);
             SetRequestHandler(DefinitionRequest.Type, this.HandleDefinitionRequest);
             SetRequestHandler(HoverRequest.Type, this.HandleHoverRequest);
+            SetRequestHandler(DocumentSymbolRequest.Type, this.HandleDocumentSymbolRequest);
+            SetRequestHandler(WorkspaceSymbolRequest.Type, this.HandleWorkspaceSymbolRequest);
         }
 
         /// <summary>
@@ -128,8 +131,8 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                         DefinitionProvider = true,
                         //ReferencesProvider = true,
                         DocumentHighlightProvider = true,
-                        //DocumentSymbolProvider = true,
-                        //WorkspaceSymbolProvider = true,
+                        DocumentSymbolProvider = true,
+                        WorkspaceSymbolProvider = true,
                         HoverProvider = true,
                         //CodeActionProvider = true,
                         //CompletionProvider = new CompletionOptions
@@ -341,6 +344,83 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                     Contents = symbolInfo.ToArray(),
                     Range = symbolRange
                 });
+        }
+
+        private async Task HandleDocumentSymbolRequest(
+            DocumentSymbolParams documentSymbolParams,
+            RequestContext<SymbolInformation[]> requestContext)
+        {
+            var document = GetDocument(documentSymbolParams.TextDocument);
+
+            var searchService = _workspace.Services.GetService<INavigateToSearchService>();
+
+            var symbols = ImmutableArray.CreateBuilder<SymbolInformation>();
+
+            await FindSymbolsInDocument(searchService, document, string.Empty, symbols);
+
+            await requestContext.SendResult(symbols.ToArray());
+        }
+
+        protected async Task HandleWorkspaceSymbolRequest(
+            WorkspaceSymbolParams workspaceSymbolParams,
+            RequestContext<SymbolInformation[]> requestContext)
+        {
+            var searchService = _workspace.Services.GetService<INavigateToSearchService>();
+
+            var symbols = ImmutableArray.CreateBuilder<SymbolInformation>();
+
+            foreach (var document in _workspace.CurrentDocuments.Documents)
+            {
+                await FindSymbolsInDocument(searchService, document, workspaceSymbolParams.Query, symbols);
+            }
+
+            await requestContext.SendResult(symbols.ToArray());
+        }
+
+        private async Task FindSymbolsInDocument(
+            INavigateToSearchService searchService, Document document,
+            string searchPattern,
+            ImmutableArray<SymbolInformation>.Builder resultsBuilder)
+        {
+            var foundSymbols = await searchService.SearchDocumentAsync(document, searchPattern, CancellationToken.None);
+
+            resultsBuilder.AddRange(foundSymbols
+               .Select(r => new SymbolInformation
+                {
+                    ContainerName = r.AdditionalInformation,
+                    Kind = GetSymbolKind(r.Kind),
+                    Location = new Location
+                    {
+                        Uri = GetFileUri(r.NavigableItem.SourceSpan.File.FilePath),
+                        Range = ConvertTextSpanToRange(r.NavigableItem.SourceSpan.File.Text, r.NavigableItem.SourceSpan.Span)
+                    },
+                    Name = r.Name
+                }));
+        }
+
+        private static SymbolKind GetSymbolKind(string symbolType)
+        {
+            switch (symbolType)
+            {
+                case NavigateToItemKind.Class:
+                case NavigateToItemKind.Structure:
+                    return SymbolKind.Class;
+
+                case NavigateToItemKind.Module:
+                    return SymbolKind.Namespace;
+
+                case NavigateToItemKind.Interface:
+                    return SymbolKind.Interface;
+
+                case NavigateToItemKind.Field:
+                    return SymbolKind.Field;
+
+                case NavigateToItemKind.Method:
+                    return SymbolKind.Method;
+
+                default:
+                    return SymbolKind.Variable;
+            }
         }
 
         private static string GetFileUri(string filePath)
