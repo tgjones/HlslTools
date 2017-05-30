@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Host.Mef;
+﻿using ShaderTools.CodeAnalysis.FindSymbols;
+using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 

@@ -12,20 +12,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation
         /// Get the <see cref="DocumentId"/> of the active document. May be null if there is no active document
         /// or the active document is not in the workspace.
         /// </summary>
-        DocumentId GetActiveDocument();
+        ImmutableArray<DocumentId> GetActiveDocuments();
 
-        /// <summary>
-        /// Get a read only collection of the <see cref="DocumentId"/>s of all the visible documents in the workspace.
-        /// </summary>
-        ImmutableArray<DocumentId> GetVisibleDocuments();
-
-        event EventHandler<DocumentId> ActiveDocumentChanged;
-
-        /// <summary>
-        /// Events for Non Roslyn text buffer changes.
-        /// 
-        /// It raises events for buffers opened in a view in host.
-        /// </summary>
-        event EventHandler<EventArgs> NonRoslynBufferTextChanged;
+        event EventHandler<ImmutableArray<DocumentId>> ActiveDocumentChanged;
     }
 }

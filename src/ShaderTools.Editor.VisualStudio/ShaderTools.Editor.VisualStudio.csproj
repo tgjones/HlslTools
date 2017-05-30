@@ -324,10 +324,6 @@
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandler.cs" />
     <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionTextViewCreationListener.cs" />
-    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemDisplay.cs" />
-    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemProvider.cs" />
-    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToItemProviderFactory.cs" />
-    <Compile Include="Hlsl\Navigation\NavigateTo\NavigateToVisitor.cs" />
     <Compile Include="Core\Navigation\NavigationExtensions.cs" />
     <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />

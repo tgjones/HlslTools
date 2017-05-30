@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Composition;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace ShaderTools.CodeAnalysis.QuickInfo
 {
-    [Export(typeof(QuickInfoProviderCoordinator))]
     internal sealed class QuickInfoProviderCoordinator : IQuickInfoProviderCoordinator
     {
         private readonly IList<IQuickInfoProvider> _providers;

@@ -8,6 +8,7 @@ using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.SymbolSearch;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
@@ -38,7 +39,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SymbolSearch
             var syntaxTreeRoot = (SyntaxNode) semanticModel.SyntaxTree.Root;
 
             return (from n in syntaxTreeRoot.DescendantNodes()
-                   from s in GetSymbolSpans((SemanticModel) semanticModel, n)
+                   from s in GetSymbolSpans((SemanticModel) semanticModel, (SyntaxNode) n)
                    where s.Symbol.Equals(symbol)
                    select s).ToImmutableArray();
         }

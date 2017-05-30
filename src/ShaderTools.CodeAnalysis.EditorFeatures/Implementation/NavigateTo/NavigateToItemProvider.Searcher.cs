@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +21,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigateTo
             private readonly INavigateToCallback _callback;
             private readonly string _searchPattern;
             private readonly bool _searchCurrentDocument;
-            private readonly Document _currentDocument;
+            private readonly ImmutableArray<Document> _currentDocuments;
             private readonly ProgressTracker _progress;
             private readonly IAsynchronousOperationListener _asyncListener;
             private readonly CancellationToken _cancellationToken;
@@ -46,8 +47,14 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigateTo
                 if (_searchCurrentDocument)
                 {
                     var documentService = _workspace.Services.GetService<IDocumentTrackingService>();
-                    var activeId = documentService.GetActiveDocument();
-                    _currentDocument = activeId != null ? _workspace.CurrentDocuments.GetDocument(activeId) : null;
+                    _currentDocuments = documentService.GetActiveDocuments()
+                        .Select(x => _workspace.CurrentDocuments.GetDocument(x))
+                        .Where(x => x != null)
+                        .ToImmutableArray();
+                }
+                else
+                {
+                    _currentDocuments = ImmutableArray<Document>.Empty;
                 }
             }
 
@@ -60,20 +67,23 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigateTo
                     {
                         if (_searchCurrentDocument)
                         {
-                            _progress.AddItems(1);
+                            _progress.AddItems(_currentDocuments.Length);
 
-                            await SearchAsync(_currentDocument).ConfigureAwait(false);
+                            foreach (var currentDocument in _currentDocuments)
+                            {
+                                await SearchAsync(currentDocument).ConfigureAwait(false);
+                            }
                         }
                         else
                         {
-                            _progress.AddItems(_workspace.CurrentDocuments.Documents.Count());
+                            var documents = _workspace.CurrentDocuments.Documents.ToImmutableArray();
 
-                            // Search each project with an independent threadpool task.
-                            var searchTasks = _workspace.CurrentDocuments.Documents
-                                .Select(p => Task.Run(() => SearchAsync(p)))
-                                .ToArray();
+                            _progress.AddItems(documents.Length);
 
-                            await Task.WhenAll(searchTasks).ConfigureAwait(false);
+                            foreach (var document in documents)
+                            {
+                                await SearchAsync(document).ConfigureAwait(false);
+                            }
                         }
                     }
                 }
@@ -100,10 +110,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigateTo
 
             private async Task SearchAsyncWorker(Document document)
             {
-                var service = document.LanguageServices.GetService<INavigateToSearchService>();
+                var service = document.Workspace.Services.GetService<INavigateToSearchService>();
                 if (service != null)
                 {
-                    var searchTask = service.SearchDocumentAsync(_currentDocument, _searchPattern, _cancellationToken);
+                    var searchTask = service.SearchDocumentAsync(document, _searchPattern, _cancellationToken);
 
                     var results = await searchTask.ConfigureAwait(false);
                     if (results != null)

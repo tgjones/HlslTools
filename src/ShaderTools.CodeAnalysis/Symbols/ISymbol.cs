@@ -27,6 +27,7 @@ namespace ShaderTools.CodeAnalysis.Symbols
     {
         QuickInfo,
         MinimallyQualified,
-        MinimallyQualifiedWithoutParameters
+        MinimallyQualifiedWithoutParameters,
+        NavigateTo
     }
 }

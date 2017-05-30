@@ -5,16 +5,13 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using System.Text;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Editor.Implementation;
 using ShaderTools.CodeAnalysis.Host.Mef;
-using ShaderTools.Utilities.Diagnostics;
-using ShaderTools.Utilities.PooledObjects;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {
@@ -22,21 +19,21 @@ namespace ShaderTools.VisualStudio.LanguageServices
     [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
     internal class VisualStudioDocumentTrackingService : IDocumentTrackingService, IVsSelectionEvents, IDisposable
     {
+        private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactoryService;
         private IVsMonitorSelection _monitorSelection;
         private uint _cookie;
-        private ImmutableList<FrameListener> _visibleFrames;
         private IVsWindowFrame _activeFrame;
 
         [ImportingConstructor]
-        public VisualStudioDocumentTrackingService(SVsServiceProvider serviceProvider)
+        public VisualStudioDocumentTrackingService(SVsServiceProvider serviceProvider, IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
         {
-            _visibleFrames = ImmutableList<FrameListener>.Empty;
+            _editorAdaptersFactoryService = editorAdaptersFactoryService;
 
             _monitorSelection = (IVsMonitorSelection) serviceProvider.GetService(typeof(SVsShellMonitorSelection));
             _monitorSelection.AdviseSelectionEvents(this, out _cookie);
         }
 
-        public event EventHandler<DocumentId> ActiveDocumentChanged;
+        public event EventHandler<ImmutableArray<DocumentId>> ActiveDocumentChanged;
 
         /// <summary>
         /// Get the <see cref="DocumentId"/> of the active document. May be called from any thread.
@@ -44,74 +41,18 @@ namespace ShaderTools.VisualStudio.LanguageServices
         /// workspace.
         /// </summary>
         /// <returns>The ID of the active document (if any)</returns>
-        public DocumentId GetActiveDocument()
+        public ImmutableArray<DocumentId> GetActiveDocuments()
         {
-            var snapshot = _visibleFrames;
-            if (_activeFrame == null || snapshot.IsEmpty)
+            if (_activeFrame == null)
             {
-                return null;
+                return ImmutableArray<DocumentId>.Empty;
             }
 
-            foreach (var listener in snapshot)
-            {
-                if (listener.Frame == _activeFrame)
-                {
-                    return listener.Id;
-                }
-            }
+            var vsTextView = VsShellUtilities.GetTextView(_activeFrame);
 
-            return null;
-        }
+            var textView = _editorAdaptersFactoryService.GetWpfTextView(vsTextView);
 
-        /// <summary>
-        /// Get a read only collection of the <see cref="DocumentId"/>s of all the visible documents in the workspace.
-        /// </summary>
-        public ImmutableArray<DocumentId> GetVisibleDocuments()
-        {
-            var snapshot = _visibleFrames;
-            if (snapshot.IsEmpty)
-            {
-                return ImmutableArray.Create<DocumentId>();
-            }
-
-            var ids = ArrayBuilder<DocumentId>.GetInstance(snapshot.Count);
-            foreach (var frame in snapshot)
-            {
-                ids.Add(frame.Id);
-            }
-
-            return ids.ToImmutableAndFree();
-        }
-
-        /// <summary>
-        /// Called via the DocumentProvider's RDT OnBeforeDocumentWindowShow notification when a workspace document is being shown.
-        /// </summary>
-        /// <param name="frame">The frame containing the document being shown.</param>
-        /// <param name="id">The <see cref="DocumentId"/> of the document being shown.</param>
-        /// <param name="firstShow">Indicates whether this is a first or subsequent show.</param>
-        public void DocumentFrameShowing(IVsWindowFrame frame, DocumentId id, bool firstShow)
-        {
-            Contract.ThrowIfNull(frame);
-            Contract.ThrowIfNull(id);
-
-            if (!firstShow && !_visibleFrames.IsEmpty)
-            {
-                foreach (FrameListener frameListener in _visibleFrames)
-                {
-                    if (frameListener.Frame == frame)
-                    {
-                        // Already in the visible list
-                        return;
-                    }
-                }
-            }
-
-            _visibleFrames = _visibleFrames.Add(new FrameListener(this, frame, id));
-        }
-
-        private void RemoveFrame(FrameListener frame)
-        {
-            _visibleFrames = _visibleFrames.Remove(frame);
+            return ((VisualStudioWorkspace) PrimaryWorkspace.Workspace).GetDocumentIdsForTextView(textView);
         }
 
         public int OnSelectionChanged(IVsHierarchy pHierOld, [ComAliasName("Microsoft.VisualStudio.Shell.Interop.VSITEMID")]uint itemidOld, IVsMultiItemSelect pMISOld, ISelectionContainer pSCOld, IVsHierarchy pHierNew, [ComAliasName("Microsoft.VisualStudio.Shell.Interop.VSITEMID")]uint itemidNew, IVsMultiItemSelect pMISNew, ISelectionContainer pSCNew)
@@ -125,7 +66,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
             {
                 // Remember the newly activated frame so it can be read from another thread.
                 _activeFrame = varValueNew as IVsWindowFrame;
-                this.ActiveDocumentChanged?.Invoke(this, GetActiveDocument());
+                this.ActiveDocumentChanged?.Invoke(this, GetActiveDocuments());
             }
 
             return VSConstants.S_OK;
@@ -136,150 +77,9 @@ namespace ShaderTools.VisualStudio.LanguageServices
             return VSConstants.E_NOTIMPL;
         }
 
-        public event EventHandler<EventArgs> NonRoslynBufferTextChanged;
-
-        public void OnNonRoslynBufferOpened(ITextBuffer buffer)
-        {
-            buffer.PostChanged += OnNonRoslynBufferChanged;
-        }
-
-        public void OnNonRoslynBufferClosed(ITextBuffer buffer)
-        {
-            buffer.PostChanged -= OnNonRoslynBufferChanged;
-        }
-
-        private void OnNonRoslynBufferChanged(object sender, EventArgs e)
-        {
-            this.NonRoslynBufferTextChanged?.Invoke(sender, e);
-        }
         public void Dispose()
         {
-            if (_cookie != VSConstants.VSCOOKIE_NIL && _monitorSelection != null)
-            {
-                _activeFrame = null;
-                _monitorSelection.UnadviseSelectionEvents(_cookie);
-                _monitorSelection = null;
-                _cookie = VSConstants.VSCOOKIE_NIL;
-            }
-
-            var snapshot = _visibleFrames;
-            _visibleFrames = ImmutableList<FrameListener>.Empty;
-
-            if (!snapshot.IsEmpty)
-            {
-                foreach (var frame in snapshot)
-                {
-                    frame.Dispose();
-                }
-            }
-        }
-
-        private string GetDebuggerDisplay()
-        {
-            var snapshot = _visibleFrames;
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("Visible frames: ");
-            if (snapshot.IsEmpty)
-            {
-                sb.Append("{empty}");
-            }
-            else
-            {
-                foreach (var frame in snapshot)
-                {
-                    sb.Append(frame.GetDebuggerDisplay());
-                    sb.Append(' ');
-                }
-            }
-
-            return sb.ToString();
-        }
-
-        /// <summary>
-        /// Listens to frame notifications for a visible frame. When the frame becomes invisible or closes,
-        /// then it automatically disconnects.
-        /// </summary>
-        [DebuggerDisplay("{GetDebuggerDisplay(),nq}")]
-        private class FrameListener : IVsWindowFrameNotify, IVsWindowFrameNotify2, IDisposable
-        {
-            public readonly IVsWindowFrame Frame;
-            public readonly DocumentId Id;
-
-            private readonly VisualStudioDocumentTrackingService _service;
-            private uint _cookie;
-
-            public FrameListener(VisualStudioDocumentTrackingService service, IVsWindowFrame frame, DocumentId id)
-            {
-                this.Frame = frame;
-                this.Id = id;
-                _service = service;
-
-                ((IVsWindowFrame2) frame).Advise(this, out _cookie);
-            }
-
-            public int OnDockableChange(int fDockable)
-            {
-                return VSConstants.S_OK;
-            }
-
-            public int OnMove()
-            {
-                return VSConstants.S_OK;
-            }
-
-            public int OnShow(int fShow)
-            {
-                switch ((__FRAMESHOW) fShow)
-                {
-                    case __FRAMESHOW.FRAMESHOW_WinClosed:
-                    case __FRAMESHOW.FRAMESHOW_WinHidden:
-                    case __FRAMESHOW.FRAMESHOW_TabDeactivated:
-                        return Disconnect();
-                }
-
-                return VSConstants.S_OK;
-            }
-
-            public int OnSize()
-            {
-                return VSConstants.S_OK;
-            }
-
-            public int OnClose(ref uint pgrfSaveOptions)
-            {
-                return Disconnect();
-            }
-
-            private int Disconnect()
-            {
-                _service.RemoveFrame(this);
-                return Unadvise();
-            }
-
-            private int Unadvise()
-            {
-                int hr = VSConstants.S_OK;
-
-                if (_cookie != VSConstants.VSCOOKIE_NIL)
-                {
-                    hr = ((IVsWindowFrame2) Frame).Unadvise(_cookie);
-                    _cookie = VSConstants.VSCOOKIE_NIL;
-                }
-
-                return hr;
-            }
-
-            public void Dispose()
-            {
-                Unadvise();
-            }
-
-            internal string GetDebuggerDisplay()
-            {
-                Frame.GetProperty((int) __VSFPROPID.VSFPROPID_Caption, out var caption);
-                return caption.ToString();
-            }
+            
         }
     }
 }

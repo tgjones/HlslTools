@@ -15,13 +15,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
                 case SymbolKind.Array:
                     break;
                 case SymbolKind.Field:
-                    markup.AppendFieldSymbolInfo((FieldSymbol) symbol);
+                    markup.AppendFieldSymbolInfo((FieldSymbol) symbol, format);
                     break;
                 case SymbolKind.Function:
                     markup.AppendFunctionSymbolInfo((FunctionSymbol) symbol, format);
                     break;
                 case SymbolKind.Variable:
-                    markup.AppendVariableSymbolInfo((VariableSymbol) symbol);
+                    markup.AppendVariableSymbolInfo((VariableSymbol) symbol, format);
                     break;
                 case SymbolKind.Parameter:
                     markup.AppendParameterSymbolInfo((ParameterSymbol) symbol, true, format);
@@ -38,22 +38,22 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
                     markup.AppendTypeDeclaration((TypeSymbol) symbol);
                     break;
                 case SymbolKind.Namespace:
-                    markup.AppendNamespace((NamespaceSymbol) symbol);
+                    markup.AppendNamespace((NamespaceSymbol) symbol, format);
                     break;
                 case SymbolKind.Semantic:
                     markup.AppendSemantic((SemanticSymbol) symbol);
                     break;
                 case SymbolKind.Technique:
-                    markup.AppendTechnique((TechniqueSymbol) symbol);
+                    markup.AppendTechnique((TechniqueSymbol) symbol, format);
                     break;
                 case SymbolKind.TypeAlias:
-                    markup.AppendTypeAlias((TypeAliasSymbol) symbol);
+                    markup.AppendTypeAlias((TypeAliasSymbol) symbol, format);
                     break;
                 case SymbolKind.Attribute:
                     markup.AppendAttribute((AttributeSymbol) symbol, format);
                     break;
                 case SymbolKind.ConstantBuffer:
-                    markup.AppendConstantBuffer((ConstantBufferSymbol) symbol);
+                    markup.AppendConstantBuffer((ConstantBufferSymbol) symbol, format);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(symbol), symbol.Kind.ToString());
@@ -62,13 +62,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
 
         private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol, SymbolDisplayFormat format)
         {
-            markup.AppendType(symbol.ReturnType, false);
-            markup.AppendSpace();
-
-            if (symbol.Parent is TypeSymbol)
+            if (format != SymbolDisplayFormat.NavigateTo)
             {
-                markup.AppendTypeName((TypeSymbol) symbol.Parent);
-                markup.AppendPunctuation(".");
+                markup.AppendType(symbol.ReturnType, false);
+                markup.AppendSpace();
+
+                if (symbol.Parent is TypeSymbol)
+                {
+                    markup.AppendTypeName((TypeSymbol) symbol.Parent);
+                    markup.AppendPunctuation(".");
+                }
             }
 
             if (symbol.IsNumericConstructor)
@@ -123,24 +126,34 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             }
 
             markup.AppendType(symbol.ValueType, false);
-            markup.AppendSpace();
-            markup.AppendParameterName(symbol.Name);
 
-            if (symbol.HasDefaultValue)
+            if (format != SymbolDisplayFormat.NavigateTo)
             {
                 markup.AppendSpace();
-                markup.AppendPlainText(symbol.DefaultValueText);
+                markup.AppendParameterName(symbol.Name);
+
+                if (symbol.HasDefaultValue)
+                {
+                    markup.AppendSpace();
+                    markup.AppendPlainText(symbol.DefaultValueText);
+                }
             }
         }
 
-        private static void AppendFieldSymbolInfo(this ICollection<SymbolMarkupToken> markup, FieldSymbol symbol)
+        private static void AppendFieldSymbolInfo(this ICollection<SymbolMarkupToken> markup, FieldSymbol symbol, SymbolDisplayFormat format)
         {
-            markup.AppendPlainText("(field)");
-            markup.AppendSpace();
-            markup.AppendType(symbol.ValueType, true);
-            markup.AppendSpace();
-            markup.AppendType((TypeSymbol) symbol.Parent, false);
-            markup.AppendPunctuation(".");
+            if (format == SymbolDisplayFormat.QuickInfo)
+            {
+                markup.AppendPlainText("(field)");
+                markup.AppendSpace();
+
+                markup.AppendType(symbol.ValueType, true);
+                markup.AppendSpace();
+
+                markup.AppendType((TypeSymbol) symbol.Parent, false);
+                markup.AppendPunctuation(".");
+            }
+
             markup.AppendName(SymbolMarkupKind.FieldName, symbol.Name);
         }
 
@@ -151,7 +164,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             Global
         }
 
-        private static void AppendVariableSymbolInfo(this ICollection<SymbolMarkupToken> markup, VariableSymbol symbol)
+        private static void AppendVariableSymbolInfo(this ICollection<SymbolMarkupToken> markup, VariableSymbol symbol, SymbolDisplayFormat format)
         {
             VariableType variableType;
             if (symbol.Parent == null)
@@ -161,24 +174,27 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             else
                 variableType = VariableType.Local;
 
-            switch (variableType)
+            if (format == SymbolDisplayFormat.QuickInfo)
             {
-                case VariableType.Local:
-                    markup.AppendPlainText("(local variable)");
-                    break;
-                case VariableType.ConstantBuffer:
-                    markup.AppendPlainText("(constant buffer variable)");
-                    break;
-                case VariableType.Global:
-                    markup.AppendPlainText("(global variable)");
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
+                switch (variableType)
+                {
+                    case VariableType.Local:
+                        markup.AppendPlainText("(local variable)");
+                        break;
+                    case VariableType.ConstantBuffer:
+                        markup.AppendPlainText("(constant buffer variable)");
+                        break;
+                    case VariableType.Global:
+                        markup.AppendPlainText("(global variable)");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
 
-            markup.AppendSpace();
-            markup.AppendType(symbol.ValueType, true);
-            markup.AppendSpace();
+                markup.AppendSpace();
+                markup.AppendType(symbol.ValueType, true);
+                markup.AppendSpace();
+            }
 
             switch (variableType)
             {
@@ -263,10 +279,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             markup.AppendName(SymbolMarkupKind.SemanticName, symbol.Name);
         }
 
-        private static void AppendConstantBuffer(this ICollection<SymbolMarkupToken> markup, ConstantBufferSymbol symbol)
+        private static void AppendConstantBuffer(this ICollection<SymbolMarkupToken> markup, ConstantBufferSymbol symbol, SymbolDisplayFormat format)
         {
-            markup.AppendPlainText("(constant buffer)");
-            markup.AppendSpace();
+            if (format == SymbolDisplayFormat.QuickInfo)
+            {
+                markup.AppendPlainText("(constant buffer)");
+                markup.AppendSpace();
+            }
 
             markup.AppendName(SymbolMarkupKind.ConstantBufferVariableName, symbol.Name);
         }
@@ -277,32 +296,41 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             markup.AppendParameters(symbol.Parameters, format);
         }
 
-        private static void AppendTechnique(this ICollection<SymbolMarkupToken> markup, TechniqueSymbol symbol)
+        private static void AppendTechnique(this ICollection<SymbolMarkupToken> markup, TechniqueSymbol symbol, SymbolDisplayFormat format)
         {
-            markup.AppendKeyword("technique");
-            markup.AppendSpace();
+            if (format == SymbolDisplayFormat.QuickInfo)
+            {
+                markup.AppendKeyword("technique");
+                markup.AppendSpace();
+            }
 
             markup.AppendName(SymbolMarkupKind.TechniqueName, symbol.Name);
         }
 
-        private static void AppendTypeAlias(this ICollection<SymbolMarkupToken> markup, TypeAliasSymbol symbol)
+        private static void AppendTypeAlias(this ICollection<SymbolMarkupToken> markup, TypeAliasSymbol symbol, SymbolDisplayFormat format)
         {
-            markup.AppendKeyword("typedef");
-            markup.AppendSpace();
+            if (format == SymbolDisplayFormat.QuickInfo)
+            {
+                markup.AppendKeyword("typedef");
+                markup.AppendSpace();
 
-            markup.AppendType(symbol.ValueType, true);
-            markup.AppendSpace();
+                markup.AppendType(symbol.ValueType, true);
+                markup.AppendSpace();
+            }
 
             markup.AppendName(SymbolMarkupKind.GlobalVariableName, symbol.Name);
         }
 
-        private static void AppendNamespace(this ICollection<SymbolMarkupToken> markup, NamespaceSymbol symbol)
+        private static void AppendNamespace(this ICollection<SymbolMarkupToken> markup, NamespaceSymbol symbol, SymbolDisplayFormat format)
         {
-            markup.AppendKeyword("namespace");
-            markup.AppendSpace();
+            if (format == SymbolDisplayFormat.QuickInfo)
+            {
+                markup.AppendKeyword("namespace");
+                markup.AppendSpace();
 
-            if (symbol.Parent != null)
-                markup.AppendParentScope(symbol.Parent);
+                if (symbol.Parent != null)
+                    markup.AppendParentScope(symbol.Parent);
+            }
 
             markup.AppendName(SymbolMarkupKind.NamespaceName, symbol.Name);
         }

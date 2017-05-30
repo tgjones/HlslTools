@@ -26,7 +26,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.QuickInfo
 
             var syntaxToken = (SyntaxToken) token;
             var macroReference = syntaxToken.MacroReference;
-            if (macroReference != null && macroReference.NameToken.SourceRange == token.SourceRange)
+            if (macroReference != null && macroReference.SourceRange == token.SourceRange)
             {
                 return new QuickInfoDisplayContent(
                     LanguageNames.Hlsl,

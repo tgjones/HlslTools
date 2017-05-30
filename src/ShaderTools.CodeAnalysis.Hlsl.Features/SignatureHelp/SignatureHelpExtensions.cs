@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
@@ -16,7 +14,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
                 return ((SyntaxNode) argumentList).IsBetweenParentheses(position);
 
             // If there is a nested ArgumentList that contains this position, don't show signature help for this node type.
-            if (node.DescendantNodes().Any(x => x.Kind == SyntaxKind.ArgumentList && x.IsBetweenParentheses(position)))
+            if (node.DescendantNodes().Cast<SyntaxNode>().Any(x => x.Kind == SyntaxKind.ArgumentList && x.IsBetweenParentheses(position)))
                 return false;
 
             var leftParenthesisToken = node.GetSingleChildToken(SyntaxKind.OpenParenToken);

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.Text;
 using System.Threading;
 using ShaderTools.CodeAnalysis.Symbols;
 
@@ -53,6 +54,24 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+        }
+
+        public static string GetFullyQualifiedName(this ISymbol symbol)
+        {
+            var result = new StringBuilder();
+            GetFullyQualifiedNameRecursive(symbol, result);
+            return result.ToString();
+        }
+
+        private static void GetFullyQualifiedNameRecursive(this ISymbol symbol, StringBuilder sb)
+        {
+            if (symbol.Parent != null)
+            {
+                GetFullyQualifiedNameRecursive(symbol.Parent, sb);
+                sb.Append("::");
+            }
+
+            sb.Append(symbol.Name);
         }
 
         private static string GetDocumentation(ISymbol symbol, CancellationToken cancellationToken)

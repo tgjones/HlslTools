@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
@@ -28,6 +30,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
         private readonly ConditionalWeakTable<ITextBuffer, ITextDocument> _textBufferToTextDocumentMap;
         private readonly ConditionalWeakTable<ITextBuffer, DocumentId> _textBufferToDocumentIdMap;
         private readonly ConditionalWeakTable<ITextBuffer, List<ITextView>> _textBufferToViewsMap;
+        private readonly ConditionalWeakTable<ITextView, List<ITextBuffer>> _textViewToBuffersMap;
 
         /// <summary>
         /// A <see cref="ForegroundThreadAffinitizedObject"/> to make assertions that stuff is on the right thread.
@@ -53,6 +56,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
             _textBufferToTextDocumentMap = new ConditionalWeakTable<ITextBuffer, ITextDocument>();
             _textBufferToDocumentIdMap = new ConditionalWeakTable<ITextBuffer, DocumentId>();
             _textBufferToViewsMap = new ConditionalWeakTable<ITextBuffer, List<ITextView>>();
+            _textViewToBuffersMap = new ConditionalWeakTable<ITextView, List<ITextBuffer>>();
 
             Services.GetService<IDocumentTrackingService>();
         }
@@ -130,6 +134,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
         {
             // Add this ITextView to the list of known views for this buffer.
             _textBufferToViewsMap.GetOrCreateValue(textBuffer).Add(textView);
+            _textViewToBuffersMap.GetOrCreateValue(textView).Add(textBuffer);
 
             // Do we already know about this text buffer?
             if (_textBufferToDocumentIdMap.TryGetValue(textBuffer, out var _))
@@ -163,6 +168,14 @@ namespace ShaderTools.VisualStudio.LanguageServices
 
         internal void OnSubjectBufferDisconnected(ITextView textView, ITextBuffer textBuffer)
         {
+            var textBuffers = _textViewToBuffersMap.GetOrCreateValue(textView);
+            textBuffers.Remove(textBuffer);
+
+            if (textBuffers.Count == 0)
+            {
+                _textViewToBuffersMap.Remove(textView);
+            }
+
             // Remove text view from the list of known text views for this text buffer.
             var textViews = _textBufferToViewsMap.GetOrCreateValue(textBuffer);
             textViews.Remove(textView);
@@ -213,6 +226,19 @@ namespace ShaderTools.VisualStudio.LanguageServices
 
                 edit.Apply();
             }
+        }
+
+        internal ImmutableArray<DocumentId> GetDocumentIdsForTextView(ITextView textView)
+        {
+            if (!_textViewToBuffersMap.TryGetValue(textView, out var textBuffers))
+            {
+                return ImmutableArray<DocumentId>.Empty;
+            }
+
+            return textBuffers
+                .Select(x => x.AsTextContainer()?.GetOpenDocumentInCurrentContext()?.Id)
+                .Where(x => x != null)
+                .ToImmutableArray();
         }
     }
 }

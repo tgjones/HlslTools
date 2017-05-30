@@ -241,26 +241,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 .Where(seenNodes.Add);
         }
 
-        public static IEnumerable<SyntaxNode> DescendantNodes(this SyntaxNode root)
-        {
-            return root.DescendantNodesAndSelf().Skip(1);
-        }
-
-        public static IEnumerable<SyntaxNode> DescendantNodesAndSelf(this SyntaxNode root)
-        {
-            var stack = new Stack<SyntaxNode>();
-            stack.Push(root);
-
-            while (stack.Count > 0)
-            {
-                var current = stack.Pop();
-                yield return current;
-
-                foreach (var child in current.ChildNodes.Reverse())
-                    stack.Push((SyntaxNode) child);
-            }
-        }
-
         public static bool DefinitelyInMacro(this SyntaxTree tree, SourceLocation position)
         {
             if (tree == null)
