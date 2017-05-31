@@ -76,6 +76,9 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 case VSConstants.VSStd2KCmdID.FORMATSELECTION:
                     return QueryFormatSelectionStatus(prgCmds);
 
+                case CmdidToggleConsumeFirstMode:
+                    return QueryToggleConsumeFirstModeStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
+
                 case VSConstants.VSStd2KCmdID.COMMENT_BLOCK:
                 case VSConstants.VSStd2KCmdID.COMMENTBLOCK:
                     return QueryCommentBlockStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
@@ -166,6 +169,13 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             return GetCommandState(
                 (v, b) => new CommentSelectionCommandArgs(v, b),
+                ref pguidCmdGroup, commandCount, prgCmds, commandText);
+        }
+
+        private int QueryToggleConsumeFirstModeStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
+        {
+            return GetCommandState(
+                (v, b) => new ToggleCompletionModeCommandArgs(v, b),
                 ref pguidCmdGroup, commandCount, prgCmds, commandText);
         }
 

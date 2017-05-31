@@ -105,6 +105,16 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                     ExecutePaste(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
+                case VSConstants.VSStd97CmdID.Delete:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteDelete(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd97CmdID.SelectAll:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteSelectAll(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 default:
                     return NextCommandTarget.Exec(ref pguidCmdGroup, commandId, executeInformation, pvaIn, pvaOut);
             }
@@ -143,8 +153,26 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                     ExecuteDown(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
+                case VSConstants.VSStd2KCmdID.PAGEDN:
+                    ExecutePageDown(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.PAGEUP:
+                    ExecutePageUp(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 case VSConstants.VSStd2KCmdID.CANCEL:
                     ExecuteCancel(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.BACKSPACE:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteBackspace(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.DELETE:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteDelete(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
                 case VSConstants.VSStd2KCmdID.FORMATDOCUMENT:
@@ -153,6 +181,10 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 
                 case VSConstants.VSStd2KCmdID.FORMATSELECTION:
                     ExecuteFormatSelection(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case CmdidToggleConsumeFirstMode:
+                    ExecuteToggleConsumeFirstMode(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
                 case CmdidNextHighlightedReference:
@@ -171,6 +203,16 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 case VSConstants.VSStd2KCmdID.UNCOMMENTBLOCK:
                 case VSConstants.VSStd2KCmdID.UNCOMMENT_BLOCK:
                     ExecuteUncommentBlock(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.COMPLETEWORD:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteCommitUniqueCompletionItem(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
+                case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
+                    GCManager.UseLowLatencyModeForProcessingUserInput();
+                    ExecuteInvokeCompletionList(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
                 case VSConstants.VSStd2KCmdID.PARAMINFO:
@@ -209,6 +251,20 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 lastHandler: executeNextCommandTarget);
         }
 
+        protected void ExecuteCommitUniqueCompletionItem(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new CommitUniqueCompletionListItemCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteInvokeCompletionList(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new InvokeCompletionListCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
         protected void ExecuteUncommentBlock(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
         {
             CurrentHandlers.Execute(contentType,
@@ -237,6 +293,13 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 lastHandler: executeNextCommandTarget);
         }
 
+        protected void ExecuteToggleConsumeFirstMode(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new ToggleCompletionModeCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
         protected void ExecuteFormatDocument(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
         {
             CurrentHandlers.Execute(contentType,
@@ -258,6 +321,34 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 lastHandler: executeNextCommandTarget);
         }
 
+        protected void ExecuteBackspace(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new BackspaceKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteDelete(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new DeleteKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecutePageUp(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new PageUpKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecutePageDown(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new PageDownKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
         protected void ExecuteDown(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
         {
             CurrentHandlers.Execute(contentType,
@@ -269,6 +360,20 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             CurrentHandlers.Execute(contentType,
                 args: new UpKeyCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteSelectAll(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new SelectAllCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        protected void ExecuteTab(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new TabKeyCommandArgs(ConvertTextView(), subjectBuffer),
                 lastHandler: executeNextCommandTarget);
         }
 
