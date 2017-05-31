@@ -17,19 +17,21 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
         public string Text { get; }
         public string ValueText => Value as string ?? Text;
 
-        public override bool IsMissing { get; }
+        public SyntaxTokenSource Source { get; }
+
+        public override bool IsMissing => Source == SyntaxTokenSource.MissingToken;
 
         public SourceFileSpan FileSpan { get; }
 
-        internal SyntaxToken(SyntaxKind kind, SyntaxKind contextualKind, 
-            bool isMissing, SourceRange sourceRange, SourceFileSpan fileSpan, string text, object value,
+        private SyntaxToken(SyntaxKind kind, SyntaxKind contextualKind, 
+            SyntaxTokenSource source, SourceRange sourceRange, SourceFileSpan fileSpan, string text, object value,
             IEnumerable<SyntaxNode> leadingTrivia, IEnumerable<SyntaxNode> trailingTrivia, 
             IEnumerable<Diagnostic> diagnostics)
             : base(kind, diagnostics)
         {
             ContextualKind = contextualKind;
 
-            IsMissing = isMissing;
+            Source = source;
 
             Text = text;
             FileSpan = fileSpan;
@@ -51,13 +53,13 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
                 || TrailingTrivia.Any(x => x.ContainsDiagnostics);
         }
 
-        internal SyntaxToken(SyntaxKind kind, bool isMissing, SourceRange sourceRange, SourceFileSpan fileSpan)
-            : this(kind, SyntaxKind.BadToken, isMissing, sourceRange, fileSpan, string.Empty, null, 
-                  Enumerable.Empty<SyntaxNode>(),
-                  Enumerable.Empty<SyntaxNode>(),
-                  Enumerable.Empty<Diagnostic>())
+        internal static SyntaxToken CreateMissing(SyntaxKind kind, SourceRange sourceRange, SourceFileSpan fileSpan)
         {
-            
+            return new SyntaxToken(
+                kind, SyntaxKind.BadToken, SyntaxTokenSource.MissingToken, sourceRange, fileSpan, string.Empty, null,
+                Enumerable.Empty<SyntaxNode>(),
+                Enumerable.Empty<SyntaxNode>(),
+                Enumerable.Empty<Diagnostic>());
         }
 
         internal SyntaxToken(PretokenizedSyntaxToken pretokenizedToken, SourceLocation position)
@@ -145,27 +147,27 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics);
+            return new SyntaxToken(Kind, ContextualKind, Source, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, diagnostics);
         }
 
         public SyntaxToken WithLeadingTrivia(IEnumerable<SyntaxNode> trivia)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, trivia, TrailingTrivia, Diagnostics);
+            return new SyntaxToken(Kind, ContextualKind, Source, SourceRange, FileSpan, Text, Value, trivia, TrailingTrivia, Diagnostics);
         }
 
         public SyntaxToken WithTrailingTrivia(IEnumerable<SyntaxNode> trivia)
         {
-            return new SyntaxToken(Kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, trivia, Diagnostics);
+            return new SyntaxToken(Kind, ContextualKind, Source, SourceRange, FileSpan, Text, Value, LeadingTrivia, trivia, Diagnostics);
         }
 
         public SyntaxToken WithKind(SyntaxKind kind)
         {
-            return new SyntaxToken(kind, ContextualKind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
+            return new SyntaxToken(kind, ContextualKind, Source, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
         }
 
         public SyntaxToken WithContextualKind(SyntaxKind kind)
         {
-            return new SyntaxToken(Kind, kind, IsMissing, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
+            return new SyntaxToken(Kind, kind, Source, SourceRange, FileSpan, Text, Value, LeadingTrivia, TrailingTrivia, Diagnostics);
         }
 
         protected internal override void WriteTo(StringBuilder sb, bool leading, bool trailing)
