@@ -11,5 +11,7 @@ namespace ShaderTools.CodeAnalysis.Completion
 
         // This is serialized by the Visual Studio-specific LanguageSettingsPersister
         public static readonly PerLanguageOption<bool> TriggerOnTyping = new PerLanguageOption<bool>(nameof(CompletionOptions), nameof(TriggerOnTyping), defaultValue: true);
+
+        public static readonly PerLanguageOption<bool?> TriggerOnDeletion = new PerLanguageOption<bool?>(nameof(CompletionOptions), nameof(TriggerOnDeletion), defaultValue: null);
     }
 }

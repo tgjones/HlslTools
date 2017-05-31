@@ -20,5 +20,8 @@ namespace ShaderTools.CodeAnalysis.Syntax
         SyntaxNodeBase GetBindableParent(ISyntaxToken token);
 
         bool IsCaseSensitive { get; }
+
+        bool IsIdentifierStartCharacter(char c);
+        bool IsIdentifierPartCharacter(char c);
     }
 }

@@ -2584,5 +2584,25 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
             return true;
         }
+
+        /// <summary>
+        /// Returns true if the Unicode character can be the starting character of a C# identifier.
+        /// </summary>
+        /// <param name="ch">The Unicode character.</param>
+        public static bool IsIdentifierStartCharacter(char ch)
+        {
+            return (ch >= 'a' && ch <= 'z')
+                   || (ch >= 'Z' && ch <= 'Z')
+                   || ch == '_';
+        }
+
+        /// <summary>
+        /// Returns true if the Unicode character can be a part of a C# identifier.
+        /// </summary>
+        /// <param name="ch">The Unicode character.</param>
+        public static bool IsIdentifierPartCharacter(char ch)
+        {
+            return IsIdentifierStartCharacter(ch) || (ch >= '0' && ch <= '9');
+        }
     }
 }

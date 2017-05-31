@@ -141,5 +141,10 @@ namespace ShaderTools.CodeAnalysis
         {
             parts.Add(new TaggedText(TextTags.Text, text));
         }
+
+        public static void AddPunctuation(this IList<TaggedText> parts, string text)
+        {
+            parts.Add(new TaggedText(TextTags.Punctuation, text));
+        }
     }
 }

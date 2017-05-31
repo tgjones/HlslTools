@@ -10,6 +10,19 @@ namespace ShaderTools.Utilities.Collections
 {
     internal static class ImmutableArrayExtensions
     {
+        /// <summary>
+        /// Converts a sequence to an immutable array.
+        /// </summary>
+        /// <typeparam name="T">Elemental type of the sequence.</typeparam>
+        /// <param name="items">The sequence to convert.</param>
+        /// <returns>An immutable copy of the contents of the sequence.</returns>
+        /// <exception cref="ArgumentNullException">If items is null (default)</exception>
+        /// <remarks>If the sequence is null, this will throw <see cref="ArgumentNullException"/></remarks>
+        public static ImmutableArray<T> AsImmutable<T>(this IEnumerable<T> items)
+        {
+            return ImmutableArray.CreateRange<T>(items);
+        }
+
         internal static ImmutableArray<T> ToImmutableArrayOrEmpty<T>(this IEnumerable<T> items)
         {
             if (items == null)

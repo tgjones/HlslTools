@@ -117,5 +117,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public bool IsCaseSensitive => true;
+
+        public bool IsIdentifierStartCharacter(char c)
+        {
+            return SyntaxFacts.IsIdentifierStartCharacter(c);
+        }
+
+        public bool IsIdentifierPartCharacter(char c)
+        {
+            return SyntaxFacts.IsIdentifierPartCharacter(c);
+        }
     }
 }

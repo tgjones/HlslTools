@@ -233,5 +233,17 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
 
         //    builder.Add(alias.GetWithSingleAttributeSuffix(caseSensitive));
         //}
+
+        public static int GetCaseInsensitivePrefixLength(this string string1, string string2)
+        {
+            int x = 0;
+            while (x < string1.Length && x < string2.Length &&
+                   char.ToUpper(string1[x]) == char.ToUpper(string2[x]))
+            {
+                x++;
+            }
+
+            return x;
+        }
     }
 }

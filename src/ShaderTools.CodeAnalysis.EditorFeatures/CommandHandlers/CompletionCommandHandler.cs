@@ -11,10 +11,10 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         Before = PredefinedCommandHandlerNames.DocumentationComments)]
     internal sealed class CompletionCommandHandler : AbstractCompletionCommandHandler
     {
-        //[ImportingConstructor]
-        //public CompletionCommandHandler(IAsyncCompletionService completionService)
-        //    : base(completionService)
-        //{
-        //}
+        [ImportingConstructor]
+        public CompletionCommandHandler(IAsyncCompletionService completionService)
+            : base(completionService)
+        {
+        }
     }
 }

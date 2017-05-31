@@ -1,9 +1,12 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Symbols;
+using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Shared.Extensions
 {
@@ -77,6 +80,15 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
         private static string GetDocumentation(ISymbol symbol, CancellationToken cancellationToken)
         {
             return symbol.Documentation;
+        }
+
+        public static IEnumerable<TaggedText> GetDocumentationParts(this ISymbol symbol, SemanticModelBase semanticModel, int position, CancellationToken cancellationToken)
+        {
+            string documentation = GetDocumentation(symbol, cancellationToken);
+
+            return documentation != null
+                ? SpecializedCollections.SingletonEnumerable(new TaggedText(TextTags.Text, documentation))
+                : SpecializedCollections.EmptyEnumerable<TaggedText>();
         }
     }
 }
