@@ -86,7 +86,6 @@
   <ItemGroup>
     <Compile Include="Hlsl\Editing\Commenting\CommentingTests.cs" />
     <Compile Include="Hlsl\Editing\SmartIndenting\SmartIndentTests.cs" />
-    <Compile Include="Hlsl\IntelliSense\ScopedCompletionTests.cs" />
     <Compile Include="Hlsl\Navigation\NavigationTargetsVisitorTests.cs" />
     <Compile Include="Hlsl\Support\OptionsUtility.cs" />
     <Compile Include="Hlsl\Support\TextBufferUtility.cs" />

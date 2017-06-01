@@ -3,6 +3,7 @@
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.EditorFeatures")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Hlsl.EditorFeatures")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Hlsl.Features")]
+[assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Hlsl.Features.Tests")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.ShaderLab.Features")]
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio")]
