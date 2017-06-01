@@ -18,9 +18,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.Assembly:
                     return StandardGlyphGroup.GlyphAssembly;
 
-                case Glyph.BasicFile:
-                case Glyph.BasicProject:
-                    return StandardGlyphGroup.GlyphVBProject;
+                case Glyph.HlslFile:
+                case Glyph.ShaderLabFile:
+                    return StandardGlyphGroup.GlyphGroupUnknown;
 
                 case Glyph.ClassPublic:
                 case Glyph.ClassProtected:
@@ -34,12 +34,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.ConstantInternal:
                     return StandardGlyphGroup.GlyphGroupConstant;
 
-                case Glyph.CSharpFile:
-                    return StandardGlyphGroup.GlyphCSharpFile;
-
-                case Glyph.CSharpProject:
-                    return StandardGlyphGroup.GlyphCoolProject;
-
                 case Glyph.DelegatePublic:
                 case Glyph.DelegateProtected:
                 case Glyph.DelegatePrivate:
@@ -52,7 +46,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.EnumInternal:
                     return StandardGlyphGroup.GlyphGroupEnum;
 
-                case Glyph.EnumMember:
+                case Glyph.EnumMemberPublic:
+                case Glyph.EnumMemberProtected:
+                case Glyph.EnumMemberPrivate:
+                case Glyph.EnumMemberInternal:
                     return StandardGlyphGroup.GlyphGroupEnumMember;
 
                 case Glyph.Error:
@@ -231,10 +228,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.Assembly:
                     return KnownMonikers.Assembly;
 
-                case Glyph.BasicFile:
-                    return KnownMonikers.VBFileNode;
-                case Glyph.BasicProject:
-                    return KnownMonikers.VBProjectNode;
+                case Glyph.HlslFile:
+                case Glyph.ShaderLabFile:
+                    return KnownMonikers.UnknownMember;
 
                 case Glyph.ClassPublic:
                     return KnownMonikers.ClassPublic;
@@ -244,11 +240,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                     return KnownMonikers.ClassPrivate;
                 case Glyph.ClassInternal:
                     return KnownMonikers.ClassInternal;
-
-                case Glyph.CSharpFile:
-                    return KnownMonikers.CSFileNode;
-                case Glyph.CSharpProject:
-                    return KnownMonikers.CSProjectNode;
 
                 case Glyph.ConstantPublic:
                     return KnownMonikers.ConstantPublic;
@@ -277,8 +268,14 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.EnumInternal:
                     return KnownMonikers.EnumerationInternal;
 
-                case Glyph.EnumMember:
+                case Glyph.EnumMemberPublic:
                     return KnownMonikers.EnumerationItemPublic;
+                case Glyph.EnumMemberProtected:
+                    return KnownMonikers.EnumerationItemProtected;
+                case Glyph.EnumMemberPrivate:
+                    return KnownMonikers.EnumerationItemPrivate;
+                case Glyph.EnumMemberInternal:
+                    return KnownMonikers.EnumerationItemInternal;
 
                 case Glyph.Error:
                     return KnownMonikers.StatusError;

@@ -12,4 +12,19 @@
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="Properties\HlslFeaturesResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HlslFeaturesResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\HlslFeaturesResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>HlslFeaturesResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

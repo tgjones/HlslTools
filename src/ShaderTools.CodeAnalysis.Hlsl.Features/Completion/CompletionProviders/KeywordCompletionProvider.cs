@@ -1,26 +1,44 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using System.Threading.Tasks;
+using ShaderTools.CodeAnalysis.Completion;
+using ShaderTools.CodeAnalysis.Hlsl.Completion.Providers;
+using ShaderTools.CodeAnalysis.Hlsl.Extensions.ContextQuery;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Glyphs;
-using ShaderTools.Editor.VisualStudio.Hlsl.Util.ContextQuery;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
+namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 {
-    //[Export(typeof(ICompletionProvider))]
-    internal sealed class KeywordCompletionProvider : ICompletionProvider
+    internal sealed class KeywordCompletionProvider : CommonCompletionProvider
     {
-        public IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position)
+        internal override bool IsInsertionTrigger(SourceText text, int insertedCharacterPosition, OptionSet options)
         {
-            var syntaxTree = semanticModel.Compilation.SyntaxTree;
-
-            return GetAvailableKeywords(syntaxTree, position)
-                .Select(k => k.GetText())
-                .Select(t => new CompletionItem(t, t, t + " Keyword", Glyph.Keyword));
+            return CompletionUtilities.IsTriggerCharacter(text, insertedCharacterPosition, options);
         }
-        
+
+        public override async Task ProvideCompletionsAsync(CompletionContext context)
+        {
+            var syntaxTree = (SyntaxTree) await context.Document.GetSyntaxTreeAsync(context.CancellationToken).ConfigureAwait(false);
+
+            var sourceLocation = syntaxTree.MapRootFilePosition(context.Position);
+
+            var availableKeywords = GetAvailableKeywords(syntaxTree, sourceLocation);
+
+            foreach (var keyword in availableKeywords)
+            {
+                var keywordText = keyword.GetText();
+
+                context.AddItem(CommonCompletionItem.Create(
+                    keywordText,
+                    CompletionItemRules.Default,
+                    Glyph.Keyword,
+                    (keywordText + " Keyword").ToSymbolMarkupTokens()));
+            }
+        }
+
         private static bool IsInPropertyAccess(SyntaxNode root, SourceLocation position)
         {
             var token = root.FindTokenOnLeft(position);

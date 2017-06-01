@@ -12,7 +12,7 @@ namespace ShaderTools.CodeAnalysis.Completion
     /// One of many possible completions used to form the completion list presented to the user.
     /// </summary>
     [DebuggerDisplay("{DisplayText}")]
-    public sealed class CompletionItem : IComparable<CompletionItem>
+    internal sealed class CompletionItem : IComparable<CompletionItem>
     {
         /// <summary>
         /// The text that is displayed to the user.
@@ -44,6 +44,8 @@ namespace ShaderTools.CodeAnalysis.Completion
         /// </summary>
         public ImmutableDictionary<string, string> Properties { get; }
 
+        public Glyph Glyph { get; }
+
         /// <summary>
         /// Descriptive tags from <see cref="CompletionTags"/>.
         /// These tags may influence how the item is displayed.
@@ -61,6 +63,7 @@ namespace ShaderTools.CodeAnalysis.Completion
             string sortText,
             TextSpan span,
             ImmutableDictionary<string, string> properties,
+            Glyph glyph,
             ImmutableArray<string> tags,
             CompletionItemRules rules)
         {
@@ -69,17 +72,19 @@ namespace ShaderTools.CodeAnalysis.Completion
             this.SortText = sortText ?? this.DisplayText;
             this.Span = span;
             this.Properties = properties ?? ImmutableDictionary<string, string>.Empty;
+            Glyph = glyph;
             this.Tags = tags.NullToEmpty();
             this.Rules = rules ?? CompletionItemRules.Default;
         }
 
 #pragma warning disable RS0027 // Public API with optional parameter(s) should have the most parameters amongst its public overloads.
-        public static CompletionItem Create(
+        internal static CompletionItem Create(
 #pragma warning restore RS0027 // Public API with optional parameter(s) should have the most parameters amongst its public overloads.
             string displayText,
             string filterText = null,
             string sortText = null,
             ImmutableDictionary<string, string> properties = null,
+            Glyph glyph = Glyph.None,
             ImmutableArray<string> tags = default(ImmutableArray<string>),
             CompletionItemRules rules = null)
         {
@@ -89,37 +94,7 @@ namespace ShaderTools.CodeAnalysis.Completion
                 filterText: filterText,
                 sortText: sortText,
                 properties: properties,
-                tags: tags,
-                rules: rules);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="CompletionItem"/>
-        /// </summary>
-        /// <param name="displayText">The text that is displayed to the user.</param>
-        /// <param name="filterText">The text used to determine if the item matches the filter and is show in the list.</param>
-        /// <param name="sortText">The text used to determine the order that the item appears in the list.</param>
-        /// <param name="span">The span of the syntax element in the document associated with this item.</param>
-        /// <param name="properties">Additional information.</param>
-        /// <param name="tags">Descriptive tags that may influence how the item is displayed.</param>
-        /// <param name="rules">The rules that declare how this item should behave.</param>
-        /// <returns></returns>
-        [Obsolete("Use the Create overload that does not take a span", error: true)]
-        public static CompletionItem Create(
-            string displayText,
-            string filterText,
-            string sortText,
-            TextSpan span,
-            ImmutableDictionary<string, string> properties,
-            ImmutableArray<string> tags,
-            CompletionItemRules rules)
-        {
-            return new CompletionItem(
-                span: span,
-                displayText: displayText,
-                filterText: filterText,
-                sortText: sortText,
-                properties: properties,
+                glyph: glyph,
                 tags: tags,
                 rules: rules);
         }
@@ -130,6 +105,7 @@ namespace ShaderTools.CodeAnalysis.Completion
             Optional<string> filterText = default(Optional<string>),
             Optional<string> sortText = default(Optional<string>),
             Optional<ImmutableDictionary<string, string>> properties = default(Optional<ImmutableDictionary<string, string>>),
+            Optional<Glyph> glyph = default(Optional<Glyph>),
             Optional<ImmutableArray<string>> tags = default(Optional<ImmutableArray<string>>),
             Optional<CompletionItemRules> rules = default(Optional<CompletionItemRules>))
         {
@@ -138,6 +114,7 @@ namespace ShaderTools.CodeAnalysis.Completion
             var newFilterText = filterText.HasValue ? filterText.Value : this.FilterText;
             var newSortText = sortText.HasValue ? sortText.Value : this.SortText;
             var newProperties = properties.HasValue ? properties.Value : this.Properties;
+            var newGlyph = glyph.HasValue ? glyph.Value : this.Glyph;
             var newTags = tags.HasValue ? tags.Value : this.Tags;
             var newRules = rules.HasValue ? rules.Value : this.Rules;
 
@@ -146,6 +123,7 @@ namespace ShaderTools.CodeAnalysis.Completion
                 newFilterText == this.FilterText &&
                 newSortText == this.SortText &&
                 newProperties == this.Properties &&
+                newGlyph == Glyph &&
                 newTags == this.Tags &&
                 newRules == this.Rules)
             {
@@ -158,6 +136,7 @@ namespace ShaderTools.CodeAnalysis.Completion
                 span: newSpan,
                 sortText: newSortText,
                 properties: newProperties,
+                glyph: newGlyph,
                 tags: newTags,
                 rules: newRules);
         }

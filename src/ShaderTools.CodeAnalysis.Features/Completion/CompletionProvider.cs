@@ -10,7 +10,7 @@ namespace ShaderTools.CodeAnalysis.Completion
     /// <summary>
     /// Implement a subtype of this class and export it to provide completions during typing in an editor.
     /// </summary>
-    public abstract class CompletionProvider
+    internal abstract class CompletionProvider
     {
         internal string Name { get; }
 

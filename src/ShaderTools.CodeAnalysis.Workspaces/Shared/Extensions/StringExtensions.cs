@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
+using ShaderTools.CodeAnalysis.Symbols.Markup;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Shared.Extensions
@@ -244,6 +245,11 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
             }
 
             return x;
+        }
+
+        public static ImmutableArray<SymbolMarkupToken> ToSymbolMarkupTokens(this string text)
+        {
+            return ImmutableArray.Create(new SymbolMarkupToken(SymbolMarkupKind.PlainText, text));
         }
     }
 }

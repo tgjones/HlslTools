@@ -306,23 +306,6 @@
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="SetupPackage.cs" />
     <Compile Include="Hlsl\HlslPackage.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerTriggers.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionExtensions.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionItem.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionModel.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionModelManager.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionModelManagerProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\CompletionProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\CompletionProviderService.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\KeywordCompletionProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\SemanticCompletionProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\SymbolCompletionProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionSource.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionSourceProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\HlslCompletionSet.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionProviders\ICompletionProvider.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandler.cs" />
-    <Compile Include="Hlsl\IntelliSense\Completion\CompletionCommandHandlerProvider.cs" />
     <Compile Include="Hlsl\Navigation\GoToDefinitionTextViewCreationListener.cs" />
     <Compile Include="Core\Navigation\NavigationExtensions.cs" />
     <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
@@ -332,8 +315,6 @@
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
     <Compile Include="Core\Util\CommandTargetBase.cs" />
-    <Compile Include="Hlsl\Util\ContextQuery\SyntaxTokenExtensions.cs" />
-    <Compile Include="Hlsl\Util\ContextQuery\SyntaxTreeExtensions.cs" />
     <Compile Include="Core\Util\Logger.cs" />
     <Compile Include="Hlsl\Util\SyntaxOutput\SyntaxExtensions.cs" />
     <Compile Include="Hlsl\Util\Extensions\Extensions.cs" />

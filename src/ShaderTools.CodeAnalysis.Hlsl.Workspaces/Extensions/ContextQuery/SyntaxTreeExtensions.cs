@@ -1,7 +1,7 @@
 ﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.Util.ContextQuery
+namespace ShaderTools.CodeAnalysis.Hlsl.Extensions.ContextQuery
 {
     internal static class SyntaxTreeExtensions
     {

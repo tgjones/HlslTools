@@ -12,6 +12,7 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.GoToDefinition;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.NavigateTo;
@@ -25,6 +26,7 @@ using ShaderTools.LanguageServer.Protocol.MessageProtocol;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol.Channel;
 using ShaderTools.LanguageServer.Protocol.Services.SignatureHelp;
 using ShaderTools.LanguageServer.Protocol.Utilities;
+using CompletionItem = ShaderTools.LanguageServer.Protocol.LanguageServer.CompletionItem;
 
 namespace ShaderTools.LanguageServer.Protocol.Server
 {
@@ -101,6 +103,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             SetRequestHandler(HoverRequest.Type, this.HandleHoverRequest);
             SetRequestHandler(DocumentSymbolRequest.Type, this.HandleDocumentSymbolRequest);
             SetRequestHandler(WorkspaceSymbolRequest.Type, this.HandleWorkspaceSymbolRequest);
+            SetRequestHandler(CompletionRequest.Type, this.HandleCompletionRequest);
         }
 
         /// <summary>
@@ -135,11 +138,11 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                         WorkspaceSymbolProvider = true,
                         HoverProvider = true,
                         //CodeActionProvider = true,
-                        //CompletionProvider = new CompletionOptions
-                        //{
-                        //    ResolveProvider = true,
-                        //    TriggerCharacters = new string[] { ".", "-", ":", "\\" }
-                        //},
+                        CompletionProvider = new Protocol.LanguageServer.CompletionOptions
+                        {
+                            ResolveProvider = false,
+                            TriggerCharacters = new [] { ".", ":" }
+                        },
                         SignatureHelpProvider = new SignatureHelpOptions
                         {
                             TriggerCharacters = new[] { "(" }
@@ -361,7 +364,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             await requestContext.SendResult(symbols.ToArray());
         }
 
-        protected async Task HandleWorkspaceSymbolRequest(
+        private async Task HandleWorkspaceSymbolRequest(
             WorkspaceSymbolParams workspaceSymbolParams,
             RequestContext<SymbolInformation[]> requestContext)
         {
@@ -375,6 +378,46 @@ namespace ShaderTools.LanguageServer.Protocol.Server
             }
 
             await requestContext.SendResult(symbols.ToArray());
+        }
+
+        private async Task HandleCompletionRequest(
+            TextDocumentPositionParams completionParams,
+            RequestContext<CompletionItem[]> requestContext)
+        {
+            var document = GetDocument(completionParams.TextDocument);
+            var position = ConvertPosition(document, completionParams.Position);
+
+            var completionService = document.GetLanguageService<CompletionService>();
+
+            var completionList = await completionService.GetCompletionsAsync(document, position);
+
+            var completionItems = completionList.Items
+                .Select(x => ConvertCompletionItem(document, completionList.Rules, x))
+                .ToArray();
+
+            await requestContext.SendResult(completionItems);
+        }
+
+        private static CompletionItem ConvertCompletionItem(Document document, CompletionRules completionRules, CodeAnalysis.Completion.CompletionItem item)
+        {
+            var documentation = CommonCompletionItem.HasDescription(item)
+                ? CommonCompletionItem.GetDescription(item).Text
+                : string.Empty;
+
+            return new CompletionItem
+            {
+                Label = item.DisplayText,
+                SortText = item.SortText,
+                FilterText = item.FilterText,
+                Kind = CompletionItemKind.Class,
+                TextEdit = new TextEdit
+                {
+                    NewText = item.DisplayText,
+                    Range = ConvertTextSpanToRange(document.SourceText, item.Span)
+                },
+                Documentation = documentation,
+                CommitCharacters = completionRules.DefaultCommitCharacters.Select(x => x.ToString()).ToArray()
+            };
         }
 
         private async Task FindSymbolsInDocument(

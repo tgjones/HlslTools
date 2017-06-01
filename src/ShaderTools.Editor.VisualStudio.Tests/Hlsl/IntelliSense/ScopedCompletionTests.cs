@@ -1,7 +1,6 @@
 ﻿using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +10,7 @@ using Xunit;
 
 namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.IntelliSense
 {
+#if false
     public class ScopedCompletionTests
     {
         [Fact()]
@@ -135,4 +135,5 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.IntelliSense
 
 
     }
+#endif
 }

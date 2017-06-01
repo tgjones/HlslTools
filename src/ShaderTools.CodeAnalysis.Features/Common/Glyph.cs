@@ -8,16 +8,14 @@ namespace ShaderTools.CodeAnalysis
 
         Assembly,
 
-        BasicFile,
-        BasicProject,
+        HlslFile,
 
         ClassPublic,
         ClassProtected,
         ClassPrivate,
         ClassInternal,
 
-        CSharpFile,
-        CSharpProject,
+        ShaderLabFile,
 
         ConstantPublic,
         ConstantProtected,
@@ -34,7 +32,10 @@ namespace ShaderTools.CodeAnalysis
         EnumPrivate,
         EnumInternal,
 
-        EnumMember,
+        EnumMemberPublic,
+        EnumMemberProtected,
+        EnumMemberPrivate,
+        EnumMemberInternal,
 
         Error,
         StatusInformation,

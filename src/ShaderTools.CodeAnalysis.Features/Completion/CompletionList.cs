@@ -10,7 +10,7 @@ namespace ShaderTools.CodeAnalysis.Completion
     /// <summary>
     /// The set of completions to present to the user.
     /// </summary>
-    public sealed class CompletionList
+    internal sealed class CompletionList
     {
         /// <summary>
         /// The completion items to present to the user.

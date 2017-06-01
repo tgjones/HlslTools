@@ -11,7 +11,7 @@ namespace ShaderTools.CodeAnalysis.Completion
     /// <summary>
     /// The context presented to a <see cref="CompletionProvider"/> when providing completions.
     /// </summary>
-    public sealed class CompletionContext
+    internal sealed class CompletionContext
     {
         private readonly List<CompletionItem> _items;
 

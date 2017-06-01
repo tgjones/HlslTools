@@ -1,36 +1,82 @@
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.Composition;
+using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using ShaderTools.CodeAnalysis.Hlsl.Compilation;
+using System.Text;
+using System.Threading.Tasks;
+using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Symbols.Markup;
 using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Editor.VisualStudio.Core.Glyphs;
 
-namespace ShaderTools.Editor.VisualStudio.Hlsl.IntelliSense.Completion.CompletionProviders
+namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 {
-    [Export(typeof(ICompletionProvider))]
-    internal sealed class SemanticCompletionProvider : CompletionProvider<SemanticSyntax>
+    internal sealed class SemanticCompletionProvider : CommonCompletionProvider
     {
-        protected override IEnumerable<CompletionItem> GetItems(SemanticModel semanticModel, SourceLocation position, SemanticSyntax node)
+        internal override bool IsInsertionTrigger(SourceText text, int insertedCharacterPosition, OptionSet options)
         {
-            if (node.ColonToken.IsMissing || position < node.ColonToken.SourceRange.End)
-                return Enumerable.Empty<CompletionItem>();
+            var ch = text[insertedCharacterPosition];
+
+            return ch == ' ' || ch == ':';
+        }
+
+        public override async Task ProvideCompletionsAsync(CompletionContext context)
+        {
+            var syntaxTree = await context.Document.GetSyntaxTreeAsync(context.CancellationToken).ConfigureAwait(false);
+            var sourceLocation = syntaxTree.MapRootFilePosition(context.Position);
+            var token = ((SyntaxNode) syntaxTree.Root).FindTokenOnLeft(sourceLocation);
+
+            var semanticNode = token.Parent.AncestorsAndSelf()
+                .OfType<SemanticSyntax>()
+                .FirstOrDefault();
+
+            if (semanticNode == null || semanticNode.ColonToken.IsMissing || sourceLocation < semanticNode.ColonToken.SourceRange.End)
+            {
+                return;
+            }
 
             // If semantic is used on a variable declaration inside a struct, try to use the name of the struct
             // to guess the shader type it is applied to.
-            var parentStruct = node.Ancestors().OfType<StructTypeSyntax>().FirstOrDefault();
+            var parentStruct = semanticNode.Ancestors().OfType<StructTypeSyntax>().FirstOrDefault();
             var structUsage = GuessUsage(parentStruct);
 
+            var semanticModel = await context.Document.GetSemanticModelAsync(context.CancellationToken).ConfigureAwait(false);
+
             var availableSemantics = semanticModel
-                .LookupSymbols(node.Semantic.SourceRange.Start)
+                .LookupSymbols(semanticNode.Semantic.SourceRange.Start)
                 .OfType<SemanticSymbol>();
 
             if (structUsage != SemanticUsages.None)
+            {
                 availableSemantics = availableSemantics.Where(x => x.Usages.HasFlag(structUsage));
+            }
 
-            return availableSemantics.Select(x => new CompletionItem($"{x.Name}{(x.AllowsMultiple ? "[n]" : "")}", x.Name, $"(semantic) {x.Name}\n{x.FullDescription}", Glyph.Semantic));
+            foreach (var semantic in availableSemantics)
+            {
+                context.AddItem(CommonCompletionItem.Create(
+                    $"{semantic.Name}{(semantic.AllowsMultiple ? "[n]" : "")}",
+                    CompletionItemRules.Default,
+                    Glyph.ConstantPublic,
+                    CreateDescription(semantic)));
+            }
+        }
+
+        private static ImmutableArray<SymbolMarkupToken> CreateDescription(SemanticSymbol semantic)
+        {
+            var builder = ImmutableArray.CreateBuilder<SymbolMarkupToken>();
+
+            builder.Add(new SymbolMarkupToken(SymbolMarkupKind.PlainText, "(semantic) "));
+
+            builder.Add(new SymbolMarkupToken(SymbolMarkupKind.SemanticName, semantic.Name));
+
+            builder.Add(new SymbolMarkupToken(SymbolMarkupKind.Whitespace, Environment.NewLine));
+
+            builder.Add(new SymbolMarkupToken(SymbolMarkupKind.PlainText, semantic.FullDescription));
+
+            return builder.ToImmutable();
         }
 
         private static SemanticUsages GuessUsage(StructTypeSyntax structSyntax)
