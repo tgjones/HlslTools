@@ -12,6 +12,8 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         public override SourceText Text => _sourceFile.Text;
 
+        public override ParseOptions Options => null;
+
         public override SyntaxNodeBase Root { get; }
 
         internal SyntaxTree(SourceText text, Func<SyntaxTree, SyntaxNode> parseFunc)

@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Text
 {
     public interface IIncludeFileResolver
     {
-        SourceFile OpenInclude(string includeFilename, SourceFile currentFile, IEnumerable<string> additionalIncludeDirectories);
+        ImmutableArray<string> GetSearchDirectories(string includeFilename, SourceFile currentFile);
+        SourceFile OpenInclude(string includeFilename, SourceFile currentFile);
     }
 }

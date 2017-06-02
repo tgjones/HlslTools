@@ -10,7 +10,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
     public static class SyntaxFactory
     {
-        public static SyntaxTree ParseSyntaxTree(SourceText sourceText, ParserOptions options = null, IIncludeFileSystem fileSystem = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static SyntaxTree ParseSyntaxTree(SourceText sourceText, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null, CancellationToken cancellationToken = default(CancellationToken))
         {
             return Parse(sourceText, options, fileSystem ?? new DummyFileSystem(), p => p.ParseCompilationUnit(cancellationToken));
         }
@@ -30,14 +30,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return (StatementSyntax) Parse(SourceText.From(text), null, null, p => p.ParseStatement()).Root;
         }
 
-        private static SyntaxTree Parse(SourceText sourceText, ParserOptions options, IIncludeFileSystem fileSystem, Func<HlslParser, SyntaxNode> parseFunc)
+        private static SyntaxTree Parse(SourceText sourceText, HlslParseOptions options, IIncludeFileSystem fileSystem, Func<HlslParser, SyntaxNode> parseFunc)
         {
             var sourceFile = new SourceFile(sourceText, null);
 
             var lexer = new HlslLexer(sourceFile, options, fileSystem);
             var parser = new HlslParser(lexer);
 
-            var result = new SyntaxTree(sourceFile,
+            var result = new SyntaxTree(
+                sourceFile,
+                options,
                 syntaxTree =>
                 {
                     var node = parseFunc(parser);

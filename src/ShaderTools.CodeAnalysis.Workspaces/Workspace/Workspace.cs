@@ -5,6 +5,7 @@
 
 using System;
 using System.Collections.Immutable;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Host;
@@ -115,8 +116,10 @@ namespace ShaderTools.CodeAnalysis
         }
 
         // TODO: Refactor this.
-        public ConfigFile LoadConfigFile(string directory)
+        public ConfigFile LoadConfigFile(SourceText sourceText)
         {
+            var directory = Path.GetDirectoryName(sourceText.FilePath);
+
             if (directory == null)
                 return new ConfigFile();
 

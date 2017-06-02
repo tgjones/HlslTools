@@ -106,6 +106,9 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                 case VSConstants.VSStd2KCmdID.OUTLN_START_AUTOHIDING:
                     return QueryStartAutomaticOutliningStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
 
+                case VSConstants.VSStd2KCmdID.OPENFILE:
+                    return QueryOpenFileStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
+
                 default:
                     return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
             }
@@ -231,6 +234,13 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             return GetCommandState(
                 (v, b) => new StartAutomaticOutliningCommandArgs(v, b),
+                ref pguidCmdGroup, commandCount, prgCmds, commandText);
+        }
+
+        private int QueryOpenFileStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
+        {
+            return GetCommandState(
+                (v, b) => new OpenFileCommandArgs(v, b),
                 ref pguidCmdGroup, commandCount, prgCmds, commandText);
         }
 

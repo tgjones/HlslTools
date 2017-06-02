@@ -17,10 +17,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override SourceText Text { get; }
         public override SyntaxNodeBase Root { get; }
 
-        internal SyntaxTree(SourceFile file, Func<SyntaxTree, Tuple<SyntaxNode, List<FileSegment>>> parseFunc)
+        public override ParseOptions Options { get; }
+
+        internal SyntaxTree(SourceFile file, HlslParseOptions options, Func<SyntaxTree, Tuple<SyntaxNode, List<FileSegment>>> parseFunc)
         {
             File = file;
             Text = file.Text;
+            Options = options;
 
             var parsed = parseFunc(this);
             Root = parsed.Item1;

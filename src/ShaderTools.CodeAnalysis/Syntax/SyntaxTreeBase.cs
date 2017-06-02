@@ -8,6 +8,8 @@ namespace ShaderTools.CodeAnalysis.Syntax
     {
         public abstract SourceText Text { get; }
 
+        public abstract ParseOptions Options { get; }
+
         public abstract SyntaxNodeBase Root { get; }
 
         public abstract SourceFileSpan GetSourceFileSpan(SourceRange range);

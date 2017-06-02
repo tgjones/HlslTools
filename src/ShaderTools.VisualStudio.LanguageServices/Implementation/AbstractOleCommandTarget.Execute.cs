@@ -230,6 +230,10 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
                     ExecutePaste(subjectBuffer, contentType, executeNextCommandTarget);
                     break;
 
+                case VSConstants.VSStd2KCmdID.OPENFILE:
+                    ExecuteOpenFile(subjectBuffer, contentType, executeNextCommandTarget);
+                    break;
+
                 default:
                     return NextCommandTarget.Exec(ref pguidCmdGroup, commandId, executeInformation, pvaIn, pvaOut);
             }
@@ -403,6 +407,13 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             CurrentHandlers.Execute(contentType,
                 args: new PasteCommandArgs(ConvertTextView(), subjectBuffer),
+                lastHandler: executeNextCommandTarget);
+        }
+
+        private void ExecuteOpenFile(ITextBuffer subjectBuffer, IContentType contentType, Action executeNextCommandTarget)
+        {
+            CurrentHandlers.Execute(contentType,
+                args: new OpenFileCommandArgs(ConvertTextView(), subjectBuffer),
                 lastHandler: executeNextCommandTarget);
         }
 

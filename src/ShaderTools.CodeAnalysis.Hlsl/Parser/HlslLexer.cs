@@ -15,7 +15,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 {
     public sealed partial class HlslLexer : ILexer
     {
-        private readonly ParserOptions _options;
         private readonly IIncludeFileResolver _includeFileResolver;
         private readonly List<SyntaxNode> _leadingTrivia = new List<SyntaxNode>();
         private readonly List<SyntaxNode> _trailingTrivia = new List<SyntaxNode>();
@@ -59,10 +58,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         // - {main.hlsl, 101, 200}
         internal List<FileSegment> FileSegments { get; }
 
-        public HlslLexer(SourceFile file, ParserOptions options = null, IIncludeFileSystem includeFileSystem = null)
+        public HlslLexer(SourceFile file, HlslParseOptions options = null, IIncludeFileSystem includeFileSystem = null)
         {
             _rootFile = file;
-            _includeFileResolver = new IncludeFileResolver(includeFileSystem ?? new DummyFileSystem());
+
+            _includeFileResolver = new IncludeFileResolver(
+                includeFileSystem ?? new DummyFileSystem(), 
+                options ?? new HlslParseOptions());
+
             _directives = DirectiveStack.Empty;
 
             if (options != null)
@@ -78,8 +81,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     var directive = dp.ParseDirective(true, true, false);
                     _directives = directive.ApplyDirectives(_directives);
                 }
-
-            _options = options ?? new ParserOptions();
 
             ExpandMacros = true;
 
@@ -299,9 +300,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 SourceFile include;
                 try
                 {
-                    include = _includeFileResolver.OpenInclude(includeFilename,
-                        _includeStack.Peek().File, 
-                        _options.AdditionalIncludeDirectories);
+                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().File);
                     if (include == null)
                     {
                         includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));

@@ -306,18 +306,14 @@
     <Compile Include="Core\LanguageInfoBase.cs" />
     <Compile Include="SetupPackage.cs" />
     <Compile Include="Hlsl\HlslPackage.cs" />
-    <Compile Include="Hlsl\Navigation\GoToDefinitionTextViewCreationListener.cs" />
     <Compile Include="Core\Navigation\NavigationExtensions.cs" />
-    <Compile Include="Hlsl\Navigation\OpenIncludeFileCommandTarget.cs" />
     <Compile Include="Core\LanguagePackageBase.cs" />
     <Compile Include="ShaderLab\ShaderLabLanguageInfo.cs" />
     <Compile Include="source.extension.cs">
       <DependentUpon>source.extension.vsixmanifest</DependentUpon>
     </Compile>
-    <Compile Include="Core\Util\CommandTargetBase.cs" />
     <Compile Include="Core\Util\Logger.cs" />
     <Compile Include="Hlsl\Util\SyntaxOutput\SyntaxExtensions.cs" />
-    <Compile Include="Hlsl\Util\Extensions\Extensions.cs" />
     <Compile Include="Core\Glyphs\DispatcherGlyphService.cs" />
     <Compile Include="Core\Glyphs\Glyph.cs" />
     <Compile Include="Core\Glyphs\GlyphExtensions.cs" />

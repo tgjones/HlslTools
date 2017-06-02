@@ -108,7 +108,7 @@ float a;
 #else
 float b;
 #endif";
-            var options = new ParserOptions
+            var options = new HlslParseOptions
             {
                 PreprocessorDefines =
                 {
@@ -131,7 +131,7 @@ float a;
 #else
 float b;
 #endif";
-            var options = new ParserOptions
+            var options = new HlslParseOptions
             {
                 PreprocessorDefines =
                 {

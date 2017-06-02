@@ -1,6 +1,4 @@
-﻿using System.IO;
-using System.Threading;
-using ShaderTools.CodeAnalysis.Hlsl.Parser;
+﻿using System.Threading;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.CodeAnalysis.Host;
@@ -22,9 +20,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 
         public SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken)
         {
-            var configFile = _workspace.LoadConfigFile(Path.GetDirectoryName(text.FilePath));
+            var configFile = _workspace.LoadConfigFile(text);
 
-            var options = new ParserOptions();
+            var options = new HlslParseOptions();
             options.PreprocessorDefines.Add("__INTELLISENSE__", "1");
 
             foreach (var kvp in configFile.HlslPreprocessorDefinitions)

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using ShaderTools.CodeAnalysis.Text;
@@ -8,13 +8,40 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
     public sealed class IncludeFileResolver : IIncludeFileResolver
     {
         private readonly IIncludeFileSystem _fileSystem;
+        private readonly HlslParseOptions _parserOptions;
 
-        public IncludeFileResolver(IIncludeFileSystem fileSystem)
+        public IncludeFileResolver(IIncludeFileSystem fileSystem, HlslParseOptions parserOptions)
         {
             _fileSystem = fileSystem;
+            _parserOptions = parserOptions;
         }
 
-        public SourceFile OpenInclude(string includeFilename, SourceFile currentFile, IEnumerable<string> additionalIncludeDirectories)
+        public ImmutableArray<string> GetSearchDirectories(string includeFilename, SourceFile currentFile)
+        {
+            var result = ImmutableArray.CreateBuilder<string>();
+
+            // Look through the hierarchy of files that included currentFile, to see if any of their
+            // directories contain the include.
+            var fileToCheck = currentFile;
+            while (fileToCheck != null)
+            {
+                if (fileToCheck.FilePath != null)
+                {
+                    result.Add(Path.GetDirectoryName(fileToCheck.FilePath));
+                }
+                fileToCheck = fileToCheck.IncludedBy;
+            }
+
+            // Then try additional include directories.
+            foreach (var includeDirectory in _parserOptions.AdditionalIncludeDirectories)
+            {
+                result.Add(includeDirectory);
+            }
+
+            return result.ToImmutable();
+        }
+
+        public SourceFile OpenInclude(string includeFilename, SourceFile currentFile)
         {
             SourceText text;
 
@@ -50,7 +77,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             }
 
             // Then try additional include directories.
-            foreach (var includeDirectory in additionalIncludeDirectories)
+            foreach (var includeDirectory in _parserOptions.AdditionalIncludeDirectories)
             {
                 var testFilename = Path.Combine(includeDirectory, includeFilename);
                 if (_fileSystem.TryGetFile(testFilename, out text))
