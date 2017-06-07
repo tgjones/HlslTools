@@ -12,8 +12,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public TypeSymbol ValueType { get; }
         public int? Dimension { get; }
 
-        public override SyntaxTreeBase SourceTree => ValueType.SourceTree;
-        public override ImmutableArray<SourceRange> Locations => ValueType.Locations;
+        public override SyntaxTreeBase SourceTree => null;
+        public override ImmutableArray<SourceRange> Locations => ImmutableArray<SourceRange>.Empty;
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes => ImmutableArray<SyntaxNodeBase>.Empty;
 
         internal ArraySymbol(TypeSymbol valueType, int? dimension)
             : base(SymbolKind.Array, $"{valueType.FullName}[{dimension?.ToString() ?? string.Empty}]", "Array of " + valueType.Name, null)

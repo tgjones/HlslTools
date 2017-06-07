@@ -9,6 +9,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
     {
         public override SyntaxTreeBase SourceTree { get; } = null;
         public override ImmutableArray<SourceRange> Locations { get; } = ImmutableArray<SourceRange>.Empty;
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes => ImmutableArray<SyntaxNodeBase>.Empty;
 
         internal IntrinsicTypeSymbol(SymbolKind kind, string name, string documentation)
             : base(kind, name, documentation, null)

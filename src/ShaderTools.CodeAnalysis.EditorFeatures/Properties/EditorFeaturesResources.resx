@@ -165,4 +165,10 @@
   <data name="Navigating_to_definition" xml:space="preserve">
     <value>Navigating to definition...</value>
   </data>
+  <data name="Navigation_Bars" xml:space="preserve">
+    <value>Navigation Bars</value>
+  </data>
+  <data name="Refreshing_navigation_bars" xml:space="preserve">
+    <value>Refreshing navigation bars...</value>
+  </data>
 </root>

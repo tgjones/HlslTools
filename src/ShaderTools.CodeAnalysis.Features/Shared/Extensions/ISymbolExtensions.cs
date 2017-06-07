@@ -90,5 +90,10 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
                 ? SpecializedCollections.SingletonEnumerable(new TaggedText(TextTags.Text, documentation))
                 : SpecializedCollections.EmptyEnumerable<TaggedText>();
         }
+
+        public static string ToDisplayString(this ISymbol symbol, SymbolDisplayFormat format)
+        {
+            return symbol.ToMarkup(format).Tokens.ToTaggedText().GetFullText();
+        }
     }
 }

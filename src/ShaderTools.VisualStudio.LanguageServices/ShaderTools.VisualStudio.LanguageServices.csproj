@@ -64,7 +64,15 @@
     <Compile Include="Implementation\Extensions\VsTextSpanExtensions.cs" />
     <Compile Include="Implementation\GCManager.cs" />
     <Compile Include="Implementation\StandaloneCommandFilter.cs" />
+    <Compile Include="LanguageService\AbstractLanguageService.cs" />
+    <Compile Include="LanguageService\AbstractLanguageService.IVsAutoOutliningClient.cs" />
+    <Compile Include="LanguageService\AbstractLanguageService`2.cs" />
+    <Compile Include="LanguageService\AbstractLanguageService`2.IVsLanguageInfo.cs" />
+    <Compile Include="LanguageService\AbstractLanguageService`2.VsCodeWindowManager.cs" />
+    <Compile Include="LanguageService\AbstractPackage.cs" />
+    <Compile Include="LanguageService\AbstractPackage`2.cs" />
     <Compile Include="NavigateTo\VisualStudioNavigateToPreviewService.cs" />
+    <Compile Include="NavigationBar\NavigationBarClient.cs" />
     <Compile Include="Notification\VSNotificationServiceFactory.cs" />
     <Compile Include="Options\UI\AbstractCheckBoxViewModel.cs" />
     <Compile Include="Options\UI\AbstractOptionPage.cs" />
@@ -94,7 +102,10 @@
     <Compile Include="Utilities\AbstractNotifyPropertyChanged.cs" />
     <Compile Include="Options\UI\AbstractOptionPreviewViewModel.cs" />
     <Compile Include="Utilities\ComEventSink.cs" />
+    <Compile Include="Utilities\Extensions\GlyphExtensions.cs" />
+    <Compile Include="Utilities\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Utilities\IComEventSink.cs" />
+    <Compile Include="Utilities\VisualStudioLogger.cs" />
     <Compile Include="Utilities\VisualStudioWaitContext.Callback.cs" />
     <Compile Include="Utilities\VisualStudioWaitContext.cs" />
     <Compile Include="Utilities\VisualStudioWaitIndicator.cs" />
@@ -148,6 +159,15 @@
     <Reference Include="Microsoft.VisualStudio.Imaging, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Imaging.14.3.25407\lib\net45\Microsoft.VisualStudio.Imaging.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.14.3.25407\lib\Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Language.Intellisense, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.VisualStudio.Language.Intellisense.14.3.25407\lib\net45\Microsoft.VisualStudio.Language.Intellisense.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Language.NavigateTo.Interfaces, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\RoslynDependencies.Microsoft.VisualStudio.Language.NavigateTo.Interfaces.14.3.25407\lib\net46\Microsoft.VisualStudio.Language.NavigateTo.Interfaces.dll</HintPath>
       <Private>True</Private>
@@ -194,6 +214,11 @@
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.12.0.12.0.30110\lib\Microsoft.VisualStudio.Shell.Interop.12.0.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime.14.3.25407\lib\Microsoft.VisualStudio.Shell.Interop.14.0.DesignTime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.Shell.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <HintPath>..\packages\Microsoft.VisualStudio.Shell.Interop.8.0.8.0.50727\lib\Microsoft.VisualStudio.Shell.Interop.8.0.dll</HintPath>
       <Private>True</Private>
@@ -226,6 +251,11 @@
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.12.0, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <EmbedInteropTypes>True</EmbedInteropTypes>
       <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.12.0.12.0.30110\lib\Microsoft.VisualStudio.TextManager.Interop.12.0.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.TextManager.Interop.12.1.DesignTime, Version=12.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+      <HintPath>..\packages\Microsoft.VisualStudio.TextManager.Interop.12.1.DesignTime.12.1.30328\lib\Microsoft.VisualStudio.TextManager.Interop.12.1.DesignTime.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.TextManager.Interop.8.0, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">

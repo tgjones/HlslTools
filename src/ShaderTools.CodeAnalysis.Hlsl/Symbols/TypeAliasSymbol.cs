@@ -16,6 +16,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             ValueType = valueType;
             Locations = ImmutableArray.Create(syntax.Identifier.SourceRange);
             SourceTree = syntax.SyntaxTree;
+            DeclaringSyntaxNodes = ImmutableArray.Create((SyntaxNodeBase) syntax);
         }
 
         public TypeSymbol ValueType { get; }
@@ -23,6 +24,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         ITypeSymbol IAliasSymbol.Target => ValueType;
 
         public override ImmutableArray<SourceRange> Locations { get; }
+
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
 
         public override SyntaxTreeBase SourceTree { get; }
 

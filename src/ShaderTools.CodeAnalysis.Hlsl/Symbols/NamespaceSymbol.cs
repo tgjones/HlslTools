@@ -12,6 +12,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
         public override SyntaxTreeBase SourceTree => Syntax.SyntaxTree;
         public override ImmutableArray<SourceRange> Locations { get; }
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
 
         internal NamespaceSymbol(NamespaceSyntax syntax, Symbol parent)
             : base(SymbolKind.Namespace, syntax.Name.Text, string.Empty, parent)
@@ -19,6 +20,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             Syntax = syntax;
 
             Locations = ImmutableArray.Create(syntax.Name.SourceRange);
+            DeclaringSyntaxNodes = ImmutableArray.Create((SyntaxNodeBase) syntax);
         }
     }
 }

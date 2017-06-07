@@ -46,5 +46,20 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 return result.ToImmutable();
             }
         }
+
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes
+        {
+            get
+            {
+                var result = ImmutableArray.CreateBuilder<SyntaxNodeBase>();
+
+                result.AddRange(DeclarationSyntaxes);
+
+                if (DefinitionSyntax != null)
+                    result.Add(DefinitionSyntax);
+
+                return result.ToImmutable();
+            }
+        }
     }
 }

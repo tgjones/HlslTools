@@ -7,8 +7,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
     public class VariableSymbol : Symbol
     {
-        public override SyntaxTreeBase SourceTree { get; }
+        public override SyntaxTreeBase SourceTree { get; } = null;
         public override ImmutableArray<SourceRange> Locations { get; } = ImmutableArray<SourceRange>.Empty;
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes => ImmutableArray<SyntaxNodeBase>.Empty;
 
         internal VariableSymbol(SymbolKind kind, string name, string documentation, Symbol parent, TypeSymbol valueType)
             : base(kind, name, documentation, parent)

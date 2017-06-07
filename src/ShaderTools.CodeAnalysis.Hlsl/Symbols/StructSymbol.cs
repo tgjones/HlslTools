@@ -9,7 +9,7 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
-    public sealed class StructSymbol : TypeSymbol
+    public sealed class StructSymbol : TypeSymbol, INamedTypeSymbol
     {
         public StructSymbol BaseType { get; }
         public ImmutableArray<InterfaceSymbol> BaseInterfaces { get; }
@@ -18,6 +18,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
         public override SyntaxTreeBase SourceTree => Syntax.SyntaxTree;
         public override ImmutableArray<SourceRange> Locations { get; }
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
 
         internal StructSymbol(StructTypeSyntax syntax, Symbol parent, StructSymbol baseType, ImmutableArray<InterfaceSymbol> baseInterfaces, Binder binder)
             : base(syntax.IsClass ? SymbolKind.Class : SymbolKind.Struct, (syntax.Name != null) ? syntax.Name.Text : "<anonymous struct>", string.Empty, parent)
@@ -30,6 +31,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             Locations = syntax.Name != null
                 ? ImmutableArray.Create(syntax.Name.SourceRange)
                 : ImmutableArray<SourceRange>.Empty;
+
+            DeclaringSyntaxNodes = ImmutableArray.Create((SyntaxNodeBase) syntax);
         }
 
         public override IEnumerable<T> LookupMembers<T>(string name)

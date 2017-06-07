@@ -36,5 +36,7 @@
     <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices" Path="|ShaderTools.VisualStudio.LanguageServices;PkgdefProjectOutputGroup|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.Features" Path="|ShaderTools.CodeAnalysis.ShaderLab.Features|" />
     <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures.Text" Path="|ShaderTools.CodeAnalysis.EditorFeatures.Text|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.Hlsl" Path="|ShaderTools.VisualStudio.LanguageServices.Hlsl;PkgdefProjectOutputGroup|" />
+    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.ShaderLab" Path="|ShaderTools.VisualStudio.LanguageServices.ShaderLab;PkgdefProjectOutputGroup|" />
   </Assets>
 </PackageManifest>

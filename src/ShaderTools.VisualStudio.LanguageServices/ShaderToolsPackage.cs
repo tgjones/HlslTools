@@ -1,18 +1,20 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
 using ShaderTools.CodeAnalysis.Editor;
 using ShaderTools.CodeAnalysis.Editor.Implementation;
+using ShaderTools.CodeAnalysis.Log;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.VisualStudio.LanguageServices.Classification;
 using ShaderTools.VisualStudio.LanguageServices.ErrorList;
+using ShaderTools.VisualStudio.LanguageServices.LanguageService;
+using ShaderTools.VisualStudio.LanguageServices.Utilities;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [Guid(Guids.ShaderToolsPackageIdString)]
-    internal sealed class ShaderToolsPackage : Package
+    internal sealed class ShaderToolsPackage : AbstractPackage
     {
         // Updated by build process.
         public const string Version = "1.0.0";
@@ -38,15 +40,22 @@ namespace ShaderTools.VisualStudio.LanguageServices
         {
             base.Initialize();
 
+            Logger.SetLogger(new VisualStudioLogger(this));
+
             var componentModel = this.ComponentModel;
             _workspace = componentModel.GetService<VisualStudioWorkspace>();
 
             // Ensure the options persisters are loaded since we have to fetch options from the shell
             componentModel.GetExtensions<IOptionPersister>();
 
+            LoadComponentsInUIContextOnceSolutionFullyLoaded();
+        }
+
+        protected override void LoadComponentsInUIContext()
+        {
             // Force-load services that don't load themselves.
-            componentModel.GetService<ThemeColorFixer>();
-            componentModel.GetService<ErrorsTableDataSource>();
+            ComponentModel.GetService<ThemeColorFixer>();
+            ComponentModel.GetService<ErrorsTableDataSource>();
 
             System.Threading.Tasks.Task.Run(() => LoadComponentsBackground());
         }
@@ -60,10 +69,18 @@ namespace ShaderTools.VisualStudio.LanguageServices
 
         protected override void Dispose(bool disposing)
         {
-            var documentTrackingService = _workspace.Services.GetService<IDocumentTrackingService>() as VisualStudioDocumentTrackingService;
-            documentTrackingService.Dispose();
+            DisposeVisualStudioServices();
 
             base.Dispose(disposing);
+        }
+
+        private void DisposeVisualStudioServices()
+        {
+            if (_workspace != null)
+            {
+                var documentTrackingService = _workspace.Services.GetService<IDocumentTrackingService>() as VisualStudioDocumentTrackingService;
+                documentTrackingService.Dispose();
+            }
         }
     }
 }

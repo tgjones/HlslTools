@@ -6,7 +6,7 @@ using ShaderTools.CodeAnalysis.Symbols;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 {
-    public abstract class ContainerSymbol : Symbol
+    public abstract class ContainerSymbol : Symbol, INamespaceOrTypeSymbol
     {
         private readonly List<Symbol> _members;
         private ImmutableArray<Symbol> _membersArray = ImmutableArray<Symbol>.Empty;
@@ -22,6 +22,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 return _membersArray;
             }
         }
+
+        ImmutableArray<ISymbol> INamespaceOrTypeSymbol.GetMembers() => Members.CastArray<ISymbol>();
 
         internal ContainerSymbol(SymbolKind kind, string name, string documentation, Symbol parent)
             : base(kind, name, documentation, parent)

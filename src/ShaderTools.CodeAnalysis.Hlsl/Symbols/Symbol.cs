@@ -27,6 +27,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
         public abstract SyntaxTreeBase SourceTree { get; }
         public abstract ImmutableArray<SourceRange> Locations { get; }
+        public abstract ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
 
         public sealed override string ToString()
         {

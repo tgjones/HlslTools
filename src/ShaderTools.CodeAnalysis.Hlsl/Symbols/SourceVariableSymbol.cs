@@ -10,12 +10,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
     {
         public override SyntaxTreeBase SourceTree { get; }
         public override ImmutableArray<SourceRange> Locations { get; }
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
 
         internal SourceVariableSymbol(VariableDeclaratorSyntax syntax, Symbol parent, TypeSymbol valueType)
             : base(SymbolKind.Variable, syntax.Identifier.Text, string.Empty, parent, valueType)
         {
             SourceTree = syntax.SyntaxTree;
             Locations = ImmutableArray.Create(syntax.Identifier.SourceRange);
+            DeclaringSyntaxNodes = ImmutableArray.Create((SyntaxNodeBase) syntax);
         }
     }
 }

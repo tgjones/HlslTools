@@ -61,6 +61,17 @@ namespace ShaderTools.VisualStudio.LanguageServices.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0}
+        ///
+        ///Use the dropdown to view and navigate to other items in this file..
+        /// </summary>
+        internal static string _0_Use_the_dropdown_to_view_and_navigate_to_other_items_in_this_file {
+            get {
+                return ResourceManager.GetString("_0_Use_the_dropdown_to_view_and_navigate_to_other_items_in_this_file", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Navigation must be performed on the foreground thread..
         /// </summary>
         internal static string Navigation_must_be_performed_on_the_foreground_thread {

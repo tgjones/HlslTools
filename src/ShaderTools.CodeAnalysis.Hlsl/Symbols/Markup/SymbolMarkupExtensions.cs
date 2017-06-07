@@ -35,7 +35,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
                 case SymbolKind.Class:
                 case SymbolKind.Struct:
                 case SymbolKind.Interface:
-                    markup.AppendTypeDeclaration((TypeSymbol) symbol);
+                    markup.AppendTypeDeclaration((TypeSymbol) symbol, format);
                     break;
                 case SymbolKind.Namespace:
                     markup.AppendNamespace((NamespaceSymbol) symbol, format);
@@ -62,7 +62,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
 
         private static void AppendFunctionSymbolInfo(this ICollection<SymbolMarkupToken> markup, FunctionSymbol symbol, SymbolDisplayFormat format)
         {
-            if (format != SymbolDisplayFormat.NavigateTo)
+            if (format != SymbolDisplayFormat.NavigateTo && format != SymbolDisplayFormat.NavigationBar)
             {
                 markup.AppendType(symbol.ReturnType, false);
                 markup.AppendSpace();
@@ -220,26 +220,29 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols.Markup
             markup.AppendTypeName(symbol);
         }
 
-        private static void AppendTypeDeclaration(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol)
+        private static void AppendTypeDeclaration(this ICollection<SymbolMarkupToken> markup, TypeSymbol symbol, SymbolDisplayFormat format)
         {
-            switch (symbol.Kind)
+            if (format != SymbolDisplayFormat.NavigationBar)
             {
-                case SymbolKind.Class:
-                    markup.AppendKeyword("class");
-                    markup.AppendSpace();
-                    break;
-                case SymbolKind.Interface:
-                    markup.AppendKeyword("interface");
-                    markup.AppendSpace();
-                    break;
-                case SymbolKind.Struct:
-                    markup.AppendKeyword("struct");
-                    markup.AppendSpace();
-                    break;
-            }
+                switch (symbol.Kind)
+                {
+                    case SymbolKind.Class:
+                        markup.AppendKeyword("class");
+                        markup.AppendSpace();
+                        break;
+                    case SymbolKind.Interface:
+                        markup.AppendKeyword("interface");
+                        markup.AppendSpace();
+                        break;
+                    case SymbolKind.Struct:
+                        markup.AppendKeyword("struct");
+                        markup.AppendSpace();
+                        break;
+                }
 
-            if (symbol.Parent != null)
-                markup.AppendParentScope(symbol.Parent);
+                if (symbol.Parent != null)
+                    markup.AppendParentScope(symbol.Parent);
+            }
 
             markup.AppendTypeName(symbol);
         }

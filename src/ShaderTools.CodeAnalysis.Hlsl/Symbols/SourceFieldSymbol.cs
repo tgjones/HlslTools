@@ -13,12 +13,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             Syntax = syntax;
 
             SourceTree = syntax.SyntaxTree;
-            Locations = ImmutableArray.Create(Syntax.Identifier.SourceRange);
+            Locations = ImmutableArray.Create(syntax.Identifier.SourceRange);
+            DeclaringSyntaxNodes = ImmutableArray.Create((SyntaxNodeBase) syntax);
         }
 
         public VariableDeclaratorSyntax Syntax { get; }
 
         public override SyntaxTreeBase SourceTree { get; }
         public override ImmutableArray<SourceRange> Locations { get; }
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
     }
 }

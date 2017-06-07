@@ -151,6 +151,27 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             return NavigateTo(textBuffer, vsTextSpan);
         }
 
+        public bool TryNavigateToPosition(Workspace workspace, DocumentId documentId, int position, int virtualSpace = 0, OptionSet options = null)
+        {
+            if (!IsForeground())
+            {
+                throw new InvalidOperationException(LanguageServicesResources.Navigation_must_be_performed_on_the_foreground_thread);
+            }
+
+            var document = OpenDocument(workspace, documentId, options);
+            if (document == null)
+            {
+                return false;
+            }
+
+            var syntaxTree = document.GetSyntaxTreeSynchronously(CancellationToken.None);
+
+            var rootFileRange = syntaxTree.MapRootFileRange(new TextSpan(position, 0));
+            var rootFileSpan = syntaxTree.GetSourceFileSpan(rootFileRange);
+
+            return TryNavigateToSpan(workspace, documentId, rootFileSpan, options);
+        }
+
         /// <summary>
         /// It is unclear why, but we are sometimes asked to navigate to a position that is not
         /// inside the bounds of the associated <see cref="Document"/>. This method returns a

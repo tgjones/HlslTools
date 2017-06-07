@@ -17,5 +17,7 @@ namespace ShaderTools.CodeAnalysis.Navigation
         /// Navigates to the given position in the specified document, opening it if necessary.
         /// </summary>
         bool TryNavigateToSpan(Workspace workspace, DocumentId documentId, SourceFileSpan textSpan, OptionSet options = null);
+
+        bool TryNavigateToPosition(Workspace workspace, DocumentId documentId, int position, int virtualSpace = 0, OptionSet options = null);
     }
 }

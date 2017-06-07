@@ -178,6 +178,24 @@ namespace ShaderTools.CodeAnalysis.Editor.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Navigation Bars.
+        /// </summary>
+        internal static string Navigation_Bars {
+            get {
+                return ResourceManager.GetString("Navigation_Bars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Refreshing navigation bars....
+        /// </summary>
+        internal static string Refreshing_navigation_bars {
+            get {
+                return ResourceManager.GetString("Refreshing_navigation_bars", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The transaction is already complete..
         /// </summary>
         internal static string The_transaction_is_already_complete {

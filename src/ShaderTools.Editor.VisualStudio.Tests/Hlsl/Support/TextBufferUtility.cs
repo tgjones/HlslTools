@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.Composition.Hosting;
+﻿#if false
+using System.ComponentModel.Composition.Hosting;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.Editor.VisualStudio.Hlsl;
@@ -20,3 +21,4 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Support
         }
     }
 }
+#endif

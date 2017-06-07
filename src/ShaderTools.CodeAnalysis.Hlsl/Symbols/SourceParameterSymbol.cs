@@ -14,6 +14,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
             SourceTree = syntax.SyntaxTree;
             Locations = ImmutableArray.Create(Syntax.Declarator.Identifier.SourceRange);
+            DeclaringSyntaxNodes = ImmutableArray.Create((SyntaxNodeBase) syntax);
         }
 
         public ParameterSyntax Syntax { get; }
@@ -24,5 +25,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
         public override SyntaxTreeBase SourceTree { get; }
         public override ImmutableArray<SourceRange> Locations { get; }
+        public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
     }
 }

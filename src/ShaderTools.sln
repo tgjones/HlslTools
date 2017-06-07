@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis", "ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis", "ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Tests", "ShaderTools.CodeAnalysis.Tests\ShaderTools.CodeAnalysis.Tests.csproj", "{FB35BDC4-AB42-416A-B4EE-9BD62E3E1777}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Tests", "ShaderTools.CodeAnalysis.Tests\ShaderTools.CodeAnalysis.Tests.csproj", "{FB35BDC4-AB42-416A-B4EE-9BD62E3E1777}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualStudio", "ShaderTools.Editor.VisualStudio\ShaderTools.Editor.VisualStudio.csproj", "{58B8CB05-E943-403D-8FDE-742CFEB63467}"
 EndProject
@@ -17,67 +17,69 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{17E0A545
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxGenerator", "SyntaxGenerator\SyntaxGenerator.csproj", "{258A2D6D-2A88-4938-B45E-37D73F3A400A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Testing", "ShaderTools.Testing\ShaderTools.Testing.csproj", "{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.Testing", "ShaderTools.Testing\ShaderTools.Testing.csproj", "{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.LanguageServer.Protocol", "ShaderTools.LanguageServer.Protocol\ShaderTools.LanguageServer.Protocol.csproj", "{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.LanguageServer.Protocol", "ShaderTools.LanguageServer.Protocol\ShaderTools.LanguageServer.Protocol.csproj", "{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.LanguageServer", "ShaderTools.LanguageServer\ShaderTools.LanguageServer.csproj", "{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.LanguageServer", "ShaderTools.LanguageServer\ShaderTools.LanguageServer.csproj", "{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Workspaces.Desktop", "ShaderTools.CodeAnalysis.Workspaces.Desktop\ShaderTools.CodeAnalysis.Workspaces.Desktop.csproj", "{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Workspaces.Desktop", "ShaderTools.CodeAnalysis.Workspaces.Desktop\ShaderTools.CodeAnalysis.Workspaces.Desktop.csproj", "{DB952AFF-C727-4048-A8CF-A35CE67FFAF5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Utilities", "ShaderTools.Utilities\ShaderTools.Utilities.csproj", "{485596DC-EDC9-4C95-9807-229355F4A941}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.Utilities", "ShaderTools.Utilities\ShaderTools.Utilities.csproj", "{485596DC-EDC9-4C95-9807-229355F4A941}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{CBE3B59C-B75F-422F-BB24-D964581A6BB1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageServer", "LanguageServer", "{D16755AD-CE41-4622-8623-27F7ACEDB49B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.LanguageServer.Protocol.Hlsl", "ShaderTools.LanguageServer.Protocol.Hlsl\ShaderTools.LanguageServer.Protocol.Hlsl.csproj", "{9F1BD701-24BE-4801-9962-99447239BF2E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.LanguageServer.Protocol.Hlsl", "ShaderTools.LanguageServer.Protocol.Hlsl\ShaderTools.LanguageServer.Protocol.Hlsl.csproj", "{9F1BD701-24BE-4801-9962-99447239BF2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl", "ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj", "{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl", "ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj", "{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab", "ShaderTools.CodeAnalysis.ShaderLab\ShaderTools.CodeAnalysis.ShaderLab.csproj", "{22D67387-5C90-40A8-9C6A-55DE2E5A9A0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.ShaderLab", "ShaderTools.CodeAnalysis.ShaderLab\ShaderTools.CodeAnalysis.ShaderLab.csproj", "{22D67387-5C90-40A8-9C6A-55DE2E5A9A0E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.Tests", "ShaderTools.CodeAnalysis.Hlsl.Tests\ShaderTools.CodeAnalysis.Hlsl.Tests.csproj", "{461A10F9-4EC8-4E72-A7F5-983D38AEF575}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.Tests", "ShaderTools.CodeAnalysis.Hlsl.Tests\ShaderTools.CodeAnalysis.Hlsl.Tests.csproj", "{461A10F9-4EC8-4E72-A7F5-983D38AEF575}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab.Tests", "ShaderTools.CodeAnalysis.ShaderLab.Tests\ShaderTools.CodeAnalysis.ShaderLab.Tests.csproj", "{97779AA2-D9D1-43CD-8D0C-4123A877D868}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.ShaderLab.Tests", "ShaderTools.CodeAnalysis.ShaderLab.Tests\ShaderTools.CodeAnalysis.ShaderLab.Tests.csproj", "{97779AA2-D9D1-43CD-8D0C-4123A877D868}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.Editor.VisualStudio.Tests", "ShaderTools.Editor.VisualStudio.Tests\ShaderTools.Editor.VisualStudio.Tests.csproj", "{53A8BEF4-417A-4447-94AF-D4A85B66D244}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Workspaces", "Workspaces", "{AA1A8DD5-D463-4426-B9DE-39DB7AE04A86}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Workspaces", "ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj", "{E098DC48-574C-45AB-9F46-E47D977B45D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Workspaces", "ShaderTools.CodeAnalysis.Workspaces\ShaderTools.CodeAnalysis.Workspaces.csproj", "{E098DC48-574C-45AB-9F46-E47D977B45D5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "EditorFeatures", "EditorFeatures", "{7C680757-8612-43C4-8E5A-BBCCA08E0211}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.EditorFeatures.Text", "ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj", "{2AD2617F-DB08-4AC7-8C8A-F6F1325DF2EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.EditorFeatures.Text", "ShaderTools.CodeAnalysis.EditorFeatures.Text\ShaderTools.CodeAnalysis.EditorFeatures.Text.csproj", "{2AD2617F-DB08-4AC7-8C8A-F6F1325DF2EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.EditorFeatures", "ShaderTools.CodeAnalysis.EditorFeatures\ShaderTools.CodeAnalysis.EditorFeatures.csproj", "{C9467A05-4901-4D20-ACCE-62506F3239D3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.EditorFeatures", "ShaderTools.CodeAnalysis.EditorFeatures\ShaderTools.CodeAnalysis.EditorFeatures.csproj", "{C9467A05-4901-4D20-ACCE-62506F3239D3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures", "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.csproj", "{71EC216A-9C33-4B96-AC22-7167833DAAED}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures", "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.csproj", "{71EC216A-9C33-4B96-AC22-7167833DAAED}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.LanguageServices", "ShaderTools.VisualStudio.LanguageServices\ShaderTools.VisualStudio.LanguageServices.csproj", "{3D3317E0-0F38-4321-99C4-9F87BDEA92CC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "Features", "{80AA1968-FC70-4591-A40A-21DADB3AAF73}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Features", "ShaderTools.CodeAnalysis.Features\ShaderTools.CodeAnalysis.Features.csproj", "{6B3BAE0E-7E7F-4975-A28F-E1614C8AFE35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Features", "ShaderTools.CodeAnalysis.Features\ShaderTools.CodeAnalysis.Features.csproj", "{6B3BAE0E-7E7F-4975-A28F-E1614C8AFE35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.Workspaces", "ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj", "{028116DF-9897-45C3-911C-AC3C15E588EA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.Workspaces", "ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj", "{028116DF-9897-45C3-911C-AC3C15E588EA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.LanguageServices.Hlsl", "ShaderTools.VisualStudio.LanguageServices.Hlsl\ShaderTools.VisualStudio.LanguageServices.Hlsl.csproj", "{A963C25B-5E83-413A-9757-1259E7C11368}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.LanguageServices.ShaderLab", "ShaderTools.VisualStudio.LanguageServices.ShaderLab\ShaderTools.VisualStudio.LanguageServices.ShaderLab.csproj", "{29F65024-2F2D-466D-98A3-4698BAEF7E1D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab.Workspaces", "ShaderTools.CodeAnalysis.ShaderLab.Workspaces\ShaderTools.CodeAnalysis.ShaderLab.Workspaces.csproj", "{21F7A626-177C-4125-BD2C-55CF26C0ACF3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.ShaderLab.Workspaces", "ShaderTools.CodeAnalysis.ShaderLab.Workspaces\ShaderTools.CodeAnalysis.ShaderLab.Workspaces.csproj", "{21F7A626-177C-4125-BD2C-55CF26C0ACF3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures", "ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures\ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures.csproj", "{7DD0DC6A-5836-4B08-BCF0-3378E56924C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures", "ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures\ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures.csproj", "{7DD0DC6A-5836-4B08-BCF0-3378E56924C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.Features", "ShaderTools.CodeAnalysis.Hlsl.Features\ShaderTools.CodeAnalysis.Hlsl.Features.csproj", "{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.Features", "ShaderTools.CodeAnalysis.Hlsl.Features\ShaderTools.CodeAnalysis.Hlsl.Features.csproj", "{3812DB4E-BA47-4DB7-9683-A4C3CC7F8C26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.VisualStudio.SyntaxVisualizer", "ShaderTools.VisualStudio.SyntaxVisualizer\ShaderTools.VisualStudio.SyntaxVisualizer.csproj", "{EE73E1A5-CABC-4184-B95B-DA3D74696D1C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.ShaderLab.Features", "ShaderTools.CodeAnalysis.ShaderLab.Features\ShaderTools.CodeAnalysis.ShaderLab.Features.csproj", "{8DF44FBE-8981-44B1-B1B2-9062DBCD3A35}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.ShaderLab.Features", "ShaderTools.CodeAnalysis.ShaderLab.Features\ShaderTools.CodeAnalysis.ShaderLab.Features.csproj", "{8DF44FBE-8981-44B1-B1B2-9062DBCD3A35}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.Features.Tests", "ShaderTools.CodeAnalysis.Hlsl.Features.Tests\ShaderTools.CodeAnalysis.Hlsl.Features.Tests.csproj", "{15930D39-3702-44AC-9E5D-D1343FE6A0FC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.Features.Tests", "ShaderTools.CodeAnalysis.Hlsl.Features.Tests\ShaderTools.CodeAnalysis.Hlsl.Features.Tests.csproj", "{15930D39-3702-44AC-9E5D-D1343FE6A0FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests", "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests.csproj", "{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -205,6 +207,10 @@ Global
 		{15930D39-3702-44AC-9E5D-D1343FE6A0FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{15930D39-3702-44AC-9E5D-D1343FE6A0FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{15930D39-3702-44AC-9E5D-D1343FE6A0FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -240,5 +246,6 @@ Global
 		{EE73E1A5-CABC-4184-B95B-DA3D74696D1C} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
 		{8DF44FBE-8981-44B1-B1B2-9062DBCD3A35} = {80AA1968-FC70-4591-A40A-21DADB3AAF73}
 		{15930D39-3702-44AC-9E5D-D1343FE6A0FC} = {80AA1968-FC70-4591-A40A-21DADB3AAF73}
+		{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD} = {7C680757-8612-43C4-8E5A-BBCCA08E0211}
 	EndGlobalSection
 EndGlobal

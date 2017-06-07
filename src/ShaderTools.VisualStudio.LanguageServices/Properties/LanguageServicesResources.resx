@@ -120,4 +120,9 @@
   <data name="Navigation_must_be_performed_on_the_foreground_thread" xml:space="preserve">
     <value>Navigation must be performed on the foreground thread.</value>
   </data>
+  <data name="_0_Use_the_dropdown_to_view_and_navigate_to_other_items_in_this_file" xml:space="preserve">
+    <value>{0}
+
+Use the dropdown to view and navigate to other items in this file.</value>
+  </data>
 </root>
