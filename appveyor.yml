@@ -17,6 +17,7 @@ test_script:
   - dotnet test src\ShaderTools.CodeAnalysis.Tests\ShaderTools.CodeAnalysis.Tests.csproj
   - dotnet test src\ShaderTools.CodeAnalysis.Hlsl.Tests\ShaderTools.CodeAnalysis.Hlsl.Tests.csproj
   - dotnet test src\ShaderTools.CodeAnalysis.Hlsl.Features.Tests\ShaderTools.CodeAnalysis.Hlsl.Features.Tests.csproj
+  - dotnet test src\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests.csproj
   - dotnet test src\ShaderTools.CodeAnalysis.ShaderLab.Tests\ShaderTools.CodeAnalysis.ShaderLab.Tests.csproj
   - '%xunit20%\xunit.console.x86 src/ShaderTools.Editor.VisualStudio.Tests/bin/Release/ShaderTools.Editor.VisualStudio.Tests.dll -appveyor'
 
