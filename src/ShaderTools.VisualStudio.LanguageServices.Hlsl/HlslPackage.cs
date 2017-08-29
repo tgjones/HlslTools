@@ -37,6 +37,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Hlsl
     [ProvideLanguageExtension(typeof(HlslLanguageService), ".psh")]
     [ProvideLanguageExtension(typeof(HlslLanguageService), ".cginc")]
     [ProvideLanguageExtension(typeof(HlslLanguageService), ".compute")]
+    [ProvideLanguageExtension(typeof(HlslLanguageService), ".shader")]
 
     // Adds support for user mapping of custom file extensions.
     [ProvideFileExtensionMapping(
