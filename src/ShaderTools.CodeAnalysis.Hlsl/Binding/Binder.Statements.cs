@@ -43,6 +43,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                     return BindSwitchStatement((SwitchStatementSyntax) syntax, parent);
                 case SyntaxKind.WhileStatement:
                     return BindWhileStatement((WhileStatementSyntax) syntax, parent);
+                case SyntaxKind.ContinueStatement:
+                    return BindContinueStatement((ContinueStatementSyntax) syntax);
                 case SyntaxKind.EmptyStatement:
                     return BindEmptyStatement((EmptyStatementSyntax) syntax);
                 default:
@@ -53,6 +55,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         private BoundStatement BindEmptyStatement(EmptyStatementSyntax syntax)
         {
             return new BoundNoOpStatement();
+        }
+
+        private BoundStatement BindContinueStatement(ContinueStatementSyntax syntax)
+        {
+            return new BoundContinueStatement();
         }
 
         private BoundStatement BindDoStatement(DoStatementSyntax syntax, Symbol parent)

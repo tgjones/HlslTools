@@ -51,6 +51,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 case BoundNodeKind.WhileStatement:
                     VisitWhileStatement((BoundWhileStatement) node);
                     break;
+                case BoundNodeKind.ContinueStatement:
+                    VisitContinueStatement((BoundContinueStatement) node);
+                    break;
                 case BoundNodeKind.NoOpStatement:
                     VisitNoOpStatement((BoundNoOpStatement) node);
                     break;
@@ -62,6 +65,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         protected virtual void VisitNoOpStatement(BoundNoOpStatement node)
         {
             
+        }
+
+        protected virtual void VisitContinueStatement(BoundContinueStatement node)
+        {
+
         }
 
         protected virtual void VisitWhileStatement(BoundWhileStatement node)
