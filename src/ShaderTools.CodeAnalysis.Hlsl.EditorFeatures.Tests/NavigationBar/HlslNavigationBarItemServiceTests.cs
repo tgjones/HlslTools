@@ -38,12 +38,6 @@ float Variable1, Variable2;";
             Assert.Equal("(Global Scope)", targets[0].Text);
             Assert.Equal(Glyph.Namespace, targets[0].Glyph);
 
-            Assert.Equal("Struct1", targets[1].Text);
-            Assert.Equal(Glyph.StructurePublic, targets[1].Glyph);
-
-            Assert.Equal("Class1", targets[2].Text);
-            Assert.Equal(Glyph.ClassPublic, targets[2].Glyph);
-
             Assert.Equal(4, targets[0].ChildItems.Count);
             Assert.Equal("Func1(int a, bool b, float c = 1.0)", targets[0].ChildItems[0].Text);
             Assert.Equal(Glyph.MethodPublic, targets[0].ChildItems[0].Glyph);
@@ -54,11 +48,17 @@ float Variable1, Variable2;";
             Assert.Equal("Variable2", targets[0].ChildItems[3].Text);
             Assert.Equal(Glyph.Local, targets[0].ChildItems[3].Glyph);
 
-            Assert.Equal(1, targets[1].ChildItems.Count);
-            Assert.Equal("StructField1", targets[1].ChildItems[0].Text);
-            Assert.Equal(Glyph.FieldPublic, targets[1].ChildItems[0].Glyph);
+            Assert.Equal("Class1", targets[1].Text);
+            Assert.Equal(Glyph.ClassPublic, targets[1].Glyph);
 
-            Assert.Equal(0, targets[2].ChildItems.Count);
+            Assert.Equal(0, targets[1].ChildItems.Count);
+
+            Assert.Equal("Struct1", targets[2].Text);
+            Assert.Equal(Glyph.StructurePublic, targets[2].Glyph);
+
+            Assert.Equal(1, targets[2].ChildItems.Count);
+            Assert.Equal("StructField1", targets[2].ChildItems[0].Text);
+            Assert.Equal(Glyph.FieldPublic, targets[2].ChildItems[0].Glyph);
         }
     }
 }
