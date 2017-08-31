@@ -147,6 +147,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 case SyntaxKind.TrueKeyword:
                 case SyntaxKind.IntegerLiteralToken:
                 case SyntaxKind.FloatLiteralToken:
+                case SyntaxKind.CharacterLiteralToken:
                     expr = new LiteralExpressionSyntax(SyntaxFacts.GetLiteralExpression(Current.Kind), NextToken());
                     break;
                 case SyntaxKind.StringLiteralToken:
@@ -376,6 +377,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 case SyntaxKind.OpenParenToken:
                 case SyntaxKind.IntegerLiteralToken:
                 case SyntaxKind.FloatLiteralToken:
+                case SyntaxKind.CharacterLiteralToken:
                 case SyntaxKind.StringLiteralToken:
                 case SyntaxKind.IdentifierToken:
                 case SyntaxKind.CompileKeyword:

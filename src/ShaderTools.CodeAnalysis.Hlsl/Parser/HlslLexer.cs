@@ -830,6 +830,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     }
                     break;
 
+                case '\'':
+                    ReadCharacterLiteral();
+                    break;
+
                 case '"':
                     ReadString();
                     break;
@@ -851,6 +855,34 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             var c = _charReader.Current;
             NextChar();
             _diagnostics.ReportIllegalInputCharacter(CurrentSpan, c);
+        }
+
+        private void ReadCharacterLiteral()
+        {
+            _kind = SyntaxKind.CharacterLiteralToken;
+
+            // Skip first single quote
+            NextChar();
+
+            var c = _charReader.Current;
+            if (c == '\'' || c == '\\' || c == '\r' || c == '\n')
+            {
+                _diagnostics.ReportInvalidCharacterLiteral(CurrentSpanStart);
+            }
+            else
+            {
+                NextChar();
+                if (_charReader.Current != '\'')
+                {
+                    _diagnostics.ReportInvalidCharacterLiteral(CurrentSpanStart);
+                }
+                else
+                {
+                    NextChar();
+                }
+            }
+
+            _value = c;
         }
 
         private void ReadString()

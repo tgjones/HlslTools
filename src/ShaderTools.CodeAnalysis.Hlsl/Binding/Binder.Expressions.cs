@@ -24,6 +24,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 case SyntaxKind.TrueLiteralExpression:
                 case SyntaxKind.FalseLiteralExpression:
                 case SyntaxKind.NumericLiteralExpression:
+                case SyntaxKind.CharacterLiteralExpression:
                     return BindLiteralExpression((LiteralExpressionSyntax) node);
                 case SyntaxKind.StringLiteralExpression:
                     return BindStringLiteralExpression((StringLiteralExpressionSyntax) node);
@@ -275,9 +276,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 case SyntaxKind.FalseLiteralExpression:
                     return new BoundLiteralExpression(node, IntrinsicTypes.Bool);
                 case SyntaxKind.NumericLiteralExpression:
+                case SyntaxKind.CharacterLiteralExpression:
                     switch (node.Token.Kind)
                     {
                         case SyntaxKind.IntegerLiteralToken:
+                        case SyntaxKind.CharacterLiteralToken:
                             return new BoundLiteralExpression(node, IntrinsicTypes.Int);
                         case SyntaxKind.FloatLiteralToken:
                             return new BoundLiteralExpression(node, IntrinsicTypes.Float);

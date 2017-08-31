@@ -269,6 +269,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid character literal..
+        /// </summary>
+        internal static string InvalidCharacterLiteral {
+            get {
+                return ResourceManager.GetString("InvalidCharacterLiteral", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid expression term &apos;{0}&apos;..
         /// </summary>
         internal static string InvalidExprTerm {

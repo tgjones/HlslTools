@@ -109,7 +109,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
             if (token.Kind.IsComment())
                 return ClassificationTypeNames.Comment;
 
-            if (token.Kind == SyntaxKind.StringLiteralToken || token.Kind == SyntaxKind.BracketedStringLiteralToken)
+            if (token.Kind == SyntaxKind.StringLiteralToken || token.Kind == SyntaxKind.BracketedStringLiteralToken || token.Kind == SyntaxKind.CharacterLiteralToken)
                 return ClassificationTypeNames.StringLiteral;
 
             if (token.Kind.IsNumericLiteral())

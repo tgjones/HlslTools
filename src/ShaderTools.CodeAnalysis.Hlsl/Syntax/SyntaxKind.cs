@@ -418,6 +418,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         IdentifierToken,
         IntegerLiteralToken,
         FloatLiteralToken,
+        CharacterLiteralToken,
         StringLiteralToken,
         BracketedStringLiteralToken,
         PreprocessingNumber,
@@ -554,6 +555,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         // Primary expressions
         NumericLiteralExpression,
+        CharacterLiteralExpression,
         StringLiteralExpression,
         TrueLiteralExpression,
         FalseLiteralExpression,

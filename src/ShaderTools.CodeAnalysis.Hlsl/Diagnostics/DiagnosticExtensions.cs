@@ -32,6 +32,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Diagnostics
             diagnostics.Report(sourceRange, DiagnosticId.UnterminatedString);
         }
 
+        public static void ReportInvalidCharacterLiteral(this ICollection<Diagnostic> diagnostics, SourceRange sourceRange)
+        {
+            diagnostics.Report(sourceRange, DiagnosticId.InvalidCharacterLiteral);
+        }
+
         public static void ReportInvalidInteger(this ICollection<Diagnostic> diagnostics, SourceRange sourceRange, string tokenText)
         {
             diagnostics.Report(sourceRange, DiagnosticId.InvalidInteger, tokenText);

@@ -5,6 +5,7 @@
         IllegalInputCharacter,
         UnterminatedComment,
         UnterminatedString,
+        InvalidCharacterLiteral,
 
         InvalidInteger,
         InvalidReal,

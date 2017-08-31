@@ -30,6 +30,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.IntegerLiteralToken:
                     return "<integer-literal>";
 
+                case SyntaxKind.CharacterLiteralToken:
+                    return "<character-literal>";
+
                 case SyntaxKind.StringLiteralToken:
                     return "<string-literal>";
 
@@ -1034,6 +1037,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.FloatLiteralToken:
                 case SyntaxKind.IntegerLiteralToken:
                     return SyntaxKind.NumericLiteralExpression;
+                case SyntaxKind.CharacterLiteralToken:
+                    return SyntaxKind.CharacterLiteralExpression;
                 case SyntaxKind.TrueKeyword:
                     return SyntaxKind.TrueLiteralExpression;
                 case SyntaxKind.FalseKeyword:
@@ -1144,6 +1149,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         {
             return kind == SyntaxKind.FloatLiteralToken ||
                    kind == SyntaxKind.IntegerLiteralToken ||
+                   kind == SyntaxKind.CharacterLiteralToken ||
                    kind == SyntaxKind.StringLiteralToken;
         }
 

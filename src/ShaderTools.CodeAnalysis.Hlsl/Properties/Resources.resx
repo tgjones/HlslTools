@@ -279,4 +279,7 @@
   <data name="UnterminatedString" xml:space="preserve">
     <value>String is not properly terminated.</value>
   </data>
+  <data name="InvalidCharacterLiteral" xml:space="preserve">
+    <value>Invalid character literal.</value>
+  </data>
 </root>
