@@ -62,7 +62,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             unchecked
             {
                 var hashCode = (int) Kind;
-                hashCode = (hashCode * 397) ^ Name.GetHashCode();
+                hashCode = (hashCode * 397) ^ (Name?.GetHashCode() ?? 0);
                 hashCode = (hashCode * 397) ^ (Parent?.GetHashCode() ?? 0);
                 return hashCode;
             }

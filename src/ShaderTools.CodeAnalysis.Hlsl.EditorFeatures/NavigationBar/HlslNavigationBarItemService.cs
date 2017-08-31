@@ -226,6 +226,11 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.NavigationBar
         {
             var result = new List<NavigationBarItem>();
 
+            if (symbol.Locations.Length == 0)
+            {
+                return result;
+            }
+
             var locationsLength = symbol.Kind == SymbolKind.Function
                 ? symbol.Locations.Length
                 : 1;
