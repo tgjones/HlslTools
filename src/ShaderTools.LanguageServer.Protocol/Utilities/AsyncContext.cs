@@ -39,7 +39,11 @@ namespace ShaderTools.LanguageServer.Protocol.Utilities
             // Get the main task and act on its completion
             Task asyncMainTask = asyncMainFunc();
             asyncMainTask.ContinueWith(
-                t => threadSyncContext.EndLoop(),
+                (t) => {
+                    if (t.IsFaulted)
+                        throw t.Exception;
+                    threadSyncContext.EndLoop();
+                },
                 TaskScheduler.Default);
 
             // Start the synchronization context's request loop and
