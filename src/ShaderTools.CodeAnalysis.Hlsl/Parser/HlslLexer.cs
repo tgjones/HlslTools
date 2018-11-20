@@ -58,11 +58,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         // - {main.hlsl, 101, 200}
         internal List<FileSegment> FileSegments { get; }
 
-        public HlslLexer(SourceFile file, HlslParseOptions options = null, IIncludeFileSystem includeFileSystem = null)
+        public HlslLexer(SourceFile file, HlslParseOptions options = null, IIncludeFileSystem includeFileSystem = null, IIncludeFileResolver includeFileResolver = null)
         {
             _rootFile = file;
 
-            _includeFileResolver = new IncludeFileResolver(
+            _includeFileResolver = includeFileResolver ?? new IncludeFileResolver(
                 includeFileSystem ?? new DummyFileSystem(), 
                 options ?? new HlslParseOptions());
 
