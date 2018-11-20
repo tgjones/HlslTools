@@ -34,6 +34,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
                 text,
                 options,
                 _fileSystem,
+                null,
                 cancellationToken);
         }
     }

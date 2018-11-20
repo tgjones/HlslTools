@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using ShaderTools.CodeAnalysis;
+using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
@@ -14,7 +15,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
             _workspace = workspace;
         }
 
-        public bool TryGetFile(string path, out SourceText text)
+        public bool TryGetFile(string path, IncludeType includeType, out SourceText text)
         {
             // Is file open in workspace?
             var document = _workspace.CurrentDocuments

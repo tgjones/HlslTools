@@ -16,7 +16,7 @@ namespace ShaderTools.CodeAnalysis.Text
 
         public bool IsRootFile => IncludedBy == null;
 
-        internal SourceFile(SourceText text, SourceFile includedBy)
+        public SourceFile(SourceText text, SourceFile includedBy)
         {
             Text = text ?? throw new ArgumentNullException(nameof(text));
             IncludedBy = includedBy;

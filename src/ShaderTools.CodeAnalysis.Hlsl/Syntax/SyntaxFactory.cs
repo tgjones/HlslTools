@@ -10,31 +10,31 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
     public static class SyntaxFactory
     {
-        public static SyntaxTree ParseSyntaxTree(SourceText sourceText, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null, CancellationToken cancellationToken = default(CancellationToken))
+        public static SyntaxTree ParseSyntaxTree(SourceText sourceText, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null, IIncludeFileResolver fileResolver = null, CancellationToken cancellationToken = default(CancellationToken))
         {
-            return Parse(sourceText, options, fileSystem ?? new DummyFileSystem(), p => p.ParseCompilationUnit(cancellationToken));
+            return Parse(sourceText, options, fileSystem ?? new DummyFileSystem(), fileResolver, p => p.ParseCompilationUnit(cancellationToken));
         }
 
-        public static CompilationUnitSyntax ParseCompilationUnit(SourceText sourceText, IIncludeFileSystem fileSystem = null)
+        public static CompilationUnitSyntax ParseCompilationUnit(SourceText sourceText, IIncludeFileSystem fileSystem = null, IIncludeFileResolver fileResolver = null)
         {
-            return (CompilationUnitSyntax) Parse(sourceText, null, fileSystem, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
+            return (CompilationUnitSyntax) Parse(sourceText, null, fileSystem, fileResolver, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
         }
 
         public static SyntaxTree ParseExpression(string text)
         {
-            return Parse(SourceText.From(text), null, null, p => p.ParseExpression());
+            return Parse(SourceText.From(text), null, null, null, p => p.ParseExpression());
         }
 
         public static StatementSyntax ParseStatement(string text)
         {
-            return (StatementSyntax) Parse(SourceText.From(text), null, null, p => p.ParseStatement()).Root;
+            return (StatementSyntax) Parse(SourceText.From(text), null, null, null, p => p.ParseStatement()).Root;
         }
 
-        private static SyntaxTree Parse(SourceText sourceText, HlslParseOptions options, IIncludeFileSystem fileSystem, Func<HlslParser, SyntaxNode> parseFunc)
+        private static SyntaxTree Parse(SourceText sourceText, HlslParseOptions options, IIncludeFileSystem fileSystem, IIncludeFileResolver fileResolver, Func <HlslParser, SyntaxNode> parseFunc)
         {
             var sourceFile = new SourceFile(sourceText, null);
 
-            var lexer = new HlslLexer(sourceFile, options, fileSystem);
+            var lexer = new HlslLexer(sourceFile, options, fileSystem, fileResolver);
             var parser = new HlslParser(lexer);
 
             var result = new SyntaxTree(

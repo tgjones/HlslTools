@@ -13,7 +13,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
             _includes = includes;
         }
 
-        public bool TryGetFile(string path, out SourceText text)
+        public bool TryGetFile(string path, IncludeType includeType, out SourceText text)
         {
             string include;
             if (_includes.TryGetValue(path, out include))

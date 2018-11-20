@@ -58,11 +58,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         // - {main.hlsl, 101, 200}
         internal List<FileSegment> FileSegments { get; }
 
-        public HlslLexer(SourceFile file, HlslParseOptions options = null, IIncludeFileSystem includeFileSystem = null)
+        public HlslLexer(SourceFile file, HlslParseOptions options = null, IIncludeFileSystem includeFileSystem = null, IIncludeFileResolver includeFileResolver = null)
         {
             _rootFile = file;
 
-            _includeFileResolver = new IncludeFileResolver(
+            _includeFileResolver = includeFileResolver ?? new IncludeFileResolver(
                 includeFileSystem ?? new DummyFileSystem(), 
                 options ?? new HlslParseOptions());
 
@@ -300,7 +300,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 SourceFile include;
                 try
                 {
-                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().File);
+                    include = _includeFileResolver.OpenInclude(includeFilename, includeDirective.IsLocal ? IncludeType.Local : IncludeType.System, _includeStack.Peek().File);
                     if (include == null)
                     {
                         includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));

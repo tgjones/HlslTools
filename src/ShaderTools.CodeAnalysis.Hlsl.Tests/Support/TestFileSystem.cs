@@ -6,7 +6,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
 {
     public sealed class TestFileSystem : IIncludeFileSystem
     {
-        public bool TryGetFile(string path, out SourceText text)
+        public bool TryGetFile(string path, IncludeType includeType, out SourceText text)
         {
             if (File.Exists(path))
             {
