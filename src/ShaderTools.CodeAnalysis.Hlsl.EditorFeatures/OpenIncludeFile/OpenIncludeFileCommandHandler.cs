@@ -53,7 +53,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
 
             var currentFile = ((SyntaxTree) syntaxTree).File;
 
-            var include = includeFileResolver.OpenInclude(includeDirectiveTrivia.TrimmedFilename, currentFile);
+            var include = includeFileResolver.OpenInclude(includeDirectiveTrivia.TrimmedFilename, includeDirectiveTrivia.IsLocal ? IncludeType.Local : IncludeType.System, currentFile);
 
             if (include == null)
             {

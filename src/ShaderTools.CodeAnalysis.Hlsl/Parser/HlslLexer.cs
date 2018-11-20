@@ -300,7 +300,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 SourceFile include;
                 try
                 {
-                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().File);
+                    include = _includeFileResolver.OpenInclude(includeFilename, includeDirective.IsLocal ? IncludeType.Local : IncludeType.System, _includeStack.Peek().File);
                     if (include == null)
                     {
                         includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));

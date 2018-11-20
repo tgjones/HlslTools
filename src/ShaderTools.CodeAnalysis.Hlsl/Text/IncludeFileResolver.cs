@@ -41,7 +41,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             return result.ToImmutable();
         }
 
-        public SourceFile OpenInclude(string includeFilename, SourceFile currentFile)
+        public SourceFile OpenInclude(string includeFilename, IncludeType includeType, SourceFile currentFile)
         {
             SourceText text;
 
@@ -56,7 +56,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             // If path is rooted, open it directly.
             if (Path.IsPathRooted(includeFilename))
             {
-                if (_fileSystem.TryGetFile(includeFilename, out text))
+                if (_fileSystem.TryGetFile(includeFilename, includeType, out text))
                     return new SourceFile(text, currentFile);
                 return null;
             }
@@ -70,7 +70,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                 {
                     var rootFileDirectory = Path.GetDirectoryName(fileToCheck.FilePath);
                     var testFilename = Path.Combine(rootFileDirectory, includeFilename);
-                    if (_fileSystem.TryGetFile(testFilename, out text))
+                    if (_fileSystem.TryGetFile(testFilename, includeType, out text))
                         return new SourceFile(text, currentFile);
                 }
                 fileToCheck = fileToCheck.IncludedBy;
@@ -80,7 +80,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             foreach (var includeDirectory in _parserOptions.AdditionalIncludeDirectories)
             {
                 var testFilename = Path.Combine(includeDirectory, includeFilename);
-                if (_fileSystem.TryGetFile(testFilename, out text))
+                if (_fileSystem.TryGetFile(testFilename, includeType, out text))
                     return new SourceFile(text, currentFile);
             }
 

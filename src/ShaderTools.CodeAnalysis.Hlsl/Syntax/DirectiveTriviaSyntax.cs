@@ -448,6 +448,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         public string TrimmedFilename => Filename.Text.TrimStart('<', '"').TrimEnd('>', '"');
 
+        public bool IsLocal => !Filename.Text.StartsWith("<");
+
         public IncludeDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken includeKeyword, SyntaxToken filename, SyntaxToken endOfDirectiveToken, bool isActive, IEnumerable<Diagnostic> diagnostics)
             : base(SyntaxKind.IncludeDirectiveTrivia, diagnostics)
         {
