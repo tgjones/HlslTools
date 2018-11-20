@@ -12,7 +12,7 @@ using SyntaxGenerator.Writer;
 
 namespace SyntaxGenerator
 {
-    public class GenerateSyntaxTask : AppDomainIsolatedTask, ICancelableTask
+    public class GenerateSyntaxTask : Microsoft.Build.Utilities.Task, ICancelableTask
     {
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
