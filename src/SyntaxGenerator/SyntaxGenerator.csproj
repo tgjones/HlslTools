@@ -7,7 +7,4 @@
     <PackageReference Include="Microsoft.Build.Framework" Version="15.8.166"/>
     <PackageReference Include="Microsoft.Build.Utilities.Core" Version="15.8.166" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="SyntaxGenerator.targets" />
-  </ItemGroup>
 </Project>

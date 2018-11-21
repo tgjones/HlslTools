@@ -30,6 +30,8 @@ namespace SyntaxGenerator
 
         public override bool Execute()
         {
+            Log.LogMessage(MessageImportance.High, "Running SyntaxGenerator.");
+
             try
             {
                 ExecuteInternal();

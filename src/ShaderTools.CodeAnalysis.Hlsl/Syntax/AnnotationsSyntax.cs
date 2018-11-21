@@ -2,18 +2,11 @@ using System.Collections.Generic;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public class AnnotationsSyntax : SyntaxNode
+    public partial class AnnotationsSyntax : SyntaxNode
     {
-        public readonly SyntaxToken LessThanToken;
-        public readonly List<VariableDeclarationStatementSyntax> Annotations;
-        public readonly SyntaxToken GreaterThanToken;
-
         public AnnotationsSyntax(SyntaxToken lessThanToken, List<VariableDeclarationStatementSyntax> annotations, SyntaxToken greaterThanToken)
-            : base(SyntaxKind.Annotations)
+            : this(SyntaxKind.Annotations, lessThanToken, annotations, greaterThanToken)
         {
-            RegisterChildNode(out LessThanToken, lessThanToken);
-            RegisterChildNodes(out Annotations, annotations);
-            RegisterChildNode(out GreaterThanToken, greaterThanToken);
         }
 
         public override void Accept(SyntaxVisitor visitor)
