@@ -367,11 +367,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitBaseList(BaseListSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitElseClause(ElseClauseSyntax node)
         {
             DefaultVisit(node);
@@ -833,11 +828,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitNumericConstructorInvocation(NumericConstructorInvocationExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitBaseList(BaseListSyntax node)
         {
             return DefaultVisit(node);
         }

@@ -3,6 +3,12 @@
   <PredefinedNode Name="SyntaxNode" Base="SyntaxNodeBase"/>
   <PredefinedNode Name="SyntaxToken" Base="SyntaxNode"/>
 
+  <AbstractNode Name="BaseMatrixTypeSyntax" Base="NumericTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
+
   <AbstractNode Name="ExpressionSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -10,6 +16,18 @@
   </AbstractNode>
 
   <AbstractNode Name="NameSyntax" Base="TypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
+
+  <AbstractNode Name="NumericTypeSyntax" Base="PredefinedTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
+
+  <AbstractNode Name="PredefinedTypeSyntax" Base="TypeSyntax">
     <TypeComment>
       <summary></summary>
     </TypeComment>
@@ -204,6 +222,26 @@
       <Kind Name="CloseBracketToken"/>
     </Field>
   </Node>
+
+  <Node Name="BaseListSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="BaseList"/>
+    <Field Name="ColonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+    <Field Name="BaseType" Type="IdentifierNameSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="IdentifierNameSyntax"/>
+    </Field>
+  </Node>
+
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
