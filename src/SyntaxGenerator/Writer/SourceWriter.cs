@@ -153,12 +153,18 @@ namespace SyntaxGenerator.Writer
 
                 // write constructor with diagnostics
                 WriteLine();
-                Write("    public {0}(", node.Name);
+                if (HasOneKind(nd))
+                    Write("    public {0}(", node.Name);
+                else
+                    Write("    public {0}(SyntaxKind kind, ", node.Name);
 
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
                 WriteLine(", IEnumerable<Diagnostic> diagnostics)");
-                WriteLine("        : base(SyntaxKind.{0}, diagnostics)", nd.Kinds[0].Name);
+                if (HasOneKind(nd))
+                    WriteLine("        : base(SyntaxKind.{0}, diagnostics)", nd.Kinds[0].Name);
+                else
+                    WriteLine("        : base(kind, diagnostics)");
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
@@ -166,12 +172,18 @@ namespace SyntaxGenerator.Writer
 
                 // write constructor without diagnostics
                 WriteLine();
-                Write("    public {0}(", node.Name);
+                if (HasOneKind(nd))
+                    Write("    public {0}(", node.Name);
+                else
+                    Write("    public {0}(SyntaxKind kind, ", node.Name);
 
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
                 WriteLine(")");
-                WriteLine("        : base(SyntaxKind.{0})", nd.Kinds[0].Name);
+                if (HasOneKind(nd))
+                    WriteLine("        : base(SyntaxKind.{0})", nd.Kinds[0].Name);
+                else
+                    WriteLine("        : base(kind)");
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
@@ -269,11 +281,19 @@ namespace SyntaxGenerator.Writer
             WriteLine("    {");
 
             Write("         return new {0}(", node.Name);
+
+            var first = true;
+            if (!HasOneKind(node))
+            {
+                Write("this.Kind");
+                first = false;
+            }
             for (int f = 0; f < node.Fields.Count; f++)
             {
                 var field = node.Fields[f];
-                if (f > 0)
+                if (!first)
                     Write(", ");
+                first = false;
                 Write("this.{0}", CamelCase(field.Name));
             }
             WriteLine(", diagnostics);");
@@ -375,7 +395,7 @@ namespace SyntaxGenerator.Writer
                 WriteLine(")");
                 WriteLine("        {");
                 Write("            var newNode = new {0}(", node.Name);
-                if (node.Kinds.Count > 1)
+                if (!HasOneKind(node))
                 {
                     Write("this.Kind, ");
                 }

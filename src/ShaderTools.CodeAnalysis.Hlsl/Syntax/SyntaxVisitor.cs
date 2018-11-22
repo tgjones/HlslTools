@@ -302,11 +302,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitAssignmentExpression(AssignmentExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitRegisterLocation(RegisterLocation node)
         {
             DefaultVisit(node);
@@ -323,11 +318,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual void VisitPackOffsetComponentPart(PackOffsetComponentPart node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitArrayRankSpecifier(ArrayRankSpecifierSyntax node)
         {
             DefaultVisit(node);
         }
@@ -797,11 +787,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitAssignmentExpression(AssignmentExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitRegisterLocation(RegisterLocation node)
         {
             return DefaultVisit(node);
@@ -818,11 +803,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPackOffsetComponentPart(PackOffsetComponentPart node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitArrayRankSpecifier(ArrayRankSpecifierSyntax node)
         {
             return DefaultVisit(node);
         }

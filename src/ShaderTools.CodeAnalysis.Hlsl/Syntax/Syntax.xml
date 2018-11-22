@@ -3,6 +3,12 @@
   <PredefinedNode Name="SyntaxNode" Base="SyntaxNodeBase"/>
   <PredefinedNode Name="SyntaxToken" Base="SyntaxNode"/>
 
+  <AbstractNode Name="ExpressionSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
+
   <Node Name="AnnotationsSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -72,6 +78,63 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="CloseBraceToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="ArrayRankSpecifierSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ArrayRankSpecifier"/>
+    <Field Name="OpenBracketToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBracketToken"/>
+    </Field>
+    <Field Name="Dimension" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBracketToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBracketToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="AssignmentExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="Left" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="OperatorToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="LessThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LessThanToken"/>
+    </Field>
+    <Field Name="Right" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="GreaterThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="GreaterThanToken"/>
     </Field>
   </Node>
 

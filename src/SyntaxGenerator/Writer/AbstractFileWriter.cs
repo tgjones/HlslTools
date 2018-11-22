@@ -207,6 +207,11 @@ namespace SyntaxGenerator.Writer
             return f.New != null && string.Compare(f.New, "true", true) == 0;
         }
 
+        protected static bool HasOneKind(Node n)
+        {
+            return n.Kinds != null && n.Kinds.Count == 1;
+        }
+
         protected static bool HasErrors(Node n)
         {
             return n.Errors == null || string.Compare(n.Errors, "true", true) == 0;
