@@ -1,6 +1,6 @@
 namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public abstract class SyntaxVisitor
+    public abstract partial class SyntaxVisitor
     {
         public virtual void Visit(SyntaxNode node)
         {
@@ -68,11 +68,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual void VisitAttribute(AttributeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitAnnotations(AnnotationsSyntax node)
         {
             DefaultVisit(node);
         }
@@ -508,7 +503,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
     }
 
-    public abstract class SyntaxVisitor<T>
+    public abstract partial class SyntaxVisitor<T>
     {
         public virtual T Visit(SyntaxNode node)
         {
@@ -578,11 +573,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitAttribute(AttributeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitAnnotations(AnnotationsSyntax node)
         {
             return DefaultVisit(node);
         }

@@ -16,6 +16,10 @@ namespace SyntaxGenerator
     {
         private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
+        public GenerateSyntaxTask()
+        {
+        }
+
         [Required]
         public ITaskItem[] Compile { get; set; }
 

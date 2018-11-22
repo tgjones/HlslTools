@@ -109,20 +109,13 @@ namespace SyntaxGenerator.Writer
             return IsOverride(field) ? "override " : IsNew(field) ? "new " : "";
         }
 
-        protected static bool CanBeField(Field field)
+        protected bool CanBeField(Field field)
         {
             return field.Type != "SyntaxToken" && !IsAnyList(field.Type) && !IsOverride(field) && !IsNew(field);
         }
 
-        protected static string GetFieldType(Field field, bool green)
+        protected string GetFieldType(Field field)
         {
-            if (IsAnyList(field.Type))
-            {
-                return green
-                    ? "GreenNode"
-                    : "SyntaxNode";
-            }
-
             return field.Type;
         }
 
@@ -138,12 +131,13 @@ namespace SyntaxGenerator.Writer
             return typeName.StartsWith("SeparatedSyntaxList<", StringComparison.Ordinal);
         }
 
-        protected static bool IsNodeList(string typeName)
+        protected bool IsNodeList(string typeName)
         {
-            return typeName.StartsWith("SyntaxList<", StringComparison.Ordinal);
+            return typeName.StartsWith("List<", StringComparison.Ordinal);
+                //TODO && IsNode(typeName.Substring(5, typeName.Length - 6));
         }
 
-        protected static bool IsAnyNodeList(string typeName)
+        protected bool IsAnyNodeList(string typeName)
         {
             return IsNodeList(typeName) || IsSeparatedNodeList(typeName);
         }
@@ -165,7 +159,7 @@ namespace SyntaxGenerator.Writer
             return sub;
         }
 
-        protected static bool IsAnyList(string typeName)
+        protected bool IsAnyList(string typeName)
         {
             return IsNodeList(typeName) || IsSeparatedNodeList(typeName) || typeName == "SyntaxNodeOrTokenList";
         }
