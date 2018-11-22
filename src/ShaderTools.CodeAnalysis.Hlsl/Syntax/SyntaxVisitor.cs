@@ -57,16 +57,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitAttributeArgumentList(AttributeArgumentListSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitAttribute(AttributeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVariableDeclaration(VariableDeclarationSyntax node)
         {
             DefaultVisit(node);
@@ -93,11 +83,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual void VisitTypeAlias(TypeAliasSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitIdentifierName(IdentifierNameSyntax node)
         {
             DefaultVisit(node);
         }
@@ -542,16 +527,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitAttributeArgumentList(AttributeArgumentListSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitAttribute(AttributeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitVariableDeclaration(VariableDeclarationSyntax node)
         {
             return DefaultVisit(node);
@@ -578,11 +553,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitTypeAlias(TypeAliasSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitIdentifierName(IdentifierNameSyntax node)
         {
             return DefaultVisit(node);
         }
