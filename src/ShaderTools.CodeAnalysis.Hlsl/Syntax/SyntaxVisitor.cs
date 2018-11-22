@@ -47,11 +47,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitArgumentList(ArgumentListSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitParameterList(ParameterListSyntax node)
         {
             DefaultVisit(node);
@@ -307,11 +302,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitArrayInitializerExpression(ArrayInitializerExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitAssignmentExpression(AssignmentExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -548,11 +538,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitTemplateArgumentList(TemplateArgumentListSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitArgumentList(ArgumentListSyntax node)
         {
             return DefaultVisit(node);
         }
@@ -808,11 +793,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitArrayInitializerExpression(ArrayInitializerExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
