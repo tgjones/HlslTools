@@ -4,6 +4,9 @@
   <PredefinedNode Name="SyntaxToken" Base="SyntaxNode"/>
 
   <Node Name="AnnotationsSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
     <Kind Name="Annotations"/>
     <Field Name="LessThanToken" Type="SyntaxToken">
       <PropertyComment>
@@ -25,6 +28,9 @@
   </Node>
 
   <Node Name="ArgumentListSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
     <Kind Name="ArgumentList"/>
     <Field Name="OpenParenToken" Type="SyntaxToken">
       <PropertyComment>
@@ -46,6 +52,9 @@
   </Node>
 
   <Node Name="ArrayInitializerExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
     <Kind Name="ArrayInitializerExpression"/>
     <Field Name="OpenBraceToken" Type="SyntaxToken">
       <PropertyComment>
