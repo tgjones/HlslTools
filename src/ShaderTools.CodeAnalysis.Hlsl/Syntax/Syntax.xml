@@ -9,6 +9,12 @@
     </TypeComment>
   </AbstractNode>
 
+  <AbstractNode Name="BaseMatrixTypeSyntax" Base="NumericTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
+
   <AbstractNode Name="ExpressionSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -239,6 +245,27 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="IdentifierNameSyntax"/>
+    </Field>
+  </Node>
+
+  <Node Name="AssignmentExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="Left" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="OperatorToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Right" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
     </Field>
   </Node>
 

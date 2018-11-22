@@ -227,11 +227,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitBinaryExpression(BinaryExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitCompoundExpression(CompoundExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -688,11 +683,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPostfixUnaryExpression(PostfixUnaryExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitBinaryExpression(BinaryExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
