@@ -148,7 +148,7 @@ namespace SyntaxGenerator.Writer
                 for (int i = 0, n = valueFields.Count; i < n; i++)
                 {
                     var field = valueFields[i];
-                    WriteLine("    internal readonly {0} {1};", field.Type, CamelCase(field.Name));
+                    WriteLine("    private readonly {0} {1};", field.Type, CamelCase(field.Name));
                 }
 
                 // write constructor with diagnostics
