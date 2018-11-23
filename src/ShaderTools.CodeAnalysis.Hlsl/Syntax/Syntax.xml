@@ -368,6 +368,23 @@
       </PropertyComment>
     </Field>
   </Node>
+  <Node Name="CompilationUnitSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="CompilationUnit"/>
+    <Field Name="Declarations" Type="List&lt;SyntaxNode&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="EndOfFileToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfFileToken"/>
+    </Field>
+  </Node>
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
