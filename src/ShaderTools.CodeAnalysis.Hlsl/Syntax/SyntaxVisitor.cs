@@ -142,11 +142,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitBlock(BlockSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitExpressionStatement(ExpressionStatementSyntax node)
         {
             DefaultVisit(node);
@@ -163,11 +158,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual void VisitDiscardStatement(DiscardStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitBreakStatement(BreakStatementSyntax node)
         {
             DefaultVisit(node);
         }
@@ -602,11 +592,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitBlock(BlockSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitExpressionStatement(ExpressionStatementSyntax node)
         {
             return DefaultVisit(node);
@@ -623,11 +608,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitDiscardStatement(DiscardStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitBreakStatement(BreakStatementSyntax node)
         {
             return DefaultVisit(node);
         }

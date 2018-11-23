@@ -8,37 +8,34 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
-
-  <AbstractNode Name="BaseMatrixTypeSyntax" Base="NumericTypeSyntax">
+  <AbstractNode Name="BaseVectorTypeSyntax" Base="NumericTypeSyntax">
     <TypeComment>
       <summary></summary>
     </TypeComment>
   </AbstractNode>
-
   <AbstractNode Name="ExpressionSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
     </TypeComment>
   </AbstractNode>
-
   <AbstractNode Name="NameSyntax" Base="TypeSyntax">
     <TypeComment>
       <summary></summary>
     </TypeComment>
   </AbstractNode>
-
   <AbstractNode Name="NumericTypeSyntax" Base="PredefinedTypeSyntax">
     <TypeComment>
       <summary></summary>
     </TypeComment>
   </AbstractNode>
-
   <AbstractNode Name="PredefinedTypeSyntax" Base="TypeSyntax">
     <TypeComment>
       <summary></summary>
     </TypeComment>
   </AbstractNode>
-
+  <AbstractNode Name="StatementSyntax" Base="SyntaxNode">
+    <Field Name="Attributes" Type="List&lt;AttributeSyntax&gt;" />
+  </AbstractNode>
   <AbstractNode Name="TypeSyntax" Base="ExpressionSyntax">
     <TypeComment>
       <summary></summary>
@@ -248,7 +245,7 @@
     </Field>
   </Node>
 
-  <Node Name="AssignmentExpressionSyntax" Base="ExpressionSyntax">
+  <Node Name="BinaryExpressionSyntax" Base="ExpressionSyntax">
     <TypeComment>
       <summary></summary>
     </TypeComment>
@@ -268,6 +265,50 @@
       </PropertyComment>
     </Field>
   </Node>
+
+  <Node Name="BlockSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="Block"/>
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBraceToken"/>
+    </Field>
+    <Field Name="Statements" Type="List&lt;StatementSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBraceToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="BreakStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="BreakStatement"/>
+    <Field Name="BreakKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="BreakKeyword"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
