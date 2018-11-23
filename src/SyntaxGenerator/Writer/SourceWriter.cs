@@ -80,49 +80,61 @@ namespace SyntaxGenerator.Writer
                 WriteLine("  public abstract partial class {0} : {1}", node.Name, node.Base);
                 WriteLine("  {");
 
+                var concreteFields = nd.Fields.Where(f => !IsAbstract(f)).ToList();
+                var abstractFields = nd.Fields.Where(f => IsAbstract(f)).ToList();
+
+                foreach (var field in concreteFields)
+                {
+                    var type = GetFieldType(field);
+                    WriteLine("    private readonly {0} {1};", type, CamelCase(field.Name));
+                }
+
+                var fieldArgs = string.Empty;
+                if (concreteFields.Any())
+                {
+                    fieldArgs = concreteFields.Aggregate("", (str, a) => str + $", {a.Type} {CamelCase(a.Name)}");
+                }
+                    
                 // ctor with diagnostics
-                WriteLine("    protected {0}(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)", node.Name);
+                WriteLine("    protected {0}(SyntaxKind kind{1}, IEnumerable<Diagnostic> diagnostics)", node.Name, fieldArgs);
                 WriteLine("      : base(kind, diagnostics)");
                 WriteLine("    {");
                 if (node.Name == "DirectiveTriviaSyntax")
                 {
                     WriteLine("      this.flags |= NodeFlags.ContainsDirectives;");
                 }
+                var valueFields = concreteFields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
+                var nodeFields = concreteFields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
+                WriteCtorBody(valueFields, nodeFields);
+
                 WriteLine("    }");
 
                 // ctor without diagnostics
-                WriteLine("    protected {0}(SyntaxKind kind)", node.Name);
+                WriteLine("    protected {0}(SyntaxKind kind{1})", node.Name, fieldArgs);
                 WriteLine("      : base(kind)");
                 WriteLine("    {");
                 if (node.Name == "DirectiveTriviaSyntax")
                 {
                     WriteLine("      this.flags |= NodeFlags.ContainsDirectives;");
                 }
+                WriteCtorBody(valueFields, nodeFields);
+
                 WriteLine("    }");
 
-                var valueFields = nd.Fields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
-                var nodeFields = nd.Fields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
-
-                for (int i = 0, n = nodeFields.Count; i < n; i++)
+                foreach (var field in concreteFields)
                 {
-                    var field = nodeFields[i];
-                    if (IsNodeOrNodeList(field.Type))
-                    {
-                        WriteLine();
-                        WriteComment(field.PropertyComment, "    ");
-
-                        WriteLine("    public abstract {0}{1} {2} {{ get; }}",
-                            (IsNew(field) ? "new " : ""), field.Type, field.Name);
-                    }
-                }
-
-                for (int i = 0, n = valueFields.Count; i < n; i++)
-                {
-                    var field = valueFields[i];
                     WriteLine();
                     WriteComment(field.PropertyComment, "    ");
 
-                    WriteLine("   public abstract {0}{1} {2} {{ get; }}",
+                    WriteLine("    public {0}{1} {2} => {3};",
+                        (IsNew(field) ? "new " : ""), field.Type, field.Name, CamelCase(field.Name));
+                }
+                foreach (var field in abstractFields)
+                {
+                    WriteLine();
+                    WriteComment(field.PropertyComment, "    ");
+
+                    WriteLine("    public abstract {0}{1} {2} {{ get; }}",
                         (IsNew(field) ? "new " : ""), field.Type, field.Name);
                 }
 
@@ -132,7 +144,7 @@ namespace SyntaxGenerator.Writer
             {
                 Node nd = (Node) node;
 
-                var baseArgs = GetBaseArgs(nd);
+                var baseFields = GetBaseFields(nd);
 
                 WriteLine("  public sealed partial class {0} : {1}", node.Name, node.Base);
                 WriteLine("  {");
@@ -160,16 +172,16 @@ namespace SyntaxGenerator.Writer
                 else
                     Write("    public {0}(SyntaxKind kind, ", node.Name);
 
-                if (baseArgs.Any())
-                    Write(baseArgs.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
+                if (baseFields.Any())
+                    Write(baseFields.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
-                var baseArgsStr = (baseArgs.Any() ? ", " : string.Empty) + string.Join(", ", baseArgs.Select(a => CamelCase(a.Name)));
+                var baseFieldsStr = (baseFields.Any() ? ", " : string.Empty) + string.Join(", ", baseFields.Select(a => CamelCase(a.Name)));
                 WriteLine(", IEnumerable<Diagnostic> diagnostics)");
                 if (HasOneKind(nd))
-                    WriteLine("        : base(SyntaxKind.{0}{1}, diagnostics)", nd.Kinds[0].Name, baseArgsStr);
+                    WriteLine("        : base(SyntaxKind.{0}{1}, diagnostics)", nd.Kinds[0].Name, baseFieldsStr);
                 else
-                    WriteLine("        : base(kind{0}, diagnostics)", baseArgsStr);
+                    WriteLine("        : base(kind{0}, diagnostics)", baseFieldsStr);
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
@@ -182,15 +194,15 @@ namespace SyntaxGenerator.Writer
                 else
                     Write("    public {0}(SyntaxKind kind, ", node.Name);
 
-                if (baseArgs.Any())
-                    Write(baseArgs.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
+                if (baseFields.Any())
+                    Write(baseFields.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
                 WriteLine(")");
                 if (HasOneKind(nd))
-                    WriteLine("        : base(SyntaxKind.{0}{1})", nd.Kinds[0].Name, baseArgsStr);
+                    WriteLine("        : base(SyntaxKind.{0}{1})", nd.Kinds[0].Name, baseFieldsStr);
                 else
-                    WriteLine("        : base(kind{0})", baseArgsStr);
+                    WriteLine("        : base(kind{0})", baseFieldsStr);
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
@@ -295,8 +307,8 @@ namespace SyntaxGenerator.Writer
                 Write("this.Kind");
                 first = false;
             }
-            var baseArgs = GetBaseArgs(node);
-            foreach (var arg in baseArgs)
+            var baseFields = GetBaseFields(node);
+            foreach (var arg in baseFields)
             {
                 if (!first)
                     Write(", ");
@@ -417,13 +429,13 @@ namespace SyntaxGenerator.Writer
                 }
 
                 bool first = true;
-                var baseArgs = GetBaseArgs(node);
-                foreach (var arg in baseArgs)
+                var baseFields = GetBaseFields(node);
+                foreach (var field in baseFields)
                 {
                     if (!first)
                         Write(", ");
                     first = false;
-                    Write("this." + arg.Name);
+                    Write("this." + field.Name);
                 }
 
                 foreach (var field in node.Fields)
@@ -1194,19 +1206,17 @@ namespace SyntaxGenerator.Writer
             }
         }
 
-        private List<Argument> GetBaseArgs(Node nd)
+        private List<Field> GetBaseFields(Node nd)
         {
-            List<Argument> baseArgs = new List<Argument>(0);
-            var pn = GetPredefinedNode(nd.Base);
+            List<Field> baseFields = new List<Field>(0);
+            var pn = GetTreeType(nd.Base) as AbstractNode;
             if (pn != null)
             {
                 if (pn.Fields != null && pn.Fields.Count > 0)
-                {
-                    baseArgs = pn.Fields.ToList();
-                }
+                    baseFields = pn.Fields.Where(f => !IsAbstract(f)).ToList();
             }
 
-            return baseArgs;
+            return baseFields;
         }
     }
 }

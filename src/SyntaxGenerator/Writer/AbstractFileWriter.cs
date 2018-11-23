@@ -13,7 +13,7 @@ namespace SyntaxGenerator.Writer
         private readonly IDictionary<string, string> _parentMap;
         private readonly ILookup<string, string> _childMap;
         private readonly IDictionary<string, Node> _nodeMap;
-        private readonly IDictionary<string, PredefinedNode> _preNodeMap;
+        private readonly IDictionary<string, TreeType> _treeTypeMap;
 
         private const int INDENT_SIZE = 4;
         private int _indentLevel;
@@ -24,7 +24,7 @@ namespace SyntaxGenerator.Writer
             _writer = writer;
             _tree = tree;
             _nodeMap = tree.Types.OfType<Node>().ToDictionary(n => n.Name);
-            _preNodeMap = tree.Types.OfType<PredefinedNode>().ToDictionary(n => n.Name);
+            _treeTypeMap = tree.Types.ToDictionary(n => n.Name);
             _parentMap = tree.Types.ToDictionary(n => n.Name, n => n.Base);
             _parentMap.Add(tree.Root, null);
             _childMap = tree.Types.ToLookup(n => n.Base, n => n.Name);
@@ -194,10 +194,10 @@ namespace SyntaxGenerator.Writer
             return _nodeMap.TryGetValue(typeName, out node) ? node : null;
         }
 
-        protected PredefinedNode GetPredefinedNode(string typeName)
+        protected TreeType GetTreeType(string typeName)
         {
-            PredefinedNode node;
-            return _preNodeMap.TryGetValue(typeName, out node) ? node : null;
+            TreeType node;
+            return _treeTypeMap.TryGetValue(typeName, out node) ? node : null;
         }
 
         protected static bool IsOptional(Field f)
@@ -208,6 +208,11 @@ namespace SyntaxGenerator.Writer
         protected static bool IsOverride(Field f)
         {
             return f.Override != null && string.Compare(f.Override, "true", true) == 0;
+        }
+
+        protected static bool IsAbstract(Field f)
+        {
+            return f.Abstract != null && string.Compare(f.Abstract, "true", true) == 0;
         }
 
         protected static bool IsNew(Field f)
