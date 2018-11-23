@@ -6,7 +6,6 @@
 
         public readonly SyntaxToken DefaultKeyword;
 
-        public override SyntaxToken Keyword => DefaultKeyword;
         public override SyntaxToken ColonToken => _colonToken;
 
         public DefaultSwitchLabelSyntax(SyntaxToken defaultKeyword, SyntaxToken colonToken)

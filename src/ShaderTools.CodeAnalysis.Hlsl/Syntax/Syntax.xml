@@ -36,6 +36,9 @@
   <AbstractNode Name="StatementSyntax" Base="SyntaxNode">
     <Field Name="Attributes" Type="List&lt;AttributeSyntax&gt;" />
   </AbstractNode>
+  <AbstractNode Name="SwitchLabelSyntax" Base="SyntaxNode">
+    <Field Name="ColonToken" Type="SyntaxToken" Abstract="true" />
+  </AbstractNode>
   <AbstractNode Name="TypeSyntax" Base="ExpressionSyntax">
     <TypeComment>
       <summary></summary>
@@ -309,6 +312,29 @@
     </Field>
   </Node>
 
+  <Node Name="CaseSwitchLabelSyntax" Base="SwitchLabelSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="CaseSwitchLabel"/>
+    <Field Name="CaseKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CaseKeyword"/>
+    </Field>
+    <Field Name="Value" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ColonToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+  </Node>
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">

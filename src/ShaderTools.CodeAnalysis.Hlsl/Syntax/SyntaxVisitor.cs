@@ -197,11 +197,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitCaseSwitchLabel(CaseSwitchLabelSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitDefaultSwitchLabel(DefaultSwitchLabelSyntax node)
         {
             DefaultVisit(node);
@@ -643,11 +638,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSwitchSection(SwitchSectionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitCaseSwitchLabel(CaseSwitchLabelSyntax node)
         {
             return DefaultVisit(node);
         }
