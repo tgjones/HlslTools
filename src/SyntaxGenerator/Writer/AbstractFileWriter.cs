@@ -13,6 +13,7 @@ namespace SyntaxGenerator.Writer
         private readonly IDictionary<string, string> _parentMap;
         private readonly ILookup<string, string> _childMap;
         private readonly IDictionary<string, Node> _nodeMap;
+        private readonly IDictionary<string, PredefinedNode> _preNodeMap;
 
         private const int INDENT_SIZE = 4;
         private int _indentLevel;
@@ -23,6 +24,7 @@ namespace SyntaxGenerator.Writer
             _writer = writer;
             _tree = tree;
             _nodeMap = tree.Types.OfType<Node>().ToDictionary(n => n.Name);
+            _preNodeMap = tree.Types.OfType<PredefinedNode>().ToDictionary(n => n.Name);
             _parentMap = tree.Types.ToDictionary(n => n.Name, n => n.Base);
             _parentMap.Add(tree.Root, null);
             _childMap = tree.Types.ToLookup(n => n.Base, n => n.Name);
@@ -190,6 +192,12 @@ namespace SyntaxGenerator.Writer
         {
             Node node;
             return _nodeMap.TryGetValue(typeName, out node) ? node : null;
+        }
+
+        protected PredefinedNode GetPredefinedNode(string typeName)
+        {
+            PredefinedNode node;
+            return _preNodeMap.TryGetValue(typeName, out node) ? node : null;
         }
 
         protected static bool IsOptional(Field f)

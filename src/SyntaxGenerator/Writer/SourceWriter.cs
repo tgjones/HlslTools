@@ -132,6 +132,8 @@ namespace SyntaxGenerator.Writer
             {
                 Node nd = (Node) node;
 
+                var baseArgs = GetBaseArgs(nd);
+
                 WriteLine("  public sealed partial class {0} : {1}", node.Name, node.Base);
                 WriteLine("  {");
 
@@ -158,13 +160,16 @@ namespace SyntaxGenerator.Writer
                 else
                     Write("    public {0}(SyntaxKind kind, ", node.Name);
 
+                if (baseArgs.Any())
+                    Write(baseArgs.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
+                var baseArgsStr = (baseArgs.Any() ? ", " : string.Empty) + string.Join(", ", baseArgs.Select(a => CamelCase(a.Name)));
                 WriteLine(", IEnumerable<Diagnostic> diagnostics)");
                 if (HasOneKind(nd))
-                    WriteLine("        : base(SyntaxKind.{0}, diagnostics)", nd.Kinds[0].Name);
+                    WriteLine("        : base(SyntaxKind.{0}{1}, diagnostics)", nd.Kinds[0].Name, baseArgsStr);
                 else
-                    WriteLine("        : base(kind, diagnostics)");
+                    WriteLine("        : base(kind{0}, diagnostics)", baseArgsStr);
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
@@ -177,13 +182,15 @@ namespace SyntaxGenerator.Writer
                 else
                     Write("    public {0}(SyntaxKind kind, ", node.Name);
 
+                if (baseArgs.Any())
+                    Write(baseArgs.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
                 WriteLine(")");
                 if (HasOneKind(nd))
-                    WriteLine("        : base(SyntaxKind.{0})", nd.Kinds[0].Name);
+                    WriteLine("        : base(SyntaxKind.{0}{1})", nd.Kinds[0].Name, baseArgsStr);
                 else
-                    WriteLine("        : base(kind)");
+                    WriteLine("        : base(kind{0})", baseArgsStr);
                 WriteLine("    {");
                 WriteCtorBody(valueFields, nodeFields);
                 WriteLine("    }");
@@ -288,6 +295,15 @@ namespace SyntaxGenerator.Writer
                 Write("this.Kind");
                 first = false;
             }
+            var baseArgs = GetBaseArgs(node);
+            foreach (var arg in baseArgs)
+            {
+                if (!first)
+                    Write(", ");
+                first = false;
+                Write("this." + arg.Name);
+            }
+
             for (int f = 0; f < node.Fields.Count; f++)
             {
                 var field = node.Fields[f];
@@ -399,11 +415,22 @@ namespace SyntaxGenerator.Writer
                 {
                     Write("this.Kind, ");
                 }
-                for (int f = 0; f < node.Fields.Count; f++)
+
+                bool first = true;
+                var baseArgs = GetBaseArgs(node);
+                foreach (var arg in baseArgs)
                 {
-                    var field = node.Fields[f];
-                    if (f > 0)
+                    if (!first)
                         Write(", ");
+                    first = false;
+                    Write("this." + arg.Name);
+                }
+
+                foreach (var field in node.Fields)
+                {
+                    if (!first)
+                        Write(", ");
+                    first = false;
                     Write(CamelCase(field.Name));
                 }
                 WriteLine(");");
@@ -1165,6 +1192,21 @@ namespace SyntaxGenerator.Writer
                     }
                 }
             }
+        }
+
+        private List<Argument> GetBaseArgs(Node nd)
+        {
+            List<Argument> baseArgs = new List<Argument>(0);
+            var pn = GetPredefinedNode(nd.Base);
+            if (pn != null)
+            {
+                if (pn.Fields != null && pn.Fields.Count > 0)
+                {
+                    baseArgs = pn.Fields.ToList();
+                }
+            }
+
+            return baseArgs;
         }
     }
 }
