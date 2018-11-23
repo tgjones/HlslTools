@@ -207,16 +207,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitCompoundExpression(CompoundExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitConditionalExpression(ConditionalExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPrefixCastExpression(CastExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -248,11 +238,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual void VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitCompileExpression(CompileExpressionSyntax node)
         {
             DefaultVisit(node);
         }
@@ -647,16 +632,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitCompoundExpression(CompoundExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitConditionalExpression(ConditionalExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitPrefixCastExpression(CastExpressionSyntax node)
         {
             return DefaultVisit(node);
@@ -688,11 +663,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitCompileExpression(CompileExpressionSyntax node)
         {
             return DefaultVisit(node);
         }

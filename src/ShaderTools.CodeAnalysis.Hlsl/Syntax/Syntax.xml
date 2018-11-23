@@ -335,6 +335,7 @@
       <Kind Name="ColonToken"/>
     </Field>
   </Node>
+
   <Node Name="CastExpressionSyntax" Base="ExpressionSyntax">
     <TypeComment>
       <summary></summary>
@@ -368,6 +369,7 @@
       </PropertyComment>
     </Field>
   </Node>
+
   <Node Name="CompilationUnitSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -385,6 +387,86 @@
       <Kind Name="EndOfFileToken"/>
     </Field>
   </Node>
+
+  <Node Name="CompileExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="CompileExpression"/>
+    <Field Name="CompileKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CompileKeyword"/>
+    </Field>
+    <Field Name="ShaderTargetToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ShaderFunction" Type="FunctionInvocationExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
+  <Node Name="CompoundExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="Left" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CommaToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CommaToken"/>
+    </Field>
+    <Field Name="Right" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
+  <Node Name="ConditionalExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ConditionalExpression"/>
+    <Field Name="Condition" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="QuestionToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="QuestionToken"/>
+    </Field>
+    <Field Name="WhenTrue" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ColonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+    <Field Name="WhenFalse" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
