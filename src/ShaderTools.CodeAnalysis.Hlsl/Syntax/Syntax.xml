@@ -1129,6 +1129,16 @@
     </Field>
   </Node>
 
+  <Node Name="LiteralExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary>Float, integer, boolean, etc. literal constant.</summary>
+    </TypeComment>
+    <Field Name="Token" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
 
   <Node Name="LogicalRegisterSpace" Base="SyntaxNode">
