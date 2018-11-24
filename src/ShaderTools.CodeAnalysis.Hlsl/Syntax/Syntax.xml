@@ -699,6 +699,24 @@
     </Field>
   </Node>
 
+  <Node Name="ElseClauseSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ElseClause"/>
+    <Field Name="ElseKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ElseKeyword"/>
+    </Field>
+    <Field Name="Statement" Type="StatementSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+ 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
