@@ -24,39 +24,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override ExpressionSyntax Condition => null;
     }
 
-    public sealed class ElseDirectiveTriviaSyntax : BranchingDirectiveTriviaSyntax
-    {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken ElseKeyword;
-
-        public ElseDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken elseKeyword, SyntaxToken endOfDirectiveToken, bool isActive, bool branchTaken)
-            : base(SyntaxKind.ElseDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out ElseKeyword, elseKeyword);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-            BranchTaken = branchTaken;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-        public override bool BranchTaken { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitElseDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitElseDirectiveTrivia(this);
-        }
-    }
-
     public sealed class EndIfDirectiveTriviaSyntax : DirectiveTriviaSyntax
     {
         private readonly SyntaxToken _hashToken;
