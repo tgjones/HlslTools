@@ -1022,6 +1022,17 @@
     </Field>
   </Node>
 
+  <Node Name="IdentifierDeclarationNameSyntax" Base="DeclarationNameSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="IdentifierDeclarationName"/>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
