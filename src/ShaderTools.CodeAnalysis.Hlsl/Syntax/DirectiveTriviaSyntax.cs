@@ -24,44 +24,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override ExpressionSyntax Condition => null;
     }
 
-    public sealed class ElifDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax
-    {
-        private readonly SyntaxToken _hashToken;
-        private readonly ExpressionSyntax _condition;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken ElifKeyword;
-
-        public ElifDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken elifKeyword, ExpressionSyntax condition, SyntaxToken endOfDirectiveToken, bool isActive, bool branchTaken, bool conditionValue)
-            : base(SyntaxKind.ElifDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out ElifKeyword, elifKeyword);
-            RegisterChildNode(out _condition, condition);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-            BranchTaken = branchTaken;
-            ConditionValue = conditionValue;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override ExpressionSyntax Condition => _condition;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-        public override bool BranchTaken { get; }
-        public override bool ConditionValue { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitElifDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitElifDirectiveTrivia(this);
-        }
-    }
-
     public sealed class ElseDirectiveTriviaSyntax : BranchingDirectiveTriviaSyntax
     {
         private readonly SyntaxToken _hashToken;
