@@ -24,37 +24,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override ExpressionSyntax Condition => null;
     }
 
-    public sealed class EndIfDirectiveTriviaSyntax : DirectiveTriviaSyntax
-    {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken EndIfKeyword;
-
-        public EndIfDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken endIfKeyword, SyntaxToken endOfDirectiveToken, bool isActive)
-            : base(SyntaxKind.EndIfDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out EndIfKeyword, endIfKeyword);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitEndIfDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitEndIfDirectiveTrivia(this);
-        }
-    }
-
     public abstract class DefineDirectiveTriviaSyntax : DirectiveTriviaSyntax
     {
         public abstract SyntaxToken MacroName { get; }

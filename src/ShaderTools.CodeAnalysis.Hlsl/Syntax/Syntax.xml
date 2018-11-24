@@ -669,6 +669,7 @@
     </Field>
   </Node>
 
+
   <Node Name="BadDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
     <TypeComment>
       <summary></summary>
@@ -913,5 +914,37 @@
       </PropertyComment>
     </Field>
   </Node>
+
+  <Node Name="EndIfDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="EndIfDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="EndIfKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndIfKeyword"/>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+  </Node>
+
 
 </Tree>
