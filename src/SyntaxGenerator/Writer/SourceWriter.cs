@@ -165,7 +165,7 @@ namespace SyntaxGenerator.Writer
                     Write("    public {0}(SyntaxKind kind, ", node.Name);
 
                 if (baseFields.Any())
-                    Write(baseFields.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
+                    Write(baseFields.Aggregate("", (str, a) => str + $"{a.Type} {CamelCase(a.Name)}, "));
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
                 var baseFieldsStr = (baseFields.Any() ? ", " : string.Empty) + string.Join(", ", baseFields.Select(a => CamelCase(a.Name)));
@@ -187,7 +187,7 @@ namespace SyntaxGenerator.Writer
                     Write("    public {0}(SyntaxKind kind, ", node.Name);
 
                 if (baseFields.Any())
-                    Write(baseFields.Aggregate(", ", (str, a) => $"{a.Type} {CamelCase(a.Name)}, "));
+                    Write(baseFields.Aggregate("", (str, a) => str + $"{a.Type} {CamelCase(a.Name)}, "));
                 WriteGreenNodeConstructorArgs(nodeFields, valueFields);
 
                 WriteLine(")");
