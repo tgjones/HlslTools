@@ -1013,6 +1013,26 @@
     </Field>
   </Node>
 
+  <Node Name="FunctionDefinitionSyntax" Base="FunctionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FunctionDefinition"/>
+    <Field Name="Body" Type="BlockSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="Block"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
+
   <!-- Preprocessor directives -->
   <Node Name="BadDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
     <TypeComment>
