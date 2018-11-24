@@ -542,7 +542,27 @@
       <Kind Name="SemicolonToken"/>
     </Field>
   </Node>
- 
+
+  <Node Name="DefaultSwitchLabelSyntax" Base="SwitchLabelSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="DefaultSwitchLabel"/>
+    <Field Name="DefaultKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="DefaultKeyword"/>
+    </Field>
+    <Field Name="ColonToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+  </Node>
+
+
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
