@@ -132,11 +132,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -333,11 +328,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitStringLiteralExpression(StringLiteralExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
