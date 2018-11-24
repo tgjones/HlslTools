@@ -1213,4 +1213,38 @@
     </Field>
   </Node>
 
+  <Node Name="PragmaDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PragmaDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="PragmaKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="PragmaKeyword"/>
+    </Field>
+    <Field Name="TokenString" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 </Tree>
