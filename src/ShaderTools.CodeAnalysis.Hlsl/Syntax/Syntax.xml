@@ -717,6 +717,19 @@
     </Field>
   </Node>
  
+  <Node Name="EmptyStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="EmptyStatement"/>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+ 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>

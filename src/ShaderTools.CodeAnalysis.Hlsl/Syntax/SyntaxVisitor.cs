@@ -137,11 +137,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitEmptyStatement(EmptyStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitReturnStatement(ReturnStatementSyntax node)
         {
             DefaultVisit(node);
@@ -438,11 +433,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitExpressionStatement(ExpressionStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitEmptyStatement(EmptyStatementSyntax node)
         {
             return DefaultVisit(node);
         }
