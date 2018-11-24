@@ -137,11 +137,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitPackOffsetComponentPart(PackOffsetComponentPart node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPredefinedObjectType(PredefinedObjectTypeSyntax node)
         {
             DefaultVisit(node);
@@ -323,11 +318,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPackOffsetLocation(PackOffsetLocation node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitPackOffsetComponentPart(PackOffsetComponentPart node)
         {
             return DefaultVisit(node);
         }

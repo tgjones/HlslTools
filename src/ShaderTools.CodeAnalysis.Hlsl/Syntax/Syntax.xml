@@ -1298,6 +1298,25 @@
     </Field>
   </Node>
 
+  <Node Name="PackOffsetComponentPart" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PackOffsetComponentPart"/>
+    <Field Name="DotToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="DotToken"/>
+    </Field>
+    <Field Name="Component" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
+
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
     <TypeComment>
