@@ -1138,5 +1138,46 @@
     </Field>
   </Node>
 
+  <Node Name="LineDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="LineDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="LineKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LineKeyword"/>
+    </Field>
+    <Field Name="Line" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="File" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
+
 
 </Tree>

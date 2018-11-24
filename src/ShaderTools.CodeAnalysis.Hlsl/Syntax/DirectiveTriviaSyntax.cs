@@ -29,41 +29,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public string TrimmedFilename => Filename.Text.TrimStart('<', '"').TrimEnd('>', '"');
     }
 
-    public sealed class LineDirectiveTriviaSyntax : DirectiveTriviaSyntax
-    {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken LineKeyword;
-        public readonly SyntaxToken Line;
-        public readonly SyntaxToken File;
-
-        public LineDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken lineKeyword, SyntaxToken line, SyntaxToken file, SyntaxToken endOfDirectiveToken, bool isActive)
-            : base(SyntaxKind.LineDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out LineKeyword, lineKeyword);
-            RegisterChildNode(out Line, line);
-            RegisterChildNode(out File, file);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitLineDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitLineDirectiveTrivia(this);
-        }
-    }
-
     public sealed class ErrorDirectiveTriviaSyntax : DirectiveTriviaSyntax
     {
         private readonly SyntaxToken _hashToken;
