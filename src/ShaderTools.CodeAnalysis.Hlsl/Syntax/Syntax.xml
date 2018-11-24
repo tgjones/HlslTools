@@ -767,7 +767,31 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-      <Kind Name="EqualsToken"/>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="FieldAccessExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FieldAccessExpression"/>
+    <Field Name="Expression" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="DotToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="DotToken"/>
+    </Field>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="DotToken"/>
     </Field>
   </Node>
  

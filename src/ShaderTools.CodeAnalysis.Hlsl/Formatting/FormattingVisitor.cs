@@ -758,7 +758,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             FormatToken(node.TypeToken, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        public override void VisitFieldAccess(FieldAccessExpressionSyntax node)
+        public override void VisitFieldAccessExpression(FieldAccessExpressionSyntax node)
         {
             Visit(node.Name);
 
