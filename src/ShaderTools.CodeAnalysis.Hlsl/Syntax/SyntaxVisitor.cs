@@ -107,11 +107,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitConstantBuffer(ConstantBufferSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitTechnique(TechniqueSyntax node)
         {
             DefaultVisit(node);
@@ -243,16 +238,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual void VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitRegisterLocation(RegisterLocation node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitLogicalRegisterSpace(LogicalRegisterSpace node)
         {
             DefaultVisit(node);
         }
@@ -532,11 +517,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitConstantBuffer(ConstantBufferSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitTechnique(TechniqueSyntax node)
         {
             return DefaultVisit(node);
@@ -668,16 +648,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitParenthesizedExpression(ParenthesizedExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitRegisterLocation(RegisterLocation node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitLogicalRegisterSpace(LogicalRegisterSpace node)
         {
             return DefaultVisit(node);
         }

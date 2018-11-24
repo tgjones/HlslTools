@@ -44,6 +44,11 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="VariableDeclaratorQualifierSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
 
   <Node Name="AnnotationsSyntax" Base="SyntaxNode">
     <TypeComment>
@@ -467,6 +472,53 @@
     </Field>
   </Node>
 
+  <Node Name="ConstantBufferSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ConstantBufferDeclaration"/>
+    <Field Name="ConstantBufferKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ConstantBufferKeyword"/>
+    </Field>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Register" Type="RegisterLocation">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="RegisterLocation"/>
+    </Field>
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBraceToken"/>
+    </Field>
+    <Field Name="Declarations" Type="List&lt;VariableDeclarationStatementSyntax&gt;">
+      <PropertyComment>
+        <summary>Gets the annotation list.</summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBraceToken"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
@@ -478,6 +530,67 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
+    </Field>
+  </Node>
+
+  <Node Name="LogicalRegisterSpace" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="LogicalRegisterSpace"/>
+    <Field Name="CommaToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CommaToken"/>
+    </Field>
+    <Field Name="SpaceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SpaceToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="RegisterLocation"/>
+    <Field Name="Colon" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+    <Field Name="RegisterKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="RegisterKeyword"/>
+    </Field>
+    <Field Name="OpenParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenParenToken"/>
+    </Field>
+    <Field Name="Register" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="LogicalRegisterSpace" Type="LogicalRegisterSpace">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LogicalRegisterSpace"/>
+    </Field>
+    <Field Name="CloseParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseParenToken"/>
     </Field>
   </Node>
 
