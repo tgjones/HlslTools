@@ -796,7 +796,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             FormatCloseBraceToken(node.CloseBraceToken);
         }
 
-        public override void VisitNumericConstructorInvocation(NumericConstructorInvocationExpressionSyntax node)
+        public override void VisitNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax node)
         {
             Visit(node.Type);
 

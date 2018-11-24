@@ -177,11 +177,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitNumericConstructorInvocation(NumericConstructorInvocationExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitObjectLikeMacroReference(ObjectLikeMacroReference node)
         {
             
@@ -368,11 +363,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSemantic(SemanticSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitNumericConstructorInvocation(NumericConstructorInvocationExpressionSyntax node)
         {
             return DefaultVisit(node);
         }

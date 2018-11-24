@@ -1279,6 +1279,25 @@
     </Field>
   </Node>
 
+  <Node Name="NumericConstructorInvocationExpressionSyntax" Base="InvocationExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="NumericConstructorInvocationExpression"/>
+    <Field Name="Type" Type="NumericTypeSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ArgumentList" Type="ArgumentListSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ArgumentList"/>
+      <Getter Name="ArgumentListSyntax" Override="true"/>
+    </Field>
+  </Node>
+
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
     <TypeComment>
