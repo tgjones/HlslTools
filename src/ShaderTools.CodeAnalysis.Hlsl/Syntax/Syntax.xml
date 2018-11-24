@@ -765,7 +765,6 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-      <Kind Name="IfDefKeyword"/>
     </Field>
     <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
       <PropertyComment>
@@ -790,6 +789,50 @@
     </Field>
   </Node>
 
+  <Node Name="IfNDefDirectiveTriviaSyntax" Base="ConditionalDirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="IfNDefDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="IfNDefKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="IfNDefKeyword"/>
+    </Field>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="BranchTaken" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ConditionValue" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
 
 </Tree>

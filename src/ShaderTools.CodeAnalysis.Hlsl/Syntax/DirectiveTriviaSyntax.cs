@@ -19,44 +19,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override ExpressionSyntax Condition => null;
     }
 
-    public sealed class IfNDefDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax
+    public sealed partial class IfNDefDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax
     {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken IfNDefKeyword;
-        public readonly SyntaxToken Name;
-
-        public IfNDefDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken ifNDefKeyword, SyntaxToken name, SyntaxToken endOfDirectiveToken, bool isActive, bool branchTaken, bool conditionValue)
-            : base(SyntaxKind.IfNDefDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out IfNDefKeyword, ifNDefKeyword);
-            RegisterChildNode(out Name, name);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-            BranchTaken = branchTaken;
-            ConditionValue = conditionValue;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-
         public override ExpressionSyntax Condition => null;
-
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-        public override bool BranchTaken { get; }
-        public override bool ConditionValue { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitIfNDefDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitIfNDefDirectiveTrivia(this);
-        }
     }
 
     public sealed class ElifDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax
