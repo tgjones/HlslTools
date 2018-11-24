@@ -67,6 +67,12 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="InvocationExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="ArgumentListSyntax" Type="ArgumentListSyntax" Abstract="true" />
+  </AbstractNode>
   <AbstractNode Name="NameSyntax" Base="TypeSyntax">
     <TypeComment>
       <summary></summary>
@@ -1031,6 +1037,26 @@
       <Kind Name="SemicolonToken"/>
     </Field>
   </Node>
+
+  <Node Name="FunctionInvocationExpressionSyntax" Base="InvocationExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FunctionInvocationExpression"/>
+    <Field Name="Name" Type="NameSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ArgumentList" Type="ArgumentListSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ArgumentList"/>
+      <Getter Name="ArgumentListSyntax" Override="true"/>
+    </Field>
+  </Node>
+
 
 
   <!-- Preprocessor directives -->
