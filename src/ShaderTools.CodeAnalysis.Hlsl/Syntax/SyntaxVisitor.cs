@@ -192,11 +192,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitGenericVectorType(GenericVectorTypeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitStateInitializer(StateInitializerSyntax node)
         {
             DefaultVisit(node);
@@ -433,11 +428,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitVectorType(VectorTypeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitGenericVectorType(GenericVectorTypeSyntax node)
         {
             return DefaultVisit(node);
         }

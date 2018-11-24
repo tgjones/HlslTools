@@ -980,6 +980,49 @@
     </Field>
   </Node>
 
+  <Node Name="GenericVectorTypeSyntax" Base="BaseVectorTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PredefinedGenericVectorType"/>
+    <Field Name="VectorKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="VectorKeyword"/>
+    </Field>
+    <Field Name="LessThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LessThanToken"/>
+    </Field>
+    <Field Name="ScalarType" Type="ScalarTypeSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="PredefinedScalarType"/>
+    </Field>
+    <Field Name="CommaToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CommaToken"/>
+    </Field>
+    <Field Name="SizeToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="GreaterThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="GreaterThanToken"/>
+    </Field>
+  </Node>
+
+
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
