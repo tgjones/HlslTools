@@ -147,11 +147,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitDiscardStatement(DiscardStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitIfStatement(IfStatementSyntax node)
         {
             DefaultVisit(node);
@@ -468,11 +463,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitReturnStatement(ReturnStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitDiscardStatement(DiscardStatementSyntax node)
         {
             return DefaultVisit(node);
         }

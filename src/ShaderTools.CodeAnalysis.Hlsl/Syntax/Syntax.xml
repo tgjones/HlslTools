@@ -604,6 +604,24 @@
     </Field>
   </Node>
 
+  <Node Name="DiscardStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="DiscardStatement"/>
+    <Field Name="DiscardKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="DiscardKeyword"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemiColonToken"/>
+    </Field>
+  </Node>
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
@@ -680,6 +698,7 @@
   </Node>
 
 
+  <!-- Preprocessor directives -->
   <Node Name="BadDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
     <TypeComment>
       <summary></summary>
