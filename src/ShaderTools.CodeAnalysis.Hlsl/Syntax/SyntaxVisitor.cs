@@ -152,11 +152,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitContinueStatement(ContinueStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitIfStatement(IfStatementSyntax node)
         {
             DefaultVisit(node);
@@ -558,11 +553,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitDiscardStatement(DiscardStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitContinueStatement(ContinueStatementSyntax node)
         {
             return DefaultVisit(node);
         }

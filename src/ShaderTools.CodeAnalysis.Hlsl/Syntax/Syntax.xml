@@ -13,6 +13,11 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="DeclarationNameSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
   <AbstractNode Name="ExpressionSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -519,7 +524,25 @@
     </Field>
   </Node>
 
-
+  <Node Name="ContinueStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ContinueStatement"/>
+    <Field Name="ContinueKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ContinueKeyword"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+ 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
