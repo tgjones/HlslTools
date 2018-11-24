@@ -24,54 +24,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override ExpressionSyntax Condition => null;
     }
 
-    public sealed class IncludeDirectiveTriviaSyntax : DirectiveTriviaSyntax
+    public sealed partial class IncludeDirectiveTriviaSyntax : DirectiveTriviaSyntax
     {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken IncludeKeyword;
-        public readonly SyntaxToken Filename;
-
         public string TrimmedFilename => Filename.Text.TrimStart('<', '"').TrimEnd('>', '"');
-
-        public IncludeDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken includeKeyword, SyntaxToken filename, SyntaxToken endOfDirectiveToken, bool isActive, IEnumerable<Diagnostic> diagnostics)
-            : base(SyntaxKind.IncludeDirectiveTrivia, diagnostics)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out IncludeKeyword, includeKeyword);
-            RegisterChildNode(out Filename, filename);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        public IncludeDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken includeKeyword, SyntaxToken filename, SyntaxToken endOfDirectiveToken, bool isActive)
-            : base(SyntaxKind.IncludeDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out IncludeKeyword, includeKeyword);
-            RegisterChildNode(out Filename, filename);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitIncludeDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitIncludeDirectiveTrivia(this);
-        }
-
-        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
-        {
-            return new IncludeDirectiveTriviaSyntax(_hashToken, IncludeKeyword, Filename, _endOfDirectiveToken, IsActive, diagnostics);
-        }
     }
 
     public sealed class UndefDirectiveTriviaSyntax : DirectiveTriviaSyntax

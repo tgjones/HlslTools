@@ -706,7 +706,6 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-      <Kind Name="EndOfDirectiveToken"/>
     </Field>
   </Node>
 
@@ -952,7 +951,6 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-      <Kind Name="EndOfDirectiveToken"/>
     </Field>
   </Node>
 
@@ -995,7 +993,6 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-      <Kind Name="EndOfDirectiveToken"/>
     </Field>
   </Node>
 
@@ -1044,7 +1041,6 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-      <Kind Name="EndOfDirectiveToken"/>
     </Field>
   </Node>
 
@@ -1069,6 +1065,41 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="CloseParenToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="IncludeDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="IncludeDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="IncludeKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="IncludeKeyword"/>
+    </Field>
+    <Field Name="Filename" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
     </Field>
   </Node>
 
