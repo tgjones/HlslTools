@@ -19,6 +19,13 @@
     </TypeComment>
     <Field Name="BranchTaken" Type="bool" Abstract="true" />
   </AbstractNode>
+  <AbstractNode Name="ConditionalDirectiveTriviaSyntax" Base="BranchingDirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="Condition" Type="ExpressionSyntax" Abstract="true" />
+    <Field Name="ConditionValue" Type="bool" Abstract="true" />
+  </AbstractNode>
   <AbstractNode Name="DeclarationNameSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>

@@ -14,18 +14,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
     }
 
-    public abstract class ConditionalDirectiveTriviaSyntax : BranchingDirectiveTriviaSyntax
-    {
-        protected ConditionalDirectiveTriviaSyntax(SyntaxKind kind)
-            : base(kind)
-        {
-        }
-
-        public abstract ExpressionSyntax Condition { get; }
-
-        public abstract bool ConditionValue { get; }
-    }
-
     public sealed class IfDirectiveTriviaSyntax : ConditionalDirectiveTriviaSyntax
     {
         private readonly SyntaxToken _hashToken;
