@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Tree Namespace="ShaderTools.CodeAnalysis.Hlsl.Syntax" LanguageName="Hlsl" Root="SyntaxNodeBase" >
   <PredefinedNode Name="SyntaxNode" Base="SyntaxNodeBase"/>
-  <PredefinedNode Name="SyntaxToken" Base="SyntaxNode"/>
+  <PredefinedNode Name="LocatedNode" Base="SyntaxNode"/>
+  <PredefinedNode Name="SyntaxToken" Base="LocatedNode"/>
 
   <AbstractNode Name="BaseMatrixTypeSyntax" Base="NumericTypeSyntax">
     <TypeComment>
