@@ -752,6 +752,24 @@
       </PropertyComment>
     </Field>
   </Node>
+
+  <Node Name="ExpressionStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ExpressionStatement"/>
+    <Field Name="Expression" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EqualsToken"/>
+    </Field>
+  </Node>
  
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
