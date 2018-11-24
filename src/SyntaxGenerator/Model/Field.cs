@@ -29,5 +29,8 @@ namespace SyntaxGenerator.Model
 
         [XmlElement]
         public Comment PropertyComment;
+
+        [XmlElement(ElementName = "Getter", Type = typeof(Field))]
+        public List<Field> Getters;
     }
 }

@@ -208,6 +208,14 @@ namespace SyntaxGenerator.Writer
                     WriteLine("    public {0}{1} {2} {{ get {{ return this.{3}; }} }}",
                         OverrideOrNewModifier(field), field.Type, field.Name, CamelCase(field.Name)
                         );
+
+                    // additional getters
+                    foreach (var getter in field.Getters)
+                    {
+                        WriteLine("    public {0}{1} {2} {{ get {{ return this.{3}; }} }}",
+                            OverrideOrNewModifier(getter), field.Type, getter.Name, CamelCase(field.Name)
+                            );
+                    }
                 }
 
                 for (int i = 0, n = valueFields.Count; i < n; i++)
@@ -217,6 +225,14 @@ namespace SyntaxGenerator.Writer
                     WriteLine("    public {0}{1} {2} {{ get {{ return this.{3}; }} }}",
                         OverrideOrNewModifier(field), field.Type, field.Name, CamelCase(field.Name)
                         );
+
+                    // additional getters
+                    foreach (var getter in field.Getters)
+                    {
+                        WriteLine("    public {0}{1} {2} {{ get {{ return this.{3}; }} }}",
+                            OverrideOrNewModifier(getter), field.Type, getter.Name, CamelCase(field.Name)
+                            );
+                    }
                 }
 
                 this.WriteGreenAcceptMethods(nd);
