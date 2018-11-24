@@ -106,6 +106,12 @@
     <Field Name="ColonToken" Type="SyntaxToken" Abstract="true" />
     <Field Name="Keyword" Type="SyntaxToken" Abstract="true" />
   </AbstractNode>
+  <AbstractNode Name="TypeDefinitionSyntax" Base="TypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="NameToken" Type="SyntaxToken" Abstract="true" />
+  </AbstractNode>
   <AbstractNode Name="TypeSyntax" Base="ExpressionSyntax">
     <TypeComment>
       <summary></summary>
@@ -1086,6 +1092,43 @@
       <Kind Name="ElseClause"/>
     </Field>
   </Node>
+
+  <Node Name="InterfaceTypeSyntax" Base="TypeDefinitionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="InterfaceType"/>
+    <Field Name="InterfaceKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="InterfaceKeyword"/>
+    </Field>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Getter Name="NameToken" Override="true"/>
+    </Field>
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBraceToken"/>
+    </Field>
+    <Field Name="Methods" Type="List&lt;FunctionDeclarationSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBraceToken"/>
+    </Field>
+  </Node>
+
 
 
   <Node Name="LogicalRegisterSpace" Base="SyntaxNode">
