@@ -12,11 +12,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         }
 
-        public virtual void VisitNamespace(NamespaceSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitSamplerStateInitializer(SamplerStateInitializerSyntax node)
         {
             DefaultVisit(node);
@@ -210,11 +205,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         protected virtual T DefaultVisit(SyntaxNode node)
         {
             return default(T);
-        }
-
-        public virtual T VisitNamespace(NamespaceSyntax node)
-        {
-            return DefaultVisit(node);
         }
 
         public virtual T VisitSamplerStateInitializer(SamplerStateInitializerSyntax node)
