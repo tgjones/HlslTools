@@ -30,6 +30,10 @@ namespace SyntaxGenerator.Writer
             WriteLine("using System.Threading;");
             WriteLine("using ShaderTools.CodeAnalysis.Diagnostics;");
             WriteLine("using ShaderTools.CodeAnalysis.Syntax;");
+
+            foreach (var us in Tree.Usings)
+                WriteLine($"using {us.Namespace};");
+
             WriteLine();
         }
 
