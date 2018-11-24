@@ -39,9 +39,20 @@
     </TypeComment>
   </AbstractNode>
   <AbstractNode Name="StatementSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
     <Field Name="Attributes" Type="List&lt;AttributeSyntax&gt;" />
   </AbstractNode>
+  <AbstractNode Name="StructuredTriviaSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
   <AbstractNode Name="SwitchLabelSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
     <Field Name="ColonToken" Type="SyntaxToken" Abstract="true" />
   </AbstractNode>
   <AbstractNode Name="TypeSyntax" Base="ExpressionSyntax">
