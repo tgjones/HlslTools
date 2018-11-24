@@ -670,6 +670,35 @@
     </Field>
   </Node>
 
+  <Node Name="ElementAccessExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ElementAccessExpression"/>
+    <Field Name="Expression" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="OpenBracketToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBracketToken"/>
+    </Field>
+    <Field Name="Index" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBracketToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBracketToken"/>
+    </Field>
+  </Node>
+
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>

@@ -202,11 +202,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitElementAccessExpression(ElementAccessExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitFunctionInvocationExpression(FunctionInvocationExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -513,11 +508,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitFieldAccess(FieldAccessExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitElementAccessExpression(ElementAccessExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
