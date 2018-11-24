@@ -51,6 +51,17 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="FunctionSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="Attributes" Type="List&lt;AttributeSyntax&gt;" />
+    <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;" />
+    <Field Name="ReturnType" Type="TypeSyntax" />
+    <Field Name="Name" Type="DeclarationNameSyntax" />
+    <Field Name="ParameterList" Type="ParameterListSyntax" />
+    <Field Name="Semantic" Type="SemanticSyntax" />
+  </AbstractNode>
   <AbstractNode Name="InitializerSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -989,6 +1000,18 @@
     </Field>
   </Node>
 
+  <Node Name="FunctionDeclarationSyntax" Base="FunctionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FunctionDeclaration"/>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
 
   <!-- Preprocessor directives -->
   <Node Name="BadDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
