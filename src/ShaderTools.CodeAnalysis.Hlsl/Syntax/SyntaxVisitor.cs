@@ -32,11 +32,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitParameterList(ParameterListSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
             DefaultVisit(node);
@@ -208,11 +203,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitTemplateArgumentList(TemplateArgumentListSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitParameterList(ParameterListSyntax node)
         {
             return DefaultVisit(node);
         }
