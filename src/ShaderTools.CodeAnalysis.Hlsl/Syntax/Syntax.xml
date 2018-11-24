@@ -1510,7 +1510,23 @@
       <Kind Name="TemplateArgumentList"/>
     </Field>
   </Node>
- 
+
+  <Node Name="PrefixUnaryExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="OperatorToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Operand" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
     <TypeComment>

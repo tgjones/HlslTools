@@ -87,11 +87,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPrefixCastExpression(CastExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -228,11 +223,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSwitchSection(SwitchSectionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitPrefixUnaryExpression(PrefixUnaryExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
