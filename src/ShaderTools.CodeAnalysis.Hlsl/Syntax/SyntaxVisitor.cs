@@ -77,11 +77,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitParameter(ParameterSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitReturnStatement(ReturnStatementSyntax node)
         {
             DefaultVisit(node);
@@ -248,11 +243,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPass(PassSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitParameter(ParameterSyntax node)
         {
             return DefaultVisit(node);
         }

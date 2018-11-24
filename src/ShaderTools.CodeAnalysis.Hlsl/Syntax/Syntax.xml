@@ -1362,7 +1362,7 @@
     <TypeComment>
       <summary></summary>
     </TypeComment>
-    <Kind Name="ArgumentList"/>
+    <Kind Name="ParameterList"/>
     <Field Name="OpenParenToken" Type="SyntaxToken">
       <PropertyComment>
         <summary></summary>
@@ -1379,6 +1379,29 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="CloseParenToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="ParameterSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="Parameter"/>
+    <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Type" Type="TypeSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Declarator" Type="VariableDeclaratorSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="VariableDeclarator"/>
     </Field>
   </Node>
 
@@ -1463,7 +1486,7 @@
     <TypeComment>
       <summary></summary>
     </TypeComment>
-    <Kind Name="VariableDeclaration"/>
+    <Kind Name="VariableDeclarator"/>
     <Field Name="Identifier" Type="SyntaxToken">
       <PropertyComment>
         <summary></summary>
