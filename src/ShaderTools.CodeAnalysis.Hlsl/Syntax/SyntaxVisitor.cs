@@ -42,11 +42,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitMacroArgumentList(MacroArgumentListSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
             DefaultVisit(node);
@@ -202,11 +197,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitMacroArgument(MacroArgumentSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitObjectLikeMacroReference(ObjectLikeMacroReference node)
         {
             
@@ -258,11 +248,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitParameterList(ParameterListSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitMacroArgumentList(MacroArgumentListSyntax node)
         {
             return DefaultVisit(node);
         }
@@ -418,11 +403,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitNumericConstructorInvocation(NumericConstructorInvocationExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitMacroArgument(MacroArgumentSyntax node)
         {
             return DefaultVisit(node);
         }

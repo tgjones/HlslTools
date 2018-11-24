@@ -1141,7 +1141,6 @@
     </Field>
   </Node>
 
-
   <Node Name="LogicalRegisterSpace" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -1160,6 +1159,44 @@
       <Kind Name="SpaceToken"/>
     </Field>
   </Node>
+
+  <Node Name="MacroArgumentListSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="MacroArgumentList"/>
+    <Field Name="OpenParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenParenToken"/>
+    </Field>
+    <Field Name="Arguments" Type="SeparatedSyntaxList&lt;MacroArgumentSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseParenToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="MacroArgumentSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="MacroArgument"/>
+    <Field Name="Tokens" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
+
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
     <TypeComment>
