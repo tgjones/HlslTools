@@ -162,11 +162,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitDoStatement(DoStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitSwitchStatement(SwitchStatementSyntax node)
         {
             DefaultVisit(node);
@@ -478,11 +473,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitWhileStatement(WhileStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitDoStatement(DoStatementSyntax node)
         {
             return DefaultVisit(node);
         }
