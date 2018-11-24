@@ -27,11 +27,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitTemplateArgumentList(TemplateArgumentListSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
             DefaultVisit(node);
@@ -107,11 +102,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitPredefinedObjectType(PredefinedObjectTypeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVectorType(VectorTypeSyntax node)
         {
             DefaultVisit(node);
@@ -178,11 +168,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSkippedTokensSyntaxTrivia(SkippedTokensTriviaSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitTemplateArgumentList(TemplateArgumentListSyntax node)
         {
             return DefaultVisit(node);
         }
@@ -258,11 +243,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitStringLiteralExpression(StringLiteralExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitPredefinedObjectType(PredefinedObjectTypeSyntax node)
         {
             return DefaultVisit(node);
         }

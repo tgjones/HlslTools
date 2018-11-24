@@ -1493,6 +1493,24 @@
     </Field>
   </Node>
 
+  <Node Name="PredefinedObjectTypeSyntax" Base="PredefinedTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PredefinedObjectType"/>
+    <Field Name="ObjectTypeToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="TemplateArgumentList" Type="TemplateArgumentListSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="TemplateArgumentList"/>
+    </Field>
+  </Node>
+ 
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
     <TypeComment>
@@ -1545,6 +1563,30 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
+    </Field>
+  </Node>
+
+  <Node Name="TemplateArgumentListSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="TemplateArgumentList"/>
+    <Field Name="LessThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LessThanToken"/>
+    </Field>
+    <Field Name="Arguments" Type="SeparatedSyntaxList&lt;ExpressionSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="GreaterThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="GreaterThanToken"/>
     </Field>
   </Node>
 
