@@ -876,6 +876,56 @@
     </Field>
   </Node>
 
+  <Node Name="FunctionDeclarationSyntax" Base="FunctionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FunctionDeclaration"/>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="FunctionDefinitionSyntax" Base="FunctionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FunctionDefinition"/>
+    <Field Name="Body" Type="BlockSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="Block"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="FunctionInvocationExpressionSyntax" Base="InvocationExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="FunctionInvocationExpression"/>
+    <Field Name="Name" Type="NameSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ArgumentList" Type="ArgumentListSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ArgumentList"/>
+      <Getter Name="ArgumentListSyntax" Override="true"/>
+    </Field>
+  </Node>
 
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
@@ -1003,57 +1053,6 @@
       <PropertyComment>
         <summary></summary>
       </PropertyComment>
-    </Field>
-  </Node>
-
-  <Node Name="FunctionDeclarationSyntax" Base="FunctionSyntax">
-    <TypeComment>
-      <summary></summary>
-    </TypeComment>
-    <Kind Name="FunctionDeclaration"/>
-    <Field Name="SemicolonToken" Type="SyntaxToken">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
-      <Kind Name="SemicolonToken"/>
-    </Field>
-  </Node>
-
-  <Node Name="FunctionDefinitionSyntax" Base="FunctionSyntax">
-    <TypeComment>
-      <summary></summary>
-    </TypeComment>
-    <Kind Name="FunctionDefinition"/>
-    <Field Name="Body" Type="BlockSyntax">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
-      <Kind Name="Block"/>
-    </Field>
-    <Field Name="SemicolonToken" Type="SyntaxToken">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
-      <Kind Name="SemicolonToken"/>
-    </Field>
-  </Node>
-
-  <Node Name="FunctionInvocationExpressionSyntax" Base="InvocationExpressionSyntax">
-    <TypeComment>
-      <summary></summary>
-    </TypeComment>
-    <Kind Name="FunctionInvocationExpression"/>
-    <Field Name="Name" Type="NameSyntax">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
-    </Field>
-    <Field Name="ArgumentList" Type="ArgumentListSyntax">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
-      <Kind Name="ArgumentList"/>
-      <Getter Name="ArgumentListSyntax" Override="true"/>
     </Field>
   </Node>
 
