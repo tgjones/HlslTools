@@ -1316,6 +1316,47 @@
     </Field>
   </Node>
 
+  <Node Name="PackOffsetLocation" Base="VariableDeclaratorQualifierSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PackOffsetLocation"/>
+    <Field Name="ColonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+    <Field Name="PackOffsetKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="PackOffsetKeyword"/>
+    </Field>
+    <Field Name="OpenParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenParenToken"/>
+    </Field>
+    <Field Name="Register" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ComponentPart" Type="PackOffsetComponentPart">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="PackOffsetComponentPart"/>
+    </Field>
+    <Field Name="CloseParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseParenToken"/>
+    </Field>
+  </Node>
 
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
