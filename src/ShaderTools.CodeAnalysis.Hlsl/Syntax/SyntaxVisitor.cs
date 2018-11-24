@@ -312,11 +312,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitErrorDirectiveTrivia(ErrorDirectiveTriviaSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPragmaDirectiveTrivia(PragmaDirectiveTriviaSyntax node)
         {
             DefaultVisit(node);
@@ -643,11 +638,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitMacroArgument(MacroArgumentSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitErrorDirectiveTrivia(ErrorDirectiveTriviaSyntax node)
         {
             return DefaultVisit(node);
         }
