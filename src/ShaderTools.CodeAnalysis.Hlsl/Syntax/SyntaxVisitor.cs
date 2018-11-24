@@ -177,17 +177,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitScalarType(ScalarTypeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitMatrixType(MatrixTypeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitGenericMatrixType(GenericMatrixTypeSyntax node)
         {
             DefaultVisit(node);
         }
@@ -432,17 +422,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitScalarType(ScalarTypeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitMatrixType(MatrixTypeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitGenericMatrixType(GenericMatrixTypeSyntax node)
         {
             return DefaultVisit(node);
         }

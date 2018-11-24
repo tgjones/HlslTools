@@ -927,6 +927,59 @@
     </Field>
   </Node>
 
+  <Node Name="GenericMatrixTypeSyntax" Base="BaseMatrixTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PredefinedGenericMatrixType"/>
+    <Field Name="MatrixKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="MatrixKeyword"/>
+    </Field>
+    <Field Name="LessThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LessThanToken"/>
+    </Field>
+    <Field Name="ScalarType" Type="ScalarTypeSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="PredefinedScalarType"/>
+    </Field>
+    <Field Name="FirstCommaToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CommaToken"/>
+    </Field>
+    <Field Name="RowsToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="SecondCommaToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CommaToken"/>
+    </Field>
+    <Field Name="ColsToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="GreaterThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="GreaterThanToken"/>
+    </Field>
+  </Node>
+
 
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
@@ -998,6 +1051,18 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="CloseParenToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="ScalarTypeSyntax" Base="NumericTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PredefinedScalarType"/>
+    <Field Name="TypeTokens" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
     </Field>
   </Node>
 
