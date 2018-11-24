@@ -1196,6 +1196,17 @@
     </Field>
   </Node>
 
+  <Node Name="MatrixTypeSyntax" Base="BaseMatrixTypeSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="PredefinedMatrixType"/>
+    <Field Name="TypeToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">

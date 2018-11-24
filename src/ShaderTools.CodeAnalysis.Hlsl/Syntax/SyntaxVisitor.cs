@@ -152,11 +152,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitMatrixType(MatrixTypeSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPredefinedObjectType(PredefinedObjectTypeSyntax node)
         {
             DefaultVisit(node);
@@ -358,11 +353,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPackOffsetComponentPart(PackOffsetComponentPart node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitMatrixType(MatrixTypeSyntax node)
         {
             return DefaultVisit(node);
         }
