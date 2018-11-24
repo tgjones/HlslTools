@@ -24,56 +24,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         public override ExpressionSyntax Condition => null;
     }
 
-    public abstract class DefineDirectiveTriviaSyntax : DirectiveTriviaSyntax
-    {
-        public abstract SyntaxToken MacroName { get; }
-        public abstract List<SyntaxToken> MacroBody { get; }
-
-        protected DefineDirectiveTriviaSyntax(SyntaxKind kind)
-            : base(kind)
-        {
-        }
-    }
-
-    public sealed class ObjectLikeDefineDirectiveTriviaSyntax : DefineDirectiveTriviaSyntax
-    {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken DefineKeyword;
-        public readonly SyntaxToken Name;
-
-        public readonly List<SyntaxToken> Body;
-
-        public override SyntaxToken MacroName => Name;
-        public override List<SyntaxToken> MacroBody => Body;
-
-        public ObjectLikeDefineDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken defineKeyword, SyntaxToken name, List<SyntaxToken> body, SyntaxToken endOfDirectiveToken, bool isActive)
-            : base(SyntaxKind.ObjectLikeDefineDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out DefineKeyword, defineKeyword);
-            RegisterChildNode(out Name, name);
-            RegisterChildNodes(out Body, body);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitObjectLikeDefineDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitObjectLikeDefineDirectiveTrivia(this);
-        }
-    }
-
     public sealed class FunctionLikeDefineDirectiveTriviaSyntax : DefineDirectiveTriviaSyntax
     {
         private readonly SyntaxToken _hashToken;

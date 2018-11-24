@@ -31,6 +31,13 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="DefineDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="MacroName" Type="SyntaxToken" Abstract="true" />
+    <Field Name="MacroBody" Type="List&lt;SyntaxToken&gt;" Abstract="true" />
+  </AbstractNode>
   <AbstractNode Name="DirectiveTriviaSyntax" Base="StructuredTriviaSyntax">
     <TypeComment>
       <summary></summary>
@@ -75,6 +82,7 @@
       <summary></summary>
     </TypeComment>
     <Field Name="ColonToken" Type="SyntaxToken" Abstract="true" />
+    <Field Name="Keyword" Type="SyntaxToken" Abstract="true" />
   </AbstractNode>
   <AbstractNode Name="TypeSyntax" Base="ExpressionSyntax">
     <TypeComment>
@@ -364,6 +372,7 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="CaseKeyword"/>
+      <Getter Name="Keyword" Override="true"/>
     </Field>
     <Field Name="Value" Type="ExpressionSyntax">
       <PropertyComment>
@@ -585,6 +594,7 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="DefaultKeyword"/>
+      <Getter Name="Keyword" Override="true"/>
     </Field>
     <Field Name="ColonToken" Type="SyntaxToken" Override="true">
       <PropertyComment>
@@ -945,6 +955,50 @@
       <Kind Name="EndOfDirectiveToken"/>
     </Field>
   </Node>
+
+  <Node Name="ObjectLikeDefineDirectiveTriviaSyntax" Base="DefineDirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="ObjectLikeDefineDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="DefineKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="DefineKeyword"/>
+    </Field>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Getter Name="MacroName" Override="true"/>
+    </Field>
+    <Field Name="Body" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Getter Name="MacroBody" Override="true"/>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+  </Node>
+
 
 
 </Tree>
