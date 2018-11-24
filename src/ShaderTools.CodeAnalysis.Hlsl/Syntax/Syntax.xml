@@ -51,6 +51,11 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="InitializerSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+  </AbstractNode>
   <AbstractNode Name="NameSyntax" Base="TypeSyntax">
     <TypeComment>
       <summary></summary>
@@ -727,6 +732,24 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="EqualsValueClauseSyntax" Base="InitializerSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="EqualsValueClause"/>
+    <Field Name="EqualsToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EqualsToken"/>
+    </Field>
+    <Field Name="Value" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
     </Field>
   </Node>
  

@@ -17,11 +17,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitEqualsValueClause(EqualsValueClauseSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitSamplerStateInitializer(SamplerStateInitializerSyntax node)
         {
             DefaultVisit(node);
@@ -313,11 +308,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitNamespace(NamespaceSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitEqualsValueClause(EqualsValueClauseSyntax node)
         {
             return DefaultVisit(node);
         }
