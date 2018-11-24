@@ -6,83 +6,12 @@ using ShaderTools.CodeAnalysis.Syntax;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public abstract class DirectiveTriviaSyntax : StructuredTriviaSyntax
+    public abstract partial class DirectiveTriviaSyntax : StructuredTriviaSyntax
     {
-        protected DirectiveTriviaSyntax(SyntaxKind kind, IEnumerable<Diagnostic> diagnostics)
-            : base(kind, diagnostics)
-        {
-        }
-
-        protected DirectiveTriviaSyntax(SyntaxKind kind)
-            : base(kind)
-        {
-        }
-
-        public abstract SyntaxToken HashToken { get; }
-
-        public abstract SyntaxToken EndOfDirectiveToken { get; }
-
-        public abstract bool IsActive { get; }
-
         internal override DirectiveStack ApplyDirectives(DirectiveStack stack)
         {
             return stack.Add(new Directive(this));
         }
-    }
-
-    public sealed class BadDirectiveTriviaSyntax : DirectiveTriviaSyntax
-    {
-        private readonly SyntaxToken _hashToken;
-        private readonly SyntaxToken _endOfDirectiveToken;
-
-        public readonly SyntaxToken Identifier;
-
-        public BadDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken identifier, SyntaxToken endOfDirectiveToken, bool isActive)
-            : base(SyntaxKind.BadDirectiveTrivia)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out Identifier, identifier);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        internal BadDirectiveTriviaSyntax(SyntaxToken hashToken, SyntaxToken identifier, SyntaxToken endOfDirectiveToken, bool isActive, ImmutableArray<Diagnostic> diagnostics)
-            : base(SyntaxKind.BadDirectiveTrivia, diagnostics)
-        {
-            RegisterChildNode(out _hashToken, hashToken);
-            RegisterChildNode(out Identifier, identifier);
-            RegisterChildNode(out _endOfDirectiveToken, endOfDirectiveToken);
-            IsActive = isActive;
-        }
-
-        public override SyntaxToken HashToken => _hashToken;
-        public override SyntaxToken EndOfDirectiveToken => _endOfDirectiveToken;
-        public override bool IsActive { get; }
-
-        public override void Accept(SyntaxVisitor visitor)
-        {
-            visitor.VisitBadDirectiveTrivia(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitBadDirectiveTrivia(this);
-        }
-
-        public override SyntaxNodeBase SetDiagnostics(ImmutableArray<Diagnostic> diagnostics)
-        {
-            return new BadDirectiveTriviaSyntax(_hashToken, Identifier, _endOfDirectiveToken, IsActive, diagnostics);
-        }
-    }
-
-    public abstract class BranchingDirectiveTriviaSyntax : DirectiveTriviaSyntax
-    {
-        protected BranchingDirectiveTriviaSyntax(SyntaxKind kind)
-            : base(kind)
-        {
-        }
-
-        public abstract bool BranchTaken { get; }
     }
 
     public abstract class ConditionalDirectiveTriviaSyntax : BranchingDirectiveTriviaSyntax

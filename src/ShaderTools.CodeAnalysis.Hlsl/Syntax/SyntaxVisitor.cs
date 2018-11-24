@@ -382,11 +382,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitBadDirectiveTrivia(BadDirectiveTriviaSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitObjectLikeMacroReference(ObjectLikeMacroReference node)
         {
             
@@ -778,11 +773,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPragmaDirectiveTrivia(PragmaDirectiveTriviaSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitBadDirectiveTrivia(BadDirectiveTriviaSyntax node)
         {
             return DefaultVisit(node);
         }

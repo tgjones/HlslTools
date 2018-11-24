@@ -13,10 +13,24 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <AbstractNode Name="BranchingDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="BranchTaken" Type="bool" Abstract="true" />
+  </AbstractNode>
   <AbstractNode Name="DeclarationNameSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
     </TypeComment>
+  </AbstractNode>
+  <AbstractNode Name="DirectiveTriviaSyntax" Base="StructuredTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="HashToken" Type="SyntaxToken" Abstract="true" />
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Abstract="true" />
+    <Field Name="IsActive" Type="bool" Abstract="true" />
   </AbstractNode>
   <AbstractNode Name="ExpressionSyntax" Base="SyntaxNode">
     <TypeComment>
@@ -647,5 +661,36 @@
       <Kind Name="CloseParenToken"/>
     </Field>
   </Node>
+
+  <Node Name="BadDirectiveTriviaSyntax" Base="DirectiveTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="BadDirectiveTrivia"/>
+    <Field Name="HashToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="HashToken"/>
+    </Field>
+    <Field Name="Identifier" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="EndOfDirectiveToken" Type="SyntaxToken" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+    <Field Name="IsActive" Type="bool" Override="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EndOfDirectiveToken"/>
+    </Field>
+  </Node>
+
 
 </Tree>

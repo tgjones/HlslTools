@@ -99,10 +99,6 @@ namespace SyntaxGenerator.Writer
                 WriteLine("    protected {0}(SyntaxKind kind{1}, IEnumerable<Diagnostic> diagnostics)", node.Name, fieldArgs);
                 WriteLine("      : base(kind, diagnostics)");
                 WriteLine("    {");
-                if (node.Name == "DirectiveTriviaSyntax")
-                {
-                    WriteLine("      this.flags |= NodeFlags.ContainsDirectives;");
-                }
                 var valueFields = concreteFields.Where(n => !IsNodeOrNodeList(n.Type)).ToList();
                 var nodeFields = concreteFields.Where(n => IsNodeOrNodeList(n.Type)).ToList();
                 WriteCtorBody(valueFields, nodeFields);
@@ -113,10 +109,6 @@ namespace SyntaxGenerator.Writer
                 WriteLine("    protected {0}(SyntaxKind kind{1})", node.Name, fieldArgs);
                 WriteLine("      : base(kind)");
                 WriteLine("    {");
-                if (node.Name == "DirectiveTriviaSyntax")
-                {
-                    WriteLine("      this.flags |= NodeFlags.ContainsDirectives;");
-                }
                 WriteCtorBody(valueFields, nodeFields);
 
                 WriteLine("    }");
