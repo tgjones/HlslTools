@@ -215,6 +215,11 @@ namespace SyntaxGenerator.Writer
             return f.Abstract != null && string.Compare(f.Abstract, "true", true) == 0;
         }
 
+        protected static bool IsDerived(Field f)
+        {
+            return f.Derived != null && string.Compare(f.Derived, "true", true) == 0;
+        }
+
         protected static bool IsNew(Field f)
         {
             return f.New != null && string.Compare(f.New, "true", true) == 0;

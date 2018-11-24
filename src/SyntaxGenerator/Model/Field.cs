@@ -24,6 +24,9 @@ namespace SyntaxGenerator.Model
         [XmlAttribute]
         public string Abstract;
 
+        [XmlAttribute]
+        public string Derived;
+
         [XmlElement(ElementName = "Kind", Type = typeof(Kind))]
         public List<Kind> Kinds;
 

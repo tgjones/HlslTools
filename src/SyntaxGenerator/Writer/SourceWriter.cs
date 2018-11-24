@@ -141,6 +141,7 @@ namespace SyntaxGenerator.Writer
                 Node nd = (Node) node;
 
                 var baseFields = GetBaseFields(nd);
+                var hasDerivedTypes = nd.Fields.Any(IsDerived);
 
                 WriteLine("  public sealed partial class {0} : {1}", node.Name, node.Base);
                 WriteLine("  {");
@@ -161,12 +162,14 @@ namespace SyntaxGenerator.Writer
                     WriteLine("    private readonly {0} {1};", field.Type, CamelCase(field.Name));
                 }
 
+                var ctorAccess = hasDerivedTypes ? "private" : "public";
+
                 // write constructor with diagnostics
                 WriteLine();
                 if (HasOneKind(nd))
-                    Write("    public {0}(", node.Name);
+                    Write("    {0} {1}(", ctorAccess, node.Name);
                 else
-                    Write("    public {0}(SyntaxKind kind, ", node.Name);
+                    Write("    {0} {1}(SyntaxKind kind, ", ctorAccess, node.Name);
 
                 if (baseFields.Any())
                     Write(baseFields.Aggregate("", (str, a) => str + $"{a.Type} {CamelCase(a.Name)}, "));
@@ -186,9 +189,9 @@ namespace SyntaxGenerator.Writer
                 // write constructor without diagnostics
                 WriteLine();
                 if (HasOneKind(nd))
-                    Write("    public {0}(", node.Name);
+                    Write("    {0} {1}(", ctorAccess, node.Name);
                 else
-                    Write("    public {0}(SyntaxKind kind, ", node.Name);
+                    Write("    {0} {1}(SyntaxKind kind, ", ctorAccess, node.Name);
 
                 if (baseFields.Any())
                     Write(baseFields.Aggregate("", (str, a) => str + $"{a.Type} {CamelCase(a.Name)}, "));
@@ -399,11 +402,19 @@ namespace SyntaxGenerator.Writer
             Write("    public {0} Update(", node.Name);
 
             // parameters
+            var first = true;
+
             for (int f = 0; f < node.Fields.Count; f++)
             {
                 var field = node.Fields[f];
-                if (f > 0)
+
+                if (IsDerived(field))
+                    continue;
+
+                if (!first)
                     Write(", ");
+
+                first = false;
 
                 var type =
                     //field.Type == "SyntaxNodeOrTokenList" ? "Microsoft.CodeAnalysis.Syntax.InternalSyntax.SyntaxList<CSharpSyntaxNode>" :
@@ -440,7 +451,7 @@ namespace SyntaxGenerator.Writer
                     Write("this.Kind, ");
                 }
 
-                bool first = true;
+                first = true;
                 var baseFields = GetBaseFields(node);
                 foreach (var field in baseFields)
                 {
@@ -508,6 +519,9 @@ namespace SyntaxGenerator.Writer
             for (int f = 0; f < node.Fields.Count; f++)
             {
                 var field = node.Fields[f];
+                if (IsDerived(field))
+                    continue;
+
                 var type = this.GetRedPropertyType(field);
 
                 WriteLine();
@@ -516,11 +530,18 @@ namespace SyntaxGenerator.Writer
 
                 // call update inside each setter
                 Write("        return this.Update(");
+
+                var first = true;
                 for (int f2 = 0; f2 < node.Fields.Count; f2++)
                 {
                     var field2 = node.Fields[f2];
-                    if (f2 > 0)
+                    if (IsDerived(field2))
+                        continue;
+
+                    if (!first)
                         Write(", ");
+
+                    first = false;
 
                     if (field2 == field)
                     {
@@ -639,11 +660,18 @@ namespace SyntaxGenerator.Writer
                     if (nodeFields.Count > 0)
                     {
                         Write("      return node.Update(");
+                        var first = true;
                         for (int f = 0; f < node.Fields.Count; f++)
                         {
                             var field = node.Fields[f];
-                            if (f > 0)
+                            if (IsDerived(field))
+                                continue;
+
+                            if (!first)
                                 Write(", ");
+
+                            first = false;
+
                             if (IsNodeOrNodeList(field.Type))
                             {
                                 Write(CamelCase(field.Name));
