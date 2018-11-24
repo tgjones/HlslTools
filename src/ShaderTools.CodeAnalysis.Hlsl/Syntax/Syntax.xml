@@ -1034,7 +1034,6 @@
     </Field>
   </Node>
 
-
   <Node Name="IdentifierNameSyntax" Base="NameSyntax">
     <TypeComment>
       <summary></summary>
@@ -1046,6 +1045,48 @@
       </PropertyComment>
     </Field>
   </Node>
+
+  <Node Name="IfStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="IfStatement"/>
+    <Field Name="IfKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="IfKeyword"/>
+    </Field>
+    <Field Name="OpenParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenParenToken"/>
+    </Field>
+    <Field Name="Condition" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseParenToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseParenToken"/>
+    </Field>
+    <Field Name="Statement" Type="StatementSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Else" Type="ElseClauseSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ElseClause"/>
+    </Field>
+  </Node>
+
 
   <Node Name="LogicalRegisterSpace" Base="SyntaxNode">
     <TypeComment>
