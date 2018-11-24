@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Tree Namespace="ShaderTools.CodeAnalysis.Hlsl.Syntax" LanguageName="Hlsl" Root="SyntaxNodeBase" >
+  <Using Namespace="ShaderTools.CodeAnalysis.Hlsl.Binding.BoundNodes"/>
+
   <PredefinedNode Name="SyntaxNode" Base="SyntaxNodeBase"/>
   <PredefinedNode Name="LocatedNode" Base="SyntaxNode"/>
   <PredefinedNode Name="SyntaxToken" Base="LocatedNode"/>
@@ -1468,10 +1470,28 @@
       </PropertyComment>
       <Kind Name="CloseBraceToken"/>
     </Field>
- 
   </Node>
 
-
+  <Node Name="PostfixUnaryExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Field Name="Operand" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="OperatorToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Operator" Type="UnaryOperatorKind" Derived="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
