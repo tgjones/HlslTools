@@ -2,6 +2,10 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
   </PropertyGroup>
+  <PropertyGroup>
+    <!-- Workaround for https://github.com/Microsoft/msbuild/issues/2661 -->
+    <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+  </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Collections.Immutable" Version="1.3.1" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj" />
@@ -23,7 +27,6 @@
   <ItemGroup>
     <ProjectReference Include="..\SyntaxGenerator\SyntaxGenerator.csproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
       <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
     </ProjectReference>
   </ItemGroup>
