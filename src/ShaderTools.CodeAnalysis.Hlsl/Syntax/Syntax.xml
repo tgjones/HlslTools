@@ -2041,6 +2041,39 @@
     </Field>
   </Node>
 
+  <Node Name="TypedefStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="TypedefStatement"/>
+    <Field Name="TypedefKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="TypedefKeyword"/>
+    </Field>
+    <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Type" Type="TypeSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Declarators" Type="SeparatedSyntaxList&lt;TypeAliasSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
 
   <Node Name="VariableDeclarationSyntax" Base="SyntaxNode">
     <TypeComment>

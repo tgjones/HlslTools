@@ -22,11 +22,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitTypedefStatement(TypedefStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitWhileStatement(WhileStatementSyntax node)
         {
             DefaultVisit(node);
@@ -78,11 +73,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitTypedefStatement(TypedefStatementSyntax node)
         {
             return DefaultVisit(node);
         }
