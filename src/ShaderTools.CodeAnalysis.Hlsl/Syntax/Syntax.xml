@@ -1855,6 +1855,22 @@
     </Field>
   </Node>
 
+  <Node Name="SwitchSectionSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="SwitchSection"/>
+    <Field Name="Labels" Type="List&lt;SwitchLabelSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Statements" Type="List&lt;StatementSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
   <Node Name="TemplateArgumentListSyntax" Base="SyntaxNode">
     <TypeComment>
