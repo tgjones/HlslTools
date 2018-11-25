@@ -17,11 +17,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitPrefixCastExpression(CastExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitSyntaxToken(SyntaxToken node)
         {
             DefaultVisit(node);
@@ -53,11 +48,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSyntaxTrivia(SyntaxTrivia node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitPrefixCastExpression(CastExpressionSyntax node)
         {
             return DefaultVisit(node);
         }

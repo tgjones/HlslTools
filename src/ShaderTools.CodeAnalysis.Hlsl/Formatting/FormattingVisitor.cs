@@ -918,7 +918,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 Visit(node.TemplateArgumentList);
         }
 
-        public override void VisitPrefixCastExpression(CastExpressionSyntax node)
+        public override void VisitCastExpression(CastExpressionSyntax node)
         {
             FormatOpenParenToken(node.OpenParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfTypeCasts);
 
