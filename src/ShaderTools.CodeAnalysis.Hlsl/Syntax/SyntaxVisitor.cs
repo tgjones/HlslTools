@@ -57,11 +57,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitReturnStatement(ReturnStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitWhileStatement(WhileStatementSyntax node)
         {
             DefaultVisit(node);
@@ -183,11 +178,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitTechnique(TechniqueSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitReturnStatement(ReturnStatementSyntax node)
         {
             return DefaultVisit(node);
         }
