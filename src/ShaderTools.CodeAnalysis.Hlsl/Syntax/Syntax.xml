@@ -1802,6 +1802,17 @@
     </Field>
   </Node>
 
+  <Node Name="StringLiteralExpressionSyntax" Base="ExpressionSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="StringLiteralExpression"/>
+    <Field Name="Tokens" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
 
   <Node Name="TemplateArgumentListSyntax" Base="SyntaxNode">
     <TypeComment>

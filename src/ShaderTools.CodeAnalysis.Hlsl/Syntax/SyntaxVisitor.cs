@@ -67,11 +67,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitStringLiteralExpression(StringLiteralExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVectorType(VectorTypeSyntax node)
         {
             DefaultVisit(node);
@@ -158,11 +153,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitPrefixCastExpression(CastExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitStringLiteralExpression(StringLiteralExpressionSyntax node)
         {
             return DefaultVisit(node);
         }
