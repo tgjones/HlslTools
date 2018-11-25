@@ -1677,6 +1677,24 @@
     </Field>
   </Node>
 
+  <Node Name="SemanticSyntax" Base="VariableDeclaratorQualifierSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="SemanticName"/>
+    <Field Name="ColonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonToken"/>
+    </Field>
+    <Field Name="Semantic" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
   <Node Name="StateInitializerSyntax" Base="InitializerSyntax">
     <TypeComment>
       <summary></summary>

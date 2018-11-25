@@ -92,11 +92,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitSemantic(SemanticSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitObjectLikeMacroReference(ObjectLikeMacroReference node)
         {
             
@@ -198,11 +193,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSyntaxToken(SyntaxToken node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitSemantic(SemanticSyntax node)
         {
             return DefaultVisit(node);
         }
