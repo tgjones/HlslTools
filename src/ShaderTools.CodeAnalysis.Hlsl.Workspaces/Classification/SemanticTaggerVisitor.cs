@@ -154,13 +154,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
             base.VisitIdentifierDeclarationName(node);
         }
 
-        public override void VisitFieldAccess(FieldAccessExpressionSyntax node)
+        public override void VisitFieldAccessExpression(FieldAccessExpressionSyntax node)
         {
             var symbol = _semanticModel.GetSymbol(node);
             if (symbol != null)
                 CreateTag(node.Name, HlslClassificationTypeNames.FieldIdentifier);
 
-            base.VisitFieldAccess(node);
+            base.VisitFieldAccessExpression(node);
         }
 
         public override void VisitMethodInvocationExpression(MethodInvocationExpressionSyntax node)
