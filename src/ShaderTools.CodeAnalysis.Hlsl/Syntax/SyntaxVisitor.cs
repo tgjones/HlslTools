@@ -17,17 +17,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitWhileStatement(WhileStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPrefixCastExpression(CastExpressionSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitVectorType(VectorTypeSyntax node)
         {
             DefaultVisit(node);
         }
@@ -67,17 +57,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitWhileStatement(WhileStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitPrefixCastExpression(CastExpressionSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitVectorType(VectorTypeSyntax node)
         {
             return DefaultVisit(node);
         }
