@@ -47,11 +47,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitSwitchStatement(SwitchStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitPrefixCastExpression(CastExpressionSyntax node)
         {
             DefaultVisit(node);
@@ -123,11 +118,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitWhileStatement(WhileStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitSwitchStatement(SwitchStatementSyntax node)
         {
             return DefaultVisit(node);
         }
