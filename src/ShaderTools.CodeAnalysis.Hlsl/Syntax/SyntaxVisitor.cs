@@ -32,11 +32,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitTypeAlias(TypeAliasSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitTechnique(TechniqueSyntax node)
         {
             DefaultVisit(node);
@@ -103,11 +98,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitTypedefStatement(TypedefStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitTypeAlias(TypeAliasSyntax node)
         {
             return DefaultVisit(node);
         }

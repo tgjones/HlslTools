@@ -1943,6 +1943,35 @@
     </Field>
   </Node>
 
+  <Node Name="TypeAliasSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="TypeAlias"/>
+    <Field Name="Identifier" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ArrayRankSpecifiers" Type="List&lt;ArrayRankSpecifierSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Qualifiers" Type="List&lt;VariableDeclaratorQualifierSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Annotations" Type="AnnotationsSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="Annotations"/>
+    </Field>
+  </Node>
+
+
   <Node Name="VariableDeclarationSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
