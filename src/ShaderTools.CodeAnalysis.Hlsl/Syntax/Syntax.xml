@@ -1551,6 +1551,30 @@
     </Field>
   </Node>
 
+  <Node Name="QualifiedNameSyntax" Base="NameSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="QualifiedName"/>
+    <Field Name="Left" Type="NameSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ColonColonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ColonColonToken"/>
+    </Field>
+    <Field Name="Right" Type="IdentifierNameSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="IdentifierName"/>
+    </Field>
+  </Node>
+
 
   <Node Name="RegisterLocation" Base="VariableDeclaratorQualifierSyntax">
     <TypeComment>
