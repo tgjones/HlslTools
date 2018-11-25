@@ -12,11 +12,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 
         }
 
-        public virtual void VisitSamplerStateInitializer(SamplerStateInitializerSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitSyntaxTrivia(SyntaxTrivia node)
         {
             DefaultVisit(node);
@@ -87,17 +82,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitStateInitializer(StateInitializerSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitStateArrayInitializer(StateArrayInitializerSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitStateProperty(StatePropertySyntax node)
         {
             DefaultVisit(node);
         }
@@ -135,11 +120,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         protected virtual T DefaultVisit(SyntaxNode node)
         {
             return default(T);
-        }
-
-        public virtual T VisitSamplerStateInitializer(SamplerStateInitializerSyntax node)
-        {
-            return DefaultVisit(node);
         }
 
         public virtual T VisitSyntaxTrivia(SyntaxTrivia node)
@@ -212,17 +192,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitStateInitializer(StateInitializerSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitStateArrayInitializer(StateArrayInitializerSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitStateProperty(StatePropertySyntax node)
         {
             return DefaultVisit(node);
         }

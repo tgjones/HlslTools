@@ -1641,6 +1641,30 @@
     </Field>
   </Node>
 
+  <Node Name="SamplerStateInitializerSyntax" Base="InitializerSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="SamplerStateInitializer"/>
+    <Field Name="EqualsToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EqualsToken"/>
+    </Field>
+    <Field Name="SamplerStateKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SamplerStateKeyword"/>
+    </Field>
+    <Field Name="StateInitializer" Type="StateInitializerSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
   <Node Name="ScalarTypeSyntax" Base="NumericTypeSyntax">
     <TypeComment>
       <summary></summary>
@@ -1652,6 +1676,78 @@
       </PropertyComment>
     </Field>
   </Node>
+
+  <Node Name="StateInitializerSyntax" Base="InitializerSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="StateInitializer"/>
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBraceToken"/>
+    </Field>
+    <Field Name="Properties" Type="List&lt;StatePropertySyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBraceToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="StatePropertySyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="StateProperty"/>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="ArrayRankSpecifier" Type="ArrayRankSpecifierSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="ArrayRankSpecifier"/>
+    </Field>
+    <Field Name="EqualsToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="EqualsToken"/>
+    </Field>
+    <Field Name="LessThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="LessThanToken"/>
+    </Field>
+    <Field Name="Value" Type="ExpressionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="GreaterThanToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="GreaterThanToken"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
 
   <Node Name="TemplateArgumentListSyntax" Base="SyntaxNode">
     <TypeComment>
