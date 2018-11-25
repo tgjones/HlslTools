@@ -1695,6 +1695,20 @@
     </Field>
   </Node>
 
+  <Node Name="SkippedTokensTriviaSyntax" Base="StructuredTriviaSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="SkippedTokensTrivia"/>
+    <Field Name="Tokens" Type="List&lt;SyntaxToken&gt;" Derived="true">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+  </Node>
+
+
+
   <Node Name="StateInitializerSyntax" Base="InitializerSyntax">
     <TypeComment>
       <summary></summary>

@@ -1033,7 +1033,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             FormatToken(node.Semantic, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        public override void VisitSkippedTokensSyntaxTrivia(SkippedTokensTriviaSyntax node)
+        public override void VisitSkippedTokensTrivia(SkippedTokensTriviaSyntax node)
         {
             
         }

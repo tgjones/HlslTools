@@ -17,11 +17,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitSkippedTokensSyntaxTrivia(SkippedTokensTriviaSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
             DefaultVisit(node);
@@ -118,11 +113,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSyntaxTrivia(SyntaxTrivia node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitSkippedTokensSyntaxTrivia(SkippedTokensTriviaSyntax node)
         {
             return DefaultVisit(node);
         }
