@@ -19,6 +19,14 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SyntaxGenerator\SyntaxGenerator.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
+      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <SyntaxDefinition Include="Syntax\Syntax.xml" />
   </ItemGroup>
