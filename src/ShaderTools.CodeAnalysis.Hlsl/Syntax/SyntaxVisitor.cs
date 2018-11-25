@@ -17,11 +17,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitWhileStatement(WhileStatementSyntax node)
         {
             DefaultVisit(node);
@@ -68,11 +63,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitSyntaxTrivia(SyntaxTrivia node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitVariableDeclarationStatement(VariableDeclarationStatementSyntax node)
         {
             return DefaultVisit(node);
         }

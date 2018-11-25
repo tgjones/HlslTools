@@ -2075,6 +2075,25 @@
     </Field>
   </Node>
 
+  <Node Name="VariableDeclarationStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="VariableDeclarationStatement"/>
+    <Field Name="Declaration" Type="VariableDeclarationSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="VariableDeclaration"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
   <Node Name="VariableDeclarationSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
