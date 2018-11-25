@@ -52,11 +52,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitQualifiedDeclarationName(QualifiedDeclarationNameSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitStructType(StructTypeSyntax node)
         {
             DefaultVisit(node);
@@ -188,11 +183,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitQualifiedName(QualifiedNameSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitQualifiedDeclarationName(QualifiedDeclarationNameSyntax node)
         {
             return DefaultVisit(node);
         }
