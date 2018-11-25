@@ -77,11 +77,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitStateArrayInitializer(StateArrayInitializerSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitSyntaxToken(SyntaxToken node)
         {
             DefaultVisit(node);
@@ -173,11 +168,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         }
 
         public virtual T VisitVectorType(VectorTypeSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitStateArrayInitializer(StateArrayInitializerSyntax node)
         {
             return DefaultVisit(node);
         }

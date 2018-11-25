@@ -1707,7 +1707,29 @@
     </Field>
   </Node>
 
-
+  <Node Name="StateArrayInitializerSyntax" Base="InitializerSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="StateArrayInitializer"/>
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBraceToken"/>
+    </Field>
+    <Field Name="Initializers" Type="SeparatedSyntaxList&lt;StateInitializerSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBraceToken"/>
+    </Field>
+  </Node>
 
   <Node Name="StateInitializerSyntax" Base="InitializerSyntax">
     <TypeComment>
