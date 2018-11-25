@@ -22,17 +22,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitTypeDeclarationStatement(TypeDeclarationStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
         public virtual void VisitTypedefStatement(TypedefStatementSyntax node)
-        {
-            DefaultVisit(node);
-        }
-
-        public virtual void VisitTechnique(TechniqueSyntax node)
         {
             DefaultVisit(node);
         }
@@ -92,17 +82,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitTypeDeclarationStatement(TypeDeclarationStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
         public virtual T VisitTypedefStatement(TypedefStatementSyntax node)
-        {
-            return DefaultVisit(node);
-        }
-
-        public virtual T VisitTechnique(TechniqueSyntax node)
         {
             return DefaultVisit(node);
         }

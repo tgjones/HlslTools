@@ -1943,6 +1943,53 @@
     </Field>
   </Node>
 
+  <Node Name="TechniqueSyntax" Base="SyntaxNode">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="TechniqueDeclaration"/>
+    <Field Name="TechniqueKeyword" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="TechniqueKeyword"/>
+    </Field>
+    <Field Name="Name" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Annotations" Type="AnnotationsSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="Annotations"/>
+    </Field>
+    <Field Name="OpenBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="OpenBraceToken"/>
+    </Field>
+    <Field Name="Passes" Type="List&lt;PassSyntax&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="CloseBraceToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="CloseBraceToken"/>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
+    </Field>
+  </Node>
+
   <Node Name="TypeAliasSyntax" Base="SyntaxNode">
     <TypeComment>
       <summary></summary>
@@ -1968,6 +2015,29 @@
         <summary></summary>
       </PropertyComment>
       <Kind Name="Annotations"/>
+    </Field>
+  </Node>
+
+  <Node Name="TypeDeclarationStatementSyntax" Base="StatementSyntax">
+    <TypeComment>
+      <summary></summary>
+    </TypeComment>
+    <Kind Name="TypeDeclarationStatement"/>
+    <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="Type" Type="TypeDefinitionSyntax">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+    </Field>
+    <Field Name="SemicolonToken" Type="SyntaxToken">
+      <PropertyComment>
+        <summary></summary>
+      </PropertyComment>
+      <Kind Name="SemicolonToken"/>
     </Field>
   </Node>
 
