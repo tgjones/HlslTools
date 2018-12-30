@@ -758,7 +758,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             FormatToken(node.TypeToken, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        public override void VisitFieldAccess(FieldAccessExpressionSyntax node)
+        public override void VisitFieldAccessExpression(FieldAccessExpressionSyntax node)
         {
             Visit(node.Name);
 
@@ -796,7 +796,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             FormatCloseBraceToken(node.CloseBraceToken);
         }
 
-        public override void VisitNumericConstructorInvocation(NumericConstructorInvocationExpressionSyntax node)
+        public override void VisitNumericConstructorInvocationExpression(NumericConstructorInvocationExpressionSyntax node)
         {
             Visit(node.Type);
 
@@ -918,7 +918,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 Visit(node.TemplateArgumentList);
         }
 
-        public override void VisitPrefixCastExpression(CastExpressionSyntax node)
+        public override void VisitCastExpression(CastExpressionSyntax node)
         {
             FormatOpenParenToken(node.OpenParenToken, _options.Spacing.InsertSpacesWithinParenthesesOfTypeCasts);
 
@@ -1033,7 +1033,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             FormatToken(node.Semantic, trailing: TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
-        public override void VisitSkippedTokensSyntaxTrivia(SkippedTokensTriviaSyntax node)
+        public override void VisitSkippedTokensTrivia(SkippedTokensTriviaSyntax node)
         {
             
         }
