@@ -140,7 +140,9 @@ export class Logger {
         // TODO: Add timestamp
         this.logChannel.appendLine(message);
         if (this.logFilePath) {
-            fs.appendFile(this.logFilePath, message + os.EOL);
+            fs.appendFile(this.logFilePath, message + os.EOL, (err) => {
+                if (err) throw err;
+            });
         }
     }
 }
