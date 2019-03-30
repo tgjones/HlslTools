@@ -10,7 +10,7 @@
   "license": "SEE LICENSE IN LICENSE.txt",
   "homepage": "https://github.com/tgjones/HlslTools/blob/master/src/ShaderTools.VSCode/README.md",
   "categories": [
-    "Languages",
+    "Programming Languages",
     "Linters"
   ],
   "icon": "../../art/logo.png",
