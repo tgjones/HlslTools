@@ -21,10 +21,19 @@ namespace SyntaxGenerator.Model
         [XmlAttribute]
         public string New;
 
+        [XmlAttribute]
+        public string Abstract;
+
+        [XmlAttribute]
+        public string Derived;
+
         [XmlElement(ElementName = "Kind", Type = typeof(Kind))]
         public List<Kind> Kinds;
 
         [XmlElement]
         public Comment PropertyComment;
+
+        [XmlElement(ElementName = "Getter", Type = typeof(Field))]
+        public List<Field> Getters;
     }
 }

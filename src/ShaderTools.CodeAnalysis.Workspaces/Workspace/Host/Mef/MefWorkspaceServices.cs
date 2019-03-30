@@ -97,11 +97,15 @@ namespace ShaderTools.CodeAnalysis.Host.Mef
 
         public override bool IsSupported(string languageName)
         {
+            languageName = languageName.ToUpperInvariant();
+
             return this.GetSupportedLanguages().Contains(languageName);
         }
 
         public override HostLanguageServices GetLanguageServices(string languageName)
         {
+            languageName = languageName.ToUpperInvariant();
+
             var currentServicesMap = _languageServicesMap;
             if (!currentServicesMap.TryGetValue(languageName, out var languageServices))
             {

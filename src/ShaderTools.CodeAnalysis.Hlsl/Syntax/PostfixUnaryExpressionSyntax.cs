@@ -1,29 +1,19 @@
+using System.Collections.Generic;
+using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Binding.BoundNodes;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
 {
-    public class PostfixUnaryExpressionSyntax : ExpressionSyntax
+    public sealed partial class PostfixUnaryExpressionSyntax : ExpressionSyntax
     {
-        public readonly ExpressionSyntax Operand;
-        public readonly SyntaxToken OperatorToken;
-        public readonly UnaryOperatorKind Operator;
-
         public PostfixUnaryExpressionSyntax(SyntaxKind kind, ExpressionSyntax operand, SyntaxToken operatorToken)
-            : base(kind)
+            : this(kind, operand, operatorToken, SyntaxFacts.GetUnaryOperatorKind(kind))
         {
-            RegisterChildNode(out Operand, operand);
-            RegisterChildNode(out OperatorToken, operatorToken);
-            Operator = SyntaxFacts.GetUnaryOperatorKind(kind);
         }
 
-        public override void Accept(SyntaxVisitor visitor)
+        public PostfixUnaryExpressionSyntax(SyntaxKind kind, ExpressionSyntax operand, SyntaxToken operatorToken, IEnumerable<Diagnostic> diagnostics)
+            : this(kind, operand, operatorToken, SyntaxFacts.GetUnaryOperatorKind(kind), diagnostics)
         {
-            visitor.VisitPostfixUnaryExpression(this);
-        }
-
-        public override T Accept<T>(SyntaxVisitor<T> visitor)
-        {
-            return visitor.VisitPostfixUnaryExpression(this);
         }
     }
 }

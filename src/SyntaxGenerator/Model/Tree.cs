@@ -19,5 +19,8 @@ namespace SyntaxGenerator.Model
         [XmlElement(ElementName = "AbstractNode", Type = typeof(AbstractNode))]
         [XmlElement(ElementName = "PredefinedNode", Type = typeof(PredefinedNode))]
         public List<TreeType> Types;
+
+        [XmlElement(ElementName = "Using", Type = typeof(Using))]
+        public List<Using> Usings;
     }
 }

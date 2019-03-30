@@ -35,22 +35,25 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.NavigationBar
                     .SelectMany(x => CreateItems(x, null, tree, cancellationToken))
                     .ToList();
 
-                globalMemberNavigationItems.Sort((x, y) =>
+                if (globalMemberNavigationItems.Any())
                 {
-                    var textComparison = x.Text.CompareTo(y.Text);
-                    return textComparison != 0 ? textComparison : x.Grayed.CompareTo(y.Grayed);
-                });
+                    globalMemberNavigationItems.Sort((x, y) =>
+                    {
+                        var textComparison = x.Text.CompareTo(y.Text);
+                        return textComparison != 0 ? textComparison : x.Grayed.CompareTo(y.Grayed);
+                    });
 
-                var firstGlobalScopeIndex = globalMemberNavigationItems
-                    .Cast<NavigationBarSymbolItem>()
-                    .Min(x => x.NavigationSpan.Start);
+                    var firstGlobalScopeIndex = globalMemberNavigationItems
+                        .Cast<NavigationBarSymbolItem>()
+                        .Min(x => x.NavigationSpan.Start);
 
-                membersInTypes.Insert(0, new NavigationBarSymbolItem(
-                    "(Global Scope)",
-                    Glyph.Namespace,
-                    new[] {new TextSpan(0, document.SourceText.Length)},
-                    new TextSpan(firstGlobalScopeIndex, 0),
-                    globalMemberNavigationItems));
+                    membersInTypes.Insert(0, new NavigationBarSymbolItem(
+                        "(Global Scope)",
+                        Glyph.Namespace,
+                        new[] { new TextSpan(0, document.SourceText.Length) },
+                        new TextSpan(firstGlobalScopeIndex, 0),
+                        globalMemberNavigationItems));
+                }
             }
 
             return membersInTypes;

@@ -614,6 +614,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         MacroArgumentList,
 
         Parameter,
+        ParameterList,
 
         BadToken
     }

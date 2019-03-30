@@ -13,6 +13,7 @@ namespace SyntaxGenerator.Writer
         private readonly IDictionary<string, string> _parentMap;
         private readonly ILookup<string, string> _childMap;
         private readonly IDictionary<string, Node> _nodeMap;
+        private readonly IDictionary<string, TreeType> _treeTypeMap;
 
         private const int INDENT_SIZE = 4;
         private int _indentLevel;
@@ -23,6 +24,7 @@ namespace SyntaxGenerator.Writer
             _writer = writer;
             _tree = tree;
             _nodeMap = tree.Types.OfType<Node>().ToDictionary(n => n.Name);
+            _treeTypeMap = tree.Types.ToDictionary(n => n.Name);
             _parentMap = tree.Types.ToDictionary(n => n.Name, n => n.Base);
             _parentMap.Add(tree.Root, null);
             _childMap = tree.Types.ToLookup(n => n.Base, n => n.Name);
@@ -109,20 +111,13 @@ namespace SyntaxGenerator.Writer
             return IsOverride(field) ? "override " : IsNew(field) ? "new " : "";
         }
 
-        protected static bool CanBeField(Field field)
+        protected bool CanBeField(Field field)
         {
             return field.Type != "SyntaxToken" && !IsAnyList(field.Type) && !IsOverride(field) && !IsNew(field);
         }
 
-        protected static string GetFieldType(Field field, bool green)
+        protected string GetFieldType(Field field)
         {
-            if (IsAnyList(field.Type))
-            {
-                return green
-                    ? "GreenNode"
-                    : "SyntaxNode";
-            }
-
             return field.Type;
         }
 
@@ -138,12 +133,13 @@ namespace SyntaxGenerator.Writer
             return typeName.StartsWith("SeparatedSyntaxList<", StringComparison.Ordinal);
         }
 
-        protected static bool IsNodeList(string typeName)
+        protected bool IsNodeList(string typeName)
         {
-            return typeName.StartsWith("SyntaxList<", StringComparison.Ordinal);
+            return typeName.StartsWith("List<", StringComparison.Ordinal);
+                //TODO && IsNode(typeName.Substring(5, typeName.Length - 6));
         }
 
-        protected static bool IsAnyNodeList(string typeName)
+        protected bool IsAnyNodeList(string typeName)
         {
             return IsNodeList(typeName) || IsSeparatedNodeList(typeName);
         }
@@ -165,7 +161,7 @@ namespace SyntaxGenerator.Writer
             return sub;
         }
 
-        protected static bool IsAnyList(string typeName)
+        protected bool IsAnyList(string typeName)
         {
             return IsNodeList(typeName) || IsSeparatedNodeList(typeName) || typeName == "SyntaxNodeOrTokenList";
         }
@@ -198,6 +194,12 @@ namespace SyntaxGenerator.Writer
             return _nodeMap.TryGetValue(typeName, out node) ? node : null;
         }
 
+        protected TreeType GetTreeType(string typeName)
+        {
+            TreeType node;
+            return _treeTypeMap.TryGetValue(typeName, out node) ? node : null;
+        }
+
         protected static bool IsOptional(Field f)
         {
             return f.Optional != null && string.Compare(f.Optional, "true", true) == 0;
@@ -208,9 +210,24 @@ namespace SyntaxGenerator.Writer
             return f.Override != null && string.Compare(f.Override, "true", true) == 0;
         }
 
+        protected static bool IsAbstract(Field f)
+        {
+            return f.Abstract != null && string.Compare(f.Abstract, "true", true) == 0;
+        }
+
+        protected static bool IsDerived(Field f)
+        {
+            return f.Derived != null && string.Compare(f.Derived, "true", true) == 0;
+        }
+
         protected static bool IsNew(Field f)
         {
             return f.New != null && string.Compare(f.New, "true", true) == 0;
+        }
+
+        protected static bool HasOneKind(Node n)
+        {
+            return n.Kinds != null && n.Kinds.Count == 1;
         }
 
         protected static bool HasErrors(Node n)
