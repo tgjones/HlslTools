@@ -289,7 +289,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                     var sourceSpan = x.SourceSpans[0].SourceSpan;
                     return new Location
                     {
-                        Uri = GetFileUri(sourceSpan.File.FilePath),
+                        Uri = GetFileUri(!string.IsNullOrEmpty(sourceSpan.File.FilePath) ? sourceSpan.File.FilePath : document.FilePath),
                         Range = ConvertTextSpanToRange(sourceSpan.File.Text, sourceSpan.Span)
                     };
                 })
@@ -434,7 +434,9 @@ namespace ShaderTools.LanguageServer.Protocol.Server
                     Kind = GetSymbolKind(r.Kind),
                     Location = new Location
                     {
-                        Uri = GetFileUri(r.NavigableItem.SourceSpan.File.FilePath),
+                        Uri = GetFileUri(!string.IsNullOrEmpty(r.NavigableItem.SourceSpan.File.FilePath) 
+                            ? r.NavigableItem.SourceSpan.File.FilePath 
+                            : r.NavigableItem.Document.FilePath),
                         Range = ConvertTextSpanToRange(r.NavigableItem.SourceSpan.File.Text, r.NavigableItem.SourceSpan.Span)
                     },
                     Name = r.Name
@@ -470,7 +472,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         {
             // If the file isn't untitled, return a URI-style path
             return
-                !filePath.StartsWith("untitled")
+                !string.IsNullOrEmpty(filePath) && !filePath.StartsWith("untitled")
                     ? new Uri("file://" + filePath).AbsoluteUri
                     : filePath;
         }
