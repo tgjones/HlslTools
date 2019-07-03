@@ -282,4 +282,10 @@
   <data name="InvalidCharacterLiteral" xml:space="preserve">
     <value>Invalid character literal.</value>
   </data>
+  <data name="RetNoObjectRequired" xml:space="preserve">
+    <value>Since '{0}' returns void, a return keyword must not be followed by an object expression.</value>
+  </data>
+  <data name="RetObjectRequired" xml:space="preserve">
+    <value>An object of a type convertible to '{0}' is required.</value>
+  </data>
 </root>

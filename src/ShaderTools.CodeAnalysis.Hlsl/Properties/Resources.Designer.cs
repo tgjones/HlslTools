@@ -20,7 +20,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -400,6 +400,24 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
         internal static string NumberTooLarge {
             get {
                 return ResourceManager.GetString("NumberTooLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Since &apos;{0}&apos; returns void, a return keyword must not be followed by an object expression..
+        /// </summary>
+        internal static string RetNoObjectRequired {
+            get {
+                return ResourceManager.GetString("RetNoObjectRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An object of a type convertible to &apos;{0}&apos; is required..
+        /// </summary>
+        internal static string RetObjectRequired {
+            get {
+                return ResourceManager.GetString("RetObjectRequired", resourceCulture);
             }
         }
         

@@ -204,7 +204,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             if (declaration.Semantic != null)
                 Bind(declaration.Semantic, BindVariableQualifier);
 
-            var functionBinder = new Binder(_sharedBinderState, this);
+            var functionBinder = new FunctionBinder(_sharedBinderState, this, functionSymbol);
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
 
@@ -268,11 +268,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 Bind(declaration.Semantic, BindVariableQualifier);
 
             var functionBinder = (functionOwner != null && (functionOwner.Kind == SymbolKind.Class || functionOwner.Kind == SymbolKind.Struct))
-                ? new StructMethodBinder(_sharedBinderState, this, (StructSymbol) functionOwner)
-                : new Binder(_sharedBinderState, this);
+                ? new StructMethodBinder(_sharedBinderState, this, (StructSymbol) functionOwner, functionSymbol)
+                : new FunctionBinder(_sharedBinderState, this, functionSymbol);
 
             if (isQualifiedName)
-                functionBinder = new ContainedFunctionBinder(_sharedBinderState, functionBinder, containerSymbol.Binder);
+                functionBinder = new ContainedFunctionBinder(_sharedBinderState, functionBinder, containerSymbol.Binder, functionSymbol);
 
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
             var boundBody = functionBinder.Bind(declaration.Body, x => functionBinder.BindBlock(x, functionSymbol));

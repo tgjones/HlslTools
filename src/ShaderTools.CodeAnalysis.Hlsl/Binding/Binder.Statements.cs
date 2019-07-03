@@ -177,6 +177,18 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
 
         private BoundReturnStatement BindReturnStatement(ReturnStatementSyntax syntax)
         {
+            var containingFunctionSymbol = (FunctionSymbol)ContainingMember;
+            var returnType = containingFunctionSymbol.ReturnType;
+
+            if (returnType == IntrinsicTypes.Void && syntax.Expression != null)
+            {
+                Diagnostics.Report(syntax.SourceRange, DiagnosticId.RetNoObjectRequired, containingFunctionSymbol.ToString());
+            }
+            else if (returnType != IntrinsicTypes.Void && syntax.Expression == null)
+            {
+                Diagnostics.Report(syntax.SourceRange, DiagnosticId.RetObjectRequired, returnType.FullName);
+            }
+
             BindAttributes(syntax.Attributes);
             return new BoundReturnStatement(syntax.Expression != null ? Bind(syntax.Expression, BindExpression) : null);
         }

@@ -93,5 +93,19 @@ void main()
 ";
             AssertNoDiagnostics(code);
         }
+
+        [Fact]
+        public void DetectsReturnValueFromVoidFunction()
+        {
+            var code = "void foo() { return 1; }";
+            AssertDiagnostics(code, DiagnosticId.RetNoObjectRequired);
+        }
+
+        [Fact]
+        public void DetectsNoReturnValueFromNonVoidFunction()
+        {
+            var code = "int foo() { return; }";
+            AssertDiagnostics(code, DiagnosticId.RetObjectRequired);
+        }
     }
 }

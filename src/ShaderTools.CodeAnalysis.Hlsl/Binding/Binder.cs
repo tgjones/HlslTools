@@ -22,6 +22,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
 
         public Binder Parent { get; }
 
+        internal virtual Symbol ContainingMember => Parent.ContainingMember;
+
         internal List<Diagnostic> Diagnostics => _sharedBinderState.Diagnostics;
 
         public static BindingResult Bind(SyntaxNode syntaxRoot, CancellationToken cancellationToken)
