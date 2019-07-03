@@ -101,7 +101,19 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.Formatting
                 return true;
             }
 
+            // If format-on-typing is not on, then we don't support formatting on any other characters.
+            var autoFormattingOnTyping = options.GetOption(FeatureOnOffOptions.AutoFormattingOnTyping, LanguageNames.Hlsl);
+            if (!autoFormattingOnTyping)
+            {
+                return false;
+            }
+
             if (ch == '}' && !options.GetOption(FeatureOnOffOptions.AutoFormattingOnCloseBrace, LanguageNames.Hlsl))
+            {
+                return false;
+            }
+
+            if (ch == ')' && !options.GetOption(FeatureOnOffOptions.AutoFormattingOnCloseParen, LanguageNames.Hlsl))
             {
                 return false;
             }

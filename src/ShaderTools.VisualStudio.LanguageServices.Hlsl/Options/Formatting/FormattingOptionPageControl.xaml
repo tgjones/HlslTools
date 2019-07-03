@@ -10,8 +10,12 @@
         <StackPanel>
             <GroupBox Header="General">
                 <StackPanel>
-                    <CheckBox x:Name="FormatOnSemicolonCheckBox" Content="Automatically format _statement on ;"/>
-                    <CheckBox x:Name="FormatOnCloseBraceCheckBox" Content="Automatically format _block on }" />
+                    <CheckBox x:Name="FormatWhenTypingCheckBox" Content="Automatically format when typing" />
+                    <StackPanel Margin="15, 0, 0, 0" IsEnabled="{Binding ElementName=FormatWhenTypingCheckBox, Path=IsChecked}">
+                        <CheckBox x:Name="FormatOnSemicolonCheckBox" Content="Automatically format _statement on ;" />
+                        <CheckBox x:Name="FormatOnCloseBraceCheckBox" Content="Automatically format _block on }" />
+                        <CheckBox x:Name="FormatOnCloseParenCheckBox" Content="Automatically format on )" />
+                    </StackPanel>
                     <CheckBox x:Name="FormatOnPasteCheckBox" Content="Automatically format on _paste" />
                 </StackPanel>
             </GroupBox>
