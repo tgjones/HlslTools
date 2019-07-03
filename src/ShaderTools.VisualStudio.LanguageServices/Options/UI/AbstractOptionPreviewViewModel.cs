@@ -135,7 +135,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Options.UI
                 LineSpan.FromBounds(startLine, endLine));
 
             var textView = _textEditorFactoryService.CreateTextView(projection,
-              _textEditorFactoryService.CreateTextViewRoleSet(PredefinedTextViewRoles.Interactive));
+              _textEditorFactoryService.CreateTextViewRoleSet());
 
             this.TextViewHost = _textEditorFactoryService.CreateTextViewHost(textView, setFocus: false);
 
