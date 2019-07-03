@@ -11,6 +11,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         static IntrinsicBinder()
         {
             LocalSymbolDictionary = IntrinsicFunctions.AllFunctions
+                .Union(IntrinsicFunctions.AllSM6Functions)
                 .Union(IntrinsicFunctions.AllXboxFunctions)
                 .Cast<Symbol>()
                 .Union(IntrinsicSemantics.AllSemantics)
