@@ -340,6 +340,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             if (parent is TypeSyntax)
                 return true;
 
+            if (parent.ContainsDiagnostics)
+                return false;
+
             return PossiblyInFunctionReturnTypeName(parent, position)
                 || PossiblyInParameterTypeName(parent, position)
                 || PossiblyInVariableTypeName(parent, position);
