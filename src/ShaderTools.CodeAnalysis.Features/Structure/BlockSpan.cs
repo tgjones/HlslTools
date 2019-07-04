@@ -6,7 +6,7 @@ namespace ShaderTools.CodeAnalysis.Structure
 {
     internal struct BlockSpan
     {
-        private const string Ellipses = "...";
+        public BlockSpanType Type { get; }
 
         /// <summary>
         /// Whether or not this span can be collapsed.
@@ -39,14 +39,10 @@ namespace ShaderTools.CodeAnalysis.Structure
         public bool IsDefaultCollapsed { get; }
 
         public BlockSpan(
-            bool isCollapsible, TextSpan textSpan, string bannerText = Ellipses, bool autoCollapse = false, bool isDefaultCollapsed = false)
-            : this(isCollapsible, textSpan, textSpan, bannerText, autoCollapse, isDefaultCollapsed)
+            BlockSpanType type,
+            bool isCollapsible, TextSpan textSpan, TextSpan hintSpan, string bannerText, bool autoCollapse, bool isDefaultCollapsed)
         {
-        }
-
-        public BlockSpan(
-            bool isCollapsible, TextSpan textSpan, TextSpan hintSpan, string bannerText = Ellipses, bool autoCollapse = false, bool isDefaultCollapsed = false)
-        {
+            Type = type;
             TextSpan = textSpan;
             BannerText = bannerText;
             HintSpan = hintSpan;
@@ -61,5 +57,14 @@ namespace ShaderTools.CodeAnalysis.Structure
                 ? $"{{Span={TextSpan}, HintSpan={HintSpan}, BannerText=\"{BannerText}\", AutoCollapse={AutoCollapse}, IsDefaultCollapsed={IsDefaultCollapsed}}}"
                 : $"{{Span={TextSpan}, BannerText=\"{BannerText}\", AutoCollapse={AutoCollapse}, IsDefaultCollapsed={IsDefaultCollapsed}}}";
         }
+    }
+
+    public enum BlockSpanType
+    {
+        Namespace,
+        Type,
+        Member,
+        Conditional,
+        Loop,
     }
 }

@@ -27,35 +27,129 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Structure
 
         public override void VisitNamespace(NamespaceSyntax node)
         {
-            CreateTag(node.Name, node.CloseBraceToken, false);
+            CreateTag(
+                BlockSpanType.Namespace, 
+                node.Name, 
+                node.CloseBraceToken, 
+                node.NamespaceKeyword,
+                node.Name,
+                false);
             base.VisitNamespace(node);
         }
 
         public override void VisitTypeDeclarationStatement(TypeDeclarationStatementSyntax node)
         {
-            CreateTag(node.Type.NameToken, node.SemicolonToken, false);
+            SyntaxToken hintStartToken;
+            switch (node.Type)
+            {
+                case InterfaceTypeSyntax i:
+                    hintStartToken = i.InterfaceKeyword;
+                    break;
+                case StructTypeSyntax s:
+                    hintStartToken = s.StructKeyword;
+                    break;
+                default:
+                    throw new System.InvalidOperationException();
+            }
+
+            CreateTag(
+                BlockSpanType.Type, 
+                node.Type.NameToken, 
+                node.SemicolonToken,
+                hintStartToken,
+                node.Type.NameToken,
+                false);
             base.VisitTypeDeclarationStatement(node);
         }
 
         public override void VisitConstantBuffer(ConstantBufferSyntax node)
         {
-            CreateTag(node.Name, node.CloseBraceToken, false);
+            CreateTag(
+                BlockSpanType.Type, 
+                node.Name, 
+                node.CloseBraceToken,
+                node.ConstantBufferKeyword,
+                node.Name,
+                false);
             base.VisitConstantBuffer(node);
         }
 
         public override void VisitFunctionDefinition(FunctionDefinitionSyntax node)
         {
-            CreateTag(node.ParameterList.CloseParenToken, node.Body.CloseBraceToken, true);
+            CreateTag(
+                BlockSpanType.Member, 
+                node.ParameterList.CloseParenToken, 
+                node.Body.CloseBraceToken, 
+                node.ReturnType.GetFirstTokenInDescendants(),
+                node.ParameterList.CloseParenToken,
+                true);
             base.VisitFunctionDefinition(node);
         }
 
         public override void VisitTechnique(TechniqueSyntax node)
         {
-            CreateTag(node.Name, node.CloseBraceToken, false);
+            CreateTag(
+                BlockSpanType.Type, 
+                node.Name, 
+                node.CloseBraceToken,
+                node.TechniqueKeyword,
+                node.Name,
+                false);
             base.VisitTechnique(node);
         }
 
-        private void CreateTag(SyntaxToken startToken, SyntaxToken endToken, bool isImplementation)
+        public override void VisitIfStatement(IfStatementSyntax node)
+        {
+            if (node.Statement is BlockSyntax b)
+            {
+                CreateTag(
+                    BlockSpanType.Conditional,
+                    node.CloseParenToken,
+                    b.CloseBraceToken,
+                    node.IfKeyword,
+                    node.CloseParenToken,
+                    false);
+            }
+            base.VisitIfStatement(node);
+        }
+
+        public override void VisitElseClause(ElseClauseSyntax node)
+        {
+            if (node.Statement is BlockSyntax b)
+            {
+                CreateTag(
+                    BlockSpanType.Conditional,
+                    node.ElseKeyword, 
+                    b.CloseBraceToken, 
+                    node.ElseKeyword,
+                    node.ElseKeyword,
+                    false);
+            }
+            base.VisitElseClause(node);
+        }
+
+        public override void VisitForStatement(ForStatementSyntax node)
+        {
+            if (node.Statement is BlockSyntax b)
+            {
+                CreateTag(
+                    BlockSpanType.Loop,
+                    node.CloseParenToken, 
+                    b.CloseBraceToken, 
+                    node.ForKeyword,
+                    node.CloseParenToken,
+                    false);
+            }
+            base.VisitForStatement(node);
+        }
+
+        private void CreateTag(
+            BlockSpanType type, 
+            SyntaxToken startToken, 
+            SyntaxToken endToken, 
+            SyntaxToken hintStartToken,
+            SyntaxToken hintEndToken,
+            bool isImplementation)
         {
             if (startToken == null || !startToken.FileSpan.IsInRootFile
                 || endToken == null || !endToken.FileSpan.IsInRootFile)
@@ -65,7 +159,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Structure
             var lineSpan = _sourceText.Lines.GetLinePositionSpan(textSpan);
             var isCollapsible = lineSpan.Start.Line != lineSpan.End.Line;
 
-            _results.Add(new BlockSpan(isCollapsible, textSpan, autoCollapse: isImplementation));
+            _results.Add(new BlockSpan(
+                type, 
+                isCollapsible, 
+                textSpan, 
+                TextSpan.FromBounds(hintStartToken.FileSpan.Span.Start, hintEndToken.FileSpan.Span.End),
+                "...",
+                isImplementation,
+                false));
         }
     }
 }
