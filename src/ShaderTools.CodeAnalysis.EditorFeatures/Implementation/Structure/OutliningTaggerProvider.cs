@@ -18,10 +18,10 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
     [Export(typeof(ITaggerProvider))]
     [TagType(typeof(IOutliningRegionTag))]
     [ContentType(ContentTypeNames.ShaderToolsContentType)]
-    internal class StructureTaggerProvider : AsynchronousTaggerProvider<IOutliningRegionTag>
+    internal class OutliningTaggerProvider : AsynchronousTaggerProvider<IOutliningRegionTag>
     {
         [ImportingConstructor]
-        public StructureTaggerProvider(
+        public OutliningTaggerProvider(
             IForegroundNotificationService notificationService,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners)
             : base(new AggregateAsynchronousOperationListener(asyncListeners, FeatureAttribute.Outlining), notificationService)

@@ -36,6 +36,7 @@ namespace ShaderTools.CodeAnalysis.Shared.TestHooks
         public const string SignatureHelp = nameof(SignatureHelp);
         public const string Snippets = nameof(Snippets);
         public const string SolutionCrawler = nameof(SolutionCrawler);
+        public const string Structure = nameof(Structure);
         public const string TodoCommentList = nameof(TodoCommentList);
         public const string Workspace = nameof(Workspace);
     }

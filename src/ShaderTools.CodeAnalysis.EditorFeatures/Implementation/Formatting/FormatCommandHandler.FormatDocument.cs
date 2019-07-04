@@ -47,6 +47,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
                 title: EditorFeaturesResources.Format_Document,
                 message: EditorFeaturesResources.Formatting_document,
                 allowCancel: true,
+                showProgress: false,
                 action: waitContext =>
                 {
                     Format(args.TextView, document, null, waitContext.CancellationToken);

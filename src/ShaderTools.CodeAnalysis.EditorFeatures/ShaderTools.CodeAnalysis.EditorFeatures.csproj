@@ -1,13 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net46</TargetFramework>
+    <TargetFramework>net461</TargetFramework>
     <RootNamespace>ShaderTools.CodeAnalysis.Editor</RootNamespace>
   </PropertyGroup>
-
-  <ItemGroup>
-    <None Include="Shared\Tagging\EventSources\TaggerEventSources.ViewSpanChangedEventSource.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -15,16 +11,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.ImageCatalog" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Imaging.Interop.14.0.DesignTime" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.Intellisense" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Language.StandardClassification" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.SDK.EmbedInteropTypes" Version="14.1.7" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.Data" Version="14.3.25407" />
-    <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf" Version="14.3.25407" />
-    <PackageReference Include="RoslynDependencies.Microsoft.VisualStudio.Language.NavigateTo.Interfaces" Version="14.3.25407" />
+    <PackageReference Include="Madskristensen.VisualStudio.SDK" Version="15.8.81-pre" />
   </ItemGroup>
 
   <ItemGroup>

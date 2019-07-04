@@ -2,13 +2,12 @@
 
 using System;
 using System.ComponentModel.Composition;
-using Microsoft.VisualStudio.Language.Intellisense.Utilities;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Editor.Commands;
+using ShaderTools.CodeAnalysis.Editor.Host;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Notification;
-using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Editor.GoToDefinition

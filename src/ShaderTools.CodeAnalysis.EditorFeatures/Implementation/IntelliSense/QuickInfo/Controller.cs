@@ -63,7 +63,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
                 // We want the span to actually only go up to the caret.  So get the expected span
                 // and then update its end point accordingly.
                 ITrackingSpan trackingSpan = null;
-                QuickInfoItem item = null;
+                CodeAnalysis.QuickInfo.QuickInfoItem item = null;
 
                 // Whether or not we have an item to show, we need to start the session.
                 // If the user Edit.QuickInfo's on a squiggle, they want to see the 

@@ -50,6 +50,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
                 title: EditorFeaturesResources.Format_Selection,
                 message: EditorFeaturesResources.Formatting_currently_selected_text,
                 allowCancel: true,
+                showProgress: false,
                 action: waitContext =>
                 {
                     var buffer = args.SubjectBuffer;

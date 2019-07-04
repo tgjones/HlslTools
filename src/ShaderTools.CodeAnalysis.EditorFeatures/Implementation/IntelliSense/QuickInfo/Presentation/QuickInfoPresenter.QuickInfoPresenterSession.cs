@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
-using ShaderTools.CodeAnalysis.QuickInfo;
+using QuickInfoItem = ShaderTools.CodeAnalysis.QuickInfo.QuickInfoItem;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo.Presentation
 {

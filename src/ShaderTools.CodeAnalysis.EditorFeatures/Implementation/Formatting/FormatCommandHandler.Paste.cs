@@ -27,6 +27,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
                 title: EditorFeaturesResources.Format_Paste,
                 message: EditorFeaturesResources.Formatting_pasted_text,
                 allowCancel: true,
+                showProgress: false,
                 action: c => ExecuteCommandWorker(args, nextHandler, c.CancellationToken));
         }
 

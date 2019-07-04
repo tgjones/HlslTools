@@ -18,7 +18,7 @@ namespace ShaderTools.CodeAnalysis.Text.Implementation.TextBufferFactoryService
             ITextBufferFactoryService textBufferFactoryService,
             IContentTypeRegistryService contentTypeRegistry)
         {
-            _singleton = new TextBufferCloneService((ITextBufferFactoryService2) textBufferFactoryService, contentTypeRegistry.UnknownContentType);
+            _singleton = new TextBufferCloneService((ITextBufferFactoryService3) textBufferFactoryService, contentTypeRegistry.UnknownContentType);
         }
 
         public IWorkspaceService CreateService(HostWorkspaceServices workspaceServices)
@@ -28,10 +28,10 @@ namespace ShaderTools.CodeAnalysis.Text.Implementation.TextBufferFactoryService
 
         private class TextBufferCloneService : ITextBufferCloneService
         {
-            private readonly ITextBufferFactoryService2 _textBufferFactoryService;
+            private readonly ITextBufferFactoryService3 _textBufferFactoryService;
             private readonly IContentType _unknownContentType;
 
-            public TextBufferCloneService(ITextBufferFactoryService2 textBufferFactoryService, IContentType unknownContentType)
+            public TextBufferCloneService(ITextBufferFactoryService3 textBufferFactoryService, IContentType unknownContentType)
             {
                 _textBufferFactoryService = textBufferFactoryService;
                 _unknownContentType = unknownContentType;

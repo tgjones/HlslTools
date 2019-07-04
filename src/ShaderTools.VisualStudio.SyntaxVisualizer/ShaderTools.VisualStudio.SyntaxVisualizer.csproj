@@ -4,6 +4,7 @@
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">15.0</VisualStudioVersion>
     <MinimumVisualStudioVersion>15.0</MinimumVisualStudioVersion>
     <UseCodebase>true</UseCodebase>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -23,7 +24,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderTools.VisualStudio.SyntaxVisualizer</RootNamespace>
     <AssemblyName>ShaderTools.VisualStudio.SyntaxVisualizer</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
@@ -136,22 +137,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Editor">
-      <Version>14.3.25407</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Shell.14.0">
-      <Version>14.3.25407</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Shell.Interop.12.0">
-      <Version>12.0.30110</Version>
-    </PackageReference>
     <PackageReference Include="Microsoft.VSSDK.BuildTools">
-      <Version>15.0.26201</Version>
+      <Version>$(BuildToolsVersion)</Version>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="System.Collections.Immutable">
-      <Version>1.3.1</Version>
     </PackageReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

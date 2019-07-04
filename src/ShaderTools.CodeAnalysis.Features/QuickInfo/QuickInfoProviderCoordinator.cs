@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,18 +14,18 @@ namespace ShaderTools.CodeAnalysis.QuickInfo
             _providers = providers;
         }
 
-        public async Task<(QuickInfoItem, IQuickInfoProvider)> GetItemAsync(Document document, int position, CancellationToken cancellationToken)
+        public async Task<Tuple<QuickInfoItem, IQuickInfoProvider>> GetItemAsync(Document document, int position, CancellationToken cancellationToken)
         {
             foreach (var provider in _providers)
             {
                 var item = await provider.GetItemAsync(document, position, cancellationToken).ConfigureAwait(false);
                 if (item != null)
                 {
-                    return (item, provider);
+                    return Tuple.Create(item, provider);
                 }
             }
 
-            return ((QuickInfoItem) null, (IQuickInfoProvider) null);
+            return Tuple.Create((QuickInfoItem) null, (IQuickInfoProvider) null);
         }
     }
 }

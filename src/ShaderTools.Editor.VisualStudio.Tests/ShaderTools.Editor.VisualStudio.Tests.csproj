@@ -9,10 +9,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderTools.Editor.VisualStudio.Tests</RootNamespace>
     <AssemblyName>ShaderTools.Editor.VisualStudio.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -98,12 +99,6 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.VisualStudio.Setup.Configuration.Interop">
-      <Version>1.8.24</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Text.UI.Wpf">
-      <Version>15.0.26201</Version>
-    </PackageReference>
     <PackageReference Include="NSubstitute">
       <Version>2.0.3</Version>
     </PackageReference>
