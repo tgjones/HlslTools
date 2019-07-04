@@ -1477,6 +1477,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.TypedefKeyword:
                 case SyntaxKind.UniformKeyword:
                 case SyntaxKind.UNormKeyword:
+                case SyntaxKind.UnsignedKeyword:
                 case SyntaxKind.UintKeyword:
                 case SyntaxKind.Uint1Keyword:
                 case SyntaxKind.Uint2Keyword:
