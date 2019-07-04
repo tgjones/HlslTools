@@ -69,6 +69,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 
             var isSemanticContext = !isPreprocessorDirectiveContext && leftToken.HasAncestor<SemanticSyntax>();
 
+            var isExpressionContext = leftToken.HasAncestor<ExpressionSyntax>();
+
             var isTypeDeclarationContext = syntaxTree.IsTypeDeclarationContext(targetToken);
 
             if (IsValidBreakKeywordContext(isStatementContext, leftToken))
@@ -77,14 +79,26 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
             if (targetToken.IsSwitchLabelContext())
                 yield return SyntaxKind.CaseKeyword;
 
+            if (isStatementContext)
+                yield return SyntaxKind.ConstKeyword;
+
             if (IsValidContinueKeywordContext(isStatementContext, leftToken))
                 yield return SyntaxKind.ContinueKeyword;
+
+            if (isStatementContext)
+                yield return SyntaxKind.DoKeyword;
 
             if (isPreprocessorDirectiveContext || IsValidElseKeywordContext(targetToken))
                 yield return SyntaxKind.ElseKeyword;
 
             if (isPreprocessorKeywordContext || isStatementContext)
                 yield return SyntaxKind.IfKeyword;
+
+            if (isStatementContext || isExpressionContext)
+                yield return SyntaxKind.FalseKeyword;
+
+            if (isStatementContext)
+                yield return SyntaxKind.ForKeyword;
 
             if (isSemanticContext)
                 yield return SyntaxKind.PackoffsetKeyword;
@@ -100,6 +114,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 
             if (isStatementContext)
                 yield return SyntaxKind.SwitchKeyword;
+
+            if (isStatementContext || isExpressionContext)
+                yield return SyntaxKind.TrueKeyword;
 
             if (isStatementContext || IsValidWhileKeywordContext(targetToken))
                 yield return SyntaxKind.WhileKeyword;

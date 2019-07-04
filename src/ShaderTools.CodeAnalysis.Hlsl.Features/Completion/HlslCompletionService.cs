@@ -26,8 +26,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion
         private readonly ImmutableArray<CompletionProvider> _defaultCompletionProviders =
             ImmutableArray.Create<CompletionProvider>(
                 new SemanticCompletionProvider(),
-                new SymbolCompletionProvider()
-                //new KeywordCompletionProvider()
+                new SymbolCompletionProvider(),
+                new KeywordCompletionProvider()
             );
 
         private readonly Workspace _workspace;
