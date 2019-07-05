@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using ShaderTools.CodeAnalysis.Editor.Commands;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 
 namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
 {
@@ -22,13 +23,15 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
     /// doesn't process the command.
     /// </summary>
     internal abstract class AbstractIntelliSenseCommandHandler :
-        ICommandHandler<EscapeKeyCommandArgs>,
-        ICommandHandler<UpKeyCommandArgs>,
-        ICommandHandler<DownKeyCommandArgs>
+        IChainedCommandHandler<EscapeKeyCommandArgs>,
+        IChainedCommandHandler<UpKeyCommandArgs>,
+        IChainedCommandHandler<DownKeyCommandArgs>
     {
         private readonly CompletionCommandHandler _completionCommandHandler;
         private readonly SignatureHelpCommandHandler _signatureHelpCommandHandler;
         private readonly QuickInfoCommandHandlerAndSourceProvider _quickInfoCommandHandler;
+
+        public string DisplayName => "Signature Help";
 
         protected AbstractIntelliSenseCommandHandler(
             CompletionCommandHandler completionCommandHandler,
@@ -55,7 +58,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             return nextHandler();
         }
 
-        public void ExecuteCommand(EscapeKeyCommandArgs args, Action nextHandler)
+        public void ExecuteCommand(EscapeKeyCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             if (//(_completionCommandHandler != null && _completionCommandHandler.TryHandleEscapeKey(args)) ||
                 (_signatureHelpCommandHandler != null && _signatureHelpCommandHandler.TryHandleEscapeKey(args)) ||
@@ -67,7 +70,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             nextHandler();
         }
 
-        public void ExecuteCommand(UpKeyCommandArgs args, Action nextHandler)
+        public void ExecuteCommand(UpKeyCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             if (//(_completionCommandHandler != null && _completionCommandHandler.TryHandleUpKey(args)) ||
                 (_signatureHelpCommandHandler != null && _signatureHelpCommandHandler.TryHandleUpKey(args)))
@@ -78,7 +81,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             nextHandler();
         }
 
-        public void ExecuteCommand(DownKeyCommandArgs args, Action nextHandler)
+        public void ExecuteCommand(DownKeyCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             if (//(_completionCommandHandler != null && _completionCommandHandler.TryHandleDownKey(args)) ||
                 (_signatureHelpCommandHandler != null && _signatureHelpCommandHandler.TryHandleDownKey(args)))

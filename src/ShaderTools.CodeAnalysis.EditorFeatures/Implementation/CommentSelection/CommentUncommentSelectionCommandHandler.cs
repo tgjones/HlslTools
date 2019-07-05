@@ -8,8 +8,6 @@ using System.Threading;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Operations;
-using ShaderTools.CodeAnalysis.Editor.Commands;
-using ShaderTools.CodeAnalysis.Editor.Host;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
@@ -17,34 +15,37 @@ using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.Utilities.Diagnostics;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
+using Microsoft.VisualStudio.Utilities;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.CommentSelection
 {
-    [ExportCommandHandler(PredefinedCommandHandlerNames.CommentSelection, ContentTypeNames.ShaderToolsContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    [Name(nameof(CommentUncommentSelectionCommandHandler))]
     internal class CommentUncommentSelectionCommandHandler :
         ICommandHandler<CommentSelectionCommandArgs>,
         ICommandHandler<UncommentSelectionCommandArgs>
     {
-        private readonly IWaitIndicator _waitIndicator;
         private readonly ITextUndoHistoryRegistry _undoHistoryRegistry;
         private readonly IEditorOperationsFactoryService _editorOperationsFactoryService;
 
+        public string DisplayName => "Comment / Uncomment Selection";
+
         [ImportingConstructor]
         internal CommentUncommentSelectionCommandHandler(
-            IWaitIndicator waitIndicator,
             ITextUndoHistoryRegistry undoHistoryRegistry,
             IEditorOperationsFactoryService editorOperationsFactoryService)
         {
-            Contract.ThrowIfNull(waitIndicator);
             Contract.ThrowIfNull(undoHistoryRegistry);
             Contract.ThrowIfNull(editorOperationsFactoryService);
 
-            _waitIndicator = waitIndicator;
             _undoHistoryRegistry = undoHistoryRegistry;
             _editorOperationsFactoryService = editorOperationsFactoryService;
         }
 
-        private static CommandState GetCommandState(ITextBuffer buffer, Func<CommandState> nextHandler)
+        private static CommandState GetCommandState(ITextBuffer buffer)
         {
             //if (!buffer.CanApplyChangeDocumentToWorkspace())
             //{
@@ -54,33 +55,33 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.CommentSelection
             return CommandState.Available;
         }
 
-        public CommandState GetCommandState(CommentSelectionCommandArgs args, Func<CommandState> nextHandler)
+        public CommandState GetCommandState(CommentSelectionCommandArgs args)
         {
-            return GetCommandState(args.SubjectBuffer, nextHandler);
+            return GetCommandState(args.SubjectBuffer);
         }
 
         /// <summary>
         /// Comment the selected spans, and reset the selection.
         /// </summary>
-        public void ExecuteCommand(CommentSelectionCommandArgs args, Action nextHandler)
+        public bool ExecuteCommand(CommentSelectionCommandArgs args, CommandExecutionContext context)
         {
-            this.ExecuteCommand(args.TextView, args.SubjectBuffer, Operation.Comment);
+            return ExecuteCommand(args.TextView, args.SubjectBuffer, Operation.Comment, context);
         }
 
-        public CommandState GetCommandState(UncommentSelectionCommandArgs args, Func<CommandState> nextHandler)
+        public CommandState GetCommandState(UncommentSelectionCommandArgs args)
         {
-            return GetCommandState(args.SubjectBuffer, nextHandler);
+            return GetCommandState(args.SubjectBuffer);
         }
 
         /// <summary>
         /// Uncomment the selected spans, and reset the selection.
         /// </summary>
-        public void ExecuteCommand(UncommentSelectionCommandArgs args, Action nextHandler)
+        public bool ExecuteCommand(UncommentSelectionCommandArgs args, CommandExecutionContext context)
         {
-            this.ExecuteCommand(args.TextView, args.SubjectBuffer, Operation.Uncomment);
+            return ExecuteCommand(args.TextView, args.SubjectBuffer, Operation.Uncomment, context);
         }
 
-        internal void ExecuteCommand(ITextView textView, ITextBuffer subjectBuffer, Operation operation)
+        private bool ExecuteCommand(ITextView textView, ITextBuffer subjectBuffer, Operation operation, CommandExecutionContext context)
         {
             var title = operation == Operation.Comment ? EditorFeaturesResources.Comment_Selection
                 : EditorFeaturesResources.Uncomment_Selection;
@@ -88,50 +89,48 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.CommentSelection
             var message = operation == Operation.Comment ? EditorFeaturesResources.Commenting_currently_selected_text
                 : EditorFeaturesResources.Uncommenting_currently_selected_text;
 
-            _waitIndicator.Wait(
-                title,
-                message,
-                allowCancel: false,
-                action: waitContext =>
+            using (context.OperationContext.AddScope(false, message))
+            {
+                var document = subjectBuffer.CurrentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
+                if (document == null)
                 {
-                    var document = subjectBuffer.CurrentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
-                    if (document == null)
-                    {
-                        return;
-                    }
+                    return true;
+                }
 
-                    var service = document.GetLanguageService<ICommentUncommentService>();
-                    if (service == null)
-                    {
-                        return;
-                    }
+                var service = document.GetLanguageService<ICommentUncommentService>();
+                if (service == null)
+                {
+                    return true;
+                }
 
-                    var trackingSpans = new List<ITrackingSpan>();
-                    var textChanges = new List<TextChange>();
+                var trackingSpans = new List<ITrackingSpan>();
+                var textChanges = new List<TextChange>();
 
-                    CollectEdits(service, textView.Selection.GetSnapshotSpansOnBuffer(subjectBuffer), textChanges, trackingSpans, operation);
+                CollectEdits(service, textView.Selection.GetSnapshotSpansOnBuffer(subjectBuffer), textChanges, trackingSpans, operation);
 
+                using (var transaction = new CaretPreservingEditTransaction(title, textView, _undoHistoryRegistry, _editorOperationsFactoryService))
+                {
+                    document.Workspace.ApplyTextChanges(document.Id, textChanges, CancellationToken.None);
+                    transaction.Complete();
+                }
+
+                if (operation == Operation.Uncomment)
+                {
                     using (var transaction = new CaretPreservingEditTransaction(title, textView, _undoHistoryRegistry, _editorOperationsFactoryService))
                     {
-                        document.Workspace.ApplyTextChanges(document.Id, textChanges, waitContext.CancellationToken);
+                        Format(service, subjectBuffer.CurrentSnapshot, trackingSpans, CancellationToken.None);
                         transaction.Complete();
                     }
+                }
 
-                    if (operation == Operation.Uncomment)
-                    {
-                        using (var transaction = new CaretPreservingEditTransaction(title, textView, _undoHistoryRegistry, _editorOperationsFactoryService))
-                        {
-                            Format(service, subjectBuffer.CurrentSnapshot, trackingSpans, waitContext.CancellationToken);
-                            transaction.Complete();
-                        }
-                    }
+                if (trackingSpans.Any())
+                {
+                    // TODO, this doesn't currently handle block selection
+                    textView.SetSelection(trackingSpans.First().GetSpan(subjectBuffer.CurrentSnapshot));
+                }
+            }
 
-                    if (trackingSpans.Any())
-                    {
-                        // TODO, this doesn't currently handle block selection
-                        textView.SetSelection(trackingSpans.First().GetSpan(subjectBuffer.CurrentSnapshot));
-                    }
-                });
+            return true;
         }
 
         private void Format(ICommentUncommentService service, ITextSnapshot snapshot, IEnumerable<ITrackingSpan> changes, CancellationToken cancellationToken)

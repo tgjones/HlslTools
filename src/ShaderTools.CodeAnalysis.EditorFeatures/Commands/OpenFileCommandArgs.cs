@@ -3,11 +3,12 @@
 using System.Diagnostics.CodeAnalysis;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
 
 namespace ShaderTools.CodeAnalysis.Editor.Commands
 {
     [ExcludeFromCodeCoverage]
-    internal class OpenFileCommandArgs : CommandArgs
+    internal class OpenFileCommandArgs : EditorCommandArgs
     {
         public OpenFileCommandArgs(ITextView textView, ITextBuffer subjectBuffer)
             : base(textView, subjectBuffer)

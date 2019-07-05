@@ -56,15 +56,6 @@ namespace ShaderTools.VisualStudio.LanguageServices
             // Force-load services that don't load themselves.
             ComponentModel.GetService<ThemeColorFixer>();
             ComponentModel.GetService<ErrorsTableDataSource>();
-
-            System.Threading.Tasks.Task.Run(() => LoadComponentsBackground());
-        }
-
-        private void LoadComponentsBackground()
-        {
-            // Perf: Initialize the command handlers.
-            var commandHandlerServiceFactory = ComponentModel.GetService<ICommandHandlerServiceFactory>();
-            commandHandlerServiceFactory.Initialize(ContentTypeNames.ShaderToolsContentType);
         }
 
         protected override void Dispose(bool disposing)

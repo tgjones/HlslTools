@@ -1,7 +1,8 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using ShaderTools.CodeAnalysis.Editor.Commands;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Text;
@@ -10,20 +11,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
 {
     internal partial class FormatCommandHandler
     {
-        public CommandState GetCommandState(FormatDocumentCommandArgs args, Func<CommandState> nextHandler)
+        public CommandState GetCommandState(FormatDocumentCommandArgs args)
         {
-            return GetCommandState(args.SubjectBuffer, nextHandler);
+            return GetCommandState(args.SubjectBuffer);
         }
 
-        public void ExecuteCommand(FormatDocumentCommandArgs args, Action nextHandler)
-        {
-            if (!TryExecuteCommand(args))
-            {
-                nextHandler();
-            }
-        }
-
-        private bool TryExecuteCommand(FormatDocumentCommandArgs args)
+        public bool ExecuteCommand(FormatDocumentCommandArgs args, CommandExecutionContext context)
         {
             //if (!args.SubjectBuffer.CanApplyChangeDocumentToWorkspace())
             //{
@@ -42,20 +35,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
                 return false;
             }
 
-            var result = false;
-            _waitIndicator.Wait(
-                title: EditorFeaturesResources.Format_Document,
-                message: EditorFeaturesResources.Formatting_document,
-                allowCancel: true,
-                showProgress: false,
-                action: waitContext =>
-                {
-                    Format(args.TextView, document, null, waitContext.CancellationToken);
-                    result = true;
-                });
+            using (context.OperationContext.AddScope(true, EditorFeaturesResources.Formatting_document))
+            {
+                Format(args.TextView, document, null, context.OperationContext.UserCancellationToken);
+            }
 
-            // We don't call nextHandler, since we have handled this command.
-            return result;
+            return true;
         }
     }
 }

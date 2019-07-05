@@ -3,10 +3,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.CodeAnalysis.Editor.Commands;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
@@ -23,6 +25,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
 
         private readonly IQuickInfoProviderCoordinatorFactory _providerCoordinatorFactory;
 
+        public string DisplayName => "Quick Info";
+
         public Controller(
             ITextView textView,
             ITextBuffer subjectBuffer,
@@ -36,7 +40,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo
         }
 
         internal static Controller GetInstance(
-            CommandArgs args,
+            EditorCommandArgs args,
             IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> presenter,
             IAsynchronousOperationListener asyncListener,
             IQuickInfoProviderCoordinatorFactory providerCoordinatorFactory)

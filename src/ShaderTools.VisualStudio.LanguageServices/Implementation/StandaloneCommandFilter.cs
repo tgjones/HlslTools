@@ -3,7 +3,7 @@
 using System;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.CodeAnalysis.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
 
 namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 {
@@ -22,7 +22,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         internal StandaloneCommandFilter(
             IServiceProvider serviceProvider,
             IWpfTextView wpfTextView,
-            ICommandHandlerServiceFactory commandHandlerServiceFactory,
+            IEditorCommandHandlerServiceFactory commandHandlerServiceFactory,
             IVsEditorAdaptersFactoryService editorAdaptersFactoryService)
             : base(wpfTextView, commandHandlerServiceFactory, editorAdaptersFactoryService, serviceProvider)
         {
