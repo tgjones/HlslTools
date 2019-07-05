@@ -7,16 +7,16 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
         public readonly SyntaxToken PassKeyword;
         public readonly SyntaxToken OpenBraceToken;
         public readonly List<SyntaxNode> Statements;
-        public readonly CgProgramSyntax CgProgram;
+        public readonly ShaderProgramSyntax ShaderProgram;
         public readonly SyntaxToken CloseBraceToken;
 
-        public PassSyntax(SyntaxToken passKeyword, SyntaxToken openBraceToken, List<SyntaxNode> statements, CgProgramSyntax cgProgram, SyntaxToken closeBraceToken)
+        public PassSyntax(SyntaxToken passKeyword, SyntaxToken openBraceToken, List<SyntaxNode> statements, ShaderProgramSyntax shaderProgram, SyntaxToken closeBraceToken)
             : base(SyntaxKind.Pass)
         {
             RegisterChildNode(out PassKeyword, passKeyword);
             RegisterChildNode(out OpenBraceToken, openBraceToken);
             RegisterChildNodes(out Statements, statements);
-            RegisterChildNode(out CgProgram, cgProgram);
+            RegisterChildNode(out ShaderProgram, shaderProgram);
             RegisterChildNode(out CloseBraceToken, closeBraceToken);
         }
 

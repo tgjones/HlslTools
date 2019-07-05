@@ -122,12 +122,12 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             DefaultVisit(node);
         }
 
-        public virtual void VisitCgProgram(CgProgramSyntax node)
+        public virtual void VisitShaderProgram(ShaderProgramSyntax node)
         {
             DefaultVisit(node);
         }
 
-        public virtual void VisitCgInclude(CgIncludeSyntax node)
+        public virtual void VisitShaderInclude(ShaderIncludeSyntax node)
         {
             DefaultVisit(node);
         }
@@ -542,12 +542,12 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
             return DefaultVisit(node);
         }
 
-        public virtual T VisitCgProgram(CgProgramSyntax node)
+        public virtual T VisitShaderProgram(ShaderProgramSyntax node)
         {
             return DefaultVisit(node);
         }
 
-        public virtual T VisitCgInclude(CgIncludeSyntax node)
+        public virtual T VisitShaderInclude(ShaderIncludeSyntax node)
         {
             return DefaultVisit(node);
         }

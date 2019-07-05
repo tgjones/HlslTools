@@ -171,10 +171,16 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
                     return "Pass";
                 case SyntaxKind.CgProgramKeyword:
                     return "CGPROGRAM";
+                case SyntaxKind.HlslProgramKeyword:
+                    return "HLSLPROGRAM";
                 case SyntaxKind.CgIncludeKeyword:
                     return "CGINCLUDE";
+                case SyntaxKind.HlslIncludeKeyword:
+                    return "HLSLINCLUDE";
                 case SyntaxKind.EndCgKeyword:
                     return "ENDCG";
+                case SyntaxKind.EndHlslKeyword:
+                    return "ENDHLSL";
                 case SyntaxKind.FallbackKeyword:
                     return "Fallback";
                 case SyntaxKind.CustomEditorKeyword:
@@ -293,12 +299,21 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
                 throw new ArgumentNullException(nameof(text));
 
             // Every Unity keyword apart from CGPROGRAM and CGINCLUDE is case insensitive.
-            if (text == "CGPROGRAM")
-                return SyntaxKind.CgProgramKeyword;
-            if (text == "CGINCLUDE")
-                return SyntaxKind.CgIncludeKeyword;
-            if (text == "ENDCG")
-                return SyntaxKind.EndCgKeyword;
+            switch (text)
+            {
+                case "CGPROGRAM":
+                    return SyntaxKind.CgProgramKeyword;
+                case "HLSLPROGRAM":
+                    return SyntaxKind.HlslProgramKeyword;
+                case "CGINCLUDE":
+                    return SyntaxKind.CgIncludeKeyword;
+                case "HLSLINCLUDE":
+                    return SyntaxKind.HlslIncludeKeyword;
+                case "ENDCG":
+                    return SyntaxKind.EndCgKeyword;
+                case "ENDHLSL":
+                    return SyntaxKind.EndHlslKeyword;
+            }
 
             switch (text.ToLower())
             {

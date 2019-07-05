@@ -30,9 +30,9 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
             if (Current.Kind == SyntaxKind.PropertiesKeyword)
                 properties = ParseUnityShaderProperties();
 
-            CgIncludeSyntax cgInclude = null;
-            if (Current.Kind == SyntaxKind.CgIncludeKeyword)
-                cgInclude = ParseUnityCgInclude();
+            ShaderIncludeSyntax cgInclude = null;
+            if (Current.Kind == SyntaxKind.CgIncludeKeyword || Current.Kind == SyntaxKind.HlslIncludeKeyword)
+                cgInclude = ParseUnityShaderInclude();
 
             var statements = new List<SyntaxNode>();
             while (Current.Kind == SyntaxKind.SubShaderKeyword || Current.Kind == SyntaxKind.CategoryKeyword)
@@ -425,10 +425,12 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
                         statements.Add(ParseUnityGrabPass());
                         break;
                     case SyntaxKind.CgProgramKeyword:
-                        statements.Add(ParseUnityCgProgram());
+                    case SyntaxKind.HlslProgramKeyword:
+                        statements.Add(ParseUnityShaderProgram());
                         break;
                     case SyntaxKind.CgIncludeKeyword:
-                        statements.Add(ParseUnityCgInclude());
+                    case SyntaxKind.HlslIncludeKeyword:
+                        statements.Add(ParseUnityShaderInclude());
                         break;
 
                     default:
@@ -493,9 +495,9 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
                 }
             }
 
-            CgProgramSyntax cgProgram = null;
-            if (Current.Kind == SyntaxKind.CgProgramKeyword)
-                cgProgram = ParseUnityCgProgram();
+            ShaderProgramSyntax shaderProgram = null;
+            if (Current.Kind == SyntaxKind.CgProgramKeyword || Current.Kind == SyntaxKind.HlslProgramKeyword)
+                shaderProgram = ParseUnityShaderProgram();
 
             var closeBraceToken = Match(SyntaxKind.CloseBraceToken);
 
@@ -503,7 +505,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
                 passKeyword,
                 openBraceToken,
                 statements,
-                cgProgram,
+                shaderProgram,
                 closeBraceToken);
         }
 
@@ -550,26 +552,38 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
                 passName);
         }
 
-        private CgProgramSyntax ParseUnityCgProgram()
+        private ShaderProgramSyntax ParseUnityShaderProgram()
         {
-            var cgProgramKeyword = Match(SyntaxKind.CgProgramKeyword);
+            var cgProgramKeyword = MatchOneOf(SyntaxKind.CgProgramKeyword, SyntaxKind.HlslProgramKeyword);
 
-            SyntaxToken endCgKeyword;
+            var programKind = cgProgramKeyword.Kind == SyntaxKind.CgProgramKeyword
+                ? SyntaxKind.CgProgram
+                : SyntaxKind.HlslProgram;
 
-            ParseUnityCgProgramOrInclude(out endCgKeyword);
+            var endKeywordKind = cgProgramKeyword.Kind == SyntaxKind.CgProgramKeyword
+                ? SyntaxKind.EndCgKeyword
+                : SyntaxKind.EndHlslKeyword;
 
-            return new CgProgramSyntax(cgProgramKeyword, endCgKeyword);
+            var endCgKeyword = Match(endKeywordKind);
+
+            return new ShaderProgramSyntax(programKind, cgProgramKeyword, endCgKeyword);
         }
 
-        private CgIncludeSyntax ParseUnityCgInclude()
+        private ShaderIncludeSyntax ParseUnityShaderInclude()
         {
-            var cgIncludeKeyword = Match(SyntaxKind.CgIncludeKeyword);
+            var cgIncludeKeyword = MatchOneOf(SyntaxKind.CgIncludeKeyword, SyntaxKind.HlslIncludeKeyword);
 
-            SyntaxToken endCgKeyword;
+            var programKind = cgIncludeKeyword.Kind == SyntaxKind.CgIncludeKeyword
+                ? SyntaxKind.CgInclude
+                : SyntaxKind.HlslInclude;
 
-            ParseUnityCgProgramOrInclude(out endCgKeyword);
+            var endKeywordKind = cgIncludeKeyword.Kind == SyntaxKind.CgIncludeKeyword
+                ? SyntaxKind.EndCgKeyword
+                : SyntaxKind.EndHlslKeyword;
 
-            return new CgIncludeSyntax(cgIncludeKeyword, endCgKeyword);
+            var endCgKeyword = Match(endKeywordKind);
+
+            return new ShaderIncludeSyntax(programKind, cgIncludeKeyword, endCgKeyword);
         }
 
         private void ParseUnityCgProgramOrInclude(out SyntaxToken endCgKeyword)
