@@ -78,18 +78,18 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
         {
             var shaderLabSyntaxTree = (SyntaxTree) await document.GetSyntaxTreeAsync(cancellationToken);
 
-            var cgBlockVisitor = new CgBlockVisitor(shaderLabSyntaxTree);
-            cgBlockVisitor.Visit((SyntaxNode) shaderLabSyntaxTree.Root);
-            var cgBlockSpans = cgBlockVisitor.CgBlockSpans;
+            var shaderBlockVisitor = new ShaderBlockVisitor(shaderLabSyntaxTree);
+            shaderBlockVisitor.Visit((SyntaxNode) shaderLabSyntaxTree.Root);
+            var shaderBlockSpans = shaderBlockVisitor.CgBlockSpans;
 
             var snapshot = document.SourceText.FindCorrespondingEditorTextSnapshot();
 
             var dataBufferSpans = new List<object>();
 
             var primaryIndex = 0;
-            foreach (var cgBlockSpan in cgBlockSpans)
+            foreach (var shaderBlockSpan in shaderBlockSpans)
             {
-                var primarySpan = Span.FromBounds(primaryIndex, cgBlockSpan.Start);
+                var primarySpan = Span.FromBounds(primaryIndex, shaderBlockSpan.Start);
                 if (!primarySpan.IsEmpty)
                     dataBufferSpans.Add(snapshot.CreateTrackingSpan(
                         primarySpan, 
@@ -97,7 +97,7 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 
                 var elisionBuffer = _projectionBufferFactoryService.CreateElisionBuffer(
                     null,
-                    new NormalizedSnapshotSpanCollection(new SnapshotSpan(snapshot, cgBlockSpan)),
+                    new NormalizedSnapshotSpanCollection(new SnapshotSpan(snapshot, shaderBlockSpan)),
                     ElisionBufferOptions.None,
                     _hlslContentType);
 
@@ -106,7 +106,7 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
                     elisionBuffer.CurrentSnapshot.Length, 
                     SpanTrackingMode.EdgeInclusive));
 
-                primaryIndex = cgBlockSpan.End;
+                primaryIndex = shaderBlockSpan.End;
             }
 
             // Last span.
@@ -134,25 +134,25 @@ namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
             
         }
 
-        private sealed class CgBlockVisitor : SyntaxWalker
+        private sealed class ShaderBlockVisitor : SyntaxWalker
         {
             private readonly SyntaxTree _syntaxTree;
 
             public List<Span> CgBlockSpans { get; } = new List<Span>();
 
-            public CgBlockVisitor(SyntaxTree syntaxTree)
+            public ShaderBlockVisitor(SyntaxTree syntaxTree)
             {
                 _syntaxTree = syntaxTree;
             }
 
-            public override void VisitCgProgram(CgProgramSyntax node)
+            public override void VisitShaderProgram(ShaderProgramSyntax node)
             {
-                AddBlockSpan(node.CgProgramKeyword, node.EndCgKeyword);
+                AddBlockSpan(node.BeginProgramKeyword, node.EndProgramKeyword);
             }
 
-            public override void VisitCgInclude(CgIncludeSyntax node)
+            public override void VisitShaderInclude(ShaderIncludeSyntax node)
             {
-                AddBlockSpan(node.CgIncludeKeyword, node.EndCgKeyword);
+                AddBlockSpan(node.BeginIncludeKeyword, node.EndIncludeKeyword);
             }
 
             private void AddBlockSpan(SyntaxToken startToken, SyntaxToken endToken)
