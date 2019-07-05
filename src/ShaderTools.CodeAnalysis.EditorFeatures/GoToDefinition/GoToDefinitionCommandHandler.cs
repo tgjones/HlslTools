@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
-using System;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.CodeAnalysis.Editor.Commands;
-using ShaderTools.CodeAnalysis.Editor.Host;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
+using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Notification;
@@ -12,19 +12,13 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Editor.GoToDefinition
 {
-    [ExportCommandHandler(PredefinedCommandHandlerNames.GoToDefinition,
-       ContentTypeNames.ShaderToolsContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    [Name(nameof(GoToDefinitionCommandHandler))]
     internal class GoToDefinitionCommandHandler :
         ICommandHandler<GoToDefinitionCommandArgs>
     {
-        private readonly IWaitIndicator _waitIndicator;
-
-        [ImportingConstructor]
-        public GoToDefinitionCommandHandler(
-            IWaitIndicator waitIndicator)
-        {
-            _waitIndicator = waitIndicator;
-        }
+        public string DisplayName => "Go To Definition";
 
         private (Document, IEditorGoToDefinitionService) GetDocumentAndService(ITextSnapshot snapshot)
         {
@@ -32,58 +26,48 @@ namespace ShaderTools.CodeAnalysis.Editor.GoToDefinition
             return (document, document?.Workspace.Services.GetService<IEditorGoToDefinitionService>());
         }
 
-        public CommandState GetCommandState(GoToDefinitionCommandArgs args, Func<CommandState> nextHandler)
+        public CommandState GetCommandState(GoToDefinitionCommandArgs args)
         {
-            var (document, service) = GetDocumentAndService(args.SubjectBuffer.CurrentSnapshot);
+            var (_, service) = GetDocumentAndService(args.SubjectBuffer.CurrentSnapshot);
             return service != null
                 ? CommandState.Available
                 : CommandState.Unavailable;
         }
 
-        public void ExecuteCommand(GoToDefinitionCommandArgs args, Action nextHandler)
+        public bool ExecuteCommand(GoToDefinitionCommandArgs args, CommandExecutionContext context)
         {
             var subjectBuffer = args.SubjectBuffer;
             var (document, service) = GetDocumentAndService(subjectBuffer.CurrentSnapshot);
             if (service != null)
             {
                 var caretPos = args.TextView.GetCaretPoint(subjectBuffer);
-                if (caretPos.HasValue && TryExecuteCommand(document, caretPos.Value, service))
+                if (caretPos.HasValue && TryExecuteCommand(document, caretPos.Value, service, context))
                 {
-                    return;
+                    return true;
                 }
             }
 
-            nextHandler();
+            return false;
         }
 
-        // Internal for testing purposes only.
-        internal bool TryExecuteCommand(ITextSnapshot snapshot, int caretPosition)
-            => TryExecuteCommand(snapshot.GetOpenDocumentInCurrentContextWithChanges(), caretPosition);
-
-        internal bool TryExecuteCommand(Document document, int caretPosition)
-            => TryExecuteCommand(document, caretPosition, document.Workspace.Services.GetService<IEditorGoToDefinitionService>());
-
-        internal bool TryExecuteCommand(Document document, int caretPosition, IEditorGoToDefinitionService goToDefinitionService)
+        private bool TryExecuteCommand(Document document, int caretPosition, IEditorGoToDefinitionService goToDefinitionService, CommandExecutionContext context)
         {
             string errorMessage = null;
 
-            var result = _waitIndicator.Wait(
-                title: EditorFeaturesResources.Go_to_Definition,
-                message: EditorFeaturesResources.Navigating_to_definition,
-                allowCancel: true,
-                action: waitContext =>
-                {
-                    if (goToDefinitionService != null &&
-                        goToDefinitionService.TryGoToDefinition(document, caretPosition, waitContext.CancellationToken))
-                    {
-                        return;
-                    }
-
-                    errorMessage = EditorFeaturesResources.Cannot_navigate_to_the_symbol_under_the_caret;
-                });
-
-            if (result == WaitIndicatorResult.Completed && errorMessage != null)
+            using (context.OperationContext.AddScope(true, EditorFeaturesResources.Navigating_to_definition))
             {
+                if (goToDefinitionService != null &&
+                    goToDefinitionService.TryGoToDefinition(document, caretPosition, context.OperationContext.UserCancellationToken))
+                {
+                    return true;
+                }
+
+                errorMessage = EditorFeaturesResources.Cannot_navigate_to_the_symbol_under_the_caret;
+            }
+
+            if (errorMessage != null)
+            {
+                context.OperationContext.TakeOwnership();
                 var workspace = document.Workspace;
                 var notificationService = workspace.Services.GetService<INotificationService>();
                 notificationService.SendNotification(errorMessage, title: EditorFeaturesResources.Go_to_Definition, severity: NotificationSeverity.Information);

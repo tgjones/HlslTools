@@ -2,9 +2,11 @@
 
 using System;
 using Microsoft.VisualStudio;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
 using ShaderTools.CodeAnalysis.Editor;
 using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.Utilities.Diagnostics;
@@ -26,43 +28,9 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             {
                 return QueryVisualStudio2000Status(ref pguidCmdGroup, commandCount, prgCmds, commandText);
             }
-            else if (pguidCmdGroup == VSConstants.GUID_VSStandardCommandSet97)
-            {
-                return QueryVisualStudio97Status(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-            }
-            else if (pguidCmdGroup == VSConstants.GUID_AppCommand)
-            {
-                return QueryAppCommandStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-            }
             else
             {
                 return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-            }
-        }
-
-        private int QueryAppCommandStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
-        {
-            switch ((VSConstants.AppCommandCmdID) prgCmds[0].cmdID)
-            {
-                case VSConstants.AppCommandCmdID.BrowserBackward:
-                case VSConstants.AppCommandCmdID.BrowserForward:
-                    prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-                    return VSConstants.S_OK;
-
-                default:
-                    return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-            }
-        }
-
-        private int QueryVisualStudio97Status(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
-        {
-            switch ((VSConstants.VSStd97CmdID) prgCmds[0].cmdID)
-            {
-                case VSConstants.VSStd97CmdID.GotoDefn:
-                    return QueryGoToDefinitionStatus(prgCmds);
-
-                default:
-                    return NextCommandTarget.QueryStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
             }
         }
 
@@ -70,42 +38,6 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         {
             switch ((VSConstants.VSStd2KCmdID) prgCmds[0].cmdID)
             {
-                case VSConstants.VSStd2KCmdID.FORMATDOCUMENT:
-                    return QueryFormatDocumentStatus(prgCmds);
-
-                case VSConstants.VSStd2KCmdID.FORMATSELECTION:
-                    return QueryFormatSelectionStatus(prgCmds);
-
-                case CmdidToggleConsumeFirstMode:
-                    return QueryToggleConsumeFirstModeStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-
-                case VSConstants.VSStd2KCmdID.COMMENT_BLOCK:
-                case VSConstants.VSStd2KCmdID.COMMENTBLOCK:
-                    return QueryCommentBlockStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-
-                case VSConstants.VSStd2KCmdID.UNCOMMENT_BLOCK:
-                case VSConstants.VSStd2KCmdID.UNCOMMENTBLOCK:
-                    return QueryUncommentBlockStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-
-                case CmdidNextHighlightedReference:
-                case CmdidPreviousHighlightedReference:
-                    return QueryNavigateHighlightedReferenceStatus(prgCmds);
-
-                case VSConstants.VSStd2KCmdID.COMPLETEWORD:
-                    return QueryCompleteWordStatus(prgCmds);
-
-                case VSConstants.VSStd2KCmdID.SHOWMEMBERLIST:
-                    return QueryShowMemberListStatus(prgCmds);
-
-                case VSConstants.VSStd2KCmdID.PARAMINFO:
-                    return QueryParameterInfoStatus(prgCmds);
-
-                case VSConstants.VSStd2KCmdID.QUICKINFO:
-                    return QueryQuickInfoStatus(prgCmds);
-
-                case VSConstants.VSStd2KCmdID.OUTLN_START_AUTOHIDING:
-                    return QueryStartAutomaticOutliningStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
-
                 case VSConstants.VSStd2KCmdID.OPENFILE:
                     return QueryOpenFileStatus(ref pguidCmdGroup, commandCount, prgCmds, commandText);
 
@@ -120,7 +52,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             uint commandCount,
             OLECMD[] prgCmds,
             IntPtr commandText)
-            where T : CommandArgs
+            where T : EditorCommandArgs
         {
             var result = VSConstants.S_OK;
 
@@ -143,9 +75,8 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             else
             {
                 commandState = CurrentHandlers.GetCommandState<T>(
-                    subjectBuffer.ContentType,
-                    args: createArgs(ConvertTextView(), subjectBuffer),
-                    lastHandler: executeNextCommandTarget);
+                    (textView, textBuffer) => createArgs(ConvertTextView(), subjectBuffer),
+                    executeNextCommandTarget);
             }
 
             var enabled = commandState.IsAvailable ? OLECMDF.OLECMDF_ENABLED : OLECMDF.OLECMDF_INVISIBLE;
@@ -159,82 +90,6 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
             }
 
             return result;
-        }
-
-        private int QueryShowMemberListStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryCompleteWordStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryNavigateHighlightedReferenceStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryUncommentBlockStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
-        {
-            return GetCommandState(
-                (v, b) => new UncommentSelectionCommandArgs(v, b),
-                ref pguidCmdGroup, commandCount, prgCmds, commandText);
-        }
-
-        private int QueryCommentBlockStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
-        {
-            return GetCommandState(
-                (v, b) => new CommentSelectionCommandArgs(v, b),
-                ref pguidCmdGroup, commandCount, prgCmds, commandText);
-        }
-
-        private int QueryToggleConsumeFirstModeStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
-        {
-            return GetCommandState(
-                (v, b) => new ToggleCompletionModeCommandArgs(v, b),
-                ref pguidCmdGroup, commandCount, prgCmds, commandText);
-        }
-
-        private int QueryFormatDocumentStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryFormatSelectionStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryGoToDefinitionStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryQuickInfoStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryParameterInfoStatus(OLECMD[] prgCmds)
-        {
-            prgCmds[0].cmdf = (uint) (OLECMDF.OLECMDF_ENABLED | OLECMDF.OLECMDF_SUPPORTED);
-            return VSConstants.S_OK;
-        }
-
-        private int QueryStartAutomaticOutliningStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)
-        {
-            return GetCommandState(
-                (v, b) => new StartAutomaticOutliningCommandArgs(v, b),
-                ref pguidCmdGroup, commandCount, prgCmds, commandText);
         }
 
         private int QueryOpenFileStatus(ref Guid pguidCmdGroup, uint commandCount, OLECMD[] prgCmds, IntPtr commandText)

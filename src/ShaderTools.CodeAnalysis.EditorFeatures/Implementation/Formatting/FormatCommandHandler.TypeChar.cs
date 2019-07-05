@@ -2,8 +2,9 @@
 
 using System;
 using System.Threading;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.CodeAnalysis.Editor.Commands;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
@@ -18,14 +19,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
             return nextHandler();
         }
 
-        public void ExecuteCommand(TypeCharCommandArgs args, Action nextHandler)
+        public void ExecuteCommand(TypeCharCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
-            ExecuteCommand(args, nextHandler, CancellationToken.None);
-        }
-
-        private void ExecuteCommand(TypeCharCommandArgs args, Action nextHandler, CancellationToken cancellationToken)
-        {
-            ExecuteReturnOrTypeCommand(args, nextHandler, cancellationToken);
+            ExecuteReturnOrTypeCommand(args, nextHandler, context.OperationContext.UserCancellationToken);
         }
 
         private bool TryFormat(

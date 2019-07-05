@@ -4,11 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Text.Outlining;
 using Microsoft.VisualStudio.Text.Tagging;
-using ShaderTools.CodeAnalysis.Editor.Commands;
+using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
@@ -16,12 +19,17 @@ using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.ReferenceHighlighting
 {
-    [ExportCommandHandler(PredefinedCommandHandlerNames.NavigateToHighlightedReference, ContentTypeNames.ShaderToolsContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    [Name(nameof(NavigateToHighlightedReferenceCommandHandler))]
     internal partial class NavigateToHighlightedReferenceCommandHandler :
-        ICommandHandler<NavigateToHighlightedReferenceCommandArgs>
+        ICommandHandler<NavigateToNextHighlightedReferenceCommandArgs>,
+        ICommandHandler<NavigateToPreviousHighlightedReferenceCommandArgs>
     {
         private readonly IOutliningManagerService _outliningManagerService;
         private readonly IViewTagAggregatorFactoryService _tagAggregatorFactory;
+
+        public string DisplayName => "Navigate To Highlighted Reference";
 
         [ImportingConstructor]
         public NavigateToHighlightedReferenceCommandHandler(
@@ -32,7 +40,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.ReferenceHighlighting
             _tagAggregatorFactory = tagAggregatorFactory ?? throw new ArgumentNullException(nameof(tagAggregatorFactory));
         }
 
-        public CommandState GetCommandState(NavigateToHighlightedReferenceCommandArgs args, Func<CommandState> nextHandler)
+        public CommandState GetCommandStateImpl(EditorCommandArgs args)
         {
             using (var tagAggregator = _tagAggregatorFactory.CreateTagAggregator<NavigableHighlightTag>(args.TextView))
             {
@@ -41,7 +49,17 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.ReferenceHighlighting
             }
         }
 
-        public void ExecuteCommand(NavigateToHighlightedReferenceCommandArgs args, Action nextHandler)
+        public CommandState GetCommandState(NavigateToNextHighlightedReferenceCommandArgs args)
+        {
+            return GetCommandStateImpl(args);
+        }
+
+        public CommandState GetCommandState(NavigateToPreviousHighlightedReferenceCommandArgs args)
+        {
+            return GetCommandStateImpl(args);
+        }
+
+        public bool ExecuteCommandImpl(EditorCommandArgs args, bool navigateToNext)
         {
             using (var tagAggregator = _tagAggregatorFactory.CreateTagAggregator<NavigableHighlightTag>(args.TextView))
             {
@@ -49,21 +67,32 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.ReferenceHighlighting
 
                 if (tagUnderCursor == null)
                 {
-                    nextHandler();
-                    return;
+                    return false;
                 }
 
                 var spans = GetTags(tagAggregator, args.TextView.TextSnapshot.GetFullSpan()).ToList();
 
                 Contract.ThrowIfFalse(spans.Any(), "We should have at least found the tag under the cursor!");
 
-                var destTag = GetDestinationTag(tagUnderCursor.Value, spans, args.Direction);
+                var destTag = GetDestinationTag(tagUnderCursor.Value, spans, navigateToNext);
 
                 if (args.TextView.TryMoveCaretToAndEnsureVisible(destTag.Start, _outliningManagerService))
                 {
                     args.TextView.SetSelection(destTag);
                 }
             }
+
+            return true;
+        }
+
+        public bool ExecuteCommand(NavigateToNextHighlightedReferenceCommandArgs args, CommandExecutionContext context)
+        {
+            return ExecuteCommandImpl(args, true);
+        }
+
+        public bool ExecuteCommand(NavigateToPreviousHighlightedReferenceCommandArgs args, CommandExecutionContext context)
+        {
+            return ExecuteCommandImpl(args, false);
         }
 
         private static IEnumerable<SnapshotSpan> GetTags(
@@ -78,13 +107,13 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.ReferenceHighlighting
         private static SnapshotSpan GetDestinationTag(
             SnapshotSpan tagUnderCursor,
             List<SnapshotSpan> orderedTagSpans,
-            NavigateDirection direction)
+            bool navigateToNext)
         {
             var destIndex = orderedTagSpans.BinarySearch(tagUnderCursor, new StartComparer());
 
             Contract.ThrowIfFalse(destIndex >= 0, "Expected to find start tag in the collection");
 
-            destIndex += direction == NavigateDirection.Down ? 1 : -1;
+            destIndex += navigateToNext ? 1 : -1;
             if (destIndex < 0)
             {
                 destIndex = orderedTagSpans.Count - 1;

@@ -2,15 +2,21 @@
 
 using System;
 using System.ComponentModel.Composition;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Text.Outlining;
-using ShaderTools.CodeAnalysis.Editor.Commands;
+using Microsoft.VisualStudio.Utilities;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
 {
-    [ExportCommandHandler("Outlining Command Handler", ContentTypeNames.ShaderToolsContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    [Name(nameof(OutliningCommandHandler))]
     internal sealed class OutliningCommandHandler : ICommandHandler<StartAutomaticOutliningCommandArgs>
     {
         private readonly IOutliningManagerService _outliningManagerService;
+
+        public string DisplayName => "Outlining";
 
         [ImportingConstructor]
         public OutliningCommandHandler(IOutliningManagerService outliningManagerService)
@@ -18,13 +24,13 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
             _outliningManagerService = outliningManagerService;
         }
 
-        public void ExecuteCommand(StartAutomaticOutliningCommandArgs args, Action nextHandler)
+        public bool ExecuteCommand(StartAutomaticOutliningCommandArgs args, CommandExecutionContext context)
         {
             // The editor actually handles this command, we just have to make sure it is enabled.
-            nextHandler();
+            return false;
         }
 
-        public CommandState GetCommandState(StartAutomaticOutliningCommandArgs args, Func<CommandState> nextHandler)
+        public CommandState GetCommandState(StartAutomaticOutliningCommandArgs args)
         {
             var outliningManager = _outliningManagerService.GetOutliningManager(args.TextView);
             var enabled = false;

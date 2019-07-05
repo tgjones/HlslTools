@@ -4,13 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.QuickInfo;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
@@ -20,7 +21,9 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
     [Export]
     [Export(typeof(IQuickInfoSourceProvider))]
     [Order(After = PredefinedQuickInfoPresenterNames.ShaderToolsQuickInfoPresenter)]
-    [ExportCommandHandler(PredefinedCommandHandlerNames.QuickInfo, ContentTypeNames.ShaderToolsContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    [Name(nameof(QuickInfoCommandHandlerAndSourceProvider))]
     internal partial class QuickInfoCommandHandlerAndSourceProvider :
         ForegroundThreadAffinitizedObject,
         ICommandHandler<InvokeQuickInfoCommandArgs>,
@@ -30,6 +33,8 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         private readonly IIntelliSensePresenter<IQuickInfoPresenterSession, IQuickInfoSession> _presenter;
         private readonly IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> _asyncListeners;
         private readonly IQuickInfoProviderCoordinatorFactory _providerCoordinatorFactory;
+
+        public string DisplayName => "Quick Info";
 
         [ImportingConstructor]
         public QuickInfoCommandHandlerAndSourceProvider(
@@ -56,7 +61,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             _presenter = presenter;
         }
 
-        private bool TryGetController(CommandArgs args, out Controller controller)
+        private bool TryGetController(EditorCommandArgs args, out Controller controller)
         {
             AssertIsForeground();
 
@@ -85,7 +90,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         }
 
         private bool TryGetControllerCommandHandler<TCommandArgs>(TCommandArgs args, out ICommandHandler<TCommandArgs> commandHandler)
-            where TCommandArgs : CommandArgs
+            where TCommandArgs : EditorCommandArgs
         {
             AssertIsForeground();
             if (!TryGetController(args, out var controller))
@@ -99,42 +104,39 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         }
 
         private CommandState GetCommandStateWorker<TCommandArgs>(
-            TCommandArgs args,
-            Func<CommandState> nextHandler)
-            where TCommandArgs : CommandArgs
+            TCommandArgs args)
+            where TCommandArgs : EditorCommandArgs
         {
             AssertIsForeground();
             return TryGetControllerCommandHandler(args, out var commandHandler)
-                ? commandHandler.GetCommandState(args, nextHandler)
-                : nextHandler();
+                ? commandHandler.GetCommandState(args)
+                : CommandState.Unspecified;
         }
 
-        private void ExecuteCommandWorker<TCommandArgs>(
+        private bool ExecuteCommandWorker<TCommandArgs>(
             TCommandArgs args,
-            Action nextHandler)
-            where TCommandArgs : CommandArgs
+            CommandExecutionContext context)
+            where TCommandArgs : EditorCommandArgs
         {
             AssertIsForeground();
-            if (!TryGetControllerCommandHandler(args, out var commandHandler))
+            if (TryGetControllerCommandHandler(args, out var commandHandler))
             {
-                nextHandler();
+                commandHandler.ExecuteCommand(args, context);
+                return true;
             }
-            else
-            {
-                commandHandler.ExecuteCommand(args, nextHandler);
-            }
+            return false;
         }
 
-        CommandState ICommandHandler<InvokeQuickInfoCommandArgs>.GetCommandState(InvokeQuickInfoCommandArgs args, Func<CommandState> nextHandler)
+        CommandState ICommandHandler<InvokeQuickInfoCommandArgs>.GetCommandState(InvokeQuickInfoCommandArgs args)
         {
             AssertIsForeground();
-            return GetCommandStateWorker(args, nextHandler);
+            return GetCommandStateWorker(args);
         }
 
-        void ICommandHandler<InvokeQuickInfoCommandArgs>.ExecuteCommand(InvokeQuickInfoCommandArgs args, Action nextHandler)
+        bool ICommandHandler<InvokeQuickInfoCommandArgs>.ExecuteCommand(InvokeQuickInfoCommandArgs args, CommandExecutionContext context)
         {
             AssertIsForeground();
-            ExecuteCommandWorker(args, nextHandler);
+            return ExecuteCommandWorker(args, context);
         }
 
         public IQuickInfoSource TryCreateQuickInfoSource(ITextBuffer textBuffer)

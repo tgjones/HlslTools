@@ -4,9 +4,11 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Utilities;
-using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.SignatureHelp;
 using ShaderTools.CodeAnalysis.Editor.Options;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
@@ -19,17 +21,21 @@ using ShaderTools.CodeAnalysis.SignatureHelp;
 namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
 {
     [Export]
-    [ExportCommandHandler(PredefinedCommandHandlerNames.SignatureHelp, ContentTypeNames.ShaderToolsContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
     [Order(Before = PredefinedCommandHandlerNames.Completion)]
+    [Name(nameof(SignatureHelpCommandHandler))]
     internal class SignatureHelpCommandHandler :
         ForegroundThreadAffinitizedObject,
-        ICommandHandler<TypeCharCommandArgs>,
-        ICommandHandler<InvokeSignatureHelpCommandArgs>
+        IChainedCommandHandler<TypeCharCommandArgs>,
+        IChainedCommandHandler<InvokeSignatureHelpCommandArgs>
     {
         //private readonly IInlineRenameService _inlineRenameService;
         private readonly IIntelliSensePresenter<ISignatureHelpPresenterSession, ISignatureHelpSession> _signatureHelpPresenter;
         private readonly IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> _asyncListeners;
         private readonly IList<Lazy<ISignatureHelpProvider, OrderableLanguageMetadata>> _signatureHelpProviders;
+
+        public string DisplayName => "Signature Help";
 
         [ImportingConstructor]
         public SignatureHelpCommandHandler(
@@ -56,7 +62,7 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             _signatureHelpPresenter = signatureHelpPresenter;
         }
 
-        private bool TryGetController(CommandArgs args, out Controller controller)
+        private bool TryGetController(EditorCommandArgs args, out Controller controller)
         {
             AssertIsForeground();
 
@@ -84,8 +90,8 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             return true;
         }
 
-        private bool TryGetControllerCommandHandler<TCommandArgs>(TCommandArgs args, out ICommandHandler<TCommandArgs> commandHandler)
-            where TCommandArgs : CommandArgs
+        private bool TryGetControllerCommandHandler<TCommandArgs>(TCommandArgs args, out IChainedCommandHandler<TCommandArgs> commandHandler)
+            where TCommandArgs : EditorCommandArgs
         {
             AssertIsForeground();
             if (!TryGetController(args, out var controller))
@@ -94,14 +100,14 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
                 return false;
             }
 
-            commandHandler = (ICommandHandler<TCommandArgs>) controller;
+            commandHandler = (IChainedCommandHandler<TCommandArgs>) controller;
             return true;
         }
 
         private CommandState GetCommandStateWorker<TCommandArgs>(
             TCommandArgs args,
             Func<CommandState> nextHandler)
-            where TCommandArgs : CommandArgs
+            where TCommandArgs : EditorCommandArgs
         {
             AssertIsForeground();
             return TryGetControllerCommandHandler(args, out var commandHandler)
@@ -111,8 +117,9 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
 
         private void ExecuteCommandWorker<TCommandArgs>(
             TCommandArgs args,
-            Action nextHandler)
-            where TCommandArgs : CommandArgs
+            Action nextHandler,
+            CommandExecutionContext context)
+            where TCommandArgs : EditorCommandArgs
         {
             AssertIsForeground();
             if (!TryGetControllerCommandHandler(args, out var commandHandler))
@@ -121,32 +128,32 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
             }
             else
             {
-                commandHandler.ExecuteCommand(args, nextHandler);
+                commandHandler.ExecuteCommand(args, nextHandler, context);
             }
         }
 
-        CommandState ICommandHandler<TypeCharCommandArgs>.GetCommandState(TypeCharCommandArgs args, System.Func<CommandState> nextHandler)
+        CommandState IChainedCommandHandler<TypeCharCommandArgs>.GetCommandState(TypeCharCommandArgs args, Func<CommandState> nextHandler)
         {
             AssertIsForeground();
             return GetCommandStateWorker(args, nextHandler);
         }
 
-        void ICommandHandler<TypeCharCommandArgs>.ExecuteCommand(TypeCharCommandArgs args, System.Action nextHandler)
+        void IChainedCommandHandler<TypeCharCommandArgs>.ExecuteCommand(TypeCharCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             AssertIsForeground();
-            ExecuteCommandWorker(args, nextHandler);
+            ExecuteCommandWorker(args, nextHandler, context);
         }
 
-        CommandState ICommandHandler<InvokeSignatureHelpCommandArgs>.GetCommandState(InvokeSignatureHelpCommandArgs args, Func<CommandState> nextHandler)
+        CommandState IChainedCommandHandler<InvokeSignatureHelpCommandArgs>.GetCommandState(InvokeSignatureHelpCommandArgs args, Func<CommandState> nextHandler)
         {
             AssertIsForeground();
             return GetCommandStateWorker(args, nextHandler);
         }
 
-        void ICommandHandler<InvokeSignatureHelpCommandArgs>.ExecuteCommand(InvokeSignatureHelpCommandArgs args, Action nextHandler)
+        void IChainedCommandHandler<InvokeSignatureHelpCommandArgs>.ExecuteCommand(InvokeSignatureHelpCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             AssertIsForeground();
-            ExecuteCommandWorker(args, nextHandler);
+            ExecuteCommandWorker(args, nextHandler, context);
         }
 
         internal bool TryHandleEscapeKey(EscapeKeyCommandArgs commandArgs)

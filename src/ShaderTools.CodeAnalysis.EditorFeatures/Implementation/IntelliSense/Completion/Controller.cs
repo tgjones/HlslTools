@@ -1,12 +1,13 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Text.Operations;
 using ShaderTools.CodeAnalysis.Completion;
-using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
@@ -17,20 +18,20 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion
 {
     internal partial class Controller :
         AbstractController<Controller.Session, Model, ICompletionPresenterSession, ICompletionSession>,
-        ICommandHandler<TabKeyCommandArgs>,
-        ICommandHandler<ToggleCompletionModeCommandArgs>,
-        ICommandHandler<TypeCharCommandArgs>,
-        ICommandHandler<ReturnKeyCommandArgs>,
-        ICommandHandler<InvokeCompletionListCommandArgs>,
-        ICommandHandler<CommitUniqueCompletionListItemCommandArgs>,
-        ICommandHandler<PageUpKeyCommandArgs>,
-        ICommandHandler<PageDownKeyCommandArgs>,
-        ICommandHandler<CutCommandArgs>,
-        ICommandHandler<PasteCommandArgs>,
-        ICommandHandler<BackspaceKeyCommandArgs>,
-        ICommandHandler<SaveCommandArgs>,
-        ICommandHandler<DeleteKeyCommandArgs>,
-        ICommandHandler<SelectAllCommandArgs>
+        IChainedCommandHandler<TabKeyCommandArgs>,
+        IChainedCommandHandler<ToggleCompletionModeCommandArgs>,
+        IChainedCommandHandler<TypeCharCommandArgs>,
+        IChainedCommandHandler<ReturnKeyCommandArgs>,
+        IChainedCommandHandler<InvokeCompletionListCommandArgs>,
+        IChainedCommandHandler<CommitUniqueCompletionListItemCommandArgs>,
+        IChainedCommandHandler<PageUpKeyCommandArgs>,
+        IChainedCommandHandler<PageDownKeyCommandArgs>,
+        IChainedCommandHandler<CutCommandArgs>,
+        IChainedCommandHandler<PasteCommandArgs>,
+        IChainedCommandHandler<BackspaceKeyCommandArgs>,
+        IChainedCommandHandler<SaveCommandArgs>,
+        IChainedCommandHandler<DeleteKeyCommandArgs>,
+        IChainedCommandHandler<SelectAllCommandArgs>
     {
         private static readonly object s_controllerPropertyKey = new object();
 
@@ -40,6 +41,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion
         private readonly bool _isDebugger;
         private readonly bool _isImmediateWindow;
         private readonly ImmutableHashSet<string> _roles;
+
+        public string DisplayName => "Completion";
 
         public Controller(
             ITextView textView,

@@ -1,8 +1,10 @@
-﻿using System;
+﻿using System.ComponentModel.Composition;
 using System.Text;
 using System.Threading;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Hlsl;
@@ -15,10 +17,14 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
 {
-    [ExportCommandHandler(nameof(OpenIncludeFileCommandHandler), ContentTypeNames.HlslContentType)]
+    [Export(typeof(ICommandHandler))]
+    [ContentType(ContentTypeNames.ShaderToolsContentType)]
+    [Name(nameof(OpenIncludeFileCommandHandler))]
     internal sealed class OpenIncludeFileCommandHandler : ICommandHandler<OpenFileCommandArgs>
     {
-        public CommandState GetCommandState(OpenFileCommandArgs args, Func<CommandState> nextHandler)
+        public string DisplayName => "Open Include File";
+
+        public CommandState GetCommandState(OpenFileCommandArgs args)
         {
             var includeDirectiveTrivia = GetIncludeDirective(args.TextView, args.SubjectBuffer);
             if (includeDirectiveTrivia == null)
@@ -31,13 +37,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
             return new CommandState(true, false, commandText);
         }
 
-        public void ExecuteCommand(OpenFileCommandArgs args, Action nextHandler)
+        public bool ExecuteCommand(OpenFileCommandArgs args, CommandExecutionContext context)
         {
             var includeDirectiveTrivia = GetIncludeDirective(args.TextView, args.SubjectBuffer);
             if (includeDirectiveTrivia == null)
             {
-                nextHandler();
-                return;
+                return false;
             }
 
             var document = args.SubjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
@@ -66,13 +71,14 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
                     errorMessage.AppendLine(includeDirectory);
                 }
 
+                context.OperationContext.TakeOwnership();
                 var notificationService = workspace.Services.GetService<INotificationService>();
                 notificationService.SendNotification(
                     errorMessage.ToString(), 
                     title: "Open Include File", 
                     severity: NotificationSeverity.Information);
 
-                return;
+                return true;
             }
 
             var documentNavigationService = workspace.Services.GetRequiredService<IDocumentNavigationService>();
@@ -80,6 +86,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
                 workspace, 
                 document.Id,
                 new SourceFileSpan(include, new TextSpan(0, 0)));
+
+            return true;
         }
 
         private IncludeDirectiveTriviaSyntax GetIncludeDirective(ITextView textView, ITextBuffer textBuffer)

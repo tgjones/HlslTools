@@ -2,6 +2,8 @@
 
 using System;
 using System.Threading;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Editor.Commands;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
@@ -13,9 +15,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
             return nextHandler();
         }
 
-        public void ExecuteCommand(ReturnKeyCommandArgs args, Action nextHandler)
+        public void ExecuteCommand(ReturnKeyCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
-            ExecuteReturnOrTypeCommand(args, nextHandler, CancellationToken.None);
+            ExecuteReturnOrTypeCommand(args, nextHandler, context.OperationContext.UserCancellationToken);
         }
     }
 }

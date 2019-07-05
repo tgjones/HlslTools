@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding;
 using ShaderTools.CodeAnalysis.Editor;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.Utilities.Diagnostics;
@@ -14,13 +15,8 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 {
     internal abstract partial class AbstractOleCommandTarget : IOleCommandTarget
     {
-        private const VSConstants.VSStd2KCmdID CmdidToggleConsumeFirstMode = (VSConstants.VSStd2KCmdID) 2303;
-        private const VSConstants.VSStd2KCmdID CmdidNextHighlightedReference = (VSConstants.VSStd2KCmdID) 2400;
-        private const VSConstants.VSStd2KCmdID CmdidPreviousHighlightedReference = (VSConstants.VSStd2KCmdID) 2401;
-        private const VSConstants.VSStd2KCmdID CmdidContextMenuViewCallHierarchy = (VSConstants.VSStd2KCmdID) 2301;
-
         private readonly IWpfTextView _wpfTextView;
-        private readonly ICommandHandlerServiceFactory _commandHandlerServiceFactory;
+        private readonly IEditorCommandHandlerServiceFactory _commandHandlerServiceFactory;
         private readonly IVsEditorAdaptersFactoryService _editorAdaptersFactory;
         private readonly System.IServiceProvider _serviceProvider;
 
@@ -32,7 +28,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
 
         public AbstractOleCommandTarget(
             IWpfTextView wpfTextView,
-            ICommandHandlerServiceFactory commandHandlerServiceFactory,
+            IEditorCommandHandlerServiceFactory commandHandlerServiceFactory,
             IVsEditorAdaptersFactoryService editorAdaptersFactory,
             System.IServiceProvider serviceProvider)
         {
@@ -64,7 +60,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation
         /// The command handler service to use for dispatching commands. This is set by
         /// the derived classes to this class.
         /// </summary>
-        protected ICommandHandlerService CurrentHandlers { get; set; }
+        protected IEditorCommandHandlerService CurrentHandlers { get; set; }
 
         /// <summary>
         /// The next command target in the chain. This is set by the derived implementation of this

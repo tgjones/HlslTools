@@ -3,22 +3,23 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Completion;
-using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion
 {
     internal partial class Controller
     {
-        CommandState ICommandHandler<CommitUniqueCompletionListItemCommandArgs>.GetCommandState(CommitUniqueCompletionListItemCommandArgs args, Func<CommandState> nextHandler)
+        CommandState IChainedCommandHandler<CommitUniqueCompletionListItemCommandArgs>.GetCommandState(CommitUniqueCompletionListItemCommandArgs args, Func<CommandState> nextHandler)
         {
             AssertIsForeground();
             return nextHandler();
         }
 
-        void ICommandHandler<CommitUniqueCompletionListItemCommandArgs>.ExecuteCommand(
-            CommitUniqueCompletionListItemCommandArgs args, Action nextHandler)
+        void IChainedCommandHandler<CommitUniqueCompletionListItemCommandArgs>.ExecuteCommand(
+            CommitUniqueCompletionListItemCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             AssertIsForeground();
 

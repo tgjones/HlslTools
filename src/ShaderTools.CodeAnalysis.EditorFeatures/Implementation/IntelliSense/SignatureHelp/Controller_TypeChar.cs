@@ -3,6 +3,8 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Editor.Commands;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.SignatureHelp;
@@ -13,7 +15,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.SignatureH
 {
     internal partial class Controller
     {
-        CommandState ICommandHandler<TypeCharCommandArgs>.GetCommandState(TypeCharCommandArgs args, Func<CommandState> nextHandler)
+        CommandState IChainedCommandHandler<TypeCharCommandArgs>.GetCommandState(TypeCharCommandArgs args, Func<CommandState> nextHandler)
         {
             AssertIsForeground();
 
@@ -21,7 +23,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.SignatureH
             return nextHandler();
         }
 
-        void ICommandHandler<TypeCharCommandArgs>.ExecuteCommand(TypeCharCommandArgs args, Action nextHandler)
+        void IChainedCommandHandler<TypeCharCommandArgs>.ExecuteCommand(TypeCharCommandArgs args, Action nextHandler, CommandExecutionContext context)
         {
             AssertIsForeground();
 
