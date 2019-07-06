@@ -16,14 +16,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return Parse(file, options, fileSystem ?? new DummyFileSystem(), p => p.ParseCompilationUnit(cancellationToken));
         }
 
-        public static SyntaxTree ParseSyntaxTree(SourceText sourceText, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null, CancellationToken cancellationToken = default)
+        internal static SyntaxTree ParseSyntaxTree(SourceText sourceText, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null, CancellationToken cancellationToken = default)
         {
             return ParseSyntaxTree(new SourceFile(sourceText), options, fileSystem, cancellationToken);
         }
 
-        public static CompilationUnitSyntax ParseCompilationUnit(SourceText sourceText, IIncludeFileSystem fileSystem = null)
+        public static CompilationUnitSyntax ParseCompilationUnit(SourceFile file, IIncludeFileSystem fileSystem = null)
         {
-            return (CompilationUnitSyntax) Parse(new SourceFile(sourceText), null, fileSystem, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
+            return (CompilationUnitSyntax) Parse(file, null, fileSystem, p => p.ParseCompilationUnit(CancellationToken.None)).Root;
         }
 
         public static SyntaxTree ParseExpression(string text)
@@ -64,11 +64,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return new HlslLexer(new SourceFile(SourceText.From(text))).Lex(LexerMode.Syntax);
         }
 
-        public static IReadOnlyList<SyntaxToken> ParseAllTokens(SourceText sourceText, IIncludeFileSystem fileSystem = null)
+        public static IReadOnlyList<SyntaxToken> ParseAllTokens(SourceFile file, IIncludeFileSystem fileSystem = null)
         {
             var tokens = new List<SyntaxToken>();
 
-            var lexer = new HlslLexer(new SourceFile(sourceText), includeFileSystem: fileSystem);
+            var lexer = new HlslLexer(file, includeFileSystem: fileSystem);
             SyntaxToken token;
             do
             {

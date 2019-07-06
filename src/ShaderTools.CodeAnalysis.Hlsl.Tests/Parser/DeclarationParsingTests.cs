@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
+using ShaderTools.CodeAnalysis.Text;
 using Xunit;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
@@ -490,7 +491,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
         private static CompilationUnitSyntax ParseFile(string text)
         {
-            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text));
+            return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text)));
         }
     }
 }

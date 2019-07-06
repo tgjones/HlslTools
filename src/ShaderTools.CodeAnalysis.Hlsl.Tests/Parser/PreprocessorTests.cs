@@ -6,6 +6,7 @@ using ShaderTools.CodeAnalysis.Hlsl.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
+using ShaderTools.CodeAnalysis.Text;
 using Xunit;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
@@ -959,12 +960,12 @@ float bar;
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(string text)
         {
-            return SyntaxFactory.ParseAllTokens(SourceText.From(text));
+            return SyntaxFactory.ParseAllTokens(new SourceFile(SourceText.From(text)));
         }
 
         private static CompilationUnitSyntax Parse(string text, IIncludeFileSystem fileSystem = null)
         {
-            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text), fileSystem);
+            return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text), "__Root__.hlsl"), fileSystem);
         }
 
         private static void TestRoundTripping(CompilationUnitSyntax node, string text, bool disallowErrors = true)

@@ -6,6 +6,7 @@ using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.TestSuite;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Testing;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Compilation
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new CodeAnalysis.Text.SourceFile(SourceText.From(sourceCode)), fileSystem: new TestFileSystem());
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(sourceCode), testFile), fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree);
 
             // Get semantic model.

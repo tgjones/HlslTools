@@ -186,7 +186,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         pastedText += textRight;
                         i += 2;
                     }
-                    result.AddRange(SyntaxFactory.ParseAllTokens(SourceText.From(pastedText)).TakeWhile(t => t.Kind != SyntaxKind.EndOfFileToken));
+                    result.AddRange(SyntaxFactory.ParseAllTokens(new SourceFile(SourceText.From(pastedText))).TakeWhile(t => t.Kind != SyntaxKind.EndOfFileToken));
                     continue;
                 }
 

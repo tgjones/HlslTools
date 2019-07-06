@@ -115,7 +115,7 @@ float b;
                     { "FOO", "1" }
                 }
             };
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code), options);
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(code), "__Root__.hlsl"), options);
 
             foreach (var diagnostic in syntaxTree.GetDiagnostics())
                 _output.WriteLine(diagnostic.ToString());
@@ -138,7 +138,7 @@ float b;
                     { "FOO", "1 . % \\" }
                 }
             };
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code), options);
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(code), "__Root__.hlsl"), options);
 
             Assert.Equal(1, syntaxTree.GetDiagnostics().Count());
         }
@@ -160,7 +160,7 @@ float foo;
 DECL(i, 2);
 float bar;
 ";
-            return SyntaxFactory.ParseSyntaxTree(SourceText.From(text), fileSystem: fileSystem);
+            return SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(text), "__Root__.hlsl"), fileSystem: fileSystem);
         }
     }
 }

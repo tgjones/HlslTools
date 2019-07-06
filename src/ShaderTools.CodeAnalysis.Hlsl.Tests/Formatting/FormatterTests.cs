@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Testing;
 using Xunit;
 
@@ -1765,7 +1766,7 @@ RWBuffer<uint> BoundingBox _ : register(u2);
             bool allowSyntaxErrors = false)
         {
             Func<string, SyntaxTree> parse = code =>
-                SyntaxFactory.ParseSyntaxTree(SourceText.From(code),
+                SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(code), "__RootFile__.hlsl"),
                     fileSystem: new InMemoryFileSystem(includes ?? new Dictionary<string, string>()));
 
             // Arrange.
