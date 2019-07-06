@@ -79,7 +79,7 @@ export class SessionManager {
             //startArgs.push("--logfilepath", editorServicesLogPath);
 
             var debugArgs = startArgs.slice(0);
-            debugArgs.push("--launchdebugger");
+            debugArgs.push("--launch-debugger");
 
             let serverOptions: ServerOptions = {
                 run: { command: 'dotnet', args: startArgs },
