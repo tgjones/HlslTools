@@ -23,7 +23,7 @@ namespace ShaderTools.CodeAnalysis.Diagnostics
 
         private void OnDocumentEvent(object sender, DocumentEventArgs e)
         {
-            DiagnosticsUpdated?.Invoke(this, new DiagnosticsUpdatedEventArgs(e.Document.Id));
+            DiagnosticsUpdated?.Invoke(this, new DiagnosticsUpdatedEventArgs(e.Document));
         }
 
         public async Task<ImmutableArray<MappedDiagnostic>> GetDiagnosticsAsync(DocumentId documentId, CancellationToken cancellationToken)

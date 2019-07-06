@@ -1,135 +1,61 @@
 ﻿using System;
-using System.IO;
-using System.Net;
-using System.Net.Sockets;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using CommandLine;
+using System.CommandLine;
+using System.Diagnostics;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace ShaderTools.LanguageServer
 {
     internal static class Program
     {
-        public static int Main(string[] args)
+        public static async Task Main(string[] args)
         {
-            return Parser.Default.ParseArguments<ProgramOptions>(args)
-                .MapResult(options =>
-                {
-                    EditorServicesHost editorServicesHost;
-                    try
-                    {
-                        editorServicesHost = new EditorServicesHost(options.WaitForDebugger);
+            var launchDebugger = false;
+            string logFilePath = null;
+            var logLevel = LogLevel.Warning;
 
-                        var languageServicePort = GetAvailablePort();
-                        if (languageServicePort == null)
-                        {
-                            throw new Exception("Could not find an available port");
-                        }
+            logFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "ShaderTools");
 
-                        editorServicesHost.StartLogging(options.LogFilePath, options.LogLevel);
-                        editorServicesHost.StartLanguageService(languageServicePort.Value);
-
-                        Console.WriteLine(SerializeToJson(new ProgramStartResult
-                        {
-                            Status = "started",
-                            Channel = "tcp",
-                            LanguageServicePort = languageServicePort.Value
-                        }));
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine("ShaderTools Editor Services host initialization failed, terminating.");
-                        Console.Error.WriteLine(ex);
-                        return 2;
-                    }
-
-                    try
-                    {
-                        editorServicesHost.WaitForCompletion();
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.Error.WriteLine("Caught error while waiting for Editor Services host to complete.");
-                        Console.Error.WriteLine(ex);
-                        return 3;
-                    }
-
-                    return 0;
-                },
-                errors => 1);
-        }
-
-        private static readonly Random Random = new Random();
-
-        private static int? GetAvailablePort()
-        {
-            var triesRemaining = 10;
-
-            while (triesRemaining > 0)
+            ArgumentSyntax.Parse(args, syntax =>
             {
-                var port = Random.Next(10000, 30000);
-                if (TestPortAvailability(port))
-                {
-                    return port;
-                }
+                syntax.DefineOption("launchdebugger", ref launchDebugger, false, "Set whether to launch the debugger or not.");
+                //syntax.DefineOption("logfilepath", ref logFilePath, true, "Fully qualified path to the log file.");
+                syntax.DefineOption("loglevel", ref logLevel, x =>  (LogLevel) Enum.Parse(typeof(LogLevel), x), false, "Logging level.");
+            });
 
-                triesRemaining--;
+            if (launchDebugger)
+            {
+                Debugger.Launch();
             }
 
-            return null;
-        }
-
-        private static bool TestPortAvailability(int portNumber)
-        {
-            var portAvailable = true;
+            LanguageServerHost languageServerHost = null;
+            try
+            {
+                languageServerHost = await LanguageServerHost.Create(
+                    Console.OpenStandardInput(),
+                    Console.OpenStandardOutput(),
+                    logFilePath,
+                    logLevel);
+            }
+            catch (Exception ex)
+            {
+                languageServerHost?.Dispose();
+                Console.Error.WriteLine(ex);
+                return;
+            }
 
             try
             {
-                var ipAddress = Dns.GetHostEntryAsync("localhost").Result.AddressList[0];
-                var tcpListener = new TcpListener(ipAddress, portNumber);
-                tcpListener.Start();
-                tcpListener.Stop();
+                await languageServerHost.WaitForExit;
             }
-            catch (SocketException ex)
+            catch (Exception ex)
             {
-                // Check the SocketErrorCode to see if it's the expected exception
-                if (ex.SocketErrorCode == SocketError.AddressAlreadyInUse)
-                {
-                    portAvailable = false;
-                }
-                else
-                {
-                    Console.WriteLine($"Error code: " + ex.SocketErrorCode);
-                }
+                Console.Error.WriteLine(ex);
+                return;
             }
-
-            return portAvailable;
-        }
-
-        [DataContract]
-        private sealed class ProgramStartResult
-        {
-            [DataMember(Name = "status")]
-            public string Status { get; set; }
-
-            [DataMember(Name = "channel")]
-            public string Channel { get; set; }
-
-            [DataMember(Name = "languageServicePort")]
-            public int LanguageServicePort { get; set; }
-        }
-
-        private static string SerializeToJson(object value)
-        {
-            var jsonSerializer = new DataContractJsonSerializer(value.GetType());
-            using (var stream = new MemoryStream())
+            finally
             {
-                jsonSerializer.WriteObject(stream, value);
-
-                stream.Position = 0;
-
-                using (var streamReader = new StreamReader(stream))
-                    return streamReader.ReadToEnd();
+                languageServerHost.Dispose();
             }
         }
     }

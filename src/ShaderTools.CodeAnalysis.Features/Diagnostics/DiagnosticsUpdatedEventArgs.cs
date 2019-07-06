@@ -4,11 +4,11 @@ namespace ShaderTools.CodeAnalysis.Diagnostics
 {
     internal sealed class DiagnosticsUpdatedEventArgs : EventArgs
     {
-        public DocumentId DocumentId { get; }
+        public Document Document { get; }
 
-        public DiagnosticsUpdatedEventArgs(DocumentId documentId)
+        public DiagnosticsUpdatedEventArgs(Document document)
         {
-            DocumentId = documentId;
+            Document = document;
         }
     }
 }

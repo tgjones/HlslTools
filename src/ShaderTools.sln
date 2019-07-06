@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.12
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29025.244
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis", "ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj", "{2361A2C2-D048-4694-9000-25B4EA846CBA}"
 EndProject
@@ -15,11 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "VisualStudio", "VisualStudi
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyntaxGenerator", "SyntaxGenerator\SyntaxGenerator.csproj", "{258A2D6D-2A88-4938-B45E-37D73F3A400A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SyntaxGenerator", "SyntaxGenerator\SyntaxGenerator.csproj", "{258A2D6D-2A88-4938-B45E-37D73F3A400A}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.Testing", "ShaderTools.Testing\ShaderTools.Testing.csproj", "{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.LanguageServer.Protocol", "ShaderTools.LanguageServer.Protocol\ShaderTools.LanguageServer.Protocol.csproj", "{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.LanguageServer", "ShaderTools.LanguageServer\ShaderTools.LanguageServer.csproj", "{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}"
 EndProject
@@ -30,8 +28,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{CBE3B59C-B75F-422F-BB24-D964581A6BB1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LanguageServer", "LanguageServer", "{D16755AD-CE41-4622-8623-27F7ACEDB49B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.LanguageServer.Protocol.Hlsl", "ShaderTools.LanguageServer.Protocol.Hlsl\ShaderTools.LanguageServer.Protocol.Hlsl.csproj", "{9F1BD701-24BE-4801-9962-99447239BF2E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl", "ShaderTools.CodeAnalysis.Hlsl\ShaderTools.CodeAnalysis.Hlsl.csproj", "{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD}"
 EndProject
@@ -79,7 +75,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Sh
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.Features.Tests", "ShaderTools.CodeAnalysis.Hlsl.Features.Tests\ShaderTools.CodeAnalysis.Hlsl.Features.Tests.csproj", "{15930D39-3702-44AC-9E5D-D1343FE6A0FC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests", "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests.csproj", "{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests", "ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests\ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests.csproj", "{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -107,10 +103,6 @@ Global
 		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33}.Release|Any CPU.Build.0 = Release|Any CPU
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -123,10 +115,6 @@ Global
 		{485596DC-EDC9-4C95-9807-229355F4A941}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{485596DC-EDC9-4C95-9807-229355F4A941}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{485596DC-EDC9-4C95-9807-229355F4A941}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9F1BD701-24BE-4801-9962-99447239BF2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9F1BD701-24BE-4801-9962-99447239BF2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9F1BD701-24BE-4801-9962-99447239BF2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9F1BD701-24BE-4801-9962-99447239BF2E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -221,11 +209,9 @@ Global
 		{58B8CB05-E943-403D-8FDE-742CFEB63467} = {DB21B39B-9123-42FD-82D7-B0CA0CD95498}
 		{258A2D6D-2A88-4938-B45E-37D73F3A400A} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
 		{BEC7B064-74F4-4DE7-8C1A-FF43648A6B1B} = {17E0A545-C6A0-4CE2-A4D3-F5F3AEC3B18B}
-		{FFB8BB97-4814-4967-9F59-B8AA7FA36A33} = {D16755AD-CE41-4622-8623-27F7ACEDB49B}
 		{14D6F621-4DE4-4CCB-8B89-3FA37A7ABB5E} = {D16755AD-CE41-4622-8623-27F7ACEDB49B}
 		{DB952AFF-C727-4048-A8CF-A35CE67FFAF5} = {AA1A8DD5-D463-4426-B9DE-39DB7AE04A86}
 		{485596DC-EDC9-4C95-9807-229355F4A941} = {CBE3B59C-B75F-422F-BB24-D964581A6BB1}
-		{9F1BD701-24BE-4801-9962-99447239BF2E} = {D16755AD-CE41-4622-8623-27F7ACEDB49B}
 		{DBCC4D3A-B2E3-4DF5-9378-D1321E619EBD} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
 		{22D67387-5C90-40A8-9C6A-55DE2E5A9A0E} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
 		{461A10F9-4EC8-4E72-A7F5-983D38AEF575} = {A9A1351A-112B-4BD2-B832-87F187D2E83F}
@@ -247,5 +233,8 @@ Global
 		{8DF44FBE-8981-44B1-B1B2-9062DBCD3A35} = {80AA1968-FC70-4591-A40A-21DADB3AAF73}
 		{15930D39-3702-44AC-9E5D-D1343FE6A0FC} = {80AA1968-FC70-4591-A40A-21DADB3AAF73}
 		{7EBBDDAA-2891-4861-BDEE-03AEEFD19DFD} = {7C680757-8612-43C4-8E5A-BBCCA08E0211}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1BB8C6CB-EFAB-4B95-8100-4FBC75822D21}
 	EndGlobalSection
 EndGlobal

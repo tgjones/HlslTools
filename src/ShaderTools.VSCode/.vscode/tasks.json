@@ -17,7 +17,7 @@
     "isShellCommand": true,
 
     // show the output window only if unrecognized errors occur.
-    "showOutput": "always",
+    "showOutput": "silent",
 
     // we run the custom script "compile" as defined in package.json
     "args": ["run", "compile", "--loglevel", "silent"],

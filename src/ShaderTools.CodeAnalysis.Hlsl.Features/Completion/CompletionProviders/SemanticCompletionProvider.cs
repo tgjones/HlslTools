@@ -59,7 +59,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
                 context.AddItem(CommonCompletionItem.Create(
                     $"{semantic.Name}{(semantic.AllowsMultiple ? "[n]" : "")}",
                     CompletionItemRules.Default,
-                    Glyph.ConstantPublic,
+                    Glyph.Constant,
                     CreateDescription(semantic)));
             }
         }

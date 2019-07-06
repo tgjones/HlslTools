@@ -6,59 +6,13 @@ namespace ShaderTools.CodeAnalysis
     {
         None,
 
-        Assembly,
+        Class,
 
-        HlslFile,
+        Constant,
 
-        ClassPublic,
-        ClassProtected,
-        ClassPrivate,
-        ClassInternal,
+        Field,
 
-        ShaderLabFile,
-
-        ConstantPublic,
-        ConstantProtected,
-        ConstantPrivate,
-        ConstantInternal,
-
-        DelegatePublic,
-        DelegateProtected,
-        DelegatePrivate,
-        DelegateInternal,
-
-        EnumPublic,
-        EnumProtected,
-        EnumPrivate,
-        EnumInternal,
-
-        EnumMemberPublic,
-        EnumMemberProtected,
-        EnumMemberPrivate,
-        EnumMemberInternal,
-
-        Error,
-        StatusInformation,
-
-        EventPublic,
-        EventProtected,
-        EventPrivate,
-        EventInternal,
-
-        ExtensionMethodPublic,
-        ExtensionMethodProtected,
-        ExtensionMethodPrivate,
-        ExtensionMethodInternal,
-
-        FieldPublic,
-        FieldProtected,
-        FieldPrivate,
-        FieldInternal,
-
-        InterfacePublic,
-        InterfaceProtected,
-        InterfacePrivate,
-        InterfaceInternal,
+        Interface,
 
         Intrinsic,
 
@@ -72,15 +26,9 @@ namespace ShaderTools.CodeAnalysis
 
         Namespace,
 
-        MethodPublic,
-        MethodProtected,
-        MethodPrivate,
-        MethodInternal,
+        Method,
 
-        ModulePublic,
-        ModuleProtected,
-        ModulePrivate,
-        ModuleInternal,
+        Module,
 
         OpenFolder,
 
@@ -88,29 +36,12 @@ namespace ShaderTools.CodeAnalysis
 
         Parameter,
 
-        PropertyPublic,
-        PropertyProtected,
-        PropertyPrivate,
-        PropertyInternal,
-
-        RangeVariable,
-
-        Reference,
-
-        StructurePublic,
-        StructureProtected,
-        StructurePrivate,
-        StructureInternal,
+        Structure,
 
         Typedef,
 
         TypeParameter,
 
-        Snippet,
-
         CompletionWarning,
-
-        AddReference,
-        NuGet
     }
 }

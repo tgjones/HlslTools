@@ -25,7 +25,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
             {
                 var document = _subjectBuffer.AsTextContainer().GetOpenDocumentInCurrentContext();
 
-                if (document != null && document.Id == e.DocumentId)
+                if (document != null && document.Id == e.Document.Id)
                 {
                     this.RaiseChanged();
                 }
