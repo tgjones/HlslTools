@@ -9,7 +9,7 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.LanguageServer
 {
-    public sealed class LanguageServerWorkspace : Workspace
+    internal sealed class LanguageServerWorkspace : Workspace
     {
         private readonly IMefHostExportProvider _hostServices;
         private readonly string _rootPath;

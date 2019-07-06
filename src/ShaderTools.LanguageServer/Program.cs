@@ -8,20 +8,16 @@ namespace ShaderTools.LanguageServer
 {
     internal static class Program
     {
-        public static async Task Main(string[] args)
+        /// <summary>
+        /// ShaderTools Language Server
+        /// </summary>
+        /// <param name="launchDebugger">Set whether to launch the debugger or not.</param>
+        /// <param name="logLevel">Logging level.</param>
+        /// <returns></returns>
+        public static async Task Main(bool launchDebugger = false, LogLevel logLevel = LogLevel.Warning)
         {
-            var launchDebugger = false;
-            string logFilePath = null;
-            var logLevel = LogLevel.Warning;
-
-            logFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "ShaderTools");
-
-            ArgumentSyntax.Parse(args, syntax =>
-            {
-                syntax.DefineOption("launchdebugger", ref launchDebugger, false, "Set whether to launch the debugger or not.");
-                //syntax.DefineOption("logfilepath", ref logFilePath, true, "Fully qualified path to the log file.");
-                syntax.DefineOption("loglevel", ref logLevel, x =>  (LogLevel) Enum.Parse(typeof(LogLevel), x), false, "Logging level.");
-            });
+            // TODO: Make this an option.
+            var logFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "ShaderTools");
 
             if (launchDebugger)
             {
