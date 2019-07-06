@@ -26,6 +26,8 @@ namespace ShaderTools.LanguageServer
 
         public static Uri ToUri(string filePath)
         {
+            filePath = filePath.Replace('\\', '/');
+
             return (!filePath.StartsWith("/"))
                 ? new Uri($"file:///{filePath}")
                 : new Uri($"file://{filePath}");
