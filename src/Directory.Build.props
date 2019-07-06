@@ -3,5 +3,6 @@
     <SdkVersion>15.8.525</SdkVersion>
     <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>
     <BuildToolsVersion>16.2.3073</BuildToolsVersion>
+    <LangVersion>7.3</LangVersion>
   </PropertyGroup>
 </Project>
