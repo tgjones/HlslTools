@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Options;
@@ -49,19 +50,19 @@ namespace ShaderTools.CodeAnalysis
 
         public Workspace Workspace => _languageServices.WorkspaceServices.Workspace;
 
-        internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceText sourceText, string filePath)
+        internal Document(HostLanguageServices languageServices, DocumentId documentId, SourceFile file)
         {
             _languageServices = languageServices;
 
             Id = documentId;
-            SourceText = sourceText;
-            FilePath = filePath;
+            SourceText = file.Text;
+            FilePath = file.FilePath;
 
             _lazySyntaxTree = new AsyncLazy<SyntaxTreeBase>(ct => Task.Run(() =>
             {
                 var syntaxTreeFactory = languageServices.GetRequiredService<ISyntaxTreeFactoryService>();
 
-                var syntaxTree = syntaxTreeFactory.ParseSyntaxTree(sourceText, ct);
+                var syntaxTree = syntaxTreeFactory.ParseSyntaxTree(file, ct);
 
                 // make sure there is an association between this tree and this doc id before handing it out
                 BindSyntaxTreeToId(syntaxTree, this.Id);
@@ -133,7 +134,7 @@ namespace ShaderTools.CodeAnalysis
 
         public Document WithId(DocumentId documentId)
         {
-            return new Document(_languageServices, documentId, SourceText, FilePath);
+            return new Document(_languageServices, documentId, new SourceFile(SourceText, FilePath));
         }
 
         /// <summary>
@@ -141,12 +142,12 @@ namespace ShaderTools.CodeAnalysis
         /// </summary>
         public Document WithText(SourceText newText)
         {
-            return new Document(_languageServices, Id, newText, FilePath);
+            return new Document(_languageServices, Id, new SourceFile(newText, FilePath));
         }
 
         public Document WithFilePath(string filePath)
         {
-            return new Document(_languageServices, Id, SourceText, filePath);
+            return new Document(_languageServices, Id, new SourceFile(SourceText, filePath));
         }
 
         /// <summary>

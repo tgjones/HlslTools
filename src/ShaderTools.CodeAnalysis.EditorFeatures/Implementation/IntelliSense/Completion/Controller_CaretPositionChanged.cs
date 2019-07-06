@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Completion;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion
 {

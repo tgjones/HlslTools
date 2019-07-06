@@ -2,8 +2,8 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 using ShaderTools.Utilities.Collections;
 

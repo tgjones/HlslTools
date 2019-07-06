@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
@@ -72,8 +73,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 foreach (var define in options.PreprocessorDefines)
                 {
                     var lexer = new HlslLexer(new SourceFile(
-                        SourceText.From($"#define {define.Key} {define.Value}", "__ConfiguredPreprocessorDefinitions__.hlsl"),
-                        null));
+                        SourceText.From($"#define {define.Key} {define.Value}"),
+                        "__ConfiguredPreprocessorDefinitions__.hlsl"));
                     lexer._mode = LexerMode.Directive;
                     lexer.ExpandMacros = false;
 

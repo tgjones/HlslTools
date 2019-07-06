@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities.PooledObjects;
 
 namespace ShaderTools.CodeAnalysis.Shared.Utilities

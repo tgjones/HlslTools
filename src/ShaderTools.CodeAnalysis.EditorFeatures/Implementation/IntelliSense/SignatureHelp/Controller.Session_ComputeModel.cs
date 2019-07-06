@@ -6,12 +6,12 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.SignatureHelp;
 using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.ErrorReporting;
 

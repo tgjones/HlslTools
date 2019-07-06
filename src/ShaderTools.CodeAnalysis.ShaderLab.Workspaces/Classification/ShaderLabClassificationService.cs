@@ -8,7 +8,7 @@ using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Classification
 {

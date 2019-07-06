@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.TestSuite;
@@ -119,7 +120,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(string testFile)
         {
-            return LexAllTokens(SourceText.From(File.ReadAllText(testFile), testFile), new TestFileSystem());
+            return LexAllTokens(SourceText.From(File.ReadAllText(testFile)), new TestFileSystem());
         }
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(SourceText text, IIncludeFileSystem fileSystem = null)

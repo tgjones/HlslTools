@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 using ShaderTools.Utilities.Diagnostics;
@@ -49,7 +50,6 @@ namespace ShaderTools.CodeAnalysis.Text
                 this.EditorSnapshot = editorSnapshot;
                 _containerOpt = TextBufferContainer.From(editorSnapshot.TextBuffer);
                 _reiteratedVersion = editorSnapshot.Version.ReiteratedVersionNumber;
-                FilePath = editorSnapshot.TextBuffer.GetFilePath();
             }
 
             public SnapshotSourceText(ITextSnapshot roslynSnapshot, TextBufferContainer containerOpt)
@@ -58,7 +58,6 @@ namespace ShaderTools.CodeAnalysis.Text
 
                 this.EditorSnapshot = roslynSnapshot;
                 _containerOpt = containerOpt;
-                FilePath = roslynSnapshot.TextBuffer.GetFilePath();
             }
 
             /// <summary>
@@ -146,12 +145,12 @@ namespace ShaderTools.CodeAnalysis.Text
                 }
             }
 
-            public override string FilePath { get; }
-
             public override char this[int position]
             {
                 get { return this.EditorSnapshot[position]; }
             }
+
+            public override Encoding Encoding => null;
 
             #region Lines
             protected override TextLineCollection GetLinesCore()
@@ -159,7 +158,7 @@ namespace ShaderTools.CodeAnalysis.Text
                 return new LineInfo(this);
             }
 
-            private new class LineInfo : TextLineCollection
+            private class LineInfo : TextLineCollection
             {
                 private readonly SnapshotSourceText _text;
 

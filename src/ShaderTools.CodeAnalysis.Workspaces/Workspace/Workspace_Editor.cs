@@ -2,8 +2,8 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Properties;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Diagnostics;
 using ShaderTools.Utilities.Threading;
 

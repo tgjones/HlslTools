@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Formatting
 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis

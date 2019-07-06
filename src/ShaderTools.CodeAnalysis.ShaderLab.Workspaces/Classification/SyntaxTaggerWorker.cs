@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Classification
 {

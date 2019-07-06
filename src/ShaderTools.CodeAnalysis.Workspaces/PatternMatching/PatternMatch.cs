@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.PatternMatching
 {

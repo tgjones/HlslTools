@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Text;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;

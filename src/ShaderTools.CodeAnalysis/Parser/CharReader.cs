@@ -1,4 +1,4 @@
-﻿using ShaderTools.CodeAnalysis.Text;
+﻿using Microsoft.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Parser
 {

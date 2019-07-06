@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Diagnostics;
 

@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;

@@ -5,12 +5,12 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 {

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Text
@@ -57,7 +58,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             if (Path.IsPathRooted(includeFilename))
             {
                 if (_fileSystem.TryGetFile(includeFilename, out text))
-                    return new SourceFile(text, currentFile);
+                    return new SourceFile(text, currentFile, includeFilename);
                 return null;
             }
 
@@ -71,7 +72,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                     var rootFileDirectory = Path.GetDirectoryName(fileToCheck.FilePath);
                     var testFilename = Path.Combine(rootFileDirectory, includeFilename);
                     if (_fileSystem.TryGetFile(testFilename, out text))
-                        return new SourceFile(text, currentFile);
+                        return new SourceFile(text, currentFile, testFilename);
                 }
                 fileToCheck = fileToCheck.IncludedBy;
             }
@@ -81,7 +82,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             {
                 var testFilename = Path.Combine(includeDirectory, includeFilename);
                 if (_fileSystem.TryGetFile(testFilename, out text))
-                    return new SourceFile(text, currentFile);
+                    return new SourceFile(text, currentFile, testFilename);
             }
 
             return null;

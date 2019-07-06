@@ -11,6 +11,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.GoToDefinition;
@@ -19,7 +20,6 @@ using ShaderTools.CodeAnalysis.NavigateTo;
 using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Utilities;
 using ShaderTools.LanguageServer.Protocol.LanguageServer;
 using ShaderTools.LanguageServer.Protocol.MessageProtocol;
@@ -157,7 +157,7 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         {
             var openedDocument = _workspace.OpenDocument(
                 DocumentId.CreateNewId(ResolveFilePath(openParams.TextDocument.Uri)),
-                SourceText.From(openParams.TextDocument.Text, ResolveFilePath(openParams.TextDocument.Uri)),
+                new CodeAnalysis.Text.SourceFile(SourceText.From(openParams.TextDocument.Text), ResolveFilePath(openParams.TextDocument.Uri)),
                 GetLanguageName(openParams.TextDocument.LanguageId));
 
             // TODO: Get all recently edited files in the workspace

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Parser;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 using ShaderTools.CodeAnalysis.Text;

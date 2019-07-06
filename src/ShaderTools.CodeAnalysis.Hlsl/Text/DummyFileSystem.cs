@@ -1,3 +1,4 @@
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Text

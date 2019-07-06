@@ -3,7 +3,8 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion
@@ -100,14 +101,14 @@ namespace ShaderTools.CodeAnalysis.Completion
         }
 
         private CompletionItem With(
-            Optional<TextSpan> span = default(Optional<TextSpan>),
-            Optional<string> displayText = default(Optional<string>),
-            Optional<string> filterText = default(Optional<string>),
-            Optional<string> sortText = default(Optional<string>),
-            Optional<ImmutableDictionary<string, string>> properties = default(Optional<ImmutableDictionary<string, string>>),
-            Optional<Glyph> glyph = default(Optional<Glyph>),
-            Optional<ImmutableArray<string>> tags = default(Optional<ImmutableArray<string>>),
-            Optional<CompletionItemRules> rules = default(Optional<CompletionItemRules>))
+            Optional<TextSpan> span = default,
+            Optional<string> displayText = default,
+            Optional<string> filterText = default,
+            Optional<string> sortText = default,
+            Optional<ImmutableDictionary<string, string>> properties = default,
+            Optional<Glyph> glyph = default,
+            Optional<ImmutableArray<string>> tags = default,
+            Optional<CompletionItemRules> rules = default)
         {
             var newSpan = span.HasValue ? span.Value : this.Span;
             var newDisplayText = displayText.HasValue ? displayText.Value : this.DisplayText;

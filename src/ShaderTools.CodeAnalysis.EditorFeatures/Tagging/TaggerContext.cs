@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 using ShaderTools.Utilities.Collections;
 

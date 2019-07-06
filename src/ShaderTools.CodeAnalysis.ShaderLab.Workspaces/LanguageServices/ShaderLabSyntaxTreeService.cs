@@ -10,9 +10,9 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.LanguageServices
     [ExportLanguageService(typeof(ISyntaxTreeFactoryService), LanguageNames.ShaderLab)]
     internal sealed class ShaderLabSyntaxTreeService : ISyntaxTreeFactoryService
     {
-        public SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken)
+        public SyntaxTreeBase ParseSyntaxTree(SourceFile file, CancellationToken cancellationToken)
         {
-            return SyntaxFactory.ParseUnitySyntaxTree(text, cancellationToken);
+            return SyntaxFactory.ParseUnitySyntaxTree(file.Text, cancellationToken);
         }
     }
 }

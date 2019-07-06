@@ -4,10 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.Collections;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis
 {

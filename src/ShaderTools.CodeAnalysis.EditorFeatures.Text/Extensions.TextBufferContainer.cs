@@ -5,6 +5,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.Utilities;
 using ShaderTools.Utilities.Diagnostics;

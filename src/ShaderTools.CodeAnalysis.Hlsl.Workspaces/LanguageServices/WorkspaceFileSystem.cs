@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
-using ShaderTools.CodeAnalysis;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {
@@ -30,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
             // TODO: Don't open directly; open through workspace, so that it is pretokenized and cached.
             if (File.Exists(path))
             {
-                text = SourceText.From(File.ReadAllText(path), path);
+                text = SourceText.From(File.ReadAllText(path));
                 return true;
             }
 

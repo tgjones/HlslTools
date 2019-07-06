@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
-using ShaderTools.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 
 namespace ShaderTools.Utilities
 {

@@ -5,19 +5,20 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
+using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
+using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Text.Operations;
+using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
-using ShaderTools.Utilities.Diagnostics;
+using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
-using Microsoft.VisualStudio.Commanding;
-using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
-using Microsoft.VisualStudio.Utilities;
+using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.CommentSelection
 {

@@ -6,11 +6,11 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.LanguageServices;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion

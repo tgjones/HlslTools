@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Structure;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Structure
 {

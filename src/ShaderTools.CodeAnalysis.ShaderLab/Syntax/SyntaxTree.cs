@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
@@ -18,7 +19,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Syntax
 
         internal SyntaxTree(SourceText text, Func<SyntaxTree, SyntaxNode> parseFunc)
         {
-            _sourceFile = new SourceFile(text, null);
+            _sourceFile = new SourceFile(text);
             Root = parseFunc(this);
         }
 

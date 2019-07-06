@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders;
 using ShaderTools.CodeAnalysis.Text;
@@ -105,7 +106,7 @@ float Dummy(float input)
 
             var document = workspace.OpenDocument(
                 DocumentId.CreateNewId(), 
-                SourceText.From(testCode), 
+                new SourceFile(SourceText.From(testCode)), 
                 LanguageNames.Hlsl);
 
             var completionProvider = new SymbolCompletionProvider();

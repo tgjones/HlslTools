@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Diagnostics;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
-using ShaderTools.CodeAnalysis.Text;
 using Xunit;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
@@ -964,7 +964,7 @@ float bar;
 
         private static CompilationUnitSyntax Parse(string text, IIncludeFileSystem fileSystem = null)
         {
-            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text, "__Root__.hlsl"), fileSystem);
+            return SyntaxFactory.ParseCompilationUnit(SourceText.From(text), fileSystem);
         }
 
         private static void TestRoundTripping(CompilationUnitSyntax node, string text, bool disallowErrors = true)

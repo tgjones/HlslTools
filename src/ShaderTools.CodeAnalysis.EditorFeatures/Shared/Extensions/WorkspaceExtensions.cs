@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Threading;

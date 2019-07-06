@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 using ShaderTools.CodeAnalysis.ShaderLab.Tests.TestSuite;
 using ShaderTools.CodeAnalysis.Text;

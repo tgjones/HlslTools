@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion
 {

@@ -18,9 +18,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
             _fileSystem = fileSystem;
         }
 
-        public SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken)
+        public SyntaxTreeBase ParseSyntaxTree(SourceFile file, CancellationToken cancellationToken)
         {
-            var configFile = _workspace.LoadConfigFile(text);
+            var configFile = _workspace.LoadConfigFile(file);
 
             var options = new HlslParseOptions();
             options.PreprocessorDefines.Add("__INTELLISENSE__", "1");
@@ -31,7 +31,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
             options.AdditionalIncludeDirectories.AddRange(configFile.HlslAdditionalIncludeDirectories);
 
             return SyntaxFactory.ParseSyntaxTree(
-                text,
+                file,
                 options,
                 _fileSystem,
                 cancellationToken);

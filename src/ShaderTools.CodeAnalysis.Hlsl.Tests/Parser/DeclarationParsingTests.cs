@@ -1,6 +1,6 @@
 ﻿using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 using Xunit;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser

@@ -2,9 +2,9 @@
 
 using System;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Shared;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.PooledObjects;
 
 namespace ShaderTools.CodeAnalysis.PatternMatching

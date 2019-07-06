@@ -13,7 +13,7 @@ using ShaderTools.CodeAnalysis.Formatting;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Threading;
-using TextSpan = ShaderTools.CodeAnalysis.Text.TextSpan;
+using TextSpan = Microsoft.CodeAnalysis.Text.TextSpan;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion
 {

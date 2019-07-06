@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Editor.Hlsl.SmartIndent;
+﻿using Microsoft.CodeAnalysis.Text;
+using ShaderTools.CodeAnalysis.Editor.Hlsl.SmartIndent;
 using ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;

@@ -2,9 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
 using ShaderTools.CodeAnalysis.ShaderLab.Tests.TestSuite;
-using ShaderTools.CodeAnalysis.Text;
 using Xunit;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Tests.Parser
