@@ -7,10 +7,10 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion

@@ -8,6 +8,7 @@ using System.Collections.Immutable;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Properties;
@@ -64,10 +65,10 @@ namespace ShaderTools.CodeAnalysis
             }
         }
 
-        protected Document CreateDocument(DocumentId documentId, string languageName, SourceText sourceText, string filePath)
+        protected Document CreateDocument(DocumentId documentId, string languageName, SourceFile file)
         {
             var languageServices = _services.GetLanguageServices(languageName);
-            return new Document(languageServices, documentId, sourceText, filePath);
+            return new Document(languageServices, documentId, file);
         }
 
         /// <summary>
@@ -116,9 +117,9 @@ namespace ShaderTools.CodeAnalysis
         }
 
         // TODO: Refactor this.
-        public ConfigFile LoadConfigFile(SourceText sourceText)
+        public ConfigFile LoadConfigFile(SourceFile file)
         {
-            var directory = Path.GetDirectoryName(sourceText.FilePath);
+            var directory = Path.GetDirectoryName(file.FilePath);
 
             if (directory == null)
                 return new ConfigFile();

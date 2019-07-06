@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion
@@ -169,12 +170,12 @@ namespace ShaderTools.CodeAnalysis.Completion
         }
 
         private CompletionItemRules With(
-            Optional<ImmutableArray<CharacterSetModificationRule>> filterRules = default(Optional<ImmutableArray<CharacterSetModificationRule>>),
-            Optional<ImmutableArray<CharacterSetModificationRule>> commitRules = default(Optional<ImmutableArray<CharacterSetModificationRule>>),
-            Optional<EnterKeyRule> enterKeyRule = default(Optional<EnterKeyRule>),
-            Optional<bool> formatOnCommit = default(Optional<bool>),
-            Optional<int> matchPriority = default(Optional<int>),
-            Optional<CompletionItemSelectionBehavior> selectionBehavior = default(Optional<CompletionItemSelectionBehavior>))
+            Optional<ImmutableArray<CharacterSetModificationRule>> filterRules = default,
+            Optional<ImmutableArray<CharacterSetModificationRule>> commitRules = default,
+            Optional<EnterKeyRule> enterKeyRule = default,
+            Optional<bool> formatOnCommit = default,
+            Optional<int> matchPriority = default,
+            Optional<CompletionItemSelectionBehavior> selectionBehavior = default)
         {
             var newFilterRules = filterRules.HasValue ? filterRules.Value : this.FilterCharacterRules;
             var newCommitRules = commitRules.HasValue ? commitRules.Value : this.CommitCharacterRules;

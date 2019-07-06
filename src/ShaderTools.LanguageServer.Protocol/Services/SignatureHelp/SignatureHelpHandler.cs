@@ -5,12 +5,12 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
 using ShaderTools.CodeAnalysis.SignatureHelp;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.LanguageServer.Protocol.LanguageServer;
 
 namespace ShaderTools.LanguageServer.Protocol.Services.SignatureHelp

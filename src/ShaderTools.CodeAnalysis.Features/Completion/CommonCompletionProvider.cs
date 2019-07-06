@@ -4,9 +4,9 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Options;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
+using Microsoft.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Completion
 {

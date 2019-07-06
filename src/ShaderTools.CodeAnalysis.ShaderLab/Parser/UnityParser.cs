@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.ShaderLab.Diagnostics;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
@@ -190,7 +191,7 @@ namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
 
         private SourceFileSpan GetSourceFileSpan(SourceRange sourceRange)
         {
-            return new SourceFileSpan(new SourceFile(_lexer.Text, null), new TextSpan(sourceRange.Start.Position, sourceRange.Length));
+            return new SourceFileSpan(new SourceFile(_lexer.Text), new TextSpan(sourceRange.Start.Position, sourceRange.Length));
         }
 
         protected SourceRange GetDiagnosticSourceRangeForMissingToken()

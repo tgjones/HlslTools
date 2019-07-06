@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Formatting.Rules;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {

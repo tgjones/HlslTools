@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.PatternMatching;
 using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion

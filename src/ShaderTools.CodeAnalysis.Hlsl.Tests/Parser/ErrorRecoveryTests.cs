@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
@@ -494,7 +495,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
         private static CompilationUnitSyntax BuildSyntaxTree(string code)
         {
-            var compilationUnit = SyntaxFactory.ParseCompilationUnit(SourceText.From(code));
+            var compilationUnit = SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(code)));
             Assert.Equal(code, compilationUnit.ToFullString());
             return compilationUnit;
         }

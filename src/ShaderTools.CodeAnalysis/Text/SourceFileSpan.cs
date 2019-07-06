@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities;
 
 namespace ShaderTools.CodeAnalysis.Text

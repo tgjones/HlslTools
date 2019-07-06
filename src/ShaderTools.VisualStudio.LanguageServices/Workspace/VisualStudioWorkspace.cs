@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.ComponentModelHost;
 using Microsoft.VisualStudio.Shell;
@@ -160,8 +161,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
             var document = CreateDocument(
                 documentId, 
                 textBuffer.ContentType.TypeName, 
-                textContainer.CurrentText,
-                textDocument?.FilePath);
+                new SourceFile(textContainer.CurrentText, textDocument?.FilePath));
 
             OnDocumentOpened(document);
         }

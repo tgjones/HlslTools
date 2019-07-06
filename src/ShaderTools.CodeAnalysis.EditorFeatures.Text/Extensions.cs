@@ -4,6 +4,7 @@ using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Text.Properties;
 
@@ -73,35 +74,7 @@ namespace ShaderTools.CodeAnalysis.Text
         {
             var document = text.GetOpenDocumentInCurrentContextWithChanges();
 
-            //if (document != null)
-            //{
-            //    return await document.WithFrozenPartialSemanticsAsync(cancellationToken).ConfigureAwait(false);
-            //}
             return Task.FromResult(document);
-
-            //return null;
         }
-
-        //internal static bool CanApplyChangeDocumentToWorkspace(this ITextBuffer buffer)
-        //    => Workspace.TryGetWorkspace(buffer.AsTextContainer(), out var workspace) &&
-        //       workspace.CanApplyChange(ApplyChangesKind.ChangeDocument);
-
-        /// <summary>
-        /// Get the encoding used to load this <see cref="ITextBuffer"/> if possible.
-        /// <para>
-        /// Note that this will return <see cref="Encoding.UTF8"/> if the <see cref="ITextBuffer"/>
-        /// didn't come from an <see cref="ITextDocument"/>, or if the <see cref="ITextDocument"/>
-        /// is already closed.
-        /// </para>
-        /// </summary>
-        internal static Encoding GetEncodingOrUTF8(this ITextBuffer textBuffer)
-            => textBuffer.Properties.TryGetProperty(typeof(ITextDocument), out ITextDocument textDocument)
-                ? textDocument.Encoding
-                : Encoding.UTF8;
-
-        internal static string GetFilePath(this ITextBuffer textBuffer)
-            => textBuffer.Properties.TryGetProperty(typeof(ITextDocument), out ITextDocument textDocument)
-                ? textDocument.FilePath
-                : null;
     }
 }

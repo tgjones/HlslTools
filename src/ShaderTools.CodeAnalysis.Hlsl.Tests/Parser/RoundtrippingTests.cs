@@ -1,8 +1,8 @@
 ﻿using System.IO;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.TestSuite;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Testing;
 using Xunit;
 
@@ -17,7 +17,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode, testFile), fileSystem: new TestFileSystem());
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(
+                new CodeAnalysis.Text.SourceFile(SourceText.From(sourceCode), testFile),
+                fileSystem: new TestFileSystem());
 
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree);
 

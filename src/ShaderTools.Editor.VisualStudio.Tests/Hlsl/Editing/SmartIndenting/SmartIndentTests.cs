@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Editor.Hlsl.SmartIndent;
+﻿using Microsoft.CodeAnalysis.Text;
+using ShaderTools.CodeAnalysis.Editor.Hlsl.SmartIndent;
 using ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Text;
@@ -63,7 +64,7 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Hlsl.Editing.SmartIndenting
             var syntaxFactsService = new HlslSyntaxFactsService();
 
             var code = codeWithCaret.Remove(caret, 1);
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(code)));
             var actualIndent = SmartIndent.FindTotalParentChainIndent((SyntaxNode) syntaxTree.Root, caret, 0, indentationService, syntaxFactsService);
             Assert.Equal(expectedIndent, actualIndent);
         }

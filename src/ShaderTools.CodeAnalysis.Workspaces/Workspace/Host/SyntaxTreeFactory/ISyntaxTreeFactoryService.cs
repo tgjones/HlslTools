@@ -6,6 +6,6 @@ namespace ShaderTools.CodeAnalysis.Host
 {
     internal interface ISyntaxTreeFactoryService : ILanguageService
     {
-        SyntaxTreeBase ParseSyntaxTree(SourceText text, CancellationToken cancellationToken);
+        SyntaxTreeBase ParseSyntaxTree(SourceFile file, CancellationToken cancellationToken);
     }
 }

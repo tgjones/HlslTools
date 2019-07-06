@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Text;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
@@ -19,7 +20,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Formatting
 
             // Build syntax tree.
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(
-                SourceText.From(sourceCode, testFile), 
+                new SourceFile(SourceText.From(sourceCode), testFile), 
                 fileSystem: new TestFileSystem());
 
             // Check roundtripping.

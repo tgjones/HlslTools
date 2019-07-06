@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Text;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Parser;
 using ShaderTools.CodeAnalysis.ShaderLab.Diagnostics;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Parser
 {

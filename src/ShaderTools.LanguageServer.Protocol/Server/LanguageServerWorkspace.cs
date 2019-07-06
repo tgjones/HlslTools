@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Text;
@@ -12,9 +13,9 @@ namespace ShaderTools.LanguageServer.Protocol.Server
         {
         }
 
-        public Document OpenDocument(DocumentId documentId, SourceText sourceText, string languageName)
+        public Document OpenDocument(DocumentId documentId, SourceFile file, string languageName)
         {
-            var document = CreateDocument(documentId, languageName, sourceText, sourceText.FilePath);
+            var document = CreateDocument(documentId, languageName, file);
             OnDocumentOpened(document);
             return document;
         }

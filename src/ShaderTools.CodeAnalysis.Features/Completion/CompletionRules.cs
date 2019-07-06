@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion
@@ -93,11 +94,11 @@ namespace ShaderTools.CodeAnalysis.Completion
         }
 
         private CompletionRules With(
-            Optional<bool> dismissIfEmpty = default(Optional<bool>),
-            Optional<bool> dismissIfLastCharacterDeleted = default(Optional<bool>),
-            Optional<ImmutableArray<char>> defaultCommitCharacters = default(Optional<ImmutableArray<char>>),
-            Optional<EnterKeyRule> defaultEnterKeyRule = default(Optional<EnterKeyRule>),
-            Optional<SnippetsRule> snippetsRule = default(Optional<SnippetsRule>))
+            Optional<bool> dismissIfEmpty = default,
+            Optional<bool> dismissIfLastCharacterDeleted = default,
+            Optional<ImmutableArray<char>> defaultCommitCharacters = default,
+            Optional<EnterKeyRule> defaultEnterKeyRule = default,
+            Optional<SnippetsRule> snippetsRule = default)
         {
             var newDismissIfEmpty = dismissIfEmpty.HasValue ? dismissIfEmpty.Value : this.DismissIfEmpty;
             var newDismissIfLastCharacterDeleted = dismissIfLastCharacterDeleted.HasValue ? dismissIfLastCharacterDeleted.Value : this.DismissIfLastCharacterDeleted;

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
 using ShaderTools.CodeAnalysis.Text;
 
@@ -18,7 +19,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
             string include;
             if (_includes.TryGetValue(path, out include))
             {
-                text = new StringText(include, path);
+                text = SourceText.From(include);
                 return true;
             }
             text = null;

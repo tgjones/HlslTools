@@ -3,10 +3,10 @@
 using System;
 using System.Collections.Immutable;
 using System.Linq;
-using System.Diagnostics;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.Utilities;
 using ShaderTools.Utilities.Collections;
+using CandidateReason = Microsoft.CodeAnalysis.CandidateReason;
 
 namespace ShaderTools.CodeAnalysis
 {

@@ -2,7 +2,8 @@
 
 using System;
 using System.Collections.Immutable;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion
@@ -101,10 +102,10 @@ namespace ShaderTools.CodeAnalysis.Completion
         }
 
         private CompletionList With(
-            Optional<TextSpan> span = default(Optional<TextSpan>),
-            Optional<ImmutableArray<CompletionItem>> items = default(Optional<ImmutableArray<CompletionItem>>),
-            Optional<CompletionRules> rules = default(Optional<CompletionRules>),
-            Optional<CompletionItem> suggestionModeItem = default(Optional<CompletionItem>))
+            Optional<TextSpan> span = default,
+            Optional<ImmutableArray<CompletionItem>> items = default,
+            Optional<CompletionRules> rules = default,
+            Optional<CompletionItem> suggestionModeItem = default)
         {
             var newSpan = span.HasValue ? span.Value : this.Span;
             var newItems = items.HasValue ? items.Value : this.Items;

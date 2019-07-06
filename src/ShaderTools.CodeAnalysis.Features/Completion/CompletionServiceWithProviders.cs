@@ -7,11 +7,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Completion.Providers;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Diagnostics;
 

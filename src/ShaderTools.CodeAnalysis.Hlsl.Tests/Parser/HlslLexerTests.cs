@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.TestSuite;
@@ -17,7 +18,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
         public void HandlesWhitespaceTrivia()
         {
             // Act.
-            var allTokens = LexAllTokens(SourceText.From("a b \n d  "));
+            var allTokens = LexAllTokens(new SourceFile(SourceText.From("a b \n d  ")));
 
             // Assert.
             Assert.Equal(4, allTokens.Count);
@@ -119,12 +120,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(string testFile)
         {
-            return LexAllTokens(SourceText.From(File.ReadAllText(testFile), testFile), new TestFileSystem());
+            return LexAllTokens(new SourceFile(SourceText.From(File.ReadAllText(testFile)), testFile), new TestFileSystem());
         }
 
-        private static IReadOnlyList<SyntaxToken> LexAllTokens(SourceText text, IIncludeFileSystem fileSystem = null)
+        private static IReadOnlyList<SyntaxToken> LexAllTokens(SourceFile file, IIncludeFileSystem fileSystem = null)
         {
-            return SyntaxFactory.ParseAllTokens(text, fileSystem);
+            return SyntaxFactory.ParseAllTokens(file, fileSystem);
         }
 
         private static SyntaxToken LexToken(string text)

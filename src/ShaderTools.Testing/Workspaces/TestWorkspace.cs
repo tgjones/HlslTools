@@ -11,9 +11,9 @@ namespace ShaderTools.Testing.Workspaces
         {
         }
 
-        public Document OpenDocument(DocumentId documentId, SourceText sourceText, string languageName)
+        public Document OpenDocument(DocumentId documentId, SourceFile file, string languageName)
         {
-            var document = CreateDocument(documentId, languageName, sourceText, sourceText.FilePath);
+            var document = CreateDocument(documentId, languageName, file);
             OnDocumentOpened(document);
             return document;
         }

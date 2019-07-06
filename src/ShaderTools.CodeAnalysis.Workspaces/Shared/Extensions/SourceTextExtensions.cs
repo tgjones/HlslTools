@@ -2,7 +2,8 @@
 
 using System;
 using System.Threading;
-using ShaderTools.CodeAnalysis.Text;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Shared.Extensions

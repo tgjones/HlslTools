@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Syntax;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Threading;
 
@@ -23,9 +23,9 @@ namespace ShaderTools.CodeAnalysis.Formatting
 
             var formatter = document.LanguageServices.GetService<ISyntaxFormattingService>();
 
-            var formatted = formatter.Format(tree, new Text.TextSpan(0, tree.Text.Length), options, cancellationToken);
+            var formatted = formatter.Format(tree, new TextSpan(0, tree.Text.Length), options, cancellationToken);
 
-            return document.WithText(SourceText.From(formatted, document.SourceText.FilePath));
+            return document.WithText(SourceText.From(formatted));
         }
 
         public static async Task<Document> FormatAsync(Document document, IEnumerable<TextSpan> spans, OptionSet options = null, CancellationToken cancellationToken = default(CancellationToken))

@@ -2,8 +2,8 @@
 
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Formatting;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.CommentSelection

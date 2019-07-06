@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Editor.Hlsl.NavigationBar;
-using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Testing.Workspaces;
 using Xunit;
 
@@ -26,7 +26,7 @@ class Class1 {};
 
 float Variable1, Variable2;";
             var workspace = new TestWorkspace();
-            var document = workspace.OpenDocument(DocumentId.CreateNewId(), SourceText.From(sourceCode), LanguageNames.Hlsl);
+            var document = workspace.OpenDocument(DocumentId.CreateNewId(), new Text.SourceFile(SourceText.From(sourceCode)), LanguageNames.Hlsl);
             var service = new HlslNavigationBarItemService();
 
             // Act.

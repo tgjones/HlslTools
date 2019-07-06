@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Hlsl.Tests.Support;
@@ -17,16 +18,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Formatting
         {
             // Arrange.
             var sourceCode = File.ReadAllText(testFile);
-            var syntaxTree1 = SyntaxFactory.ParseSyntaxTree(SourceText.From(sourceCode, testFile), fileSystem: new TestFileSystem());
+            var syntaxTree1 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(sourceCode), testFile), fileSystem: new TestFileSystem());
 
             // Format.
             var formattedCode1 = FormatCode(sourceCode, syntaxTree1);
-            var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode1, testFile), fileSystem: new TestFileSystem());
+            var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(formattedCode1), testFile), fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree2);
 
             // Format again.
             var formattedCode2 = FormatCode(formattedCode1, syntaxTree2);
-            var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(SourceText.From(formattedCode2, testFile), fileSystem: new TestFileSystem());
+            var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(formattedCode2), testFile), fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree3);
 
             Assert.Equal(formattedCode1, formattedCode2);

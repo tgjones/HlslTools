@@ -1,6 +1,6 @@
 ﻿using System.IO;
+using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Text;
-using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
 {
@@ -10,7 +10,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Support
         {
             if (File.Exists(path))
             {
-                text = new StringText(File.ReadAllText(path), path);
+                text = SourceText.From(File.ReadAllText(path));
                 return true;
             }
 
