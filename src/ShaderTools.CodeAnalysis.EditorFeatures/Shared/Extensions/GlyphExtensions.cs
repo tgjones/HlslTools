@@ -26,7 +26,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 case Glyph.Interface:
                     return StandardGlyphGroup.GlyphGroupInterface;
 
-                case Glyph.Intrinsic:
+                case Glyph.IntrinsicClass:
+                case Glyph.IntrinsicStruct:
                     return StandardGlyphGroup.GlyphGroupIntrinsic;
 
                 case Glyph.Keyword:
@@ -111,7 +112,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                     return KnownMonikers.InterfacePublic;
 
                 // TODO: Figure out the right thing to return here.
-                case Glyph.Intrinsic:
+                case Glyph.IntrinsicClass:
+                case Glyph.IntrinsicStruct:
                     return KnownMonikers.Type;
 
                 case Glyph.Keyword:

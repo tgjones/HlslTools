@@ -14,7 +14,9 @@ namespace ShaderTools.CodeAnalysis
 
         Interface,
 
-        Intrinsic,
+        IntrinsicClass,
+
+        IntrinsicStruct,
 
         Keyword,
 

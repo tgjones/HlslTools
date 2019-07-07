@@ -37,13 +37,13 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
                 case SymbolKind.Indexer:
                     return Glyph.Method;
                 case SymbolKind.IntrinsicObjectType:
-                    return Glyph.Intrinsic;
+                    return Glyph.IntrinsicClass;
                 case SymbolKind.IntrinsicVectorType:
-                    return Glyph.Intrinsic;
+                    return Glyph.IntrinsicStruct;
                 case SymbolKind.IntrinsicMatrixType:
-                    return Glyph.Intrinsic;
+                    return Glyph.IntrinsicStruct;
                 case SymbolKind.IntrinsicScalarType:
-                    return Glyph.Intrinsic;
+                    return Glyph.IntrinsicStruct;
                 case SymbolKind.Semantic:
                     return Glyph.Constant;
                 case SymbolKind.Technique:

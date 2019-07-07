@@ -57,9 +57,30 @@ namespace ShaderTools.LanguageServer.Handlers
 
         private static CompletionItem ConvertCompletionItem(Document document, CompletionRules completionRules, CodeAnalysis.Completion.CompletionItem item)
         {
-            var documentation = CommonCompletionItem.HasDescription(item)
-                ? CommonCompletionItem.GetDescription(item).Text
-                : string.Empty;
+            var description = CommonCompletionItem.GetDescription(item);
+
+            // A bit hacky: everything before the line break is the Detail, everything after is the Documentation.
+            var detail = string.Empty;
+            var documentation = string.Empty;
+            var seenLineBreak = false;
+            foreach (var taggedText in description.TaggedParts)
+            {
+                if (seenLineBreak)
+                {
+                    documentation += taggedText.Text;
+                }
+                else
+                {
+                    if (taggedText.Text.ContainsLineBreak())
+                    {
+                        seenLineBreak = true;
+                    }
+                    else
+                    {
+                        detail += taggedText.Text;
+                    }
+                }
+            }
 
             return new CompletionItem
             {
@@ -72,6 +93,7 @@ namespace ShaderTools.LanguageServer.Handlers
                     NewText = item.DisplayText,
                     Range = Helpers.ToRange(document.SourceText, item.Span)
                 },
+                Detail = detail,
                 Documentation = documentation,
                 CommitCharacters = completionRules.DefaultCommitCharacters.Select(x => x.ToString()).ToArray()
             };
@@ -91,8 +113,10 @@ namespace ShaderTools.LanguageServer.Handlers
                     return CompletionItemKind.Field;
                 case Glyph.Interface:
                     return CompletionItemKind.Interface;
-                case Glyph.Intrinsic:
-                    return CompletionItemKind.Function;
+                case Glyph.IntrinsicClass:
+                    return CompletionItemKind.Class;
+                case Glyph.IntrinsicStruct:
+                    return CompletionItemKind.Struct;
                 case Glyph.Keyword:
                     return CompletionItemKind.Keyword;
                 case Glyph.Label:
