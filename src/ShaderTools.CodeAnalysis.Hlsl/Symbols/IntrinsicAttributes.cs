@@ -49,7 +49,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
             allAttributes.Add(Create("maxtessfactor", "Indicates the maximum value that the hull shader would return for any tessellation factor.", a => new[]
             {
-                new ParameterSymbol("factor", "Upper bound on the amount of tessellation requested to help a driver determine the maximum amount of resources required for tessellation.", a, IntrinsicTypes.Int)
+                new ParameterSymbol("factor", "Upper bound on the amount of tessellation requested to help a driver determine the maximum amount of resources required for tessellation.", a, IntrinsicTypes.Float)
             }));
 
             allAttributes.Add(Create("numthreads", "Defines the number of threads to be executed in a single thread group when a compute shader is dispatched.", a => new[]
