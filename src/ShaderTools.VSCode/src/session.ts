@@ -1,21 +1,14 @@
-/*---------------------------------------------------------
- * Copyright (C) Microsoft Corporation. All rights reserved.
- *--------------------------------------------------------*/
-
-import os = require('os');
-import fs = require('fs');
-import net = require('net');
 import path = require('path');
-import utils = require('./utils');
 import vscode = require('vscode');
-import cp = require('child_process');
-import Settings = require('./settings');
 
-import { Logger } from './logging';
-import { StringDecoder } from 'string_decoder';
-import { LanguageClient, LanguageClientOptions, Executable, RequestType, NotificationType, StreamInfo } from 'vscode-languageclient';
+import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 
-export enum SessionStatus {
+let HlslLanguageId = 'hlsl';
+let ShaderLabLanguageId = 'shaderlab';
+
+let LanguageIds = [HlslLanguageId, ShaderLabLanguageId];
+
+enum SessionStatus {
     NotStarted,
     Initializing,
     Running,
@@ -24,71 +17,27 @@ export enum SessionStatus {
 }
 
 export class SessionManager {
-
     private ShowSessionMenuCommandName = "ShaderTools.ShowSessionMenu";
 
-    private hostVersion: string;
-    private isWindowsOS: boolean;
-    private sessionFilePath: string;
     private sessionStatus: SessionStatus;
-    private editorServicesHostProcess: cp.ChildProcess;
     private statusBarItem: vscode.StatusBarItem;
     private registeredCommands: vscode.Disposable[] = [];
     private languageServerClient: LanguageClient = undefined;
-    private sessionSettings: Settings.ISettings = undefined;
-    private sessionDetails: utils.EditorServicesSessionDetails;
 
-    // When in development mode, VS Code's session ID is a fake
-    // value of "someValue.machineId".  Use that to detect dev
-    // mode for now until Microsoft/vscode#10272 gets implemented.
-    private readonly inDevelopmentMode =
-        vscode.env.sessionId === "someValue.sessionId";
-
-    constructor(
-        private requiredEditorServicesVersion: string,
-        private log: Logger) {
-
-        this.isWindowsOS = os.platform() == "win32";
-
-        // Get the current version of this extension
-        this.hostVersion =
-            vscode
-                .extensions
-                .getExtension("TimGJones.ShaderTools")
-                .packageJSON
-                .version;
-
+    constructor() {
         this.registerCommands();
     }
 
     public start() {
-        this.sessionSettings = Settings.load(utils.ShaderToolsSettingsName);
-        this.log.startNewLog(this.sessionSettings.developer.editorServicesLogLevel);
-
         this.createStatusBarItem();
-
-        this.sessionFilePath = utils.getSessionFilePath(Math.floor(100000 + Math.random() * 900000));
-
-        var startArgs = [];
-
-        if (this.sessionSettings.developer.editorServicesLogLevel) {
-            //startArgs.push("--LogLevel", this.sessionSettings.developer.editorServicesLogLevel);
-        }
-
-        this.startEditorServices(
-            startArgs);
+        this.startEditorServices();
     }
 
     public stop() {
-
-        // Shut down existing session if there is one
-        this.log.write(os.EOL + os.EOL + "Shutting down language client...");
-
         if (this.sessionStatus === SessionStatus.Failed) {
             // Before moving further, clear out the client and process if
             // the process is already dead (i.e. it crashed)
             this.languageServerClient = undefined;
-            this.editorServicesHostProcess = undefined;
         }
 
         this.sessionStatus = SessionStatus.Stopping;
@@ -99,21 +48,7 @@ export class SessionManager {
             this.languageServerClient = undefined;
         }
 
-        // Clean up the session file
-        utils.deleteSessionFile(this.sessionFilePath);
-
-        // Kill the process we spawned via the console
-        if (this.editorServicesHostProcess !== undefined) {
-            this.log.write(os.EOL + "Terminating Editor Services host process...");
-            this.editorServicesHostProcess.kill();
-            this.editorServicesHostProcess = undefined;
-        }
-
         this.sessionStatus = SessionStatus.NotStarted;
-    }
-
-    public getSessionDetails(): utils.EditorServicesSessionDetails {
-        return this.sessionDetails;
     }
 
     public dispose() : void {
@@ -124,170 +59,50 @@ export class SessionManager {
         this.registeredCommands.forEach(command => { command.dispose(); });
     }
 
-    private onConfigurationUpdated() {
-        var settings = Settings.load(utils.ShaderToolsSettingsName);
-
-        // Detect any setting changes that would affect the session
-        if (settings.developer.editorServicesLogLevel.toLowerCase() !== this.sessionSettings.developer.editorServicesLogLevel.toLowerCase()) {
-
-            vscode.window.showInformationMessage(
-                "The ShaderTools runtime configuration has changed, would you like to start a new session?",
-                "Yes", "No")
-                .then((response) => {
-                    if (response === "Yes") {
-                        this.restartSession()
-                    }
-                });
-        }
-    }
-
     private registerCommands() : void {
         this.registeredCommands = [
             vscode.commands.registerCommand('ShaderTools.RestartSession', () => { this.restartSession(); }),
-            vscode.commands.registerCommand(this.ShowSessionMenuCommandName, () => { this.showSessionMenu(); }),
-            vscode.workspace.onDidChangeConfiguration(() => this.onConfigurationUpdated())
+            vscode.commands.registerCommand(this.ShowSessionMenuCommandName, () => { this.showSessionMenu(); })
         ]
     }
 
-    private startEditorServices(
-        startArgs: string[]) {
+    private startEditorServices() {
         try
         {
             this.setSessionStatus(
-                "Starting ShaderTools Editor Services...",
+                "Starting Shader Tools...",
                 SessionStatus.Initializing);
 
-            var editorServicesLogPath = this.log.getLogFilePath("EditorServices");
+            var serverExe = path.resolve(__dirname, '../../ShaderTools.LanguageServer/bin/Debug/netcoreapp2.1/ShaderTools.LanguageServer.dll');
 
-            var editorServicesHostExePath = path.resolve(__dirname, '../../ShaderTools.LanguageServer/bin/Debug/netcoreapp1.1/ShaderTools.LanguageServer.dll');
+            var startArgs = [ serverExe ];
+            //startArgs.push("--logfilepath", editorServicesLogPath);
 
-            startArgs.unshift(editorServicesHostExePath);
-            startArgs.push("--logfilepath", editorServicesLogPath);
+            var debugArgs = startArgs.slice(0);
+            debugArgs.push("--launch-debugger");
 
-            startArgs.push("--waitfordebugger", 'true');
-
-            this.log.write(`${utils.getTimestampString()} Language server starting...`);
-
-            // Make sure no old session file exists
-            utils.deleteSessionFile(this.sessionFilePath);
-
-            // Launch Editor Services host as child process
-            this.editorServicesHostProcess =
-                cp.spawn(
-                    'dotnet',
-                    startArgs,
-                    { env: process.env });
-
-            var decoder = new StringDecoder('utf8');
-            this.editorServicesHostProcess.stdout.on(
-                'data',
-                (data: Buffer) => {
-                    this.log.write("OUTPUT: " + data);
-                    var response = JSON.parse(decoder.write(data).trim());
-
-                    if (response["status"] === "started") {
-                        this.log.write(`${utils.getTimestampString()} Language server started.`);
-
-                        this.sessionDetails = response;
-
-                        // Start the language service client
-                        this.startLanguageClient(this.sessionDetails);
-                    }
-                    else if (response["status"] === "failed") {
-                        this.setSessionFailure(`Editor Services host could not be started for an unknown reason '${response["reason"]}'`)
-                    }
-                    else {
-                        // TODO: Handle other response cases
-                    }
-                });
-
-            this.editorServicesHostProcess.stderr.on(
-                'data',
-                (data) => {
-                    this.log.writeError("ERROR: " + data);
-
-                    if (this.sessionStatus === SessionStatus.Initializing) {
-                        this.setSessionFailure("Editor Services host could not be started, click 'Show Logs' for more details.");
-                    }
-                    else if (this.sessionStatus === SessionStatus.Running) {
-                        this.promptForRestart();
-                    }
-                });
-
-            this.editorServicesHostProcess.on(
-                'close',
-                (exitCode) => {
-                    this.log.write(os.EOL + "ShaderTools.EditorServices.Host.exe terminated with exit code: " + exitCode + os.EOL);
-
-                    if (this.languageServerClient != undefined) {
-                        this.languageServerClient.stop();
-                    }
-
-                    if (this.sessionStatus === SessionStatus.Running) {
-                        this.setSessionStatus("Session exited", SessionStatus.Failed);
-                        this.promptForRestart();
-                    }
-                });
-
-          console.log("ShaderTools.LanguageServer.exe started, pid: " + this.editorServicesHostProcess.pid + ", exe: " + editorServicesHostExePath);
-          this.log.write(
-              "ShaderTools.LanguageServer.exe started --",
-              "    pid: " + this.editorServicesHostProcess.pid,
-              "    exe: " + editorServicesHostExePath,
-              "    args: " + startArgs.join(" ") + os.EOL + os.EOL);
-        }
-        catch (e)
-        {
-            this.setSessionFailure("The language service could not be started: ", e);
-        }
-    }
-
-    private promptForRestart() {
-        vscode.window.showErrorMessage(
-            "The ShaderTools session has terminated due to an error, would you like to restart it?",
-            "Yes", "No")
-            .then((answer) => { if (answer === "Yes") { this.restartSession(); }});
-    }
-
-    private startLanguageClient(sessionDetails: utils.EditorServicesSessionDetails) {
-
-        var port = sessionDetails.languageServicePort;
-
-        try
-        {
-            this.log.write("Connecting to language service on port " + port + "..." + os.EOL);
-
-            let connectFunc = () => {
-                return new Promise<StreamInfo>(
-                    (resolve, reject) => {
-                        var socket = net.connect(port);
-                        socket.on(
-                            'connect',
-                            () => {
-                                this.log.write("Language service connected.");
-                                resolve({writer: socket, reader: socket})
-                            });
-                    });
+            let serverOptions: ServerOptions = {
+                run: { command: 'dotnet', args: startArgs },
+                debug: {command: 'dotnet', args: debugArgs }
             };
 
             let clientOptions: LanguageClientOptions = {
-                documentSelector: utils.LanguageIds,
+                documentSelector: LanguageIds,
                 synchronize: {
-                    configurationSection: utils.LanguageIds,
-                    //fileEvents: vscode.workspace.createFileSystemWatcher('**/.eslintrc')
+                    configurationSection: LanguageIds
                 }
             }
 
             this.languageServerClient =
                 new LanguageClient(
-                    'ShaderTools Editor Services',
-                    connectFunc,
+                    'Shader Tools Language Client',
+                    serverOptions,
                     clientOptions);
 
             this.languageServerClient.onReady().then(
                 () => {
                     this.setSessionStatus(
-                        'ShaderTools language services started',
+                        'Shader Tools',
                         SessionStatus.Running);
                 },
                 (reason) => {
@@ -320,7 +135,7 @@ export class SessionManager {
             this.statusBarItem.show();
             vscode.window.onDidChangeActiveTextEditor(textEditor => {
                 if (textEditor === undefined
-                    || utils.LanguageIds.indexOf(textEditor.document.languageId) === -1) {
+                    || LanguageIds.indexOf(textEditor.document.languageId) === -1) {
                     this.statusBarItem.hide();
                 }
                 else {
@@ -331,8 +146,7 @@ export class SessionManager {
     }
 
     private setSessionStatus(statusText: string, status: SessionStatus): void {
-        // Set color and icon for 'Running' by default
-        var statusIconText = "$(terminal) ";
+        var statusIconText = "$(code) ";
         var statusColor = "#affc74";
 
         if (status == SessionStatus.Initializing) {
@@ -350,10 +164,8 @@ export class SessionManager {
     }
 
     private setSessionFailure(message: string, ...additionalMessages: string[]) {
-        this.log.writeAndShowError(message, ...additionalMessages);
-
         this.setSessionStatus(
-            "Initialization Error",
+            "Shader Tools Initialization Error",
             SessionStatus.Failed);
     }
 
@@ -371,10 +183,6 @@ export class SessionManager {
         if (this.sessionStatus === SessionStatus.Running) {
             menuItems = [
                 new SessionMenuItem(
-                    `Current session: ShaderTools`,
-                    () => { vscode.commands.executeCommand("ShaderTools.ShowLogs"); }),
-
-                new SessionMenuItem(
                     "Restart Current Session",
                     () => { this.restartSession(); }),
             ];
@@ -382,8 +190,8 @@ export class SessionManager {
         else if (this.sessionStatus === SessionStatus.Failed) {
             menuItems = [
                 new SessionMenuItem(
-                    `Session initialization failed, click here to show ShaderTools extension logs`,
-                    () => { vscode.commands.executeCommand("ShaderTools.ShowLogs"); }),
+                    "Session initialization failed. Click here to show Shader Tools extension logs",
+                    () => { vscode.commands.executeCommand("ShaderTools.OpenLogFolder"); }),
             ];
         }
 

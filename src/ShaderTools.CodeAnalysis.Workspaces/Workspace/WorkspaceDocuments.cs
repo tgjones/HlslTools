@@ -52,6 +52,22 @@ namespace ShaderTools.CodeAnalysis
                 .ToImmutableArray();
         }
 
+        public Document GetDocumentWithFilePath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return null;
+            }
+
+            var documentId = _idToDocumentMap.Values
+                .FirstOrDefault(x => string.Equals(x.FilePath, filePath, StringComparison.OrdinalIgnoreCase))
+                ?.Id;
+
+            return (documentId != null)
+                ? GetDocument(documentId)
+                : null;
+        }
+
         /// <summary>
         /// Gets the document in this solution with the specified syntax tree.
         /// </summary>

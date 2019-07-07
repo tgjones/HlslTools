@@ -11,5 +11,7 @@
         /// The common name used for the Unity ShaderLab language.
         /// </summary>
         public const string ShaderLab = "ShaderLab";
+
+        public static readonly string[] AllLanguages = { Hlsl, ShaderLab };
     }
 }

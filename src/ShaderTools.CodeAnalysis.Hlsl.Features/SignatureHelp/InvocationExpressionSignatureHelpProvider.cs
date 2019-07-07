@@ -30,7 +30,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
             TNode node,
             SourceLocation position)
         {
-            var functionSymbols = GetFunctionSymbols(semanticModel, node, position);
+            var functionSymbols = GetFunctionSymbols(semanticModel, node, position).ToList();
+
+            // try to bind to the actual method
+            var symbolInfo = semanticModel.GetSymbolInfo(node);
+
+            var selectedItem = symbolInfo.Symbol is FunctionSymbol fs
+                ? functionSymbols.IndexOf(fs)
+                : (int?)null;
 
             var signatureHelpItems = functionSymbols
                 .Select(ConvertFunctionSymbol).ToList();
@@ -43,7 +50,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
             return CreateSignatureHelpItems(
                 signatureHelpItems,
                 textSpan,
-                currentState);
+                currentState,
+                selectedItem);
         }
 
         protected abstract IEnumerable<FunctionSymbol> GetFunctionSymbols(

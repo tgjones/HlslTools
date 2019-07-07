@@ -10,5 +10,5 @@
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Workspaces")]
 [assembly: InternalsVisibleTo("ShaderTools.CodeAnalysis.Workspaces.Desktop")]
 [assembly: InternalsVisibleTo("ShaderTools.Editor.VisualStudio")]
-[assembly: InternalsVisibleTo("ShaderTools.LanguageServer.Protocol")]
+[assembly: InternalsVisibleTo("ShaderTools.LanguageServer")]
 [assembly: InternalsVisibleTo("ShaderTools.VisualStudio.LanguageServices")]
