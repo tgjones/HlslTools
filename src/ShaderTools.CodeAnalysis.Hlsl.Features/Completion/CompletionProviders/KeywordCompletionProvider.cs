@@ -70,7 +70,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 
             var isSemanticContext = !isPreprocessorDirectiveContext && leftToken.HasAncestor<SemanticSyntax>();
 
-            var isExpressionContext = leftToken.HasAncestor<ExpressionSyntax>();
+            var isBooleanLiteralExpressionContext = leftToken.HasAncestor<ExpressionSyntax>() && SymbolCompletionProvider.GetPropertyAccessExpression((SyntaxNode)syntaxTree.Root, position) == null;
 
             var isTypeDeclarationContext = syntaxTree.IsTypeDeclarationContext(targetToken);
 
@@ -95,7 +95,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
             if (isPreprocessorKeywordContext || isStatementContext)
                 yield return SyntaxKind.IfKeyword;
 
-            if (isStatementContext || isExpressionContext)
+            if (isStatementContext || isBooleanLiteralExpressionContext)
                 yield return SyntaxKind.FalseKeyword;
 
             if (isStatementContext)
@@ -116,7 +116,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
             if (isStatementContext)
                 yield return SyntaxKind.SwitchKeyword;
 
-            if (isStatementContext || isExpressionContext)
+            if (isStatementContext || isBooleanLiteralExpressionContext)
                 yield return SyntaxKind.TrueKeyword;
 
             if (isStatementContext || IsValidWhileKeywordContext(targetToken))

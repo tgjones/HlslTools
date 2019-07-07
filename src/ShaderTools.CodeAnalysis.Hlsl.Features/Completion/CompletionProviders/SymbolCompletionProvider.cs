@@ -99,7 +99,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
             CreateSymbolCompletions(targetType.Members, context);
         }
 
-        private static FieldAccessExpressionSyntax GetPropertyAccessExpression(SyntaxNode root, SourceLocation position)
+        internal static FieldAccessExpressionSyntax GetPropertyAccessExpression(SyntaxNode root, SourceLocation position)
         {
             var token = root.FindTokenOnLeft(position);
             var previous = (SyntaxToken) token.GetPreviousToken(false, true);
