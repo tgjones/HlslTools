@@ -181,6 +181,31 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
             base.VisitFunctionInvocationExpression(node);
         }
 
+        public override void VisitSyntaxToken(SyntaxToken node)
+        {
+            void CreateMacroTag(SyntaxNode trivia)
+            {
+                if (trivia is DefineDirectiveTriviaSyntax dd)
+                    CreateTag(dd.MacroName, HlslClassificationTypeNames.MacroIdentifier);
+            }
+
+            foreach (var trivia in node.LeadingTrivia)
+                CreateMacroTag(trivia);
+
+            foreach (var trivia in node.TrailingTrivia)
+                CreateMacroTag(trivia);
+
+            if (node.MacroReference != null)
+                CreateTag(node.MacroReference.NameToken, HlslClassificationTypeNames.MacroIdentifier);
+
+            base.VisitSyntaxToken(node);
+        }
+
+        public override void VisitSyntaxTrivia(SyntaxTrivia node)
+        {
+            base.VisitSyntaxTrivia(node);
+        }
+
         private static string GetClassificationType(Symbol symbol)
         {
             switch (symbol.Kind)

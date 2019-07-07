@@ -18,5 +18,6 @@
         public const string StructIdentifier = "Hlsl.Struct";
         public const string InterfaceIdentifier = "Hlsl.Interface";
         public const string ConstantBufferIdentifier = "Hlsl.ConstantBuffer";
+        public const string MacroIdentifier = "Hlsl.Macro";
     }
 }

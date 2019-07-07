@@ -328,5 +328,25 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.Classification
                 ForegroundColor = colorManager.GetDefaultColor(HlslClassificationTypeNames.ConstantBufferIdentifier);
             }
         }
+
+        [Export]
+        [Name(HlslClassificationTypeNames.MacroIdentifier)]
+        [BaseDefinition(PredefinedClassificationTypeNames.FormalLanguage)]
+        public ClassificationTypeDefinition MacroIdentifierType { get; set; }
+
+        [Export(typeof(EditorFormatDefinition))]
+        [Name(HlslClassificationTypeNames.MacroIdentifier)]
+        [ClassificationType(ClassificationTypeNames = HlslClassificationTypeNames.MacroIdentifier)]
+        [UserVisible(true)]
+        [Order(After = PredefinedClassificationTypeNames.String)]
+        public sealed class MacroIdentifierFormat : ClassificationFormatDefinition
+        {
+            [ImportingConstructor]
+            public MacroIdentifierFormat(IClassificationColorManager colorManager)
+            {
+                DisplayName = "HLSL Macro Identifier";
+                ForegroundColor = colorManager.GetDefaultColor(HlslClassificationTypeNames.MacroIdentifier);
+            }
+        }
     }
 }

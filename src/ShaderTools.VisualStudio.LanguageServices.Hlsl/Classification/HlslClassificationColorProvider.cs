@@ -31,7 +31,8 @@ namespace ShaderTools.VisualStudio.LanguageServices.Hlsl.Classification
                     { HlslClassificationTypeNames.ClassIdentifier, Color.FromRgb(0, 0, 139) },
                     { HlslClassificationTypeNames.StructIdentifier, Color.FromRgb(0, 0, 139) },
                     { HlslClassificationTypeNames.InterfaceIdentifier, Color.FromRgb(0, 0, 139) },
-                    { HlslClassificationTypeNames.ConstantBufferIdentifier, Color.FromRgb(0, 0, 139) }
+                    { HlslClassificationTypeNames.ConstantBufferIdentifier, Color.FromRgb(0, 0, 139) },
+                    { HlslClassificationTypeNames.MacroIdentifier, Color.FromRgb(111, 0, 138) },
                 }.ToImmutableDictionary();
             }
         }
@@ -57,7 +58,8 @@ namespace ShaderTools.VisualStudio.LanguageServices.Hlsl.Classification
                     { HlslClassificationTypeNames.ClassIdentifier, Color.FromRgb(173, 216, 230) },
                     { HlslClassificationTypeNames.StructIdentifier, Color.FromRgb(173, 216, 230) },
                     { HlslClassificationTypeNames.InterfaceIdentifier, Color.FromRgb(173, 216, 230) },
-                    { HlslClassificationTypeNames.ConstantBufferIdentifier, Color.FromRgb(173, 216, 230) }
+                    { HlslClassificationTypeNames.ConstantBufferIdentifier, Color.FromRgb(173, 216, 230) },
+                    { HlslClassificationTypeNames.MacroIdentifier, Color.FromRgb(189, 99, 197) },
                 }.ToImmutableDictionary();
             }
         }
