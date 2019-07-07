@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
@@ -34,7 +33,6 @@ namespace ShaderTools.LanguageServer.Handlers
 
             if (item != null)
             {
-                var symbolInfo = new List<MarkupContent>();
                 Range symbolRange;
 
                 var markdownText = string.Empty;
@@ -42,10 +40,11 @@ namespace ShaderTools.LanguageServer.Handlers
                 switch (item.Content)
                 {
                     case QuickInfoDisplayContent c:
-                        markdownText += $"``` {document.Language}\n{c.MainDescription.GetFullText()}\n```\n";
+                        markdownText += $"``` {Helpers.ToLspLanguage(document.Language)}\n{c.MainDescription.GetFullText()}\n```\n";
 
                         if (!c.Documentation.IsEmpty)
                         {
+                            markdownText += "---\n";
                             markdownText += c.Documentation.GetFullText();
                         }
 

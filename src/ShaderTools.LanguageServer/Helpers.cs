@@ -149,5 +149,10 @@ namespace ShaderTools.LanguageServer
                     return SymbolKind.Variable;
             }
         }
+
+        public static string ToLspLanguage(string language)
+        {
+            return language.ToLowerInvariant();
+        }
     }
 }
