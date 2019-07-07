@@ -1,6 +1,6 @@
 {
-  "name": "shadertools",
-  "displayName": "Shader Tools",
+  "name": "hlsltools",
+  "displayName": "HLSL Tools",
   "version": "0.9.0",
   "publisher": "TimGJones",
   "description": "Rich HLSL language support for Visual Studio Code",
@@ -8,7 +8,7 @@
     "vscode": "^1.21.0"
   },
   "license": "SEE LICENSE IN LICENSE.txt",
-  "homepage": "https://github.com/tgjones/ShaderTools/tree/master/src/clients/vscode/README.md",
+  "homepage": "https://github.com/tgjones/HlslTools/tree/master/src/ShaderTools.VSCode/README.md",
   "categories": [
     "Programming Languages"
   ],
@@ -19,12 +19,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tgjones/ShaderTools.git"
+    "url": "https://github.com/tgjones/HlslTools.git"
   },
   "main": "./out/main",
   "activationEvents": [
-    "onLanguage:hlsl",
-    "onLanguage:shaderlab"
+    "onLanguage:hlsl"
   ],
   "dependencies": {
     "vscode-languageclient": "4.1.4"
@@ -36,8 +35,7 @@
     "vscode": "^1.1.18"
   },
   "extensionDependencies": [
-    "vscode.hlsl",
-    "vscode.shaderlab"
+    "vscode.hlsl"
   ],
   "scripts": {
     "vscode:prepublish": "tsc -p ./ || echo done",
