@@ -1,8 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+    <PublishTrimmed>true</PublishTrimmed>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
@@ -11,6 +12,15 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.2" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
     <PackageReference Include="System.CommandLine.DragonFruit" Version="0.3.0-alpha.19317.1" />
+
+    <PackageReference Include="System.IO" Version="4.3.0" />
+    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.Handles" Version="4.3.0" />
+    <PackageReference Include="System.Runtime.InteropServices" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
+    <PackageReference Include="System.Threading" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Tasks" Version="4.3.0" />
+    
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Features\ShaderTools.CodeAnalysis.Hlsl.Features.csproj" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.Hlsl.Workspaces\ShaderTools.CodeAnalysis.Hlsl.Workspaces.csproj" />
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.ShaderLab.Features\ShaderTools.CodeAnalysis.ShaderLab.Features.csproj" />

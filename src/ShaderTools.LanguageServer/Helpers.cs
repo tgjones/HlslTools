@@ -7,6 +7,7 @@ using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.NavigateTo;
+using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace ShaderTools.LanguageServer
 {

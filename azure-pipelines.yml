@@ -7,6 +7,7 @@ pr:
 jobs:
 - job: HlslTools_Build_Test
   strategy:
+    maxParallel: 2
     matrix:
       VS2017:
         imageName: 'vs2017-win2016'
@@ -20,5 +21,5 @@ jobs:
   - task: PowerShell@2
     displayName: Build
     inputs:
-      filePath: Build.ps1
-      arguments: -Target Build
+      filePath: scripts\build.ps1
+      arguments: -ci -build
