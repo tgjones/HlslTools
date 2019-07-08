@@ -6,8 +6,6 @@ pr:
 
 jobs:
 - job: HlslTools_Build_Test
-  pool:
-    vmImage: $(imageName)
   strategy:
     matrix:
       VS2017:
@@ -16,6 +14,8 @@ jobs:
       VS2019:
         imageName: 'windows-2019'
         _name: VS2019
+  pool:
+    vmImage: $(imageName)
   steps:
   - task: PowerShell@2
     displayName: Build
