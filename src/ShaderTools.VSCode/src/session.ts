@@ -73,17 +73,17 @@ export class SessionManager {
                 "Starting Shader Tools...",
                 SessionStatus.Initializing);
 
-            var serverExe = path.resolve(__dirname, '../../ShaderTools.LanguageServer/bin/Debug/netcoreapp2.1/ShaderTools.LanguageServer.dll');
+            var serverExe = path.resolve(__dirname, '../bin/ShaderTools.LanguageServer.exe');
 
-            var startArgs = [ serverExe ];
+            var startArgs = [ ];
             //startArgs.push("--logfilepath", editorServicesLogPath);
 
             var debugArgs = startArgs.slice(0);
             debugArgs.push("--launch-debugger");
 
             let serverOptions: ServerOptions = {
-                run: { command: 'dotnet', args: startArgs },
-                debug: {command: 'dotnet', args: debugArgs }
+                run: { command: serverExe, args: startArgs },
+                debug: {command: serverExe, args: debugArgs }
             };
 
             let clientOptions: LanguageClientOptions = {

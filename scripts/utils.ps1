@@ -93,3 +93,18 @@ function Exec-Command([string]$command, [string]$commandArgs) {
 function Exec-Console([string]$command, [string]$commandArgs) {
     Exec-CommandCore -command $command -commandArgs $commandargs -useConsole:$true
 }
+
+# Toggle between human readable messages and Azure Pipelines messages based on 
+# our current environment.
+# https://docs.microsoft.com/en-us/azure/devops/pipelines/scripts/logging-commands?view=azure-devops&tabs=powershell
+function Write-TaskError([string]$message) {
+    if ($ci) {
+        Write-Host "##vso[task.logissue type=error]$message"
+    } else {
+        Write-Host $message
+    }
+}
+
+function Create-Directory([string]$dir) {
+    New-Item $dir -ItemType Directory -ErrorAction SilentlyContinue | Out-Null
+}

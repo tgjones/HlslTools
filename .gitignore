@@ -54,3 +54,5 @@ httpd.parse.errors
 
 # Vim
 *~
+
+binaries/
