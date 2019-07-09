@@ -4,9 +4,8 @@ import vscode = require('vscode');
 import { LanguageClient, LanguageClientOptions, ServerOptions } from 'vscode-languageclient';
 
 let HlslLanguageId = 'hlsl';
-let ShaderLabLanguageId = 'shaderlab';
 
-let LanguageIds = [HlslLanguageId, ShaderLabLanguageId];
+let LanguageIds = [HlslLanguageId];
 
 enum SessionStatus {
     NotStarted,
@@ -70,10 +69,11 @@ export class SessionManager {
         try
         {
             this.setSessionStatus(
-                "Starting Shader Tools...",
+                "Starting HLSL Tools...",
                 SessionStatus.Initializing);
 
-            var serverExe = path.resolve(__dirname, '../bin/ShaderTools.LanguageServer.exe');
+            // TODO: Change path depending on current platform.
+            var serverExe = path.resolve(__dirname, '../bin/win10-x64/ShaderTools.LanguageServer.exe');
 
             var startArgs = [ ];
             //startArgs.push("--logfilepath", editorServicesLogPath);
@@ -95,14 +95,14 @@ export class SessionManager {
 
             this.languageServerClient =
                 new LanguageClient(
-                    'Shader Tools Language Client',
+                    'HLSL Tools Language Client',
                     serverOptions,
                     clientOptions);
 
             this.languageServerClient.onReady().then(
                 () => {
                     this.setSessionStatus(
-                        'Shader Tools',
+                        'HLSL Tools',
                         SessionStatus.Running);
                 },
                 (reason) => {
@@ -165,7 +165,7 @@ export class SessionManager {
 
     private setSessionFailure(message: string, ...additionalMessages: string[]) {
         this.setSessionStatus(
-            "Shader Tools Initialization Error",
+            "HLSL Tools Initialization Error",
             SessionStatus.Failed);
     }
 
@@ -189,16 +189,9 @@ export class SessionManager {
         }
         else if (this.sessionStatus === SessionStatus.Failed) {
             menuItems = [
-                new SessionMenuItem(
-                    "Session initialization failed. Click here to show Shader Tools extension logs",
-                    () => { vscode.commands.executeCommand("ShaderTools.OpenLogFolder"); }),
+                new SessionMenuItem("Session initialization failed."),
             ];
         }
-
-        menuItems.push(
-            new SessionMenuItem(
-                "Open Session Logs Folder",
-                () => { vscode.commands.executeCommand("ShaderTools.OpenLogFolder"); }));
 
         vscode
             .window

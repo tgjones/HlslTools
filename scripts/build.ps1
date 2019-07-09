@@ -2,6 +2,7 @@ param(
     # Actions
     [switch]$build = $false,
     [switch]$test = $false,
+    [switch]$package = $false,
 
     # Settings
     [switch]$ci = $false,
@@ -13,7 +14,6 @@ $ErrorActionPreference = "Stop"
 [string]$rootDir = Join-Path $PSScriptRoot ".."
 [string]$toolsDir = Join-Path $rootDir "tools"
 [string]$binariesDir = Join-Path $rootDir "binaries"
-[string]$configDir = Join-Path $binariesDir $config
 
 function Get-MSBuildPath() {
     $vsWhere = Join-Path $toolsDir "vswhere.exe"
@@ -94,40 +94,49 @@ function Test-UnitTests-NetFramework() {
     }
 }
 
-function Publish-LanguageServer() {
+function Package-LanguageServer() {
     $runtimes =
-        "win10-x64",
-        "osx-x64"
+        "win10-x64"
+        #"osx-x64"
 
-    Write-Host "Publishing Language Server"
-    
-    $args = "publish --configuration $config src/ShaderTools.LanguageServer/ShaderTools.LanguageServer.csproj"
-    Exec-Console "dotnet" $args
+    Write-Host "Packaging Language Server"
+
+    foreach ($runtime in $runtimes) {
+        # TODO: Change filename depending on platform
+        $outputDir = Join-Path $rootDir "src/ShaderTools.VSCode/bin/$runtime"
+        Create-Directory $outputDir
+        $outputBinary = "$outputDir/ShaderTools.LanguageServer.exe"
+        $args = "warp src/ShaderTools.LanguageServer/ShaderTools.LanguageServer.csproj --output $outputBinary --verbose"
+        Exec-Console "dotnet" $args
+    }
+
+    $vscePath = Join-Path $binariesDir "vscode"
+    Create-Directory $vscePath
+
+    $vsceArgs = "package"
+    Exec-Console "vsce" $vsceArgs
 }
 
 Push-Location $rootDir
-try
-{
+try {
     . "scripts\utils.ps1"
 
-    if ($build)
-    {
+    if ($build) {
         Build-Solution
     }
 
-    if ($test)
-    {
+    if ($test) {
         Test-UnitTests-NetCore
         Test-UnitTests-NetFramework
     }
-}
-catch
-{
+
+    if ($package) {
+        Package-LanguageServer
+    }
+} catch {
     Write-TaskError "Error: $($_.Exception.Message)"
     Write-TaskError $_.ScriptStackTrace
     exit 1
-}
-finally
-{
+} finally {
     Pop-Location
 }
