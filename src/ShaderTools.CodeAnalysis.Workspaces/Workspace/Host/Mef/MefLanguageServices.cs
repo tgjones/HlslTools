@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Host.Mef
 {

@@ -1,5 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Hlsl.Text;
-using ShaderTools.CodeAnalysis.Host;
+﻿using Microsoft.CodeAnalysis.Host;
+using ShaderTools.CodeAnalysis.Hlsl.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {

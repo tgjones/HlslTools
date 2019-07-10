@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Host
 {

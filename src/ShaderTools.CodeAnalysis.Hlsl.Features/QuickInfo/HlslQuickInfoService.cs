@@ -2,6 +2,7 @@
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.QuickInfo;
+using ILanguageService = Microsoft.CodeAnalysis.Host.ILanguageService;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.QuickInfo
 {

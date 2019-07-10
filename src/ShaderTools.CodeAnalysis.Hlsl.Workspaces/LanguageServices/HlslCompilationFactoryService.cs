@@ -1,7 +1,7 @@
-﻿using ShaderTools.CodeAnalysis.Compilation;
+﻿using Microsoft.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.Host;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Syntax;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices

@@ -37,23 +37,6 @@ namespace ShaderTools.CodeAnalysis.Text
         public static SourceText AsText(this ITextSnapshot textSnapshot)
             => SnapshotSourceText.From(textSnapshot);
 
-        internal static SourceText AsRoslynText(this ITextSnapshot textSnapshot)
-            => new SnapshotSourceText.ClosedSnapshotSourceText(textSnapshot);
-
-        /// <summary>
-        /// Gets the workspace corresponding to the text buffer.
-        /// </summary>
-        public static Workspace GetWorkspace(this ITextBuffer buffer)
-        {
-            var container = buffer.AsTextContainer();
-            if (Workspace.TryGetWorkspace(container, out var workspace))
-            {
-                return workspace;
-            }
-
-            return null;
-        }
-
         /// <summary>
         /// Gets the <see cref="Document"/> from the corresponding <see cref="Workspace.CurrentSolution"/> that is associated with the <see cref="ITextSnapshot"/>'s buffer
         /// in its current project context, updated to contain the same text as the snapshot if necessary. There may be multiple <see cref="Document"/>s

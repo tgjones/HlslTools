@@ -1,4 +1,4 @@
-﻿using ShaderTools.CodeAnalysis.Host.Mef;
+﻿using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.ShaderLab.Classification;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.TaggedText

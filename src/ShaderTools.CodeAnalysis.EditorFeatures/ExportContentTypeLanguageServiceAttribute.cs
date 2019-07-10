@@ -2,7 +2,7 @@
 
 using System;
 using System.Composition;
-using ShaderTools.CodeAnalysis.Host.Mef;
+using Microsoft.CodeAnalysis.Host.Mef;
 
 namespace ShaderTools.CodeAnalysis.Editor
 {

@@ -3,8 +3,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Host;
 using Microsoft.VisualStudio.Text.Editor;
-using ShaderTools.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Editor
 {

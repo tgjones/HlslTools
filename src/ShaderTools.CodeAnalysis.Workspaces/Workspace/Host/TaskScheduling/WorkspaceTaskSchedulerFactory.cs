@@ -2,8 +2,8 @@
 
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using System.Composition;
+using Microsoft.CodeAnalysis.Host.Mef;
 
 namespace ShaderTools.CodeAnalysis.Host
 {

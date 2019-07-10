@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using ShaderTools.Utilities.Collections;
+using IWorkspaceService = Microsoft.CodeAnalysis.Host.IWorkspaceService;
 
 namespace ShaderTools.CodeAnalysis.Host
 {

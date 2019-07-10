@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.CodeAnalysis.Host.Mef
+﻿using ILanguageService = Microsoft.CodeAnalysis.Host.ILanguageService;
+
+namespace ShaderTools.CodeAnalysis.Host.Mef
 {
     /// <summary>
     /// A factory that creates instances of a specific <see cref="ILanguageService"/>.

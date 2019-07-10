@@ -1,6 +1,6 @@
 ﻿using System.Composition;
+using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Editor.Implementation.CommentSelection;
-using ShaderTools.CodeAnalysis.Host.Mef;
 
 namespace ShaderTools.CodeAnalysis.Editor.Hlsl.CommentSelection
 {

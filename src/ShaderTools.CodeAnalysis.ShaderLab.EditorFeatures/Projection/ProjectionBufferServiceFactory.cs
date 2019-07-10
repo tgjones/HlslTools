@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
+using IWorkspaceService = Microsoft.CodeAnalysis.Host.IWorkspaceService;
 
 namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 {

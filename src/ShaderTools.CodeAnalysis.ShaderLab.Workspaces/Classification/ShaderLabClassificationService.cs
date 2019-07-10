@@ -6,10 +6,10 @@ using System.Threading;
 using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.ShaderLab.Syntax;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Syntax;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis.Host.Mef;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.Classification
 {

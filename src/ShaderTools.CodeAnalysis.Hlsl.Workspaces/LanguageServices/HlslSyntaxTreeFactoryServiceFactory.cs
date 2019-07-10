@@ -1,6 +1,7 @@
 ﻿using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
+using ILanguageService = Microsoft.CodeAnalysis.Host.ILanguageService;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {

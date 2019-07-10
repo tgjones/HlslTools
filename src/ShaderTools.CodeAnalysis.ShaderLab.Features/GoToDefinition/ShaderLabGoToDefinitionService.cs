@@ -1,5 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.GoToDefinition;
-using ShaderTools.CodeAnalysis.Host.Mef;
+﻿using Microsoft.CodeAnalysis.Host.Mef;
+using ShaderTools.CodeAnalysis.GoToDefinition;
 
 namespace ShaderTools.CodeAnalysis.ShaderLab.GoToDefinition
 {
