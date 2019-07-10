@@ -10,6 +10,7 @@ using ShaderTools.CodeAnalysis.SignatureHelp;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
 using ShaderTools.CodeAnalysis.Text;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.SignatureHelp
 {

@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.Utilities.PooledObjects;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.FindUsages
 {

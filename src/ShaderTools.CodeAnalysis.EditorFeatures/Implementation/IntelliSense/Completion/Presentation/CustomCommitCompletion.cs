@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Tags;
 using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 using ShaderTools.CodeAnalysis.Completion;
@@ -85,7 +86,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion
         {
             get
             {
-                if (this.CompletionItem.Tags.Contains(CompletionTags.Warning))
+                if (this.CompletionItem.Tags.Contains(WellKnownTags.Warning))
                 {
                     return new[] { new CompletionIcon2(Glyph.CompletionWarning.GetImageMoniker(), s_glyphCompletionWarning, s_glyphCompletionWarning) };
                 }

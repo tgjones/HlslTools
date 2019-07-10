@@ -12,6 +12,7 @@ using Microsoft.VisualStudio.Text.Classification;
 using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
 using ShaderTools.Utilities.Collections;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 {

@@ -11,6 +11,7 @@ using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
 using ShaderTools.CodeAnalysis.SignatureHelp;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 using ModelSignatureHelp = OmniSharp.Extensions.LanguageServer.Protocol.Models.SignatureHelp;
 
 namespace ShaderTools.LanguageServer.Services.SignatureHelp

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Immutable;
+using Microsoft.CodeAnalysis.Tags;
 
 namespace ShaderTools.CodeAnalysis.Completion
 {
@@ -61,22 +62,22 @@ namespace ShaderTools.CodeAnalysis.Completion
             return true;
         }
 
-        public static readonly CompletionItemFilter NamespaceFilter = new CompletionItemFilter("Namespaces", CompletionTags.Namespace, 'n');
-        public static readonly CompletionItemFilter ClassFilter = new CompletionItemFilter("Classes", CompletionTags.Class, 'c');
-        public static readonly CompletionItemFilter ModuleFilter = new CompletionItemFilter("Modules", CompletionTags.Module, 'u');
-        public static readonly CompletionItemFilter StructureFilter = new CompletionItemFilter("Structures", CompletionTags.Structure, 's');
-        public static readonly CompletionItemFilter InterfaceFilter = new CompletionItemFilter("Interfaces", CompletionTags.Interface, 'i');
-        public static readonly CompletionItemFilter EnumFilter = new CompletionItemFilter("Enums", CompletionTags.Enum, 'e');
-        public static readonly CompletionItemFilter DelegateFilter = new CompletionItemFilter("Delegates", CompletionTags.Delegate, 'd');
-        public static readonly CompletionItemFilter ConstantFilter = new CompletionItemFilter("Constants", CompletionTags.Constant, 'o');
-        public static readonly CompletionItemFilter FieldFilter = new CompletionItemFilter("Fields", CompletionTags.Field, 'f');
-        public static readonly CompletionItemFilter EventFilter = new CompletionItemFilter("Events", CompletionTags.Event, 'v');
-        public static readonly CompletionItemFilter PropertyFilter = new CompletionItemFilter("Properties", CompletionTags.Property, 'p');
-        public static readonly CompletionItemFilter MethodFilter = new CompletionItemFilter("Methods", CompletionTags.Method, 'm');
-        public static readonly CompletionItemFilter ExtensionMethodFilter = new CompletionItemFilter("Extension methods", CompletionTags.ExtensionMethod, 'x');
-        public static readonly CompletionItemFilter LocalAndParameterFilter = new CompletionItemFilter("Locals and parameters", ImmutableArray.Create(CompletionTags.Local, CompletionTags.Parameter), 'l');
-        public static readonly CompletionItemFilter KeywordFilter = new CompletionItemFilter("Keywords", ImmutableArray.Create(CompletionTags.Keyword), 'k');
-        public static readonly CompletionItemFilter SnippetFilter = new CompletionItemFilter("Snippets", ImmutableArray.Create(CompletionTags.Snippet), 't');
+        public static readonly CompletionItemFilter NamespaceFilter = new CompletionItemFilter("Namespaces", WellKnownTags.Namespace, 'n');
+        public static readonly CompletionItemFilter ClassFilter = new CompletionItemFilter("Classes", WellKnownTags.Class, 'c');
+        public static readonly CompletionItemFilter ModuleFilter = new CompletionItemFilter("Modules", WellKnownTags.Module, 'u');
+        public static readonly CompletionItemFilter StructureFilter = new CompletionItemFilter("Structures", WellKnownTags.Structure, 's');
+        public static readonly CompletionItemFilter InterfaceFilter = new CompletionItemFilter("Interfaces", WellKnownTags.Interface, 'i');
+        public static readonly CompletionItemFilter EnumFilter = new CompletionItemFilter("Enums", WellKnownTags.Enum, 'e');
+        public static readonly CompletionItemFilter DelegateFilter = new CompletionItemFilter("Delegates", WellKnownTags.Delegate, 'd');
+        public static readonly CompletionItemFilter ConstantFilter = new CompletionItemFilter("Constants", WellKnownTags.Constant, 'o');
+        public static readonly CompletionItemFilter FieldFilter = new CompletionItemFilter("Fields", WellKnownTags.Field, 'f');
+        public static readonly CompletionItemFilter EventFilter = new CompletionItemFilter("Events", WellKnownTags.Event, 'v');
+        public static readonly CompletionItemFilter PropertyFilter = new CompletionItemFilter("Properties", WellKnownTags.Property, 'p');
+        public static readonly CompletionItemFilter MethodFilter = new CompletionItemFilter("Methods", WellKnownTags.Method, 'm');
+        public static readonly CompletionItemFilter ExtensionMethodFilter = new CompletionItemFilter("Extension methods", WellKnownTags.ExtensionMethod, 'x');
+        public static readonly CompletionItemFilter LocalAndParameterFilter = new CompletionItemFilter("Locals and parameters", ImmutableArray.Create(WellKnownTags.Local, WellKnownTags.Parameter), 'l');
+        public static readonly CompletionItemFilter KeywordFilter = new CompletionItemFilter("Keywords", ImmutableArray.Create(WellKnownTags.Keyword), 'k');
+        public static readonly CompletionItemFilter SnippetFilter = new CompletionItemFilter("Snippets", ImmutableArray.Create(WellKnownTags.Snippet), 't');
 
         public static readonly ImmutableArray<CompletionItemFilter> NamespaceFilters = ImmutableArray.Create(NamespaceFilter);
         public static readonly ImmutableArray<CompletionItemFilter> ClassFilters = ImmutableArray.Create(ClassFilter);

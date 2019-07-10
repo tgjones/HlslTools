@@ -1,6 +1,6 @@
 ﻿using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Hlsl.Classification;
-using ShaderTools.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis.Classification;
 
 namespace ShaderTools.CodeAnalysis.Hlsl
 {

@@ -1,48 +1,16 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Classification;
 using Microsoft.CodeAnalysis.Text;
-using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.Collections;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
 
 namespace ShaderTools.CodeAnalysis
 {
-    /// <summary>
-    /// A piece of text with a descriptive tag.
-    /// </summary>
-    public struct TaggedText
-    {
-        /// <summary>
-        /// A descriptive tag from <see cref="TextTags"/>.
-        /// </summary>
-        public string Tag { get; }
-
-        /// <summary>
-        /// The actual text to be displayed.
-        /// </summary>
-        public string Text { get; }
-
-        /// <summary>
-        /// Creates a new instance of <see cref="TaggedText"/>
-        /// </summary>
-        /// <param name="tag">A descriptive tag from <see cref="TextTags"/>.</param>
-        /// <param name="text">The actual text to be displayed.</param>
-        public TaggedText(string tag, string text)
-        {
-            Tag = tag ?? throw new ArgumentNullException(nameof(tag));
-            Text = text ?? throw new ArgumentNullException(nameof(text));
-        }
-
-        public override string ToString()
-        {
-            return Text;
-        }
-    }
-
     internal static class TaggedTextExtensions
     {
         public static ImmutableArray<TaggedText> ToTaggedText(this IEnumerable<SymbolMarkupToken> displayParts)

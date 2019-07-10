@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
+using Microsoft.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.Utilities.Collections;
 
