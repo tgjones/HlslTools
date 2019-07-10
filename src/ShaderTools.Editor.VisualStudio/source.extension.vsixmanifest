@@ -1,41 +1,41 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
-  <Metadata>
-    <Identity Id="7def6c01-a05e-42e6-953d-3fdea1891737" Version="1.1" Language="en-US" Publisher="Tim Jones" />
-    <DisplayName>HLSL Tools for Visual Studio</DisplayName>
-    <Description xml:space="preserve">Enhanced support for editing HLSL in Visual Studio</Description>
-    <MoreInfo>https://github.com/tgjones/HlslTools</MoreInfo>
-    <License>Resources\LICENSE</License>
-    <ReleaseNotes>https://github.com/tgjones/HlslTools/blob/master/CHANGELOG.md</ReleaseNotes>
-    <Icon>Resources\icon.png</Icon>
-    <PreviewImage>Resources\preview.png</PreviewImage>
-    <Tags>HLSL, shader, Direct3D</Tags>
-  </Metadata>
-  <Installation InstalledByMsi="false">
-    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[14.0,17.0)" />
-  </Installation>
-  <Prerequisites>
-    <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
-  </Prerequisites>
-  <Assets>
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices" Path="|ShaderTools.VisualStudio.LanguageServices|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures" Path="|ShaderTools.CodeAnalysis.EditorFeatures|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Workspaces" Path="|ShaderTools.CodeAnalysis.Workspaces|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Workspaces" Path="|ShaderTools.CodeAnalysis.Hlsl.Workspaces|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.Hlsl" Path="|ShaderTools.VisualStudio.LanguageServices.Hlsl|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.ShaderLab" Path="|ShaderTools.VisualStudio.LanguageServices.ShaderLab|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.EditorFeatures" Path="|ShaderTools.CodeAnalysis.Hlsl.EditorFeatures|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures" Path="|ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.Workspaces" Path="|ShaderTools.CodeAnalysis.ShaderLab.Workspaces|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Features" Path="|ShaderTools.CodeAnalysis.Features|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Features" Path="|ShaderTools.CodeAnalysis.Hlsl.Features|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.SyntaxVisualizer" Path="|ShaderTools.VisualStudio.SyntaxVisualizer;PkgdefProjectOutputGroup|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices" Path="|ShaderTools.VisualStudio.LanguageServices;PkgdefProjectOutputGroup|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.Features" Path="|ShaderTools.CodeAnalysis.ShaderLab.Features|" />
-    <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures.Text" Path="|ShaderTools.CodeAnalysis.EditorFeatures.Text|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.Hlsl" Path="|ShaderTools.VisualStudio.LanguageServices.Hlsl;PkgdefProjectOutputGroup|" />
-    <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.ShaderLab" Path="|ShaderTools.VisualStudio.LanguageServices.ShaderLab;PkgdefProjectOutputGroup|" />
-  </Assets>
+    <Metadata>
+        <Identity Id="7def6c01-a05e-42e6-953d-3fdea1891737" Version="1.1" Language="en-US" Publisher="Tim Jones" />
+        <DisplayName>HLSL Tools for Visual Studio</DisplayName>
+        <Description xml:space="preserve">Enhanced support for editing HLSL in Visual Studio</Description>
+        <MoreInfo>https://github.com/tgjones/HlslTools</MoreInfo>
+        <License>Resources\LICENSE</License>
+        <ReleaseNotes>https://github.com/tgjones/HlslTools/blob/master/CHANGELOG.md</ReleaseNotes>
+        <Icon>Resources\icon.png</Icon>
+        <PreviewImage>Resources\preview.png</PreviewImage>
+        <Tags>HLSL, shader, Direct3D</Tags>
+    </Metadata>
+    <Installation InstalledByMsi="false">
+        <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0.27413,17.0)" />
+    </Installation>
+    <Prerequisites>
+        <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,)" DisplayName="Visual Studio core editor" />
+    </Prerequisites>
+    <Assets>
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="%CurrentProject%" Path="|%CurrentProject%|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices" Path="|ShaderTools.VisualStudio.LanguageServices|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures" Path="|ShaderTools.CodeAnalysis.EditorFeatures|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Workspaces" Path="|ShaderTools.CodeAnalysis.Workspaces|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Workspaces" Path="|ShaderTools.CodeAnalysis.Hlsl.Workspaces|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.Hlsl" Path="|ShaderTools.VisualStudio.LanguageServices.Hlsl|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.ShaderLab" Path="|ShaderTools.VisualStudio.LanguageServices.ShaderLab|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.EditorFeatures" Path="|ShaderTools.CodeAnalysis.Hlsl.EditorFeatures|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures" Path="|ShaderTools.CodeAnalysis.ShaderLab.EditorFeatures|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.Workspaces" Path="|ShaderTools.CodeAnalysis.ShaderLab.Workspaces|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Features" Path="|ShaderTools.CodeAnalysis.Features|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.Hlsl.Features" Path="|ShaderTools.CodeAnalysis.Hlsl.Features|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.SyntaxVisualizer" Path="|ShaderTools.VisualStudio.SyntaxVisualizer;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices" Path="|ShaderTools.VisualStudio.LanguageServices;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.ShaderLab.Features" Path="|ShaderTools.CodeAnalysis.ShaderLab.Features|" />
+        <Asset Type="Microsoft.VisualStudio.MefComponent" d:Source="Project" d:ProjectName="ShaderTools.CodeAnalysis.EditorFeatures.Text" Path="|ShaderTools.CodeAnalysis.EditorFeatures.Text|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.Hlsl" Path="|ShaderTools.VisualStudio.LanguageServices.Hlsl;PkgdefProjectOutputGroup|" />
+        <Asset Type="Microsoft.VisualStudio.VsPackage" d:Source="Project" d:ProjectName="ShaderTools.VisualStudio.LanguageServices.ShaderLab" Path="|ShaderTools.VisualStudio.LanguageServices.ShaderLab;PkgdefProjectOutputGroup|" />
+    </Assets>
 </PackageManifest>

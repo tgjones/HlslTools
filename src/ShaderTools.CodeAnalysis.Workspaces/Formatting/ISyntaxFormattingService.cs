@@ -25,7 +25,6 @@ namespace ShaderTools.CodeAnalysis.Formatting
     internal interface IFormattingResult
     {
         IList<TextChange> GetTextChanges(CancellationToken cancellationToken = default(CancellationToken));
-        //SyntaxNode GetFormattedRoot(CancellationToken cancellationToken = default(CancellationToken));
     }
 
     internal sealed class FormattingResult : IFormattingResult

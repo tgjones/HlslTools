@@ -35,7 +35,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
                 TaggerEventSources.OnTextChanged(subjectBuffer, TaggerDelay.OnIdle));
         }
 
-        protected override async Task ProduceTagsAsync(TaggerContext<Microsoft.VisualStudio.Text.Tagging.IStructureTag> context, DocumentSnapshotSpan spanToTag, int? caretPosition)
+        protected override async Task ProduceTagsAsync(TaggerContext<IStructureTag> context, DocumentSnapshotSpan spanToTag, int? caretPosition)
         {
             var blockStructureProvider = spanToTag.Document.LanguageServices.GetService<IBlockStructureProvider>();
             if (blockStructureProvider == null)
@@ -49,8 +49,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
             {
                 if (!blockSpan.IsCollapsible)
                     continue;
-
-                var collapsedHintForm = snapshot.GetText(blockSpan.HintSpan.ToSpan());
 
                 context.AddTag(snapshot.GetTagSpan(
                     blockSpan.TextSpan.ToSpan(),

@@ -12,10 +12,5 @@ namespace ShaderTools.Utilities
             reference.TryGetTarget(out var target);
             return target;
         }
-
-        public static bool IsNull<T>(this WeakReference<T> reference) where T : class
-        {
-            return !reference.TryGetTarget(out var target);
-        }
     }
 }

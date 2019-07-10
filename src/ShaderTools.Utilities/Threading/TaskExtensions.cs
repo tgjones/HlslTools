@@ -11,21 +11,6 @@ namespace ShaderTools.Utilities.Threading
 {
     internal static class TaskExtensions
     {
-        /// <summary>
-        /// Use to explicitly indicate that you are not waiting for a task to complete
-        /// Observes the exceptions from it.
-        /// </summary>
-        public static async void FireAndForget(this Task task)
-        {
-            try
-            {
-                await task.ConfigureAwait(false);
-            }
-            catch (OperationCanceledException)
-            {
-            }
-        }
-
         public static T WaitAndGetResult<T>(this Task<T> task, CancellationToken cancellationToken)
         {
 #if DEBUG
@@ -100,16 +85,6 @@ namespace ShaderTools.Utilities.Threading
             this Task<TInput> task,
             Func<Task<TInput>, TResult> continuationFunction,
             CancellationToken cancellationToken,
-            TaskScheduler scheduler)
-        {
-            return SafeContinueWith<TInput, TResult>(
-                task, continuationFunction, cancellationToken, TaskContinuationOptions.None, scheduler);
-        }
-
-        public static Task<TResult> SafeContinueWith<TInput, TResult>(
-            this Task<TInput> task,
-            Func<Task<TInput>, TResult> continuationFunction,
-            CancellationToken cancellationToken,
             TaskContinuationOptions continuationOptions,
             TaskScheduler scheduler)
         {
@@ -167,48 +142,6 @@ namespace ShaderTools.Utilities.Threading
 
             // This is the only place in the code where we're allowed to call ContinueWith.
             return task.ContinueWith(outerFunction, cancellationToken, continuationOptions | TaskContinuationOptions.LazyCancellation, scheduler);
-        }
-
-        public static Task<TResult> SafeContinueWith<TResult>(
-            this Task task,
-            Func<Task, TResult> continuationFunction,
-            CancellationToken cancellationToken,
-            TaskScheduler scheduler)
-        {
-            return task.SafeContinueWith(continuationFunction, cancellationToken, TaskContinuationOptions.None, scheduler);
-        }
-
-        public static Task SafeContinueWith(
-            this Task task,
-            Action<Task> continuationAction,
-            TaskScheduler scheduler)
-        {
-            return task.SafeContinueWith(continuationAction, CancellationToken.None, TaskContinuationOptions.None, scheduler);
-        }
-
-        public static Task SafeContinueWith<TInput>(
-            this Task<TInput> task,
-            Action<Task<TInput>> continuationFunction,
-            TaskScheduler scheduler)
-        {
-            return task.SafeContinueWith(continuationFunction, CancellationToken.None, TaskContinuationOptions.None, scheduler);
-        }
-
-        public static Task<TResult> SafeContinueWith<TInput, TResult>(
-            this Task<TInput> task,
-            Func<Task<TInput>, TResult> continuationFunction,
-            TaskScheduler scheduler)
-        {
-            return task.SafeContinueWith(continuationFunction, CancellationToken.None, TaskContinuationOptions.None, scheduler);
-        }
-
-        public static Task SafeContinueWith(
-            this Task task,
-            Action<Task> continuationAction,
-            CancellationToken cancellationToken,
-            TaskScheduler scheduler)
-        {
-            return task.SafeContinueWith(continuationAction, cancellationToken, TaskContinuationOptions.None, scheduler);
         }
 
         // Code provided by Stephen Toub.
@@ -298,15 +231,6 @@ namespace ShaderTools.Utilities.Threading
                TaskScheduler.Default);
 
             return nextTask;
-        }
-
-        public static Task SafeContinueWithFromAsync(
-           this Task task,
-           Func<Task, Task> continuationFunction,
-           CancellationToken cancellationToken,
-           TaskScheduler scheduler)
-        {
-            return task.SafeContinueWithFromAsync(continuationFunction, cancellationToken, TaskContinuationOptions.None, scheduler);
         }
 
         public static Task SafeContinueWithFromAsync(

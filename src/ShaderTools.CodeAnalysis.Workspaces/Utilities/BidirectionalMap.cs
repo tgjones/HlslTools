@@ -2,8 +2,6 @@
 
 using System.Collections.Generic;
 using System.Collections.Immutable;
-using System.Linq;
-using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Utilities
@@ -15,12 +13,6 @@ namespace ShaderTools.CodeAnalysis.Utilities
 
         private readonly ImmutableDictionary<TKey, TValue> _forwardMap;
         private readonly ImmutableDictionary<TValue, TKey> _backwardMap;
-
-        public BidirectionalMap(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
-        {
-            _forwardMap = ImmutableDictionary.CreateRange<TKey, TValue>(pairs);
-            _backwardMap = ImmutableDictionary.CreateRange<TValue, TKey>(pairs.Select(p => KeyValuePair.Create(p.Value, p.Key)));
-        }
 
         private BidirectionalMap(ImmutableDictionary<TKey, TValue> forwardMap, ImmutableDictionary<TValue, TKey> backwardMap)
         {

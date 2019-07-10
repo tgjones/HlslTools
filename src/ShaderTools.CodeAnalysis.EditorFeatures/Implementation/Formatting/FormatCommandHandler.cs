@@ -2,7 +2,6 @@
 
 using System;
 using System.ComponentModel.Composition;
-using System.Linq;
 using System.Threading;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Commanding;
@@ -15,7 +14,6 @@ using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
-using ShaderTools.CodeAnalysis.Formatting.Rules;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Threading;
@@ -59,17 +57,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
                 if (changes.Count == 0)
                 {
                     return;
-                }
-
-                if (selectionOpt.HasValue)
-                {
-                    var ruleFactory = document.Workspace.Services.GetService<IHostDependentFormattingRuleFactoryService>();
-
-                    changes = ruleFactory.FilterFormattedChanges(document, selectionOpt.Value, changes).ToList();
-                    if (changes.Count == 0)
-                    {
-                        return;
-                    }
                 }
 
                 //using (Logger.LogBlock(FunctionId.Formatting_ApplyResultToBuffer, cancellationToken))

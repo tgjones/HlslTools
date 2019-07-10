@@ -7,7 +7,6 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
-using ShaderTools.CodeAnalysis.Formatting.Rules;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Text;
@@ -51,12 +50,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
 
             var document = args.SubjectBuffer.CurrentSnapshot.GetOpenDocumentInCurrentContextWithChanges();
             if (document == null)
-            {
-                return;
-            }
-
-            var formattingRuleService = document.Workspace.Services.GetService<IHostDependentFormattingRuleFactoryService>();
-            if (formattingRuleService != null && formattingRuleService.ShouldNotFormatOrCommitOnPaste(document))
             {
                 return;
             }

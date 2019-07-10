@@ -7,7 +7,7 @@ using System.Globalization;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Shared;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
-using ShaderTools.Utilities;
+using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Diagnostics;
 using ShaderTools.Utilities.PooledObjects;
 

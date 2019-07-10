@@ -33,45 +33,6 @@ namespace ShaderTools.Utilities.Collections
             return ImmutableArray.CreateRange<T>(items);
         }
 
-        internal static ImmutableArray<T> ToImmutableArrayOrEmpty<T>(this ImmutableArray<T> items)
-        {
-            if (items.IsDefault)
-            {
-                return ImmutableArray.Create<T>();
-            }
-
-            return items;
-        }
-
-        // same as Array.BinarySearch but the ability to pass arbitrary value to the comparer without allocation
-        internal static int BinarySearch<TElement, TValue>(this ImmutableArray<TElement> array, TValue value, Func<TElement, TValue, int> comparer)
-        {
-            int low = 0;
-            int high = array.Length - 1;
-
-            while (low <= high)
-            {
-                int middle = low + ((high - low) >> 1);
-                int comparison = comparer(array[middle], value);
-
-                if (comparison == 0)
-                {
-                    return middle;
-                }
-
-                if (comparison > 0)
-                {
-                    high = middle - 1;
-                }
-                else
-                {
-                    low = middle + 1;
-                }
-            }
-
-            return ~low;
-        }
-
         /// <summary>
         /// Returns an empty array if the input array is null (default)
         /// </summary>
@@ -198,11 +159,6 @@ namespace ShaderTools.Utilities.Collections
         internal static ImmutableArray<T> Concat<T>(this ImmutableArray<T> first, ImmutableArray<T> second)
         {
             return first.AddRange(second);
-        }
-
-        internal static ImmutableArray<T> Concat<T>(this ImmutableArray<T> first, T second)
-        {
-            return first.Add(second);
         }
     }
 }
