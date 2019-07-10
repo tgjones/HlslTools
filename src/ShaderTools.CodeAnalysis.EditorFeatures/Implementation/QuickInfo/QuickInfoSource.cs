@@ -8,6 +8,7 @@ using Microsoft.VisualStudio.Text.Adornments;
 using ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
+using QuickInfoService = ShaderTools.CodeAnalysis.QuickInfo.QuickInfoService;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.QuickInfo
 {
@@ -15,16 +16,13 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.QuickInfo
     {
         private readonly ITextBuffer _subjectBuffer;
         private readonly IDocumentProvider _documentProvider;
-        private readonly CodeAnalysis.QuickInfo.QuickInfoService _quickInfoService;
 
         public QuickInfoSource(
             ITextBuffer subjectBuffer,
-            IDocumentProvider documentProvider,
-            CodeAnalysis.QuickInfo.QuickInfoService quickInfoService)
+            IDocumentProvider documentProvider)
         {
             _subjectBuffer = subjectBuffer;
             _documentProvider = documentProvider;
-            _quickInfoService = quickInfoService;
         }
 
         public async Task<QuickInfoItem> GetQuickInfoItemAsync(IAsyncQuickInfoSession session, CancellationToken cancellationToken)
@@ -39,7 +37,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.QuickInfo
                     return null;
                 }
 
-                var item = await _quickInfoService.GetQuickInfoAsync(document, position.Value.Position, cancellationToken).ConfigureAwait(false);
+                var quickInfoService = QuickInfoService.GetService(document);
+
+                var item = await quickInfoService.GetQuickInfoAsync(document, position.Value.Position, cancellationToken).ConfigureAwait(false);
                 if (item == null)
                 {
                     return null;

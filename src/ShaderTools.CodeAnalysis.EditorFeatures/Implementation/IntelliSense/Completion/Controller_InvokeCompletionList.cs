@@ -12,7 +12,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.Completion
         CommandState IChainedCommandHandler<InvokeCompletionListCommandArgs>.GetCommandState(InvokeCompletionListCommandArgs args, Func<CommandState> nextHandler)
         {
             AssertIsForeground();
-            return nextHandler();
+            return CommandState.Available;
         }
 
         void IChainedCommandHandler<InvokeCompletionListCommandArgs>.ExecuteCommand(InvokeCompletionListCommandArgs args, Action nextHandler, CommandExecutionContext context)

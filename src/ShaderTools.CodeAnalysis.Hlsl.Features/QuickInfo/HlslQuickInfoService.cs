@@ -6,13 +6,8 @@ using ShaderTools.CodeAnalysis.QuickInfo;
 namespace ShaderTools.CodeAnalysis.Hlsl.QuickInfo
 {
     [ExportLanguageServiceFactory(typeof(QuickInfoService), LanguageNames.Hlsl), Shared]
-    internal sealed class CSharpQuickInfoServiceFactory : ILanguageServiceFactory
+    internal sealed class HlslQuickInfoServiceFactory : ILanguageServiceFactory
     {
-        [ImportingConstructor]
-        public CSharpQuickInfoServiceFactory()
-        {
-        }
-
         public ILanguageService CreateLanguageService(HostLanguageServices languageServices)
         {
             return new HlslQuickInfoService(languageServices.WorkspaceServices.Workspace);
