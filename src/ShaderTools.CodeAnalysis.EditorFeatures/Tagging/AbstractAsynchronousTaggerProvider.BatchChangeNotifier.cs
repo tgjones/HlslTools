@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
-using ShaderTools.Utilities;
+using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Editor.Tagging

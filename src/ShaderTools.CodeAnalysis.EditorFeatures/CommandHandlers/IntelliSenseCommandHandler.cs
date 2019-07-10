@@ -14,11 +14,9 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
         [ImportingConstructor]
         public IntelliSenseCommandHandler(
             CompletionCommandHandler completionCommandHandler,
-            SignatureHelpCommandHandler signatureHelpCommandHandler,
-            QuickInfoCommandHandlerAndSourceProvider quickInfoCommandHandler)
+            SignatureHelpCommandHandler signatureHelpCommandHandler)
             : base(completionCommandHandler,
-                signatureHelpCommandHandler,
-                quickInfoCommandHandler)
+                signatureHelpCommandHandler)
         {
         }
     }

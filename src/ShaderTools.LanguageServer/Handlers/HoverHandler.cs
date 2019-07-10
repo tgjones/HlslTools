@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -27,32 +26,21 @@ namespace ShaderTools.LanguageServer.Handlers
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
-            var providerCoordinatorFactory = _workspace.GetGlobalService<IQuickInfoProviderCoordinatorFactory>();
-            var providerCoordinator = providerCoordinatorFactory.CreateCoordinator(document);
+            var quickInfoService = document.LanguageServices.GetRequiredService<QuickInfoService>();
 
-            var (item, _) = await providerCoordinator.GetItemAsync(document, position, token);
+            var item = await quickInfoService.GetQuickInfoAsync(document, position, token);
 
             if (item != null)
             {
                 Range symbolRange;
 
-                var markdownText = string.Empty;
+                var content = item.Content;
+                var markdownText = $"``` {Helpers.ToLspLanguage(document.Language)}\n{content.MainDescription.GetFullText()}\n```\n";
 
-                switch (item.Content)
+                if (!content.Documentation.IsEmpty)
                 {
-                    case QuickInfoDisplayContent c:
-                        markdownText += $"``` {Helpers.ToLspLanguage(document.Language)}\n{c.MainDescription.GetFullText()}\n```\n";
-
-                        if (!c.Documentation.IsEmpty)
-                        {
-                            markdownText += "---\n";
-                            markdownText += c.Documentation.GetFullText();
-                        }
-
-                        break;
-
-                    default:
-                        throw new ArgumentOutOfRangeException();
+                    markdownText += "---\n";
+                    markdownText += content.Documentation.GetFullText();
                 }
 
                 symbolRange = Helpers.ToRange(document.SourceText, item.TextSpan);

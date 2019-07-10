@@ -54,7 +54,7 @@ namespace ShaderTools.CodeAnalysis.QuickInfo
 
             var documentationContent = GetDocumentationContent(symbols, sections);
 
-            return new QuickInfoDisplayContent(
+            return new QuickInfoContent(
                 semanticModel.Language,
                 glyph: symbols?.First().GetGlyph() ?? Glyph.None,
                 mainDescription: ImmutableArray.CreateRange(mainDescriptionBuilder),
