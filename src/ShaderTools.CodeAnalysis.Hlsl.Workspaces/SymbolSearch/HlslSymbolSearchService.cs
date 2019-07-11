@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
+using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.SymbolSearch;
 using ShaderTools.CodeAnalysis.Syntax;

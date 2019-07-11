@@ -5,13 +5,13 @@ using System.Collections.Immutable;
 using System.Composition;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Editor;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Editor.Implementation;
-using ShaderTools.CodeAnalysis.Host.Mef;
 
 namespace ShaderTools.VisualStudio.LanguageServices
 {

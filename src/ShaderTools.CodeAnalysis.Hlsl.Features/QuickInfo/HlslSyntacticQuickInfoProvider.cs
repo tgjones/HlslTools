@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
 using ShaderTools.CodeAnalysis.QuickInfo;
 using ShaderTools.CodeAnalysis.Syntax;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.QuickInfo
 {
@@ -17,7 +18,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.QuickInfo
             var macroDefinitionNode = token.Parent as DefineDirectiveTriviaSyntax;
             if (macroDefinitionNode != null && macroDefinitionNode.MacroName == token)
             {
-                return new QuickInfoDisplayContent(
+                return new QuickInfoContent(
                     LanguageNames.Hlsl,
                     Glyph.Macro,
                     ImmutableArray.Create(new TaggedText(TextTags.Text, $"(macro definition) {macroDefinitionNode}")),
@@ -28,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.QuickInfo
             var macroReference = syntaxToken.MacroReference;
             if (macroReference != null && macroReference.SourceRange == token.SourceRange)
             {
-                return new QuickInfoDisplayContent(
+                return new QuickInfoContent(
                     LanguageNames.Hlsl,
                     Glyph.Macro,
                     ImmutableArray.Create(new TaggedText(TextTags.Text, $"(macro reference) {macroReference.DefineDirective.ToString(true)}")),

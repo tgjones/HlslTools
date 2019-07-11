@@ -13,7 +13,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.SignatureH
         CommandState IChainedCommandHandler<InvokeSignatureHelpCommandArgs>.GetCommandState(InvokeSignatureHelpCommandArgs args, Func<CommandState> nextHandler)
         {
             AssertIsForeground();
-            return nextHandler();
+            return CommandState.Available;
         }
 
         void IChainedCommandHandler<InvokeSignatureHelpCommandArgs>.ExecuteCommand(InvokeSignatureHelpCommandArgs args, Action nextHandler, CommandExecutionContext context)

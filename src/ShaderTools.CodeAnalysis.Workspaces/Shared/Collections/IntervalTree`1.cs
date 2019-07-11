@@ -89,45 +89,8 @@ namespace ShaderTools.CodeAnalysis.Shared.Collections
             return overlapStart < overlapEnd;
         }
 
-        public ImmutableArray<T> GetIntervalsThatOverlapWith(int start, int length, IIntervalIntrospector<T> introspector)
-            => this.GetIntervalsThatMatch(start, length, s_overlapsWithTest, introspector);
-
         public ImmutableArray<T> GetIntervalsThatIntersectWith(int start, int length, IIntervalIntrospector<T> introspector)
             => this.GetIntervalsThatMatch(start, length, s_intersectsWithTest, introspector);
-
-        public ImmutableArray<T> GetIntervalsThatContain(int start, int length, IIntervalIntrospector<T> introspector)
-            => this.GetIntervalsThatMatch(start, length, s_containsTest, introspector);
-
-        public void FillWithIntervalsThatOverlapWith(int start, int length, ArrayBuilder<T> builder, IIntervalIntrospector<T> introspector)
-            => this.FillWithIntervalsThatMatch(start, length, s_overlapsWithTest, builder, introspector, stopAfterFirst: false);
-
-        public void FillWithIntervalsThatIntersectWith(int start, int length, ArrayBuilder<T> builder, IIntervalIntrospector<T> introspector)
-            => this.FillWithIntervalsThatMatch(start, length, s_intersectsWithTest, builder, introspector, stopAfterFirst: false);
-
-        public void FillWithIntervalsThatContain(int start, int length, ArrayBuilder<T> builder, IIntervalIntrospector<T> introspector)
-            => this.FillWithIntervalsThatMatch(start, length, s_containsTest, builder, introspector, stopAfterFirst: false);
-
-        public bool HasIntervalThatIntersectsWith(int position, IIntervalIntrospector<T> introspector)
-            => HasIntervalThatIntersectsWith(position, 0, introspector);
-
-        public bool HasIntervalThatIntersectsWith(int start, int length, IIntervalIntrospector<T> introspector)
-            => Any(start, length, s_intersectsWithTest, introspector);
-
-        public bool HasIntervalThatOverlapsWith(int start, int length, IIntervalIntrospector<T> introspector)
-            => Any(start, length, s_overlapsWithTest, introspector);
-
-        public bool HasIntervalThatContains(int start, int length, IIntervalIntrospector<T> introspector)
-            => Any(start, length, s_containsTest, introspector);
-
-        private bool Any(int start, int length, TestInterval testInterval, IIntervalIntrospector<T> introspector)
-        {
-            var builder = ArrayBuilder<T>.GetInstance();
-            FillWithIntervalsThatMatch(start, length, testInterval, builder, introspector, stopAfterFirst: true);
-
-            var result = builder.Count > 0;
-            builder.Free();
-            return result;
-        }
 
         private ImmutableArray<T> GetIntervalsThatMatch(
             int start, int length, TestInterval testInterval, IIntervalIntrospector<T> introspector)

@@ -33,28 +33,6 @@ namespace ShaderTools.CodeAnalysis.Text.Shared.Extensions
         }
 
         /// <summary>
-        /// Returns the first non-whitespace position on the given line as an offset
-        /// from the start of the line, or null if the line is empty or contains only
-        /// whitespace.
-        /// </summary>
-        public static int? GetFirstNonWhitespaceOffset(this ITextSnapshotLine line)
-        {
-            Contract.ThrowIfNull(line);
-
-            var text = line.GetText();
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (!char.IsWhiteSpace(text[i]))
-                {
-                    return i;
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Returns the last non-whitespace position on the given line, or null if 
         /// the line is empty or contains only whitespace.
         /// </summary>
@@ -118,46 +96,9 @@ namespace ShaderTools.CodeAnalysis.Text.Shared.Extensions
             return line.GetText().GetColumnOfFirstNonWhitespaceCharacterOrEndOfLine(tabSize);
         }
 
-        public static int GetColumnFromLineOffset(this ITextSnapshotLine line, int lineOffset, IEditorOptions editorOptions)
-        {
-            return line.GetText().GetColumnFromLineOffset(lineOffset, editorOptions.GetTabSize());
-        }
-
         public static int GetLineOffsetFromColumn(this ITextSnapshotLine line, int column, IEditorOptions editorOptions)
         {
             return line.GetText().GetLineOffsetFromColumn(column, editorOptions.GetTabSize());
-        }
-
-        /// <summary>
-        /// Checks if the given line at the given snapshot index starts with the provided value.
-        /// </summary>
-        public static bool StartsWith(this ITextSnapshotLine line, int index, string value, bool ignoreCase)
-        {
-            var snapshot = line.Snapshot;
-            if (index + value.Length > snapshot.Length)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                var snapshotIndex = index + i;
-                var actualCharacter = snapshot[snapshotIndex];
-                var expectedCharacter = value[i];
-
-                if (ignoreCase)
-                {
-                    actualCharacter = char.ToLowerInvariant(actualCharacter);
-                    expectedCharacter = char.ToLowerInvariant(expectedCharacter);
-                }
-
-                if (actualCharacter != expectedCharacter)
-                {
-                    return false;
-                }
-            }
-
-            return true;
         }
     }
 }

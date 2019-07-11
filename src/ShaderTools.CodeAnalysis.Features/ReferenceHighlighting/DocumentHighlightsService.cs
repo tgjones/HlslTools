@@ -3,7 +3,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.CodeAnalysis.Host.Mef;
+using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.SymbolSearch;
 using ShaderTools.Utilities.Collections;
 

@@ -12,6 +12,7 @@ using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.Utilities.Collections;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.QuickInfo
 {
@@ -54,7 +55,7 @@ namespace ShaderTools.CodeAnalysis.QuickInfo
 
             var documentationContent = GetDocumentationContent(symbols, sections);
 
-            return new QuickInfoDisplayContent(
+            return new QuickInfoContent(
                 semanticModel.Language,
                 glyph: symbols?.First().GetGlyph() ?? Glyph.None,
                 mainDescription: ImmutableArray.CreateRange(mainDescriptionBuilder),

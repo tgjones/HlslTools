@@ -35,17 +35,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
                 : lineText;
         }
 
-        public static int GetTextColumn(this string text, int tabSize, int initialColumn)
-        {
-            var lineText = text.GetLastLineText();
-            if (text != lineText)
-            {
-                return lineText.GetColumnFromLineOffset(lineText.Length, tabSize);
-            }
-
-            return text.ConvertTabToSpace(tabSize, initialColumn, text.Length) + initialColumn;
-        }
-
         public static int ConvertTabToSpace(this string textSnippet, int tabSize, int initialColumn, int endPosition)
         {
             Contract.Requires(tabSize > 0);
@@ -69,46 +58,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
             return column - initialColumn;
         }
 
-        public static int IndexOf(this string text, Func<char, bool> predicate)
-        {
-            if (text == null)
-            {
-                return -1;
-            }
-
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (predicate(text[i]))
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        public static string GetFirstLineText(this string text)
-        {
-            var lineBreak = text.IndexOf('\n');
-            if (lineBreak < 0)
-            {
-                return text;
-            }
-
-            return text.Substring(0, lineBreak + 1);
-        }
-
-        public static string GetLastLineText(this string text)
-        {
-            var lineBreak = text.LastIndexOf('\n');
-            if (lineBreak < 0)
-            {
-                return text;
-            }
-
-            return text.Substring(lineBreak + 1);
-        }
-
         public static bool ContainsLineBreak(this string text)
         {
             foreach (char ch in text)
@@ -121,46 +70,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
 
             return false;
         }
-
-        public static int GetNumberOfLineBreaks(this string text)
-        {
-            int lineBreaks = 0;
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] == '\n')
-                {
-                    lineBreaks++;
-                }
-                else if (text[i] == '\r')
-                {
-                    if (i + 1 == text.Length || text[i + 1] != '\n')
-                    {
-                        lineBreaks++;
-                    }
-                }
-            }
-
-            return lineBreaks;
-        }
-
-        public static bool ContainsTab(this string text)
-        {
-            // PERF: Tried replacing this with "text.IndexOf('\t')>=0", but that was actually slightly slower
-            foreach (char ch in text)
-            {
-                if (ch == '\t')
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        //public static ImmutableArray<SymbolDisplayPart> ToSymbolDisplayParts(this string text)
-        //{
-        //    return ImmutableArray.Create(new SymbolDisplayPart(SymbolDisplayPartKind.Text, null, text));
-        //}
 
         public static int GetColumnOfFirstNonWhitespaceCharacterOrEndOfLine(this string line, int tabSize)
         {
@@ -214,26 +123,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
             // We're asking for a column past the end of the line, so just go to the end.
             return line.Length;
         }
-
-        //public static void AppendToAliasNameSet(this string alias, ImmutableHashSet<string>.Builder builder)
-        //{
-        //    if (string.IsNullOrWhiteSpace(alias))
-        //    {
-        //        return;
-        //    }
-
-        //    builder.Add(alias);
-
-        //    var caseSensitive = builder.KeyComparer == StringComparer.Ordinal;
-        //    Contract.Requires(builder.KeyComparer == StringComparer.Ordinal || builder.KeyComparer == StringComparer.OrdinalIgnoreCase);
-        //    if (alias.TryGetWithoutAttributeSuffix(caseSensitive, out var aliasWithoutAttribute))
-        //    {
-        //        builder.Add(aliasWithoutAttribute);
-        //        return;
-        //    }
-
-        //    builder.Add(alias.GetWithSingleAttributeSuffix(caseSensitive));
-        //}
 
         public static int GetCaseInsensitivePrefixLength(this string string1, string string2)
         {

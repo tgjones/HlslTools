@@ -34,14 +34,6 @@ namespace ShaderTools.Utilities
         }
 
         /// <summary>
-        /// pool that uses string as key with StringComparer.OrdinalIgnoreCase as key comparer
-        /// </summary>
-        public static ObjectPool<Dictionary<string, T>> StringIgnoreCaseDictionary<T>()
-        {
-            return StringIgnoreCaseDictionaryNormalPool<T>.Instance;
-        }
-
-        /// <summary>
         /// pool that uses string as element with StringComparer.OrdinalIgnoreCase as element comparer
         /// </summary>
         public static readonly ObjectPool<HashSet<string>> StringIgnoreCaseHashSet =
@@ -75,12 +67,6 @@ namespace ShaderTools.Utilities
         private static class DefaultNormalPool<T> where T : class, new()
         {
             public static readonly ObjectPool<T> Instance = new ObjectPool<T>(() => new T(), 20);
-        }
-
-        private static class StringIgnoreCaseDictionaryNormalPool<T>
-        {
-            public static readonly ObjectPool<Dictionary<string, T>> Instance =
-                new ObjectPool<Dictionary<string, T>>(() => new Dictionary<string, T>(StringComparer.OrdinalIgnoreCase), 20);
         }
     }
 }

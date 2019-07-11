@@ -10,6 +10,7 @@ using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.Utilities.Collections;
+using ILanguageService = Microsoft.CodeAnalysis.Host.ILanguageService;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 {

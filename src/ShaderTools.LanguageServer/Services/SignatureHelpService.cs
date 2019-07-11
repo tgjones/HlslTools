@@ -4,13 +4,15 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Host;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using ShaderTools.CodeAnalysis;
-using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Shared.Utilities;
 using ShaderTools.CodeAnalysis.SignatureHelp;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 using ModelSignatureHelp = OmniSharp.Extensions.LanguageServer.Protocol.Models.SignatureHelp;
 
 namespace ShaderTools.LanguageServer.Services.SignatureHelp

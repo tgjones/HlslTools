@@ -2,6 +2,7 @@
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Text;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.Navigation
 {

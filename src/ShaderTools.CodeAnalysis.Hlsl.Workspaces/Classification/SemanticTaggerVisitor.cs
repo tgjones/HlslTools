@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
-using ShaderTools.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.Hlsl.Compilation;
 using ShaderTools.CodeAnalysis.Hlsl.Symbols;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;

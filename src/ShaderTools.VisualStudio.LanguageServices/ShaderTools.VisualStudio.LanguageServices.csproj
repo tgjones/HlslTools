@@ -62,7 +62,6 @@
     <Compile Include="Implementation\AbstractOleCommandTarget.Query.cs" />
     <Compile Include="Implementation\Extensions\SourceTextExtensions.cs" />
     <Compile Include="Implementation\Extensions\VsTextSpanExtensions.cs" />
-    <Compile Include="Implementation\GCManager.cs" />
     <Compile Include="Implementation\StandaloneCommandFilter.cs" />
     <Compile Include="LanguageService\AbstractLanguageService.cs" />
     <Compile Include="LanguageService\AbstractLanguageService.IVsAutoOutliningClient.cs" />
@@ -111,7 +110,6 @@
     <Compile Include="Utilities\VisualStudioWaitIndicator.cs" />
     <Compile Include="Workspace\VisualStudioDocumentNavigationService.cs" />
     <Compile Include="Workspace\VisualStudioDocumentTrackingService.cs" />
-    <Compile Include="Workspace\VisualStudioFormattingRuleFactoryServiceFactory.cs" />
     <Compile Include="Workspace\VisualStudioWorkspace.cs" />
     <Compile Include="Workspace\WorkspaceBufferListener.cs" />
   </ItemGroup>

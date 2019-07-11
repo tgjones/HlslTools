@@ -3,13 +3,12 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.CodeAnalysis.Host;
+using Microsoft.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.NavigateTo
 {
     internal interface INavigateToSearchService : IWorkspaceService
     {
-        //Task<ImmutableArray<INavigateToSearchResult>> SearchWorkspaceAsync(Workspace workspace, string searchPattern, CancellationToken cancellationToken);
         Task<ImmutableArray<INavigateToSearchResult>> SearchDocumentAsync(Document document, string searchPattern, CancellationToken cancellationToken);
     }
 }

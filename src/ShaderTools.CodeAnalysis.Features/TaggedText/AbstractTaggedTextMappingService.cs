@@ -1,4 +1,4 @@
-﻿using ShaderTools.CodeAnalysis.Classification;
+﻿using Microsoft.CodeAnalysis.Classification;
 using ShaderTools.Utilities.ErrorReporting;
 
 namespace ShaderTools.CodeAnalysis

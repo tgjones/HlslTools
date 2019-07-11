@@ -1,6 +1,6 @@
 ﻿using System.Threading;
+using Microsoft.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Compilation;
-using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Syntax;
 

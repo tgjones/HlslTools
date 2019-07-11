@@ -5,12 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
-using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.SignatureHelp
 {

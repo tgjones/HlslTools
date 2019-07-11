@@ -9,6 +9,7 @@ using ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders;
 using ShaderTools.CodeAnalysis.Hlsl.Completion.Providers;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
+using ILanguageService = Microsoft.CodeAnalysis.Host.ILanguageService;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Completion
 {

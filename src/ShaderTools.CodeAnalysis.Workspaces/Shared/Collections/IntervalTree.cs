@@ -8,11 +8,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Collections
 {
     internal static class IntervalTree
     {
-        public static IntervalTree<T> Create<T>(IIntervalIntrospector<T> introspector, params T[] values)
-        {
-            return Create(introspector, (IEnumerable<T>) values);
-        }
-
         public static IntervalTree<T> Create<T>(IIntervalIntrospector<T> introspector, IEnumerable<T> values = null)
         {
             Contract.ThrowIfNull(introspector);

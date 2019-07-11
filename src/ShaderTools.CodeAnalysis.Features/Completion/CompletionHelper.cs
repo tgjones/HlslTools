@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
+using Microsoft.CodeAnalysis.Tags;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.PatternMatching;
 using ShaderTools.CodeAnalysis.Syntax;
@@ -199,7 +200,7 @@ namespace ShaderTools.CodeAnalysis.Completion
 
         private static bool IsKeywordItem(CompletionItem item)
         {
-            return item.Tags.Contains(CompletionTags.Keyword);
+            return item.Tags.Contains(WellKnownTags.Keyword);
         }
 
         private int CompareMatches(PatternMatch match1, PatternMatch match2, CompletionItem item1, CompletionItem item2)

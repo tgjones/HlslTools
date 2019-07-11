@@ -70,19 +70,6 @@ namespace ShaderTools.Utilities
             _sourceLowerCaseCharacters = null;
         }
 
-        public static int GetEditDistance(string source, string target, int threshold = int.MaxValue)
-        {
-            using (var editDistance = new EditDistance(source))
-            {
-                return editDistance.GetEditDistance(target, threshold);
-            }
-        }
-
-        public static int GetEditDistance(char[] source, char[] target, int threshold = int.MaxValue)
-        {
-            return GetEditDistance(new ArraySlice<char>(source), new ArraySlice<char>(target), threshold);
-        }
-
         public int GetEditDistance(string target, int threshold = int.MaxValue)
         {
             if (_sourceLowerCaseCharacters == null)

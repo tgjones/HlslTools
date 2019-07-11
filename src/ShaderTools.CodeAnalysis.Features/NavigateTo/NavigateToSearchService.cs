@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using ShaderTools.CodeAnalysis.Host.Mef;
+using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Navigation;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.CodeAnalysis.Syntax;

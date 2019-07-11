@@ -1,8 +1,8 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.FindUsages;
-using ShaderTools.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.GoToDefinition
 {

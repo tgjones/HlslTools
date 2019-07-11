@@ -3,11 +3,11 @@ using System.Composition;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Formatting;
 using ShaderTools.CodeAnalysis.Hlsl.Options;
 using ShaderTools.CodeAnalysis.Hlsl.Syntax;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.Utilities.Collections;
 

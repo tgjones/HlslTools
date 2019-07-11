@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Notification;
+using IWorkspaceService = Microsoft.CodeAnalysis.Host.IWorkspaceService;
 
 namespace ShaderTools.VisualStudio.LanguageServices.Implementation.Notification
 {

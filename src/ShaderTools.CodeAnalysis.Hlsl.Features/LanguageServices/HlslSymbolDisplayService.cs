@@ -2,10 +2,11 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Compilation;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.LanguageServices;
 using ShaderTools.CodeAnalysis.Symbols;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 {

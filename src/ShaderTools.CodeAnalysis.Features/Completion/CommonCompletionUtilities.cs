@@ -12,6 +12,7 @@ using ShaderTools.CodeAnalysis.LanguageServices;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Symbols;
 using ShaderTools.Utilities.Collections;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.Completion
 {

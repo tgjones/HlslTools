@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using Microsoft.CodeAnalysis.Classification;
+using Microsoft.CodeAnalysis.Host.Mef;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.BraceCompletion;
 using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.CodeAnalysis.Editor.Implementation.BraceCompletion;
 using ShaderTools.CodeAnalysis.Editor.Options;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 using ShaderTools.Utilities.Threading;
 

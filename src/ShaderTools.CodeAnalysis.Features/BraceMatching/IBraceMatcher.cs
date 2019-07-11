@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using ShaderTools.CodeAnalysis.Host;
+using Microsoft.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Syntax;
 using ShaderTools.CodeAnalysis.Text;
 

@@ -2,7 +2,7 @@
 
 using System;
 using System.Collections.Immutable;
-using ShaderTools.CodeAnalysis.Host;
+using Microsoft.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation
 {

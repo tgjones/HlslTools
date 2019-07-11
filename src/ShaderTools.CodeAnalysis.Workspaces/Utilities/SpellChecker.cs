@@ -6,69 +6,6 @@ using System.Diagnostics;
 
 namespace ShaderTools.Utilities
 {
-    //internal class SpellChecker
-    //{
-    //    private const string SerializationFormat = "2";
-
-    //    public VersionStamp Version { get; }
-    //    private readonly BKTree _bkTree;
-
-    //    public SpellChecker(VersionStamp version, BKTree bKTree)
-    //    {
-    //        Version = version;
-    //        _bkTree = bKTree;
-    //    }
-
-    //    public SpellChecker(VersionStamp version, IEnumerable<StringSlice> corpus)
-    //        : this(version, BKTree.Create(corpus))
-    //    {
-    //    }
-
-    //    public IList<string> FindSimilarWords(string value)
-    //        => FindSimilarWords(value, substringsAreSimilar: false);
-
-    //    public IList<string> FindSimilarWords(string value, bool substringsAreSimilar)
-    //    {
-    //        var result = _bkTree.Find(value, threshold: null);
-
-    //        var checker = WordSimilarityChecker.Allocate(value, substringsAreSimilar);
-    //        var array = result.Where(checker.AreSimilar).ToArray();
-    //        checker.Free();
-
-    //        return array;
-    //    }
-
-    //    internal void WriteTo(ObjectWriter writer)
-    //    {
-    //        writer.WriteString(SerializationFormat);
-    //        Version.WriteTo(writer);
-    //        _bkTree.WriteTo(writer);
-    //    }
-
-    //    internal static SpellChecker ReadFrom(ObjectReader reader)
-    //    {
-    //        try
-    //        {
-    //            var formatVersion = reader.ReadString();
-    //            if (string.Equals(formatVersion, SerializationFormat, StringComparison.Ordinal))
-    //            {
-    //                var version = VersionStamp.ReadFrom(reader);
-    //                var bkTree = BKTree.ReadFrom(reader);
-    //                if (bkTree != null)
-    //                {
-    //                    return new SpellChecker(version, bkTree);
-    //                }
-    //            }
-    //        }
-    //        catch
-    //        {
-    //            Logger.Log(FunctionId.SpellChecker_ExceptionInCacheRead);
-    //        }
-
-    //        return null;
-    //    }
-    //}
-
     internal class WordSimilarityChecker
     {
         private struct CacheResult

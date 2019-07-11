@@ -1,7 +1,7 @@
 {
   "name": "hlsltools",
   "displayName": "HLSL Tools",
-  "version": "0.9.0",
+  "version": "1.0.1",
   "publisher": "TimGJones",
   "description": "Rich HLSL language support for Visual Studio Code",
   "engines": {
@@ -12,6 +12,10 @@
   "categories": [
     "Programming Languages"
   ],
+  "keywords": [
+    "shader",
+    "hlsl"
+  ],
   "icon": "art/logo.png",
   "galleryBanner": {
     "color": "#5C2D91",
@@ -21,6 +25,9 @@
     "type": "git",
     "url": "https://github.com/tgjones/HlslTools.git"
   },
+  "bugs": {
+		"url": "https://github.com/tgjones/HlslTools/issues"
+	},
   "main": "./out/main",
   "activationEvents": [
     "onLanguage:hlsl"

@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Composition;
 using System.Threading;
+using Microsoft.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Editor.Host;
 using ShaderTools.CodeAnalysis.GoToDefinition;
-using ShaderTools.CodeAnalysis.Host.Mef;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
 using ShaderTools.Utilities.Threading;
 

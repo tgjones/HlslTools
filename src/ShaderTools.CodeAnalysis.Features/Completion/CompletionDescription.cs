@@ -3,6 +3,7 @@
 using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
+using Microsoft.CodeAnalysis;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Completion

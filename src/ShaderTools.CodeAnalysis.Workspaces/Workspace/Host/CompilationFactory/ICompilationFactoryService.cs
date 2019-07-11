@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Compilation;
+﻿using Microsoft.CodeAnalysis.Host;
+using ShaderTools.CodeAnalysis.Compilation;
 using ShaderTools.CodeAnalysis.Syntax;
 
 namespace ShaderTools.CodeAnalysis.Host

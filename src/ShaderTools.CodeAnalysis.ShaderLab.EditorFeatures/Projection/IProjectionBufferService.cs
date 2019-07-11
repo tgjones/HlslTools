@@ -1,4 +1,4 @@
-﻿using ShaderTools.CodeAnalysis.Host;
+﻿using Microsoft.CodeAnalysis.Host;
 
 namespace ShaderTools.CodeAnalysis.Editor.ShaderLab.Projection
 {

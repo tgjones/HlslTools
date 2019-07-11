@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
 using ShaderTools.Utilities.Collections;
+using TaggedText = Microsoft.CodeAnalysis.TaggedText;
 
 namespace ShaderTools.CodeAnalysis.SignatureHelp
 {
