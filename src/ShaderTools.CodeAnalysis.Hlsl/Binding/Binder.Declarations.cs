@@ -277,7 +277,31 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             var boundParameters = BindParameters(declaration.ParameterList, functionBinder, functionSymbol);
             var boundBody = functionBinder.Bind(declaration.Body, x => functionBinder.BindBlock(x, functionSymbol));
 
+            if (boundReturnType.Type != IntrinsicTypes.Void && !ContainsReturnStatement(boundBody))
+                Diagnostics.Report(declaration.Name.SourceRange, DiagnosticId.ReturnExpected, functionSymbol.Name);
+
             return new BoundFunctionDefinition(functionSymbol, boundReturnType, boundParameters.ToImmutableArray(), boundBody);
+        }
+
+        /// <summary>
+        /// TODO: This is just a hack. We need to proper flow analysis
+        /// to detect whether all code paths return a value.
+        /// </summary>
+        private static bool ContainsReturnStatement(BoundBlock boundBlock)
+        {
+            foreach (var boundStatement in boundBlock.Statements)
+            {
+                switch (boundStatement)
+                {
+                    case BoundBlock b:
+                        return ContainsReturnStatement(b);
+
+                    case BoundReturnStatement r:
+                        return true;
+                }
+            }
+
+            return false;
         }
 
         private ImmutableArray<BoundVariableDeclaration> BindParameters(ParameterListSyntax parameterList, Binder invocableBinder, InvocableSymbol invocableSymbol)

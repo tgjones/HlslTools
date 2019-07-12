@@ -10,7 +10,6 @@
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
     using System;
-    using System.Reflection;
     
     
     /// <summary>
@@ -40,7 +39,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ShaderTools.CodeAnalysis.Hlsl.Properties.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ShaderTools.CodeAnalysis.Hlsl.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -418,6 +417,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
         internal static string RetObjectRequired {
             get {
                 return ResourceManager.GetString("RetObjectRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos;: not all code paths return a value..
+        /// </summary>
+        internal static string ReturnExpected {
+            get {
+                return ResourceManager.GetString("ReturnExpected", resourceCulture);
             }
         }
         

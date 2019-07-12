@@ -64,5 +64,6 @@
         MethodOverloadResolutionFailure,
         RetNoObjectRequired,
         RetObjectRequired,
+        ReturnExpected,
     }
 }
