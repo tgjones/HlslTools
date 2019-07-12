@@ -39,15 +39,5 @@ namespace ShaderTools.LanguageServer.Handlers
         {
             return null;
         }
-
-        Task<SymbolInformationContainer> IRequestHandler<WorkspaceSymbolParams, SymbolInformationContainer>.Handle(WorkspaceSymbolParams request, CancellationToken cancellationToken)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        void ICapability<WorkspaceSymbolCapability>.SetCapability(WorkspaceSymbolCapability capability)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }
