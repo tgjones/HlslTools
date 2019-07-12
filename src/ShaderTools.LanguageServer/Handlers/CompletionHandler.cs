@@ -40,7 +40,15 @@ namespace ShaderTools.LanguageServer.Handlers
 
             var completionService = document.GetLanguageService<CompletionService>();
 
-            var completionList = await completionService.GetCompletionsAsync(document, position);
+            var triggerKind = request.Context.TriggerKind == OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionTriggerKind.TriggerCharacter
+                ? CodeAnalysis.Completion.CompletionTriggerKind.Insertion
+                : CodeAnalysis.Completion.CompletionTriggerKind.Invoke;
+            var triggerChar = triggerKind == CodeAnalysis.Completion.CompletionTriggerKind.Insertion
+                ? request.Context.TriggerCharacter[0]
+                : default;
+            var trigger = new CompletionTrigger(triggerKind, triggerChar);
+
+            var completionList = await completionService.GetCompletionsAsync(document, position, trigger, cancellationToken: token);
             if (completionList == null)
             {
                 return new CompletionList();
