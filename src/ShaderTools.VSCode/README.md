@@ -8,7 +8,7 @@ HLSL Tools provides enhanced support for editing High Level Shading Language (HL
 
 ### System requirements
 
-HLSL Tools currently only works on Windows 10 x64. There are plans to support macOS and Linux in future versions.
+HLSL Tools currently only works on Windows x64. There are plans to support macOS and Linux in future versions.
 
 ### Why use HLSL Tools?
 

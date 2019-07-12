@@ -1,3 +1,4 @@
+import os = require('os');
 import path = require('path');
 import vscode = require('vscode');
 
@@ -22,8 +23,10 @@ export class SessionManager {
     private statusBarItem: vscode.StatusBarItem;
     private registeredCommands: vscode.Disposable[] = [];
     private languageServerClient: LanguageClient = undefined;
+    private platform: NodeJS.Platform;
 
     constructor() {
+        this.platform = os.platform();
         this.registerCommands();
     }
 
@@ -66,14 +69,13 @@ export class SessionManager {
     }
 
     private startEditorServices() {
-        try
-        {
+        try {
             this.setSessionStatus(
                 "Starting HLSL Tools...",
                 SessionStatus.Initializing);
 
-            // TODO: Change path depending on current platform.
-            var serverExe = path.resolve(__dirname, '../bin/win10-x64/ShaderTools.LanguageServer.exe');
+            var serverPath = this.getServerPath();
+            var serverExe = path.resolve(__dirname, `../bin/${serverPath}`);
 
             var startArgs = [ ];
             //startArgs.push("--logfilepath", editorServicesLogPath);
@@ -110,10 +112,19 @@ export class SessionManager {
                 });
 
             this.languageServerClient.start();
-        }
-        catch (e)
+        } catch (e)
         {
             this.setSessionFailure("The language service could not be started: ", e);
+        }
+    }
+
+    private getServerPath() {
+        switch (this.platform) {
+            case "win32":
+                return "win-x64/ShaderTools.LanguageServer.exe";
+
+            default:
+                throw `Platform ${this.platform} is not currently supported by HLSL Tools.`;
         }
     }
 

@@ -96,7 +96,7 @@ function Test-UnitTests-NetFramework() {
 
 function Package-LanguageServer() {
     $runtimes =
-        "win10-x64"
+        "win-x64"
         #"osx-x64"
 
     Write-Host "Packaging Language Server"
@@ -106,7 +106,12 @@ function Package-LanguageServer() {
         $outputDir = Join-Path $rootDir "src/ShaderTools.VSCode/bin/$runtime"
         Create-Directory $outputDir
         $outputBinary = "$outputDir/ShaderTools.LanguageServer.exe"
-        $args = "warp src/ShaderTools.LanguageServer/ShaderTools.LanguageServer.csproj --output $outputBinary --verbose"
+        $args = ""
+        if ($config -eq "Debug") {
+            $args = "publish --configuration $config --output $outputDir /p:PublishSingleFile=true /p:PublishTrimmed=false src/ShaderTools.LanguageServer/ShaderTools.LanguageServer.csproj"
+        } else {
+            $args = "warp src/ShaderTools.LanguageServer/ShaderTools.LanguageServer.csproj --output $outputBinary --verbose"
+        }
         Exec-Console "dotnet" $args
     }
 
