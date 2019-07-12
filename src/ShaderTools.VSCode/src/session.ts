@@ -123,6 +123,9 @@ export class SessionManager {
             case "win32":
                 return "win-x64/ShaderTools.LanguageServer.exe";
 
+            case "darwin":
+                return "osx-x64/ShaderTools.LanguageServer";
+
             default:
                 throw `Platform ${this.platform} is not currently supported by HLSL Tools.`;
         }
