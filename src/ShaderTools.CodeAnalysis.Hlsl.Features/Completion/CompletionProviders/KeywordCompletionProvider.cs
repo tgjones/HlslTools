@@ -62,7 +62,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 
             var targetToken = leftToken.GetPreviousTokenIfTouchingWord(position);
             if (targetToken == null)
-                yield break;
+                targetToken = new SyntaxToken(SyntaxKind.None, true, new SourceRange(), new SourceFileSpan());
 
             var isPreprocessorKeywordContext = isPreprocessorDirectiveContext && syntaxTree.IsPreprocessorKeywordContext(position, leftToken);
 
