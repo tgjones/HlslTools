@@ -63,48 +63,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.Providers
             return false;
         }
 
-        internal static bool IsTriggerAfterSpaceOrStartOfWordCharacter(SourceText text, int characterPosition, OptionSet options)
-        {
-            // Bring up on space or at the start of a word.
-            var ch = text[characterPosition];
-            return SpaceTypedNotBeforeWord(ch, text, characterPosition) ||
-                   (IsStartingNewWord(text, characterPosition) && options.GetOption(CompletionOptions.TriggerOnTypingLetters, LanguageNames.Hlsl));
-        }
-
-        private static bool SpaceTypedNotBeforeWord(char ch, SourceText text, int characterPosition)
-        {
-            return ch == ' ' && (characterPosition == text.Length - 1 || !IsWordStartCharacter(text[characterPosition + 1]));
-        }
-
         public static bool IsStartingNewWord(SourceText text, int characterPosition)
         {
             return CommonCompletionUtilities.IsStartingNewWord(
                 text, characterPosition, IsWordStartCharacter, IsWordCharacter);
         }
-
-        //public static (string displayText, string insertionText) GetDisplayAndInsertionText(ISymbol symbol, SyntaxContext context)
-        //{
-        //    var insertionText = GetInsertionText(symbol, context);
-        //    var displayText = symbol.GetArity() == 0
-        //        ? insertionText
-        //        : string.Format("{0}<>", insertionText);
-
-        //    return (displayText, insertionText);
-        //}
-
-        //public static string GetInsertionText(ISymbol symbol, SyntaxContext context)
-        //{
-        //    if (CommonCompletionUtilities.TryRemoveAttributeSuffix(symbol, context, out var name))
-        //    {
-        //        // Cannot escape Attribute name with the suffix removed. Only use the name with
-        //        // the suffix removed if it does not need to be escaped.
-        //        if (name.Equals(name.EscapeIdentifier()))
-        //        {
-        //            return name;
-        //        }
-        //    }
-
-        //    return symbol.Name.EscapeIdentifier(isQueryContext: context.IsInQuery);
-        //}
     }
 }

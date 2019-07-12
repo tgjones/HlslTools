@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Text;
 using ShaderTools.CodeAnalysis.Editor.Host;
 using ShaderTools.CodeAnalysis.Editor.Properties;
@@ -67,7 +68,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
             _modelTask = Task.FromResult(
                 new NavigationBarModel(
                     SpecializedCollections.EmptyList<NavigationBarItem>(),
-                    default(VersionStamp),
+                    default,
                     null));
 
             _selectedItemInfoTask = Task.FromResult(new NavigationBarSelectedTypeAndMember(null, null));
