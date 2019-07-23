@@ -6,6 +6,7 @@ using System.ComponentModel.Composition;
 using System.Linq;
 using Microsoft.VisualStudio.Commanding;
 using Microsoft.VisualStudio.Language.Intellisense;
+using Microsoft.VisualStudio.Language.Intellisense.AsyncCompletion;
 using Microsoft.VisualStudio.Text.Editor.Commanding;
 using Microsoft.VisualStudio.Text.Editor.Commanding.Commands;
 using Microsoft.VisualStudio.Utilities;
@@ -23,14 +24,13 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
     [Export]
     [Export(typeof(ICommandHandler))]
     [ContentType(ContentTypeNames.ShaderToolsContentType)]
-    [Order(Before = PredefinedCommandHandlerNames.Completion)]
+    [Order(Before = PredefinedCompletionNames.CompletionCommandHandler)]
     [Name(nameof(SignatureHelpCommandHandler))]
     internal class SignatureHelpCommandHandler :
         ForegroundThreadAffinitizedObject,
         IChainedCommandHandler<TypeCharCommandArgs>,
         IChainedCommandHandler<InvokeSignatureHelpCommandArgs>
     {
-        //private readonly IInlineRenameService _inlineRenameService;
         private readonly IIntelliSensePresenter<ISignatureHelpPresenterSession, ISignatureHelpSession> _signatureHelpPresenter;
         private readonly IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> _asyncListeners;
         private readonly IList<Lazy<ISignatureHelpProvider, OrderableLanguageMetadata>> _signatureHelpProviders;
@@ -39,11 +39,10 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
 
         [ImportingConstructor]
         public SignatureHelpCommandHandler(
-            //IInlineRenameService inlineRenameService,
             [ImportMany] IEnumerable<Lazy<ISignatureHelpProvider, OrderableLanguageMetadata>> signatureHelpProviders,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners,
             [ImportMany] IEnumerable<Lazy<IIntelliSensePresenter<ISignatureHelpPresenterSession, ISignatureHelpSession>, OrderableMetadata>> signatureHelpPresenters)
-            : this(//inlineRenameService,
+            : this(
                 ExtensionOrderer.Order(signatureHelpPresenters).Select(lazy => lazy.Value).FirstOrDefault(),
                 signatureHelpProviders, asyncListeners)
         {
@@ -51,12 +50,10 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
 
         // For testing purposes.
         public SignatureHelpCommandHandler(
-            //IInlineRenameService inlineRenameService,
             IIntelliSensePresenter<ISignatureHelpPresenterSession, ISignatureHelpSession> signatureHelpPresenter,
             [ImportMany] IEnumerable<Lazy<ISignatureHelpProvider, OrderableLanguageMetadata>> signatureHelpProviders,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners)
         {
-            //_inlineRenameService = inlineRenameService;
             _signatureHelpProviders = ExtensionOrderer.Order(signatureHelpProviders);
             _asyncListeners = asyncListeners;
             _signatureHelpPresenter = signatureHelpPresenter;

@@ -5,6 +5,7 @@ using System.ComponentModel.Composition;
 using System.Threading;
 using Microsoft.CodeAnalysis.Text;
 using Microsoft.VisualStudio.Commanding;
+using Microsoft.VisualStudio.Language.Intellisense.AsyncCompletion;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Editor.Commanding;
@@ -22,8 +23,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Formatting
 {
     [Export(typeof(ICommandHandler))]
     [ContentType(ContentTypeNames.ShaderToolsContentType)]
-    [Order(After = PredefinedCommandHandlerNames.Rename)]
-    [Order(Before = PredefinedCommandHandlerNames.Completion)]
+    [Order(Before = PredefinedCompletionNames.CompletionCommandHandler)]
     [Name(nameof(FormatCommandHandler))]
     internal partial class FormatCommandHandler :
         ICommandHandler<FormatDocumentCommandArgs>,
