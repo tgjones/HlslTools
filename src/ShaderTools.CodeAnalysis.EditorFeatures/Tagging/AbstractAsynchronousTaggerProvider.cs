@@ -5,12 +5,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 #endif
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Utilities;
-using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 using ShaderTools.Utilities.Collections;

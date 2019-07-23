@@ -19,10 +19,5 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
         {
             return new TextSpan(span.Start, span.Length);
         }
-
-        public static bool IntersectsWith(this Span span, int position)
-        {
-            return position >= span.Start && position <= span.End;
-        }
     }
 }

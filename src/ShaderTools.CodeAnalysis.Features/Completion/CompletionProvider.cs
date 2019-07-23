@@ -2,6 +2,7 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Options;
 
@@ -31,30 +32,22 @@ namespace ShaderTools.CodeAnalysis.Completion
         /// <param name="caretPosition">The position of the caret after the triggering action.</param>
         /// <param name="trigger">The triggering action.</param>
         /// <param name="options">The set of options in effect.</param>
-        public virtual bool ShouldTriggerCompletion(SourceText text, int caretPosition, CompletionTrigger trigger, OptionSet options)
+        public virtual bool ShouldTriggerCompletion(SourceText text, int position, CompletionTrigger trigger, OptionSet options)
+        {
+            switch (trigger.Kind)
+            {
+                case CompletionTriggerKind.Insertion:
+                    var insertedCharacterPosition = position - 1;
+                    return this.IsInsertionTrigger(text, insertedCharacterPosition, options);
+
+                default:
+                    return false;
+            }
+        }
+
+        internal virtual bool IsInsertionTrigger(SourceText text, int insertedCharacterPosition, OptionSet options)
         {
             return false;
-        }
-
-        /// <summary>
-        /// Gets the description of the specified item.
-        /// </summary>
-        public virtual Task<CompletionDescription> GetDescriptionAsync(Document document, CompletionItem item, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(CompletionDescription.Empty);
-        }
-
-        /// <summary>
-        /// Gets the change to be applied when the specified item is committed.
-        /// </summary>
-        /// <param name="document">The current document.</param>
-        /// <param name="item">The item to be committed.</param>
-        /// <param name="commitKey">The optional key character that caused the commit.</param>
-        /// <param name="cancellationToken"></param>
-        public virtual Task<CompletionChange> GetChangeAsync(
-            Document document, CompletionItem item, char? commitKey, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(CompletionChange.Create(new TextChange(item.Span, item.DisplayText)));
         }
     }
 }

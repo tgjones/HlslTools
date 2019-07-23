@@ -2,8 +2,8 @@
 
 using System;
 using System.Windows.Media;
+using Microsoft.VisualStudio.Core.Imaging;
 using Microsoft.VisualStudio.Imaging;
-using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
@@ -82,79 +82,79 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
             return StandardGlyphItem.GlyphItemPublic;
         }
 
-        public static ImageSource GetImageSource(this Glyph? glyph, IGlyphService glyphService)
-        {
-            return glyph.HasValue ? glyph.Value.GetImageSource(glyphService) : null;
-        }
-
         public static ImageSource GetImageSource(this Glyph glyph, IGlyphService glyphService)
         {
             return glyphService.GetGlyph(glyph.GetStandardGlyphGroup(), glyph.GetStandardGlyphItem());
         }
 
-        public static ImageMoniker GetImageMoniker(this Glyph glyph)
+        public static ImageId GetImageId(this Glyph glyph)
+        {
+            return new ImageId(KnownImageIds.ImageCatalogGuid, GetKnownImageId(glyph));
+        }
+
+        private static int GetKnownImageId(Glyph glyph)
         {
             switch (glyph)
             {
                 case Glyph.None:
-                    return default(ImageMoniker);
+                    return KnownImageIds.None;
 
                 case Glyph.Class:
-                    return KnownMonikers.ClassPublic;
+                    return KnownImageIds.ClassPublic;
 
                 case Glyph.Constant:
-                    return KnownMonikers.ConstantPublic;
+                    return KnownImageIds.ConstantPublic;
 
                 case Glyph.Field:
-                    return KnownMonikers.FieldPublic;
+                    return KnownImageIds.FieldPublic;
 
                 case Glyph.Interface:
-                    return KnownMonikers.InterfacePublic;
+                    return KnownImageIds.InterfacePublic;
 
                 // TODO: Figure out the right thing to return here.
                 case Glyph.IntrinsicClass:
                 case Glyph.IntrinsicStruct:
-                    return KnownMonikers.Type;
+                    return KnownImageIds.Type;
 
                 case Glyph.Keyword:
-                    return KnownMonikers.IntellisenseKeyword;
+                    return KnownImageIds.IntellisenseKeyword;
 
                 case Glyph.Label:
-                    return KnownMonikers.Label;
+                    return KnownImageIds.Label;
 
                 case Glyph.Macro:
-                    return KnownMonikers.MacroPublic;
+                    return KnownImageIds.MacroPublic;
 
                 case Glyph.Parameter:
                 case Glyph.Local:
-                    return KnownMonikers.LocalVariable;
+                    return KnownImageIds.LocalVariable;
 
                 case Glyph.Namespace:
-                    return KnownMonikers.Namespace;
+                    return KnownImageIds.Namespace;
 
                 case Glyph.Method:
-                    return KnownMonikers.MethodPublic;
+                    return KnownImageIds.MethodPublic;
 
                 case Glyph.Module:
-                    return KnownMonikers.ModulePublic;
+                    return KnownImageIds.ModulePublic;
 
                 case Glyph.OpenFolder:
-                    return KnownMonikers.OpenFolder;
+                    return KnownImageIds.OpenFolder;
 
                 case Glyph.Operator:
-                    return KnownMonikers.Operator;
+                    return KnownImageIds.Operator;
 
                 case Glyph.Structure:
-                    return KnownMonikers.ValueTypePublic;
+                    return KnownImageIds.ValueTypePublic;
 
                 case Glyph.Typedef:
-                    return KnownMonikers.TypeDefinitionPublic;
+                    return KnownImageIds.TypeDefinitionPublic;
 
                 case Glyph.TypeParameter:
-                    return KnownMonikers.Type;
+                    return KnownImageIds.Type;
 
                 case Glyph.CompletionWarning:
-                    return KnownMonikers.IntellisenseWarning;
+                    return KnownImageIds.IntellisenseWarning;
 
                 default:
                     throw new ArgumentException("glyph");

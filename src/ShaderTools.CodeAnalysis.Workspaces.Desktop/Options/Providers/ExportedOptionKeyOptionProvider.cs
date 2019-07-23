@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
+using Microsoft.CodeAnalysis.Options;
 
 namespace ShaderTools.CodeAnalysis.Options.Providers
 {

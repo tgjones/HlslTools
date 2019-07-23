@@ -116,7 +116,7 @@ float Dummy(float input)
                 document, 
                 index, 
                 new TextSpan(), 
-                new CompletionTrigger(CompletionTriggerKind.Invoke),
+                Microsoft.CodeAnalysis.Completion.CompletionTrigger.Invoke,
                 await document.GetOptionsAsync(),
                 CancellationToken.None);
 

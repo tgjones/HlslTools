@@ -2,6 +2,7 @@
 
 using System;
 using System.ComponentModel.Composition;
+using Microsoft.CodeAnalysis.Options;
 
 namespace ShaderTools.CodeAnalysis.Options
 {

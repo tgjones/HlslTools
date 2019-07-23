@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using ShaderTools.CodeAnalysis.Diagnostics;
@@ -31,14 +32,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
             return new CaretPositionChangedEventSource(textView, subjectBuffer, delay);
         }
 
-        //public static ITaggerEventSource OnCompletionClosed(
-        //    ITextView textView,
-        //    IIntellisenseSessionStack sessionStack,
-        //    TaggerDelay delay)
-        //{
-        //    return new CompletionClosedEventSource(textView, sessionStack, delay);
-        //}
-
         public static ITaggerEventSource OnTextChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
         {
             Contract.ThrowIfNull(subjectBuffer);
@@ -57,25 +50,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
             return new SemanticChangedEventSource(subjectBuffer, delay, notificationService);
         }
 
-        //public static ITaggerEventSource OnDocumentActiveContextChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
-        //{
-        //    return new DocumentActiveContextChangedEventSource(subjectBuffer, delay);
-        //}
-
-        //public static ITaggerEventSource OnSelectionChanged(
-        //    ITextView textView,
-        //    TaggerDelay delay)
-        //{
-        //    return new SelectionChangedEventSource(textView, delay);
-        //}
-
-        //public static ITaggerEventSource OnReadOnlyRegionsChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
-        //{
-        //    Contract.ThrowIfNull(subjectBuffer);
-
-        //    return new ReadOnlyRegionsChangedEventSource(subjectBuffer, delay);
-        //}
-
         public static ITaggerEventSource OnOptionChanged(
             ITextBuffer subjectBuffer,
             IOption option,
@@ -92,27 +66,9 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Tagging
             return new DiagnosticsChangedEventSource(subjectBuffer, service, delay);
         }
 
-        //public static ITaggerEventSource OnParseOptionChanged(
-        //    ITextBuffer subjectBuffer,
-        //    TaggerDelay delay)
-        //{
-        //    return new ParseOptionChangedEventSource(subjectBuffer, delay);
-        //}
-
-        //public static ITaggerEventSource OnWorkspaceRegistrationChanged(ITextBuffer subjectBuffer, TaggerDelay delay)
-        //{
-        //    return new WorkspaceRegistrationChangedEventSource(subjectBuffer, delay);
-        //}
-
         public static ITaggerEventSource OnViewSpanChanged(ITextView textView, TaggerDelay textChangeDelay, TaggerDelay scrollChangeDelay)
         {
             return new ViewSpanChangedEventSource(textView, textChangeDelay, scrollChangeDelay);
         }
-
-        //public static ITaggerEventSource OnEditorFormatMapChanged(
-        //    IEditorFormatMap editorFormatMap, TaggerDelay delay)
-        //{
-        //    return new EditorFormatMapChangedEventSource(editorFormatMap, delay);
-        //}
     }
 }

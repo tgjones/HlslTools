@@ -10,6 +10,8 @@ using ShaderTools.CodeAnalysis.Hlsl.Completion.Providers;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
 using ILanguageService = Microsoft.CodeAnalysis.Host.ILanguageService;
+using CompletionRules = Microsoft.CodeAnalysis.Completion.CompletionRules;
+using EnterKeyRule = Microsoft.CodeAnalysis.Completion.EnterKeyRule;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Completion
 {
@@ -22,7 +24,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion
         }
     }
 
-    internal class HlslCompletionService : CommonCompletionService
+    internal class HlslCompletionService : CompletionService
     {
         private readonly ImmutableArray<CompletionProvider> _defaultCompletionProviders =
             ImmutableArray.Create<CompletionProvider>(

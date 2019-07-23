@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using Microsoft.CodeAnalysis.Text;
-using ShaderTools.CodeAnalysis.Text;
-using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Threading;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
@@ -31,14 +29,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
             var oldSolution = workspace.CurrentDocuments;
             var newSolution = oldSolution.UpdateDocument(id, textChanges, cancellationToken);
             workspace.TryApplyChanges(newSolution);
-        }
-
-        /// <summary>
-        /// Update the solution so that the document with the Id has the text changes
-        /// </summary>
-        internal static void ApplyTextChanges(this Workspace workspace, DocumentId id, TextChange textChange, CancellationToken cancellationToken)
-        {
-            workspace.ApplyTextChanges(id, SpecializedCollections.SingletonEnumerable(textChange), cancellationToken);
         }
 
         internal static WorkspaceDocuments UpdateDocument(this WorkspaceDocuments solution, DocumentId id, IEnumerable<TextChange> textChanges, CancellationToken cancellationToken)

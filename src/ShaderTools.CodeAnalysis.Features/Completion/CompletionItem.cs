@@ -4,6 +4,7 @@ using System;
 using System.Collections.Immutable;
 using System.Diagnostics;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.Utilities.Collections;
 
@@ -65,8 +66,7 @@ namespace ShaderTools.CodeAnalysis.Completion
             TextSpan span,
             ImmutableDictionary<string, string> properties,
             Glyph glyph,
-            ImmutableArray<string> tags,
-            CompletionItemRules rules)
+            ImmutableArray<string> tags)
         {
             this.DisplayText = displayText ?? "";
             this.FilterText = filterText ?? this.DisplayText;
@@ -75,7 +75,7 @@ namespace ShaderTools.CodeAnalysis.Completion
             this.Properties = properties ?? ImmutableDictionary<string, string>.Empty;
             Glyph = glyph;
             this.Tags = tags.NullToEmpty();
-            this.Rules = rules ?? CompletionItemRules.Default;
+            this.Rules = CompletionItemRules.Default;
         }
 
 #pragma warning disable RS0027 // Public API with optional parameter(s) should have the most parameters amongst its public overloads.
@@ -86,8 +86,7 @@ namespace ShaderTools.CodeAnalysis.Completion
             string sortText = null,
             ImmutableDictionary<string, string> properties = null,
             Glyph glyph = Glyph.None,
-            ImmutableArray<string> tags = default(ImmutableArray<string>),
-            CompletionItemRules rules = null)
+            ImmutableArray<string> tags = default)
         {
             return new CompletionItem(
                 span: default(TextSpan),
@@ -96,135 +95,7 @@ namespace ShaderTools.CodeAnalysis.Completion
                 sortText: sortText,
                 properties: properties,
                 glyph: glyph,
-                tags: tags,
-                rules: rules);
-        }
-
-        private CompletionItem With(
-            Optional<TextSpan> span = default,
-            Optional<string> displayText = default,
-            Optional<string> filterText = default,
-            Optional<string> sortText = default,
-            Optional<ImmutableDictionary<string, string>> properties = default,
-            Optional<Glyph> glyph = default,
-            Optional<ImmutableArray<string>> tags = default,
-            Optional<CompletionItemRules> rules = default)
-        {
-            var newSpan = span.HasValue ? span.Value : this.Span;
-            var newDisplayText = displayText.HasValue ? displayText.Value : this.DisplayText;
-            var newFilterText = filterText.HasValue ? filterText.Value : this.FilterText;
-            var newSortText = sortText.HasValue ? sortText.Value : this.SortText;
-            var newProperties = properties.HasValue ? properties.Value : this.Properties;
-            var newGlyph = glyph.HasValue ? glyph.Value : this.Glyph;
-            var newTags = tags.HasValue ? tags.Value : this.Tags;
-            var newRules = rules.HasValue ? rules.Value : this.Rules;
-
-            if (newSpan == this.Span &&
-                newDisplayText == this.DisplayText &&
-                newFilterText == this.FilterText &&
-                newSortText == this.SortText &&
-                newProperties == this.Properties &&
-                newGlyph == Glyph &&
-                newTags == this.Tags &&
-                newRules == this.Rules)
-            {
-                return this;
-            }
-
-            return new CompletionItem(
-                displayText: newDisplayText,
-                filterText: newFilterText,
-                span: newSpan,
-                sortText: newSortText,
-                properties: newProperties,
-                glyph: newGlyph,
-                tags: newTags,
-                rules: newRules);
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="Span"/> property changed.
-        /// </summary>
-        [Obsolete("Not used anymore.  CompletionList.Span is used to control the span used for filtering.", error: true)]
-        public CompletionItem WithSpan(TextSpan span)
-        {
-            return this;
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="DisplayText"/> property changed.
-        /// </summary>
-        public CompletionItem WithDisplayText(string text)
-        {
-            return With(displayText: text);
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="FilterText"/> property changed.
-        /// </summary>
-        public CompletionItem WithFilterText(string text)
-        {
-            return With(filterText: text);
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="SortText"/> property changed.
-        /// </summary>
-        public CompletionItem WithSortText(string text)
-        {
-            return With(sortText: text);
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="Properties"/> property changed.
-        /// </summary>
-        public CompletionItem WithProperties(ImmutableDictionary<string, string> properties)
-        {
-            return With(properties: properties);
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with a property added to the <see cref="Properties"/> collection.
-        /// </summary>
-        public CompletionItem AddProperty(string name, string value)
-        {
-            return With(properties: this.Properties.Add(name, value));
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="Tags"/> property changed.
-        /// </summary>
-        public CompletionItem WithTags(ImmutableArray<string> tags)
-        {
-            return With(tags: tags);
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with a tag added to the <see cref="Tags"/> collection.
-        /// </summary>
-        public CompletionItem AddTag(string tag)
-        {
-            if (tag == null)
-            {
-                throw new ArgumentNullException(nameof(tag));
-            }
-
-            if (this.Tags.Contains(tag))
-            {
-                return this;
-            }
-            else
-            {
-                return With(tags: this.Tags.Add(tag));
-            }
-        }
-
-        /// <summary>
-        /// Creates a copy of this <see cref="CompletionItem"/> with the <see cref="Rules"/> property changed.
-        /// </summary>
-        public CompletionItem WithRules(CompletionItemRules rules)
-        {
-            return With(rules: rules);
+                tags: tags);
         }
 
         int IComparable<CompletionItem>.CompareTo(CompletionItem other)

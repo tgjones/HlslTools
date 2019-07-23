@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.Core.Imaging;
 using Microsoft.VisualStudio.Language.Intellisense;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
@@ -45,7 +44,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.QuickInfo
                     return null;
                 }
 
-                var quickInfoElement = CreateElement(item.Content);
+                var quickInfoElement = CreateElement(document, item.Content);
 
                 return new QuickInfoItem(
                     snapshot.CreateTrackingSpan(item.TextSpan.ToSpan(), SpanTrackingMode.EdgeInclusive),
@@ -55,11 +54,11 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.QuickInfo
             return null;
         }
 
-        private static ContainerElement CreateElement(CodeAnalysis.QuickInfo.QuickInfoContent content)
+        private static ContainerElement CreateElement(Document document, CodeAnalysis.QuickInfo.QuickInfoContent content)
         {
-            var taggedTextMappingService = PrimaryWorkspace.Workspace.Services.GetLanguageServices(content.Language).GetService<ITaggedTextMappingService>();
+            var taggedTextMappingService = document.Workspace.Services.GetLanguageServices(content.Language).GetService<ITaggedTextMappingService>();
 
-            var glyphElement = new ImageElement(content.Glyph.GetImageMoniker().ToImageId());
+            var glyphElement = new ImageElement(content.Glyph.GetImageId());
 
             var elements = new List<object>
             {

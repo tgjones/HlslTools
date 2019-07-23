@@ -40,13 +40,15 @@ namespace ShaderTools.LanguageServer.Handlers
 
             var completionService = document.GetLanguageService<CompletionService>();
 
-            var triggerKind = request.Context.TriggerKind == OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionTriggerKind.TriggerCharacter
-                ? CodeAnalysis.Completion.CompletionTriggerKind.Insertion
-                : CodeAnalysis.Completion.CompletionTriggerKind.Invoke;
-            var triggerChar = triggerKind == CodeAnalysis.Completion.CompletionTriggerKind.Insertion
-                ? request.Context.TriggerCharacter[0]
-                : default;
-            var trigger = new CompletionTrigger(triggerKind, triggerChar);
+            Microsoft.CodeAnalysis.Completion.CompletionTrigger trigger;
+            if (request.Context.TriggerKind == OmniSharp.Extensions.LanguageServer.Protocol.Models.CompletionTriggerKind.TriggerCharacter)
+            {
+                trigger = Microsoft.CodeAnalysis.Completion.CompletionTrigger.CreateInsertionTrigger(request.Context.TriggerCharacter[0]);
+            }
+            else
+            {
+                trigger = Microsoft.CodeAnalysis.Completion.CompletionTrigger.Invoke;
+            }
 
             var completionList = await completionService.GetCompletionsAsync(document, position, trigger, cancellationToken: token);
             if (completionList == null)
@@ -63,7 +65,7 @@ namespace ShaderTools.LanguageServer.Handlers
 
         public void SetCapability(CompletionCapability capability) { }
 
-        private static CompletionItem ConvertCompletionItem(Document document, CompletionRules completionRules, CodeAnalysis.Completion.CompletionItem item)
+        private static CompletionItem ConvertCompletionItem(Document document, Microsoft.CodeAnalysis.Completion.CompletionRules completionRules, CodeAnalysis.Completion.CompletionItem item)
         {
             var description = CommonCompletionItem.GetDescription(item);
 

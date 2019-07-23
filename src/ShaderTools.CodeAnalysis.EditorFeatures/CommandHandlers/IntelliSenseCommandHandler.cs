@@ -12,11 +12,8 @@ namespace ShaderTools.CodeAnalysis.Editor.CommandHandlers
     internal sealed class IntelliSenseCommandHandler : AbstractIntelliSenseCommandHandler
     {
         [ImportingConstructor]
-        public IntelliSenseCommandHandler(
-            CompletionCommandHandler completionCommandHandler,
-            SignatureHelpCommandHandler signatureHelpCommandHandler)
-            : base(completionCommandHandler,
-                signatureHelpCommandHandler)
+        public IntelliSenseCommandHandler(SignatureHelpCommandHandler signatureHelpCommandHandler)
+            : base(signatureHelpCommandHandler)
         {
         }
     }

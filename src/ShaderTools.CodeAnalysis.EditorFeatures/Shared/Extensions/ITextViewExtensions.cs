@@ -1,34 +1,16 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Outlining;
-using Microsoft.VisualStudio.Utilities;
-using ShaderTools.Utilities.Collections;
 using ShaderTools.Utilities.Diagnostics;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 {
     internal static partial class ITextViewExtensions
     {
-        /// <summary>
-        /// Collects the content types in the view's buffer graph.
-        /// </summary>
-        public static ISet<IContentType> GetContentTypes(this ITextView textView)
-        {
-            return new HashSet<IContentType>(
-                textView.BufferGraph.GetTextBuffers(_ => true).Select(b => b.ContentType));
-        }
-
-        public static bool IsReadOnlyOnSurfaceBuffer(this ITextView textView, SnapshotSpan span)
-        {
-            var spansInView = textView.BufferGraph.MapUpToBuffer(span, SpanTrackingMode.EdgeInclusive, textView.TextBuffer);
-            return spansInView.Any(spanInView => textView.TextBuffer.IsReadOnly(spanInView.Span));
-        }
-
         public static SnapshotPoint? GetCaretPoint(this ITextView textView, ITextBuffer subjectBuffer)
         {
             var caret = textView.Caret.Position;
@@ -49,24 +31,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
             }
         }
 
-        public static VirtualSnapshotPoint? GetVirtualCaretPoint(this ITextView textView, ITextBuffer subjectBuffer)
-        {
-            if (subjectBuffer == textView.TextBuffer)
-            {
-                return textView.Caret.Position.VirtualBufferPosition;
-            }
-
-            var mappedPoint = textView.BufferGraph.MapDownToBuffer(
-                textView.Caret.Position.VirtualBufferPosition.Position,
-                PointTrackingMode.Negative,
-                subjectBuffer,
-                PositionAffinity.Predecessor);
-
-            return mappedPoint.HasValue
-                ? new VirtualSnapshotPoint(mappedPoint.Value)
-                : default(VirtualSnapshotPoint);
-        }
-
         public static ITextBuffer GetBufferContainingCaret(this ITextView textView, string contentType = ContentTypeNames.ShaderToolsContentType)
         {
             var point = GetCaretPoint(textView, s => s.ContentType.IsOfType(contentType));
@@ -81,15 +45,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
         public static NormalizedSnapshotSpanCollection GetSpanInView(this ITextView textView, SnapshotSpan span)
         {
             return textView.BufferGraph.MapUpToSnapshot(span, SpanTrackingMode.EdgeInclusive, textView.TextSnapshot);
-        }
-
-        public static void SetSelection(
-            this ITextView textView, VirtualSnapshotPoint anchorPoint, VirtualSnapshotPoint activePoint)
-        {
-            var isReversed = activePoint < anchorPoint;
-            var start = isReversed ? activePoint : anchorPoint;
-            var end = isReversed ? anchorPoint : activePoint;
-            SetSelection(textView, new SnapshotSpan(start.Position, end.Position), isReversed);
         }
 
         public static void SetSelection(
@@ -285,36 +240,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
 
             var lineInView = textView.TextSnapshot.GetLineFromPosition(pointInView.Value.Position);
             return smartIndentService.GetDesiredIndentation(textView, lineInView);
-        }
-
-        public static bool TryGetSurfaceBufferSpan(
-            this ITextView textView,
-            VirtualSnapshotSpan virtualSnapshotSpan,
-            out VirtualSnapshotSpan surfaceBufferSpan)
-        {
-            // If we are already on the surface buffer, then there's no reason to attempt mappings
-            // as we'll lose virtualness
-            if (virtualSnapshotSpan.Snapshot.TextBuffer == textView.TextBuffer)
-            {
-                surfaceBufferSpan = virtualSnapshotSpan;
-                return true;
-            }
-
-            // We have to map. We'll lose virtualness in this process because
-            // mapping virtual points through projections is poorly defined.
-            var targetSpan = textView.BufferGraph.MapUpToSnapshot(
-                virtualSnapshotSpan.SnapshotSpan,
-                SpanTrackingMode.EdgeExclusive,
-                textView.TextSnapshot).FirstOrNullable();
-
-            if (targetSpan.HasValue)
-            {
-                surfaceBufferSpan = new VirtualSnapshotSpan(targetSpan.Value);
-                return true;
-            }
-
-            surfaceBufferSpan = default(VirtualSnapshotSpan);
-            return false;
         }
 
         /// <summary>

@@ -1,8 +1,10 @@
 ﻿using System;
+using Microsoft.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Hlsl.Formatting;
 using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.VisualStudio.LanguageServices.Options.UI;
+using OptionSet = ShaderTools.CodeAnalysis.Options.OptionSet;
 
 namespace ShaderTools.VisualStudio.LanguageServices.Hlsl.Options.Formatting
 {

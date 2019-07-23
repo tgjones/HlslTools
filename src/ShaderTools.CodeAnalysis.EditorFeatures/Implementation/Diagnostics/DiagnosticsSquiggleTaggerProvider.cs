@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.Options;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Adornments;
 using Microsoft.VisualStudio.Text.Editor;
@@ -11,7 +12,6 @@ using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Diagnostics;
 using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
 using ShaderTools.CodeAnalysis.Editor.Tagging;
-using ShaderTools.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 using ShaderTools.CodeAnalysis.Text.Shared.Extensions;
 
