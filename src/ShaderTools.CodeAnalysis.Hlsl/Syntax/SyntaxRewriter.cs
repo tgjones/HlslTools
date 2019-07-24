@@ -13,7 +13,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             for (var i = 0; i < nodeList.Count; i++)
             {
                 var n = nodeList[i];
-                var nn = n.Accept(this);
+                var nt = n as SyntaxToken;
+                var nn = nt == null ? n.Accept(this) : this.VisitToken(nt);
+
                 if (nn != n)
                 {
                     if (newNodes == null)
@@ -58,7 +60,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return new SeparatedSyntaxList<TNode>(newNodes);
         }
 
-        public new virtual SyntaxToken VisitSyntaxToken(SyntaxToken token)
+        public virtual SyntaxToken VisitToken(SyntaxToken token)
         {
             return token;
         }
