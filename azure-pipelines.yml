@@ -34,8 +34,14 @@ jobs:
       version: 3.x
       includePreviewVersions: true
 
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet Packages (dotnet)'
+    inputs:
+      command: restore
+      projects: '$(solution)'
+
   - task: NuGetCommand@2
-    displayName: 'Restore NuGet Packages'
+    displayName: 'Restore NuGet Packages (nuget)'
     inputs:
       restoreSolution: '$(solution)'
   
