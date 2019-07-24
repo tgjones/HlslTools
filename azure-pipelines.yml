@@ -31,8 +31,7 @@ jobs:
     displayName: 'Install .NET Core 3.0'
     inputs:
       packageType: sdk
-      version: 3.x
-      includePreviewVersions: true
+      version: 3.0.100-preview7-012821
       installationPath: $(Agent.ToolsDirectory)/dotnet
 
   - task: NuGetToolInstaller@0
