@@ -28,31 +28,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
             return spans.Select(s => (SnapshotSpan?) s).FirstOrDefault();
         }
 
-        public static SnapshotSpan? MapUpOrDownToBuffer(this IBufferGraph bufferGraph, SnapshotSpan span, ITextBuffer targetBuffer)
-        {
-            var direction = ClassifyBufferMapDirection(span.Snapshot.TextBuffer, targetBuffer);
-            switch (direction)
-            {
-                case BufferMapDirection.Identity:
-                    return span;
-
-                case BufferMapDirection.Down:
-                    {
-                        var spans = bufferGraph.MapDownToBuffer(span, SpanTrackingMode.EdgeExclusive, targetBuffer);
-                        return spans.Select(s => (SnapshotSpan?) s).FirstOrDefault();
-                    }
-
-                case BufferMapDirection.Up:
-                    {
-                        var spans = bufferGraph.MapUpToBuffer(span, SpanTrackingMode.EdgeExclusive, targetBuffer);
-                        return spans.Select(s => (SnapshotSpan?) s).FirstOrDefault();
-                    }
-
-                default:
-                    return null;
-            }
-        }
-
         public static SnapshotPoint? MapUpOrDownToBuffer(this IBufferGraph bufferGraph, SnapshotPoint point, ITextBuffer targetBuffer)
         {
             var direction = ClassifyBufferMapDirection(point.Snapshot.TextBuffer, targetBuffer);

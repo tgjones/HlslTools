@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.Text.Editor.Commanding;
 using Microsoft.VisualStudio.Text.Outlining;
 using Microsoft.VisualStudio.TextManager.Interop;
 using ShaderTools.CodeAnalysis;
-using ShaderTools.CodeAnalysis.Editor;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Formatting;
 using ShaderTools.CodeAnalysis.Options;
@@ -178,8 +177,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.LanguageService
 
             // The lifetime of CommandFilter is married to the view
             wpfTextView.GetOrCreateAutoClosingProperty(v =>
-                new StandaloneCommandFilter(
-                    SystemServiceProvider, v, commandHandlerFactory, EditorAdaptersFactoryService).AttachToVsTextView());
+                new StandaloneCommandFilter(v, commandHandlerFactory, EditorAdaptersFactoryService).AttachToVsTextView());
 
             ConditionallyCollapseOutliningRegions(wpfTextView, workspace);
         }

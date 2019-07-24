@@ -30,70 +30,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
         [BaseDefinition("projection")]
         public static readonly ContentTypeDefinition ShaderToolsPreviewContentTypeDefinition;
 
-        public static IElisionBuffer CreateElisionBufferWithoutIndentation(
-            this IProjectionBufferFactoryService factoryService,
-            IEditorOptions editorOptions,
-            IContentType contentType = null,
-            params SnapshotSpan[] exposedSpans)
-        {
-            return factoryService.CreateElisionBufferWithoutIndentation(
-                editorOptions,
-                contentType,
-                (IEnumerable<SnapshotSpan>)exposedSpans);
-        }
-
-        public static IElisionBuffer CreateElisionBufferWithoutIndentation(
-            this IProjectionBufferFactoryService factoryService,
-            IEditorOptions editorOptions,
-            IContentType contentType,
-            IEnumerable<SnapshotSpan> exposedSpans)
-        {
-            var spans = new NormalizedSnapshotSpanCollection(exposedSpans);
-
-            if (spans.Count > 0)
-            {
-                // BUG(6335): We have to make sure that the spans refer to the current snapshot of
-                // the buffer.
-                var buffer = spans.First().Snapshot.TextBuffer;
-                var currentSnapshot = buffer.CurrentSnapshot;
-                spans = new NormalizedSnapshotSpanCollection(
-                    spans.Select(s => s.TranslateTo(currentSnapshot, SpanTrackingMode.EdgeExclusive)));
-            }
-
-            contentType = contentType ?? factoryService.ProjectionContentType;
-            var elisionBuffer = factoryService.CreateElisionBuffer(
-                null, spans, ElisionBufferOptions.None, contentType);
-
-            if (spans.Count > 0)
-            {
-                var snapshot = spans.First().Snapshot;
-                var buffer = snapshot.TextBuffer;
-
-                // We need to figure out the shorted indentation level of the exposed lines.  We'll
-                // then remove that indentation from all lines.
-                var indentationColumn = DetermineIndentationColumn(editorOptions, spans);
-
-                var spansToElide = new List<Span>();
-
-                foreach (var span in spans)
-                {
-                    var startLineNumber = snapshot.GetLineNumberFromPosition(span.Start);
-                    var endLineNumber = snapshot.GetLineNumberFromPosition(span.End);
-
-                    for (var lineNumber = startLineNumber; lineNumber <= endLineNumber; lineNumber++)
-                    {
-                        var line = snapshot.GetLineFromLineNumber(lineNumber);
-                        var lineOffsetOfColumn = line.GetLineOffsetFromColumn(indentationColumn, editorOptions);
-                        spansToElide.Add(Span.FromBounds(line.Start, line.Start + lineOffsetOfColumn));
-                    }
-                }
-
-                elisionBuffer.ElideSpans(new NormalizedSpanCollection(spansToElide));
-            }
-
-            return elisionBuffer;
-        }
-
         private static int DetermineIndentationColumn(
             IEditorOptions editorOptions,
             IEnumerable<SnapshotSpan> spans)
@@ -142,25 +78,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
             return indentationColumn ?? 0;
         }
 
-        public static IProjectionBuffer CreateProjectionBuffer(
-            this IProjectionBufferFactoryService factoryService,
-            IContentTypeRegistryService registryService,
-            IEditorOptions editorOptions,
-            ITextSnapshot snapshot,
-            string separator,
-            params LineSpan[] exposedLineSpans)
-        {
-            return CreateProjectionBuffer(
-                factoryService,
-                registryService,
-                editorOptions,
-                snapshot,
-                separator,
-                suffixOpt: null,
-                trim: false,
-                exposedLineSpans: exposedLineSpans);
-        }
-
         public static IProjectionBuffer CreateProjectionBufferWithoutIndentation(
             this IProjectionBufferFactoryService factoryService,
             IContentTypeRegistryService registryService,
@@ -196,18 +113,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 suffixOpt,
                 trim: true,
                 exposedLineSpans: exposedLineSpans);
-        }
-
-        public static IProjectionBuffer CreatePreviewProjectionBuffer(
-            this IProjectionBufferFactoryService factoryService,
-            IList<object> sourceSpans,
-            IContentTypeRegistryService registryService)
-        {
-            return factoryService.CreateProjectionBuffer(
-                projectionEditResolver: null,
-                sourceSpans: sourceSpans,
-                options: ProjectionBufferOptions.None,
-                contentType: registryService.GetContentType(ShaderToolsPreviewContentType));
         }
 
         private static IProjectionBuffer CreateProjectionBuffer(

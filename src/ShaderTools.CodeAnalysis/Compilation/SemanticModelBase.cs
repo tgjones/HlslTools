@@ -19,8 +19,6 @@ namespace ShaderTools.CodeAnalysis.Compilation
 
         public abstract TypeInfo GetTypeInfo(SyntaxNodeBase node);
 
-        //public abstract IAliasSymbol GetAliasSymbol(SyntaxNodeBase nameSyntax);
-
         public abstract IEnumerable<ISymbol> LookupSymbols(SourceLocation position);
     }
 }

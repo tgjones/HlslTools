@@ -42,13 +42,5 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Classification
                     new ClassificationTag(typeMap.GetClassificationType(classifiedSpan.ClassificationType))));
             }
         }
-
-        public static List<ITagSpan<IClassificationTag>> ConvertAndReturnList(ClassificationTypeMap typeMap, ITextSnapshot snapshot, List<ClassifiedSpan> classifiedSpans)
-        {
-            var result = new List<ITagSpan<IClassificationTag>>();
-            Convert(typeMap, snapshot, classifiedSpans, result.Add);
-            ReturnClassifiedSpanList(classifiedSpans);
-            return result;
-        }
     }
 }

@@ -32,14 +32,5 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 document.Workspace.ApplyTextChanges(document.Id, changes, cancellationToken);
             }
         }
-
-        //private static IEnumerable<IFormattingRule> GetFormattingRules(Document document, IEnumerable<IFormattingRule> rules, TextSpan span)
-        //{
-        //    var workspace = document.Project.Solution.Workspace;
-        //    var formattingRuleFactory = workspace.Services.GetService<IHostDependentFormattingRuleFactoryService>();
-        //    var position = (span.Start + span.End) / 2;
-
-        //    return SpecializedCollections.SingletonEnumerable(formattingRuleFactory.CreateRule(document, position)).Concat(rules ?? Formatter.GetDefaultFormattingRules(document));
-        //}
     }
 }

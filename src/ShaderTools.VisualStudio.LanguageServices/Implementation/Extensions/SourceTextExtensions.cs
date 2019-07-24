@@ -20,25 +20,5 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation.Extensions
                 iEndIndex = endOffset
             };
         }
-
-        public static VsTextSpan GetVsTextSpanForLineOffset(this SourceText text, int lineNumber, int offset)
-        {
-            return new VsTextSpan
-            {
-                iStartLine = lineNumber,
-                iStartIndex = offset,
-                iEndLine = lineNumber,
-                iEndIndex = offset
-            };
-        }
-
-        public static VsTextSpan GetVsTextSpanForPosition(this SourceText text, int position, int virtualSpace)
-        {
-            text.GetLineAndOffset(position, out var lineNumber, out var offset);
-
-            offset += virtualSpace;
-
-            return text.GetVsTextSpanForLineOffset(lineNumber, offset);
-        }
     }
 }
