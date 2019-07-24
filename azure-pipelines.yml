@@ -34,6 +34,11 @@ jobs:
       version: 3.x
       includePreviewVersions: true
 
+  - task: NuGetToolInstaller@0
+    displayName: 'Install NuGet'
+    inputs:
+      versionSpec: '5.1.0'
+
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet Packages (dotnet)'
     inputs:
