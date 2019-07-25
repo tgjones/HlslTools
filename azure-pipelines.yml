@@ -28,7 +28,7 @@ jobs:
   steps:
   
   - task: UseDotNet@2
-    displayName: 'Install .NET Core 3.0'
+    displayName: 'Use .NET Core 3.0'
     inputs:
       packageType: sdk
       version: 3.0.100-preview7-012821
@@ -54,6 +54,12 @@ jobs:
     inputs:
       solution: '$(solution)'
       configuration: $(buildConfiguration)
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core 2.x'
+    inputs:
+      packageType: sdk
+      version: 2.x
 
   - task: DotNetCoreCLI@2
     displayName: Test
