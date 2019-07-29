@@ -3,10 +3,6 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
-  <PropertyGroup>
-    <!-- Workaround for https://github.com/Microsoft/msbuild/issues/2661 -->
-    <AddSyntheticProjectReferencesForSolutionDependencies>false</AddSyntheticProjectReferencesForSolutionDependencies>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis\ShaderTools.CodeAnalysis.csproj" />
   </ItemGroup>
@@ -24,14 +20,12 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <PropertyGroup>
+    <CodeGenerationRoslynVersion>0.6.1</CodeGenerationRoslynVersion>
+  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyntaxGenerator\SyntaxGenerator.csproj">
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-      <SkipGetTargetFrameworkProperties>true</SkipGetTargetFrameworkProperties>
-    </ProjectReference>
+    <ProjectReference Include="..\SyntaxGenerator\SyntaxGenerator.csproj" PrivateAssets="all" />
+    <PackageReference Include="CodeGeneration.Roslyn.BuildTime" Version="$(CodeGenerationRoslynVersion)" PrivateAssets="all" />
+    <DotNetCliToolReference Include="dotnet-codegen" Version="$(CodeGenerationRoslynVersion)" />
   </ItemGroup>
-  <ItemGroup>
-    <SyntaxDefinition Include="Syntax\Syntax.xml" />
-  </ItemGroup>
-  <Import Project="..\SyntaxGenerator\SyntaxGenerator.targets" />
 </Project>
