@@ -13,7 +13,7 @@ using ShaderTools.CodeAnalysis.Text;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 {
-    internal sealed class KeywordCompletionProvider : CommonCompletionProvider
+    internal sealed class KeywordCompletionProvider : CompletionProvider
     {
         internal override bool IsInsertionTrigger(SourceText text, int insertedCharacterPosition, OptionSet options)
         {
@@ -34,7 +34,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 
                 context.AddItem(CommonCompletionItem.Create(
                     keywordText,
-                    CompletionItemRules.Default,
                     Glyph.Keyword,
                     (keywordText + " Keyword").ToSymbolMarkupTokens()));
             }

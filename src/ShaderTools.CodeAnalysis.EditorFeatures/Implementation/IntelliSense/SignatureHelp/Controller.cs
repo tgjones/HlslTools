@@ -44,19 +44,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.IntelliSense.SignatureH
             _allProviders = allProviders;
         }
 
-        // For testing purposes.
-        internal Controller(
-            ITextView textView,
-            ITextBuffer subjectBuffer,
-            IIntelliSensePresenter<ISignatureHelpPresenterSession, ISignatureHelpSession> presenter,
-            IAsynchronousOperationListener asyncListener,
-            IDocumentProvider documentProvider,
-            IList<ISignatureHelpProvider> providers)
-            : base(textView, subjectBuffer, presenter, asyncListener, documentProvider, "SignatureHelp")
-        {
-            _providers = providers.ToImmutableArray();
-        }
-
         internal static Controller GetInstance(
             EditorCommandArgs args,
             IIntelliSensePresenter<ISignatureHelpPresenterSession, ISignatureHelpSession> presenter,

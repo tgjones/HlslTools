@@ -2,17 +2,11 @@
 
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Host;
-using ShaderTools.CodeAnalysis.Host.Mef;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Preview
 {
     internal class PreviewWorkspace : Workspace
     {
-        public PreviewWorkspace()
-            : base(MefHostServices.DefaultHost)
-        {
-        }
-
         public PreviewWorkspace(HostServices hostServices)
             : base(hostServices)
         {
@@ -23,11 +17,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Preview
             var document = CreateDocument(documentId, languageName, new Text.SourceFile(sourceText));
             OnDocumentOpened(document);
             return document;
-        }
-
-        public void UpdateDocument(DocumentId documentId, SourceText sourceText)
-        {
-            OnDocumentTextChanged(documentId, sourceText);
         }
 
         public void CloseDocument(DocumentId documentId)

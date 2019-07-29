@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Microsoft.VisualStudio.Text;
-using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Host;
 using ShaderTools.CodeAnalysis.Host.Mef;
@@ -88,26 +87,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 Select(lazy => lazy.Value).ToList();
         }
 
-        internal static IList<T> SelectMatchingExtensionValues<T>(
-            this HostWorkspaceServices workspaceServices,
-            IEnumerable<Lazy<T, OrderableLanguageAndRoleMetadata>> items,
-            IContentType contentType,
-            ITextViewRoleSet roleSet)
-        {
-            if (items == null)
-            {
-                return SpecializedCollections.EmptyList<T>();
-            }
-
-            return items.Where(lazy =>
-            {
-                var metadata = lazy.Metadata;
-                return LanguageMatches(metadata.Language, contentType, workspaceServices) &&
-                    RolesMatch(metadata.Roles, roleSet);
-            }).
-                Select(lazy => lazy.Value).ToList();
-        }
-
         private static bool LanguageMatches(
             string language,
             IContentType contentType,
@@ -115,13 +94,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
         {
             var defaultContentType = GetDefaultContentTypeName(workspaceServices, language);
             return (defaultContentType != null) ? contentType.IsOfType(defaultContentType) : false;
-        }
-
-        private static bool RolesMatch(
-            IEnumerable<string> roles,
-            ITextViewRoleSet roleSet)
-        {
-            return (roles == null) || (roleSet == null) || roleSet.ContainsAll(roles);
         }
     }
 }

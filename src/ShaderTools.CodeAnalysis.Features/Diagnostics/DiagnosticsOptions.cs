@@ -1,4 +1,5 @@
-﻿using ShaderTools.CodeAnalysis.Options;
+﻿using Microsoft.CodeAnalysis.Options;
+using ShaderTools.CodeAnalysis.Options;
 
 namespace ShaderTools.CodeAnalysis.Diagnostics
 {

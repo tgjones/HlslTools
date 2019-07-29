@@ -4,8 +4,14 @@ trigger:
 pr:
 - master
 
+variables:
+  solution: 'src/ShaderTools.sln'
+  buildConfiguration: 'Release'
+
 jobs:
+
 - job: HlslTools_Build_Test
+  
   strategy:
     maxParallel: 2
     matrix:
@@ -15,11 +21,49 @@ jobs:
       VS2019:
         imageName: 'windows-2019'
         _name: VS2019
+  
   pool:
     vmImage: $(imageName)
+  
   steps:
-  - task: PowerShell@2
-    displayName: Build
+  
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core 3.0'
     inputs:
-      filePath: scripts\build.ps1
-      arguments: -ci -build
+      packageType: sdk
+      version: 3.0.100-preview7-012821
+
+  - task: NuGetToolInstaller@0
+    displayName: 'Install NuGet'
+    inputs:
+      versionSpec: '5.1.0'
+
+  - task: DotNetCoreCLI@2
+    displayName: 'Restore NuGet Packages (dotnet)'
+    inputs:
+      command: restore
+      projects: '$(solution)'
+
+  - task: NuGetCommand@2
+    displayName: 'Restore NuGet Packages (nuget)'
+    inputs:
+      restoreSolution: '$(solution)'
+  
+  - task: VSBuild@1
+    displayName: 'Build'
+    inputs:
+      solution: '$(solution)'
+      configuration: $(buildConfiguration)
+
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core 2.x'
+    inputs:
+      packageType: sdk
+      version: 2.x
+
+  - task: DotNetCoreCLI@2
+    displayName: Test
+    inputs:
+      command: test
+      projects: '**/*Tests/*.csproj'
+      arguments: '--configuration $(buildConfiguration)'

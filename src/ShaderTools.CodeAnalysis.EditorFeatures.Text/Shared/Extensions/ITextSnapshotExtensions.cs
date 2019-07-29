@@ -26,13 +26,5 @@ namespace ShaderTools.CodeAnalysis.Text.Shared.Extensions
 
             return new SnapshotSpan(snapshot, new Span(0, snapshot.Length));
         }
-
-        public static void GetLineAndColumn(this ITextSnapshot snapshot, int position, out int lineNumber, out int columnIndex)
-        {
-            var line = snapshot.GetLineFromPosition(position);
-
-            lineNumber = line.LineNumber;
-            columnIndex = position - line.Start.Position;
-        }
     }
 }

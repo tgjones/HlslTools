@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Options;
 
@@ -28,15 +29,6 @@ namespace ShaderTools.CodeAnalysis.Completion
         /// The caret position when completion was triggered.
         /// </summary>
         public int Position { get; }
-
-        /// <summary>
-        /// The span of the syntax element at the caret position.
-        /// 
-        /// This is the most common value used for <see cref="CompletionItem.Span"/> and will
-        /// be automatically assigned to any <see cref="CompletionItem"/> that has no <see cref="CompletionItem.Span"/> specified.
-        /// </summary>
-        [Obsolete("Not used anymore. Use CompletionListSpan instead.", error: true)]
-        public TextSpan DefaultItemSpan { get; }
 
         /// <summary>
         /// The span of the document the completion list corresponds to.  It will be set initially to
@@ -99,7 +91,6 @@ namespace ShaderTools.CodeAnalysis.Completion
                 throw new ArgumentNullException(nameof(item));
             }
 
-            item = FixItem(item);
             _items.Add(item);
         }
 
@@ -116,8 +107,6 @@ namespace ShaderTools.CodeAnalysis.Completion
             }
         }
 
-        private CompletionItem _suggestionModeItem;
-
         /// <summary>
         /// An optional <see cref="CompletionItem"/> that appears selected in the list presented to the user during suggestion mode.
         /// 
@@ -128,32 +117,6 @@ namespace ShaderTools.CodeAnalysis.Completion
         /// 
         /// No text is ever inserted when this item is completed, leaving the text the user typed instead.
         /// </summary>
-        public CompletionItem SuggestionModeItem
-        {
-            get
-            {
-                return _suggestionModeItem;
-            }
-
-            set
-            {
-                _suggestionModeItem = value;
-
-                if (_suggestionModeItem != null)
-                {
-                    _suggestionModeItem = FixItem(_suggestionModeItem);
-                }
-            }
-        }
-
-        private CompletionItem FixItem(CompletionItem item)
-        {
-            // remember provider so we can find it again later
-            item = item.AddProperty("Provider", this.Provider.Name);
-
-            item.Span = this.CompletionListSpan;
-
-            return item;
-        }
+        public CompletionItem SuggestionModeItem { get; set; }
     }
 }

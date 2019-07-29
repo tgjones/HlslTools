@@ -1,6 +1,5 @@
 ﻿// Copyright (c) Microsoft.  All Rights Reserved.  Licensed under the Apache License, Version 2.0.  See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Immutable;
 using ShaderTools.CodeAnalysis.Symbols.Markup;
 using ShaderTools.Utilities.Diagnostics;
@@ -22,17 +21,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
             }
 
             return null;
-        }
-
-        public static string GetLeadingWhitespace(this string lineText)
-        {
-            Contract.ThrowIfNull(lineText);
-
-            var firstOffset = lineText.GetFirstNonWhitespaceOffset();
-
-            return firstOffset.HasValue
-                ? lineText.Substring(0, firstOffset.Value)
-                : lineText;
         }
 
         public static int ConvertTabToSpace(this string textSnippet, int tabSize, int initialColumn, int endPosition)
@@ -122,18 +110,6 @@ namespace ShaderTools.CodeAnalysis.Shared.Extensions
 
             // We're asking for a column past the end of the line, so just go to the end.
             return line.Length;
-        }
-
-        public static int GetCaseInsensitivePrefixLength(this string string1, string string2)
-        {
-            int x = 0;
-            while (x < string1.Length && x < string2.Length &&
-                   char.ToUpper(string1[x]) == char.ToUpper(string2[x]))
-            {
-                x++;
-            }
-
-            return x;
         }
 
         public static ImmutableArray<SymbolMarkupToken> ToSymbolMarkupTokens(this string text)

@@ -1,4 +1,6 @@
-﻿namespace ShaderTools.CodeAnalysis.Options
+﻿using Microsoft.CodeAnalysis.Options;
+
+namespace ShaderTools.CodeAnalysis.Options
 {
     internal static class FeatureOnOffOptions
     {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Composition;
+using Microsoft.CodeAnalysis.Options;
 using ShaderTools.CodeAnalysis.Options.Providers;
 using ShaderTools.CodeAnalysis.Properties;
 using ShaderTools.Utilities.Collections;

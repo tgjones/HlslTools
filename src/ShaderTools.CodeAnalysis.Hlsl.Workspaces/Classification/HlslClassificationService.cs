@@ -15,7 +15,7 @@ using ShaderTools.CodeAnalysis.Syntax;
 namespace ShaderTools.CodeAnalysis.Hlsl.Classification
 {
     [ExportLanguageService(typeof(IClassificationService), LanguageNames.Hlsl), Shared]
-    internal class ShaderLabClassificationService : AbstractClassificationService
+    internal class HlslClassificationService : AbstractClassificationService
     {
         public override void AddSyntacticClassifications(SyntaxTreeBase syntaxTree, TextSpan textSpan, List<ClassifiedSpan> result, CancellationToken cancellationToken)
         {

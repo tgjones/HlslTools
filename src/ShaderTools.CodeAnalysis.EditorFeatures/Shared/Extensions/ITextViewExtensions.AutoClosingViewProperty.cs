@@ -35,36 +35,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
                 return false;
             }
 
-            public static bool TryGetValue(
-                TTextView textView,
-                object key,
-                out TProperty value)
-            {
-                Contract.ThrowIfTrue(textView.IsClosed);
-
-                var properties = textView.Properties.GetOrCreateSingletonProperty(() => new AutoClosingViewProperty<TProperty, TTextView>(textView));
-                return properties.TryGetValue(key, out value);
-            }
-
-            public static void AddValue(
-                TTextView textView,
-                object key,
-                TProperty value)
-            {
-                Contract.ThrowIfTrue(textView.IsClosed);
-
-                var properties = textView.Properties.GetOrCreateSingletonProperty(() => new AutoClosingViewProperty<TProperty, TTextView>(textView));
-                properties.Add(key, value);
-            }
-
-            public static void RemoveValue(TTextView textView, object key)
-            {
-                if (textView.Properties.TryGetProperty(typeof(AutoClosingViewProperty<TProperty, TTextView>), out AutoClosingViewProperty<TProperty, TTextView> properties))
-                {
-                    properties.Remove(key);
-                }
-            }
-
             private AutoClosingViewProperty(TTextView textView)
             {
                 _textView = textView;
@@ -85,11 +55,6 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
             public void Add(object key, TProperty value)
             {
                 _map[key] = value;
-            }
-
-            public void Remove(object key)
-            {
-                _map.Remove(key);
             }
         }
     }

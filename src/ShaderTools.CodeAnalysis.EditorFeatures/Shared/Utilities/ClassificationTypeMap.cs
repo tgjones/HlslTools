@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Microsoft.CodeAnalysis.Classification;
 using Microsoft.VisualStudio.Text.Classification;
-using ShaderTools.CodeAnalysis.Classification;
 using ShaderTools.Utilities.Collections;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Utilities

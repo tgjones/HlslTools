@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Completion;
@@ -14,7 +12,7 @@ using ShaderTools.CodeAnalysis.Symbols.Markup;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
 {
-    internal sealed class SemanticCompletionProvider : CommonCompletionProvider
+    internal sealed class SemanticCompletionProvider : CompletionProvider
     {
         internal override bool IsInsertionTrigger(SourceText text, int insertedCharacterPosition, OptionSet options)
         {
@@ -58,7 +56,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Completion.CompletionProviders
             {
                 context.AddItem(CommonCompletionItem.Create(
                     $"{semantic.Name}{(semantic.AllowsMultiple ? "[n]" : "")}",
-                    CompletionItemRules.Default,
                     Glyph.Constant,
                     CreateDescription(semantic)));
             }
