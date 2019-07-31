@@ -103,6 +103,7 @@ sdfsds multiline comment. */
 
 float test() {
 	int    a;
+	return 1.0;
 }
 
 Texture2DMS<float4, 32> PictureMS;
