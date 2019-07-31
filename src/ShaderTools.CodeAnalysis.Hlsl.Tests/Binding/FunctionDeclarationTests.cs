@@ -83,7 +83,7 @@ void main()
         public void AllowsFunctionDeclaredInMacro()
         {
             var code = @"
-#define DECLARE_FUNC(name) float name() {}
+#define DECLARE_FUNC(name) float name() { return 1.0; }
 DECLARE_FUNC(myfunc)
 
 void main()
@@ -106,6 +106,13 @@ void main()
         {
             var code = "int foo() { return; }";
             AssertDiagnostics(code, DiagnosticId.RetObjectRequired);
+        }
+	
+	[Fact]
+        public void DetectsMissingReturnStatementFromNonVoidFunction()
+        {
+            var code = "int foo() { }";
+            AssertDiagnostics(code, DiagnosticId.ReturnExpected);
         }
     }
 }
