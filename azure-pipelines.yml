@@ -31,7 +31,7 @@ jobs:
     displayName: 'Install .NET Core 2.1'
     inputs:
       packageType: sdk
-      version: 2.1
+      version: 2.1.x
 
   - task: NuGetToolInstaller@0
     displayName: 'Install NuGet'
