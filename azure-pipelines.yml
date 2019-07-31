@@ -27,12 +27,6 @@ jobs:
   
   steps:
   
-  - task: UseDotNet@2
-    displayName: 'Install .NET Core 2.1'
-    inputs:
-      packageType: sdk
-      version: 2.1.x
-
   - task: NuGetToolInstaller@0
     displayName: 'Install NuGet'
     inputs:
