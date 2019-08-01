@@ -10,16 +10,16 @@ variables:
 
 jobs:
 
-- job: Build_Test_VisualStudio_Extension
+- job: Build_Test_VS_Extension
   
   strategy:
     matrix:
       VS2017:
         imageName: 'vs2017-win2016'
-        _name: VS2017
+        vsVersion: VS2017
       VS2019:
         imageName: 'windows-2019'
-        _name: VS2019
+        vsVersion: VS2019
   
   pool:
     vmImage: $(imageName)
@@ -57,6 +57,7 @@ jobs:
       
   - task: PublishPipelineArtifact@1
     displayName: Publish Artifact
+    condition: and(succeeded(), eq(variables['vsVersion'], 'VS2019'))
     inputs:
       artifactName: VSIX
-      path: src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/*.vsix
+      path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/*.vsix'
