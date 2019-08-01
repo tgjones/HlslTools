@@ -10,10 +10,9 @@ variables:
 
 jobs:
 
-- job: HlslTools_Build_Test
+- job: Build_Test_VisualStudio_Extension
   
   strategy:
-    maxParallel: 2
     matrix:
       VS2017:
         imageName: 'vs2017-win2016'
@@ -55,3 +54,9 @@ jobs:
       command: test
       projects: '**/*Tests/*.csproj'
       arguments: '--configuration $(buildConfiguration)'
+      
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Artifact
+    inputs:
+      artifactName: VSIX
+      path: src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/*.vsix
