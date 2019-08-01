@@ -60,4 +60,4 @@ jobs:
     condition: and(succeeded(), eq(variables['vsVersion'], 'VS2019'))
     inputs:
       artifactName: VSIX
-      path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/*.vsix'
+      path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
