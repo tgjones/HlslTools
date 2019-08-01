@@ -649,7 +649,7 @@ namespace SyntaxGenerator.Writer
                         }
                         else if (field.Type == "SyntaxToken")
                         {
-                            WriteLine("      var {0} = this.VisitSyntaxToken(node.{1});", CamelCase(field.Name), field.Name);
+                            WriteLine("      var {0} = this.VisitToken(node.{1});", CamelCase(field.Name), field.Name);
                         }
                         else
                         {
