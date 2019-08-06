@@ -10,7 +10,7 @@ variables:
 
 jobs:
 
-- job: Build_Test_VS_Extension
+- job: VS_Extension
   
   strategy:
     matrix:
@@ -61,3 +61,16 @@ jobs:
     inputs:
       artifactName: VSIX
       path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
+
+- job: VSCode_Extension
+
+  pool:
+    vmImage: 'windows-2019'
+
+  steps:
+
+  - script: dotnet tool install --global dotnet-warp
+    displayName: 'Install dotnet-warp'
+
+  - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid win-x64 --output build/ShaderTools.LanguageServer.exe
+    displayName: 'Build Language Server'
