@@ -66,7 +66,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         public NewLinesOptions NewLines { get; set; }
         public SpacingOptions Spacing { get; set; }
 
-        public int? SpacesPerIndent { get; set; }
+        public bool UseTabs { get; set; }
+        public int SpacesPerIndent { get; set; }
         public string NewLine { get; set; }
 
         public FormattingOptions()
@@ -75,6 +76,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
             NewLines = new NewLinesOptions();
             Spacing = new SpacingOptions();
 
+            UseTabs = false;
             SpacesPerIndent = 4;
             NewLine = Environment.NewLine;
         }

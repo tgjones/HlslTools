@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -1728,12 +1728,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 _whitespace.Add(null);
             }
 
-            if (_options.SpacesPerIndent != null)
+            if (_options.UseTabs)
+            {
+                return _whitespace[_indentLevel] = new string('\t', _indentLevel);
+            }
+            else 
+            {
                 return _whitespace[_indentLevel] = new string(
                     ' ',
-                    _indentLevel * _options.SpacesPerIndent.Value);
-
-            return _whitespace[_indentLevel] = new string('\t', _indentLevel);
+                    _indentLevel * _options.SpacesPerIndent);
+            }
         }
 
         private void Indent()
