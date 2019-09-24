@@ -38,6 +38,7 @@ namespace ShaderTools.CodeAnalysis.NavigateTo
                 if (declaredSymbol != null 
                     && declaredSymbol.Kind != SymbolKind.Parameter
                     && (declaredSymbol.Kind != SymbolKind.Variable || declaredSymbol.Parent == null || declaredSymbol.Parent.Kind != SymbolKind.Function)
+                    && declaredSymbol.Name != null
                     && Contains(declaredSymbol.Name, searchPattern))
                 {
                     var matchKind = declaredSymbol.Name.StartsWith(searchPattern, StringComparison.CurrentCultureIgnoreCase)
