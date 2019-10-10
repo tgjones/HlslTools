@@ -48,14 +48,14 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent
                     return DoBlockIndent(line, documentOptions);
 
                 case FormattingOptions.IndentStyle.Smart:
-                    return DoSmartIndent(line, document, cancellationToken);
+                    return DoSmartIndent(line, document, documentOptions, cancellationToken);
 
                 default:
                     return null;
             }
         }
 
-        private int? DoSmartIndent(ITextSnapshotLine line, Document document, CancellationToken cancellationToken)
+        private int? DoSmartIndent(ITextSnapshotLine line, Document document, DocumentOptionSet optionSet, CancellationToken cancellationToken)
         {
             var indentationService = document.GetLanguageService<IIndentationService>();
             var syntaxFactsService = document.GetLanguageService<ISyntaxFactsService>();
@@ -65,7 +65,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent
             var indent = FindTotalParentChainIndent(
                 syntaxTree.Root,
                 line.Start.Position, 
-                0, 
+                0,
+                optionSet.GetOption(FormattingOptions.IndentationSize),
                 indentationService,
                 syntaxFactsService);
 
@@ -77,6 +78,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent
             SyntaxNodeBase node, 
             int position, 
             int indent, 
+            int indentSize,
             IIndentationService indentationService,
             ISyntaxFactsService syntaxFactsService)
         {
@@ -100,13 +102,13 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.SmartIndent
 
                 var shouldIndent = indentationService.ShouldIndent(child);
                 if (shouldIndent)
-                    indent += 4;
+                    indent += indentSize;
 
                 if (position <= childSpan.Value.Span.End)
-                    return FindTotalParentChainIndent(child, position, indent, indentationService, syntaxFactsService);
+                    return FindTotalParentChainIndent(child, position, indent, indentSize, indentationService, syntaxFactsService);
 
                 if (shouldIndent)
-                    indent -= 4;
+                    indent -= indentSize;
             }
 
             return indent;

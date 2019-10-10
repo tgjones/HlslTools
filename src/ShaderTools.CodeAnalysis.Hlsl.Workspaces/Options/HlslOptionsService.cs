@@ -62,6 +62,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Options
                     InsertSpaceWithinEmptySquareBrackets = options.GetOption(HlslFormattingOptions.SpaceWithinEmptySquareBrackets)
                 },
 
+                UseTabs = options.GetOption(CodeAnalysis.Formatting.FormattingOptions.UseTabs, LanguageNames.Hlsl),
                 SpacesPerIndent = options.GetOption(CodeAnalysis.Formatting.FormattingOptions.IndentationSize, LanguageNames.Hlsl)
             };
         }
