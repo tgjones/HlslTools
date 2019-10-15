@@ -73,6 +73,7 @@
     <Compile Include="NavigateTo\VisualStudioNavigateToPreviewService.cs" />
     <Compile Include="NavigationBar\NavigationBarClient.cs" />
     <Compile Include="Notification\VSNotificationServiceFactory.cs" />
+    <Compile Include="Options\EditorconfigOptions.cs" />
     <Compile Include="Options\UI\AbstractCheckBoxViewModel.cs" />
     <Compile Include="Options\UI\AbstractOptionPage.cs" />
     <Compile Include="Options\UI\AbstractOptionPageControl.cs" />
