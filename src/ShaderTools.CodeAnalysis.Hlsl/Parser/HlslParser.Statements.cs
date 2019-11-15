@@ -55,6 +55,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
         private StatementSyntax ParseDeclarationStatement()
         {
+            var attributes = ParseAttributes();
+
             var typedefKeyword = NextTokenIf(SyntaxKind.TypedefKeyword);
 
             var mods = new List<SyntaxToken>();
@@ -79,7 +81,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 ParseVariableDeclarators(type, variables, variableDeclarationsExpected: true);
                 var semi = Match(SyntaxKind.SemiToken);
                 var variableDeclaration = new VariableDeclarationSyntax(mods, type, new SeparatedSyntaxList<VariableDeclaratorSyntax>(variables));
-                return new VariableDeclarationStatementSyntax(variableDeclaration, semi);
+                return new VariableDeclarationStatementSyntax(attributes, variableDeclaration, semi);
             }
         }
 
@@ -570,6 +572,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             if (tk == SyntaxKind.IdentifierToken && (Lookahead.Kind == SyntaxKind.IdentifierToken || Lookahead.Kind.IsLiteral()))
                 return true;
 
+            if (IsPossibleAttributeList())
+                return true;
+
             switch (Current.Kind)
             {
                 case SyntaxKind.ClassKeyword:
@@ -605,7 +610,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             }
         }
 
-        private BlockSyntax ParseBlock(List<AttributeSyntax> attributes)
+        private BlockSyntax ParseBlock(List<AttributeListSyntax> attributes)
         {
             var openBrace = Match(SyntaxKind.OpenBraceToken);
 
@@ -617,28 +622,28 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return new BlockSyntax(attributes, openBrace, statements, closeBrace);
         }
 
-        private BreakStatementSyntax ParseBreakStatement(List<AttributeSyntax> attributes)
+        private BreakStatementSyntax ParseBreakStatement(List<AttributeListSyntax> attributes)
         {
             var breakKeyword = Match(SyntaxKind.BreakKeyword);
             var semicolon = Match(SyntaxKind.SemiToken);
             return new BreakStatementSyntax(attributes, breakKeyword, semicolon);
         }
 
-        private ContinueStatementSyntax ParseContinueStatement(List<AttributeSyntax> attributes)
+        private ContinueStatementSyntax ParseContinueStatement(List<AttributeListSyntax> attributes)
         {
             var continueKeyword = Match(SyntaxKind.ContinueKeyword);
             var semicolon = Match(SyntaxKind.SemiToken);
             return new ContinueStatementSyntax(attributes, continueKeyword, semicolon);
         }
 
-        private DiscardStatementSyntax ParseDiscardStatement(List<AttributeSyntax> attributes)
+        private DiscardStatementSyntax ParseDiscardStatement(List<AttributeListSyntax> attributes)
         {
             var discardKeyword = Match(SyntaxKind.DiscardKeyword);
             var semicolon = Match(SyntaxKind.SemiToken);
             return new DiscardStatementSyntax(attributes, discardKeyword, semicolon);
         }
 
-        private DoStatementSyntax ParseDoStatement(List<AttributeSyntax> attributes)
+        private DoStatementSyntax ParseDoStatement(List<AttributeListSyntax> attributes)
         {
             var @do = Match(SyntaxKind.DoKeyword);
             var statement = ParseEmbeddedStatement();
@@ -662,14 +667,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return statement;
         }
 
-        private ExpressionStatementSyntax ParseExpressionStatement(List<AttributeSyntax> attributes)
+        private ExpressionStatementSyntax ParseExpressionStatement(List<AttributeListSyntax> attributes)
         {
             var expression = ParseExpression();
             var semicolon = Match(SyntaxKind.SemiToken);
             return new ExpressionStatementSyntax(attributes, expression, semicolon);
         }
 
-        private ForStatementSyntax ParseForStatement(List<AttributeSyntax> attributes)
+        private ForStatementSyntax ParseForStatement(List<AttributeListSyntax> attributes)
         {
             var @for = Match(SyntaxKind.ForKeyword);
             var openParen = Match(SyntaxKind.OpenParenToken);
@@ -742,7 +747,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             _termState = saveTerm;
         }
 
-        private IfStatementSyntax ParseIfStatement(List<AttributeSyntax> attributes)
+        private IfStatementSyntax ParseIfStatement(List<AttributeListSyntax> attributes)
         {
             var @if = Match(SyntaxKind.IfKeyword);
             var openParen = Match(SyntaxKind.OpenParenToken);
@@ -760,7 +765,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return new IfStatementSyntax(attributes, @if, openParen, condition, closeParen, statement, @else);
         }
 
-        private ReturnStatementSyntax ParseReturnStatement(List<AttributeSyntax> attributes)
+        private ReturnStatementSyntax ParseReturnStatement(List<AttributeListSyntax> attributes)
         {
             var @return = Match(SyntaxKind.ReturnKeyword);
             ExpressionSyntax arg = null;
@@ -776,7 +781,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return Current.Kind == SyntaxKind.CaseKeyword || Current.Kind == SyntaxKind.DefaultKeyword;
         }
 
-        private SwitchStatementSyntax ParseSwitchStatement(List<AttributeSyntax> attributes)
+        private SwitchStatementSyntax ParseSwitchStatement(List<AttributeListSyntax> attributes)
         {
             var @switch = Match(SyntaxKind.SwitchKeyword);
             var openParen = Match(SyntaxKind.OpenParenToken);
@@ -839,7 +844,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return new SwitchSectionSyntax(labels, statements);
         }
 
-        private WhileStatementSyntax ParseWhileStatement(List<AttributeSyntax> attributes)
+        private WhileStatementSyntax ParseWhileStatement(List<AttributeListSyntax> attributes)
         {
             var @while = Match(SyntaxKind.WhileKeyword);
             var openParen = Match(SyntaxKind.OpenParenToken);

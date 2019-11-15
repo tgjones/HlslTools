@@ -489,6 +489,90 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(fs.SemicolonToken);
         }
 
+        [Fact]
+        public void TestAttributeSpecifierOnFunctionReturn()
+        {
+            var text = "[[vk::location(0)]] float4 main() { return float4(1, 1, 1, 1); }";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Empty(file.GetDiagnostics());
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(1, file.Declarations.Count);
+
+            Assert.Equal(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
+            var fd = (FunctionDefinitionSyntax)file.Declarations[0];
+            Assert.Equal(1, fd.Attributes.Count);
+        }
+
+        [Fact]
+        public void TestAttributeSpecifierOnFunctionParameter()
+        {
+            var text = "float4 main([[vk::location(0)]] float4 input) { return float4(1, 1, 1, 1); }";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Empty(file.GetDiagnostics());
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(1, file.Declarations.Count);
+
+            Assert.Equal(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
+            var fd = (FunctionDefinitionSyntax)file.Declarations[0];
+            Assert.Equal(1, fd.ParameterList.Parameters[0].Attributes.Count);
+        }
+
+        [Fact]
+        public void TestAttributeSpecifierOnStructuredBuffer()
+        {
+            var text = "[[vk::binding(0, 1), vk::counter_binding(2)]] RWStructuredBuffer<float4> mySBuffer;";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Empty(file.GetDiagnostics());
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(1, file.Declarations.Count);
+
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
+            var fd = (VariableDeclarationStatementSyntax)file.Declarations[0];
+            Assert.Equal(1, fd.Attributes.Count);
+        }
+
+        [Fact]
+        public void TestAttributeSpecifierOnStructField()
+        {
+            var text = "struct S { [[vk::binding(0)]] float4 Position; }; ";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Empty(file.GetDiagnostics());
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(1, file.Declarations.Count);
+
+            Assert.Equal(SyntaxKind.TypeDeclarationStatement, file.Declarations[0].Kind);
+            var fd = (TypeDeclarationStatementSyntax)file.Declarations[0];
+            Assert.Equal(SyntaxKind.StructType, fd.Type.Kind);
+            var st = (StructTypeSyntax)fd.Type;
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, st.Members[0].Kind);
+            var vd = (VariableDeclarationStatementSyntax)st.Members[0];
+            Assert.Equal(1, vd.Attributes.Count);
+        }
+
+        [Fact]
+        public void TestAttributeSpecifierOnGlobalVariable()
+        {
+            var text = "struct S { }; [[vk::push_constant]] S PushConstants; ";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Empty(file.GetDiagnostics());
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(2, file.Declarations.Count);
+
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[1].Kind);
+            var fd = (VariableDeclarationStatementSyntax)file.Declarations[1];
+            Assert.Equal(1, fd.Attributes.Count);
+        }
+
         private static CompilationUnitSyntax ParseFile(string text)
         {
             return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text)));

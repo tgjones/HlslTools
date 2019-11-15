@@ -270,27 +270,77 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return new AnnotationsSyntax(lessThan, annotations, greaterThan);
         }
 
-        private bool IsPossibleAttribute()
+        private bool IsPossibleAttributeList()
         {
             return Current.Kind == SyntaxKind.OpenBracketToken;
         }
 
-        private List<AttributeSyntax> ParseAttributes()
+        private List<AttributeListSyntax> ParseAttributes()
         {
-            var attributes = new List<AttributeSyntax>();
-            while (IsPossibleAttribute())
-                attributes.Add(ParseAttribute());
+            var attributes = new List<AttributeListSyntax>();
+            while (IsPossibleAttributeList())
+                attributes.Add(ParseAttributeList());
             return attributes;
+        }
+
+        private AttributeListSyntax ParseAttributeList()
+        {
+            var openBracket = Match(SyntaxKind.OpenBracketToken);
+            var openBracket2 = NextTokenIf(SyntaxKind.OpenBracketToken);
+
+            var attributesList = new List<SyntaxNodeBase>();
+            if (Current.Kind != SyntaxKind.CloseBracketToken)
+            {
+                CommaIsSeparatorStack.Push(true);
+
+                try
+                {
+                    attributesList.Add(ParseAttribute());
+
+                    while (Current.Kind == SyntaxKind.CommaToken)
+                    {
+                        attributesList.Add(Match(SyntaxKind.CommaToken));
+                        attributesList.Add(ParseAttribute());
+                    }
+                }
+                finally
+                {
+                    CommaIsSeparatorStack.Pop();
+                }
+            }
+
+            var attributes = new SeparatedSyntaxList<AttributeSyntax>(attributesList);
+
+            var closeBracket = Match(SyntaxKind.CloseBracketToken);
+            var closeBracket2 = openBracket2 != null
+                ? Match(SyntaxKind.CloseBracketToken)
+                : null;
+
+            return new AttributeListSyntax(openBracket, openBracket2, attributes, closeBracket, closeBracket2);
         }
 
         private AttributeSyntax ParseAttribute()
         {
-            var openBracket = Match(SyntaxKind.OpenBracketToken);
-            var name = ParseIdentifier();
+            var name = ParseAttributeSpecifierName();
             var argumentList = ParseAttributeArgumentList();
-            var closeBracket = Match(SyntaxKind.CloseBracketToken);
+            
+            return new AttributeSyntax(name, argumentList);
+        }
 
-            return new AttributeSyntax(openBracket, name, argumentList, closeBracket);
+        private NameSyntax ParseAttributeSpecifierName()
+        {
+            var left = ParseIdentifier();
+
+            if (Current.Kind == SyntaxKind.ColonColonToken)
+            {
+                var colonColonToken = Match(SyntaxKind.ColonColonToken);
+                var right = ParseIdentifier();
+                return new AttributeQualifiedNameSyntax(left, colonColonToken, right);
+            }
+            else
+            {
+                return left;
+            }
         }
 
         private AttributeArgumentListSyntax ParseAttributeArgumentList()
@@ -349,7 +399,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         declarations.Add(ParseTechnique());
                         break;
                     case SyntaxKind.SemiToken:
-                        declarations.Add(new EmptyStatementSyntax(new List<AttributeSyntax>(), NextToken()));
+                        declarations.Add(new EmptyStatementSyntax(new List<AttributeListSyntax>(), NextToken()));
                         break;
                     default:
                         if (IsPossibleFunctionDeclaration())

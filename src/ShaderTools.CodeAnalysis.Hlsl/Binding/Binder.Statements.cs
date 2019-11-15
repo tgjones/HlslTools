@@ -199,15 +199,17 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             return BindVariableDeclaration(syntax.Declaration, parent);
         }
 
-        private ImmutableArray<BoundAttribute> BindAttributes(List<AttributeSyntax> attributes)
+        private ImmutableArray<BoundAttribute> BindAttributes(List<AttributeListSyntax> attributes)
         {
-            return attributes.Select(x => Bind(x, BindAttribute)).ToImmutableArray();
+            return attributes.SelectMany(x => x.Attributes.Select(y => Bind(y, BindAttribute))).ToImmutableArray();
         }
 
         private BoundAttribute BindAttribute(AttributeSyntax syntax)
         {
-            var attributeSymbol = IntrinsicAttributes.AllAttributes.FirstOrDefault(x => x.Name == syntax.Name.Name.Text)
-                ?? new AttributeSymbol(syntax.Name.Name.Text, string.Empty);
+            var nameText = syntax.Name.GetUnqualifiedName().Name.Text;
+
+            var attributeSymbol = IntrinsicAttributes.AllAttributes.FirstOrDefault(x => x.Name == nameText)
+                ?? new AttributeSymbol(nameText, string.Empty);
             return new BoundAttribute(attributeSymbol);
         }
     }
