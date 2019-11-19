@@ -58,7 +58,7 @@
     <TypeComment>
       <summary></summary>
     </TypeComment>
-    <Field Name="Attributes" Type="List&lt;AttributeListSyntax&gt;" />
+    <Field Name="Attributes" Type="List&lt;AttributeDeclarationSyntaxBase&gt;" />
     <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;" />
     <Field Name="ReturnType" Type="TypeSyntax" />
     <Field Name="Name" Type="DeclarationNameSyntax" />
@@ -95,7 +95,7 @@
     <TypeComment>
       <summary></summary>
     </TypeComment>
-    <Field Name="Attributes" Type="List&lt;AttributeListSyntax&gt;" />
+    <Field Name="Attributes" Type="List&lt;AttributeDeclarationSyntaxBase&gt;" />
   </AbstractNode>
   <AbstractNode Name="StructuredTriviaSyntax" Base="SyntaxNode">
     <TypeComment>
@@ -322,35 +322,34 @@
     </Field>
   </Node>
 
-  <Node Name="AttributeListSyntax" Base="SyntaxNode">
-    <Kind Name="AttributeList"/>
+  <AbstractNode Name="AttributeDeclarationSyntaxBase" Base="SyntaxNode">
+    
+  </AbstractNode>
+
+  <Node Name="AttributeSpecifierListSyntax" Base="AttributeDeclarationSyntaxBase">
+    <Kind Name="AttributeSpecifierList"/>
     <Field Name="OpenBracketToken" Type="SyntaxToken">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
       <Kind Name="OpenBracketToken"/>
     </Field>
     <Field Name="OpenBracketToken2" Type="SyntaxToken">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
       <Kind Name="OpenBracketToken"/>
     </Field>
-    <Field Name="Attributes" Type="SeparatedSyntaxList&lt;AttributeSyntax&gt;">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
-    </Field>
+    <Field Name="Attributes" Type="SeparatedSyntaxList&lt;AttributeSyntax&gt;" />
     <Field Name="CloseBracketToken" Type="SyntaxToken">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
       <Kind Name="CloseBracketToken"/>
     </Field>
     <Field Name="CloseBracketToken2" Type="SyntaxToken">
-      <PropertyComment>
-        <summary></summary>
-      </PropertyComment>
+      <Kind Name="CloseBracketToken"/>
+    </Field>
+  </Node>
+
+  <Node Name="AttributeDeclarationSyntax" Base="AttributeDeclarationSyntaxBase">
+    <Kind Name="AttributeDeclaration"/>
+    <Field Name="OpenBracketToken" Type="SyntaxToken">
+      <Kind Name="OpenBracketToken"/>
+    </Field>
+    <Field Name="Attribute" Type="AttributeSyntax" />
+    <Field Name="CloseBracketToken" Type="SyntaxToken">
       <Kind Name="CloseBracketToken"/>
     </Field>
   </Node>
@@ -595,10 +594,8 @@
   </Node>
 
   <Node Name="ConstantBufferSyntax" Base="SyntaxNode">
-    <TypeComment>
-      <summary></summary>
-    </TypeComment>
     <Kind Name="ConstantBufferDeclaration"/>
+    <Field Name="Attributes" Type="List&lt;AttributeDeclarationSyntaxBase&gt;" />
     <Field Name="ConstantBufferKeyword" Type="SyntaxToken">
       <PropertyComment>
         <summary></summary>
@@ -1434,7 +1431,7 @@
       <summary></summary>
     </TypeComment>
     <Kind Name="Parameter"/>
-    <Field Name="Attributes" Type="List&lt;AttributeListSyntax&gt;" />
+    <Field Name="Attributes" Type="List&lt;AttributeDeclarationSyntaxBase&gt;" />
     <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;">
       <PropertyComment>
         <summary></summary>

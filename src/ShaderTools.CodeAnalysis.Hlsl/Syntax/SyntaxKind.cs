@@ -593,7 +593,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         Namespace,
 
         // Attributes
-        AttributeList,
+        AttributeSpecifierList,
+        AttributeDeclaration,
         Attribute,
         AttributeArgumentList,
         AttributeQualifiedName,

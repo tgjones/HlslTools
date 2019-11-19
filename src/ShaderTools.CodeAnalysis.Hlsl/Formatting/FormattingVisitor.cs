@@ -216,23 +216,25 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
                 FormatToken(node.GreaterThanToken, LeadingFormattingOperation.RemoveLeadingWhitespace);
         }
 
-        public override void VisitAttributeList(AttributeListSyntax node)
+        public override void VisitAttributeSpecifierList(AttributeSpecifierListSyntax node)
         {
             FormatToken(node.OpenBracketToken, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.RemoveTrailingWhitespace);
-
-            if (node.OpenBracketToken2 != null)
-            {
-                FormatToken(node.OpenBracketToken2, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
-            }
 
             FormatCommaSeparatedSyntaxList(node.Attributes);
 
             FormatToken(node.CloseBracketToken, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
+        }
 
-            if (node.CloseBracketToken2 != null)
+        public override void VisitAttributeDeclaration(AttributeDeclarationSyntax node)
+        {
+            FormatToken(node.OpenBracketToken, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.RemoveTrailingWhitespace);
+
+            if (node.Attribute != null)
             {
-                FormatToken(node.CloseBracketToken2, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
+                Visit(node.Attribute);
             }
+
+            FormatToken(node.CloseBracketToken, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
         public override void VisitAttribute(AttributeSyntax node)

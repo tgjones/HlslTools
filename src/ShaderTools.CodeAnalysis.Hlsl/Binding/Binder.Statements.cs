@@ -199,9 +199,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             return BindVariableDeclaration(syntax.Declaration, parent);
         }
 
-        private ImmutableArray<BoundAttribute> BindAttributes(List<AttributeListSyntax> attributes)
+        private ImmutableArray<BoundAttribute> BindAttributes(List<AttributeDeclarationSyntaxBase> attributes)
         {
-            return attributes.SelectMany(x => x.Attributes.Select(y => Bind(y, BindAttribute))).ToImmutableArray();
+            return attributes.SelectMany(x => x.GetAttributes().Select(y => Bind(y, BindAttribute))).ToImmutableArray();
         }
 
         private BoundAttribute BindAttribute(AttributeSyntax syntax)
