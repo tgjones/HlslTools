@@ -425,7 +425,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
         [Fact]
         public void TestFor()
         {
-            var text = "for(;;) { }";
+            var text = "[unroll] for(;;) { }";
             var statement = ParseStatement(text);
 
             Assert.NotNull(statement);

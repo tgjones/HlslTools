@@ -270,27 +270,98 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return new AnnotationsSyntax(lessThan, annotations, greaterThan);
         }
 
-        private bool IsPossibleAttribute()
+        private bool IsPossibleAttributeDeclaration()
         {
             return Current.Kind == SyntaxKind.OpenBracketToken;
         }
 
-        private List<AttributeSyntax> ParseAttributes()
+        private bool IsPossibleAttributeSpecifierList()
         {
-            var attributes = new List<AttributeSyntax>();
-            while (IsPossibleAttribute())
-                attributes.Add(ParseAttribute());
+            return Current.Kind == SyntaxKind.OpenBracketToken && Lookahead.Kind == SyntaxKind.OpenBracketToken;
+        }
+
+        private List<AttributeDeclarationSyntaxBase> ParseAttributes()
+        {
+            var attributes = new List<AttributeDeclarationSyntaxBase>();
+
+            while (IsPossibleAttributeSpecifierList())
+            {
+                attributes.Add(ParseAttributeSpecifierList());
+            }
+
+            while (IsPossibleAttributeDeclaration())
+            {
+                attributes.Add(ParseAttributeDeclaration());
+            }
+
             return attributes;
+        }
+
+        private AttributeDeclarationSyntax ParseAttributeDeclaration()
+        {
+            var openBracket = Match(SyntaxKind.OpenBracketToken);
+            var attribute = ParseAttribute();
+            var closeBracket = Match(SyntaxKind.CloseBracketToken);
+
+            return new AttributeDeclarationSyntax(openBracket, attribute, closeBracket);
+        }
+
+        private AttributeSpecifierListSyntax ParseAttributeSpecifierList()
+        {
+            var openBracket = Match(SyntaxKind.OpenBracketToken);
+            var openBracket2 = Match(SyntaxKind.OpenBracketToken);
+
+            var attributesList = new List<SyntaxNodeBase>();
+            if (Current.Kind != SyntaxKind.CloseBracketToken)
+            {
+                CommaIsSeparatorStack.Push(true);
+
+                try
+                {
+                    attributesList.Add(ParseAttribute());
+
+                    while (Current.Kind == SyntaxKind.CommaToken)
+                    {
+                        attributesList.Add(Match(SyntaxKind.CommaToken));
+                        attributesList.Add(ParseAttribute());
+                    }
+                }
+                finally
+                {
+                    CommaIsSeparatorStack.Pop();
+                }
+            }
+
+            var attributes = new SeparatedSyntaxList<AttributeSyntax>(attributesList);
+
+            var closeBracket = Match(SyntaxKind.CloseBracketToken);
+            var closeBracket2 = Match(SyntaxKind.CloseBracketToken);
+
+            return new AttributeSpecifierListSyntax(openBracket, openBracket2, attributes, closeBracket, closeBracket2);
         }
 
         private AttributeSyntax ParseAttribute()
         {
-            var openBracket = Match(SyntaxKind.OpenBracketToken);
-            var name = ParseIdentifier();
+            var name = ParseAttributeSpecifierName();
             var argumentList = ParseAttributeArgumentList();
-            var closeBracket = Match(SyntaxKind.CloseBracketToken);
+            
+            return new AttributeSyntax(name, argumentList);
+        }
 
-            return new AttributeSyntax(openBracket, name, argumentList, closeBracket);
+        private NameSyntax ParseAttributeSpecifierName()
+        {
+            var left = ParseIdentifier();
+
+            if (Current.Kind == SyntaxKind.ColonColonToken)
+            {
+                var colonColonToken = Match(SyntaxKind.ColonColonToken);
+                var right = ParseIdentifier();
+                return new AttributeQualifiedNameSyntax(left, colonColonToken, right);
+            }
+            else
+            {
+                return left;
+            }
         }
 
         private AttributeArgumentListSyntax ParseAttributeArgumentList()
@@ -349,9 +420,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         declarations.Add(ParseTechnique());
                         break;
                     case SyntaxKind.SemiToken:
-                        declarations.Add(new EmptyStatementSyntax(new List<AttributeSyntax>(), NextToken()));
+                        declarations.Add(new EmptyStatementSyntax(new List<AttributeDeclarationSyntaxBase>(), NextToken()));
                         break;
                     default:
+                        if (IsPossibleCBufferOrTBuffer())
+                            declarations.Add(ParseConstantBuffer());
                         if (IsPossibleFunctionDeclaration())
                             declarations.Add(ParseFunctionDefinitionOrDeclaration(false));
                         else if (IsPossibleDeclarationStatement())

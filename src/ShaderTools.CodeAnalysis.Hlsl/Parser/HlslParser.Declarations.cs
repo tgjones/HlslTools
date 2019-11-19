@@ -165,7 +165,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
             if (!declarationOnly && (name.Kind == SyntaxKind.QualifiedDeclarationName || Current.Kind == SyntaxKind.OpenBraceToken))
             {
-                var body = ParseBlock(new List<AttributeSyntax>());
+                var body = ParseBlock(new List<AttributeDeclarationSyntaxBase>());
                 var semicolon = NextTokenIf(SyntaxKind.SemiToken);
                 return new FunctionDefinitionSyntax(attributes, modifiers, returnType, 
                     name, new ParameterListSyntax(openParen, new SeparatedSyntaxList<ParameterSyntax>(parameters), closeParen), 
@@ -185,7 +185,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
         private bool IsPossibleParameter()
         {
-            return SyntaxFacts.IsParameterModifier(Current) || IsPossibleParameterDeclaration();
+            return IsPossibleAttributeSpecifierList() || SyntaxFacts.IsParameterModifier(Current) || IsPossibleParameterDeclaration();
         }
 
         private bool IsPossibleParameterDeclaration()
@@ -229,6 +229,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
         private ParameterSyntax ParseParameter()
         {
+            var attributes = ParseAttributes();
+
             var modifiers = new List<SyntaxToken>();
             ParseParameterModifiers(modifiers);
 
@@ -236,7 +238,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
             var declarator = ParseVariableDeclarator(type);
 
-            return new ParameterSyntax(modifiers, type, declarator);
+            return new ParameterSyntax(attributes, modifiers, type, declarator);
         }
 
         private void ParseParameterModifiers(List<SyntaxToken> list)
@@ -255,6 +257,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
         private ConstantBufferSyntax ParseConstantBuffer()
         {
+            var attributes = ParseAttributes();
+
             var cbuffer = NextToken();
             var name = Match(SyntaxKind.IdentifierToken);
 
@@ -285,7 +289,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             var closeBrace = Match(SyntaxKind.CloseBraceToken);
             var semicolon = NextTokenIf(SyntaxKind.SemiToken);
 
-            return new ConstantBufferSyntax(cbuffer, name, register, openBrace, fields, closeBrace, semicolon);
+            return new ConstantBufferSyntax(attributes, cbuffer, name, register, openBrace, fields, closeBrace, semicolon);
         }
 
         private TechniqueSyntax ParseTechnique()
@@ -377,7 +381,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             }
             
             var semicolon = Match(SyntaxKind.SemiToken);
-            return new ExpressionStatementSyntax(new List<AttributeSyntax>(), expression, semicolon);
+            return new ExpressionStatementSyntax(new List<AttributeDeclarationSyntaxBase>(), expression, semicolon);
         }
 
         private bool IsPossiblePassStatement()

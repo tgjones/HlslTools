@@ -333,6 +333,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         {
             var constantBufferSymbol = new ConstantBufferSymbol(declaration, null);
 
+            BindAttributes(declaration.Attributes);
+
             var variables = new List<BoundMultipleVariableDeclarations>();
 
             // Add constant buffer fields to global scope.
