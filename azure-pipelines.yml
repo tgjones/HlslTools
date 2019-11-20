@@ -106,12 +106,14 @@ jobs:
   - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid win-x64 --output src/ShaderTools.VSCode/bin/win-x64/ShaderTools.LanguageServer.exe
     displayName: 'Build Language Server'
 
-  - download: current
+  - task: DownloadPipelineArtifact@2
     displayName: 'Download macOS LanguageServer binary'
-    artifact: LanguageServer-osx-64
-    targetPath: 'src/ShaderTools.VSCode/bin/osx-x64'
+    inputs:
+      artifactName: LanguageServer-osx-64
+      targetPath: 'src/ShaderTools.VSCode/bin/osx-x64'
 
-  - download: current
+  - task: DownloadPipelineArtifact@2
     displayName: 'Download  Linux LanguageServer binary'
-    artifact: LanguageServer-linux-x64
-    targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
+    inputs:
+      artifactName: LanguageServer-linux-x64
+      targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
