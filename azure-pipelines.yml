@@ -62,7 +62,7 @@ jobs:
       artifactName: VisualStudio
       path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
 
-- job: VSCode_Extension_Linux_and_macOS
+- job: VSCode_Extension
 
   strategy:
     matrix:
@@ -77,6 +77,11 @@ jobs:
     vmImage: $(imageName)
 
   steps:
+
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core SDK'
+    inputs:
+      version: 2.1
 
   - script: dotnet tool install --global dotnet-warp
     displayName: 'Install dotnet-warp'
@@ -97,6 +102,11 @@ jobs:
     vmImage: 'windows-2019'
 
   steps:
+
+  - task: UseDotNet@2
+    displayName: 'Use .NET Core SDK'
+    inputs:
+      version: 2.1
 
   - script: dotnet tool install --global dotnet-warp
     displayName: 'Install dotnet-warp'
