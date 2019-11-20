@@ -123,7 +123,7 @@ jobs:
   - task: DownloadPipelineArtifact@2
     displayName: 'Download macOS LanguageServer binary'
     inputs:
-      artifactName: LanguageServer-osx-64
+      artifactName: LanguageServer-osx-x64
       targetPath: 'src/ShaderTools.VSCode/bin/osx-x64'
 
   - task: DownloadPipelineArtifact@2
