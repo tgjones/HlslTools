@@ -81,7 +81,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Use .NET Core SDK'
     inputs:
-      version: 2.1
+      version: 2.1.x
 
   - script: dotnet tool install --global dotnet-warp
     displayName: 'Install dotnet-warp'
@@ -106,7 +106,7 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Use .NET Core SDK'
     inputs:
-      version: 2.1
+      version: 2.1.x
 
   - script: dotnet tool install --global dotnet-warp
     displayName: 'Install dotnet-warp'
