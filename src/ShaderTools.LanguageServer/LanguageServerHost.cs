@@ -25,15 +25,16 @@ namespace ShaderTools.LanguageServer
 
         private readonly LoggerFactory _loggerFactory;
         private readonly Serilog.Core.Logger _logger;
+        private readonly LogLevel _minLogLevel;
 
         private LanguageServerHost(
             MefHostServices exportProvider,
             Serilog.Core.Logger logger,
-            LoggerFactory loggerFactory)
+            LogLevel minLogLevel)
         {
             _exportProvider = exportProvider;
             _logger = logger;
-            _loggerFactory = loggerFactory;
+            _minLogLevel = minLogLevel;
         }
 
         public static async Task<LanguageServerHost> Create(
@@ -49,13 +50,7 @@ namespace ShaderTools.LanguageServer
                 .WriteTo.File(logFilePath)
                 .CreateLogger();
 
-            var loggerFactory = new LoggerFactory(
-                ImmutableArray<ILoggerProvider>.Empty,
-                new LoggerFilterOptions { MinLevel = minLogLevel });
-
-            loggerFactory.AddSerilog(logger);
-
-            var result = new LanguageServerHost(exportProvider, logger, loggerFactory);
+            var result = new LanguageServerHost(exportProvider, logger, minLogLevel);
 
             await result.InitializeAsync(input, output);
 
@@ -75,7 +70,7 @@ namespace ShaderTools.LanguageServer
             _server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(options => options
                 .WithInput(input)
                 .WithOutput(output)
-                .WithLoggerFactory(_loggerFactory)
+                .ConfigureLogging(x => x.AddSerilog(_logger).SetMinimumLevel(_minLogLevel).AddLanguageServer(_minLogLevel))
                 .OnInitialized(OnInitialized));
 
             var diagnosticService = _workspace.Services.GetService<IDiagnosticService>();

@@ -59,10 +59,39 @@ jobs:
     displayName: Publish Artifact
     condition: and(succeeded(), eq(variables['vsVersion'], 'VS2019'))
     inputs:
-      artifactName: VSIX
+      artifactName: VisualStudio
       path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
 
-- job: VSCode_Extension
+- job: VSCode_Extension_Linux_and_macOS
+
+  strategy:
+    matrix:
+      macOS:
+        imageName: 'macOS-latest'
+        rid: osx-x64
+      Linux:
+        imageName: 'ubuntu-latest'
+        rid: linux-x64
+  
+  pool:
+    vmImage: $(imageName)
+
+  steps:
+
+  - script: dotnet tool install --global dotnet-warp
+    displayName: 'Install dotnet-warp'
+
+  - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid $(rid) --output ShaderTools.LanguageServer
+    displayName: 'Build Language Server'
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Artifact
+    inputs:
+      artifactName: LanguageServer-$(rid)
+      path: '$(rid)/ShaderTools.LanguageServer'
+
+- job: VSCode_Extension_Windows_and_Package
+  dependsOn: VSCode_Extension_Linux_and_macOS
 
   pool:
     vmImage: 'windows-2019'
@@ -72,5 +101,17 @@ jobs:
   - script: dotnet tool install --global dotnet-warp
     displayName: 'Install dotnet-warp'
 
-  - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid win-x64 --output build/ShaderTools.LanguageServer.exe
+  - powershell: New-Item -ItemType Directory -Path src/ShaderTools.VSCode/bin/win-x64
+
+  - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid win-x64 --output src/ShaderTools.VSCode/bin/win-x64/ShaderTools.LanguageServer.exe
     displayName: 'Build Language Server'
+
+  - download: current
+    displayName: 'Download macOS LanguageServer binary'
+    artifact: LanguageServer-osx-64
+    targetPath: 'src/ShaderTools.VSCode/bin/osx-x64'
+
+  - download: current
+    displayName: 'Download  Linux LanguageServer binary'
+    artifact: LanguageServer-linux-x64
+    targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
