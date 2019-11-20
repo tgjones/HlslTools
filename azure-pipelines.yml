@@ -96,7 +96,9 @@ jobs:
       path: '$(rid)/ShaderTools.LanguageServer'
 
 - job: VSCode_Extension_Windows_and_Package
-  dependsOn: VSCode_Extension_Linux_and_macOS
+  dependsOn: 
+  - 'VSCode_Extension macOS'
+  - 'VSCode_Extension Linux'
 
   pool:
     vmImage: 'windows-2019'
