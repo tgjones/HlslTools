@@ -96,7 +96,7 @@ jobs:
     displayName: Publish Artifact
     inputs:
       artifactName: LanguageServer-$(rid)
-      path: 'ShaderTools.LanguageServer'
+      path: 'src/ShaderTools.LanguageServer/build/$(rid)/ShaderTools.LanguageServer'
 
 - job: VSCode_Extension_Windows_and_Package
   dependsOn: 'VSCode_Extension_NonWindows'
