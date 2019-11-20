@@ -62,7 +62,7 @@ jobs:
       artifactName: VisualStudio
       path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
 
-- job: VSCode_Extension
+- job: VSCode_Extension_NonWindows
 
   strategy:
     matrix:
@@ -96,9 +96,7 @@ jobs:
       path: '$(rid)/ShaderTools.LanguageServer'
 
 - job: VSCode_Extension_Windows_and_Package
-  dependsOn: 
-  - 'VSCode_Extension macOS'
-  - 'VSCode_Extension Linux'
+  dependsOn: 'VSCode_Extension_NonWindows'
 
   pool:
     vmImage: 'windows-2019'
