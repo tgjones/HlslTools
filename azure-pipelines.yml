@@ -116,8 +116,9 @@ jobs:
 
   - powershell: New-Item -ItemType Directory -Path src/ShaderTools.VSCode/bin/win-x64
 
-  - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid win-x64 --output src/ShaderTools.VSCode/bin/win-x64/ShaderTools.LanguageServer.exe
+  - script: dotnet-warp . --verbose --rid win-x64 --output ../ShaderTools.VSCode/bin/win-x64/ShaderTools.LanguageServer.exe
     displayName: 'Build Language Server'
+    workingDirectory: 'src/ShaderTools.LanguageServer'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download macOS LanguageServer binary'
