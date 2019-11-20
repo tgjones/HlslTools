@@ -86,14 +86,17 @@ jobs:
   - script: dotnet tool install --global dotnet-warp
     displayName: 'Install dotnet-warp'
 
-  - script: dotnet-warp src/ShaderTools.LanguageServer --verbose --rid $(rid) --output ShaderTools.LanguageServer
+  - powershell: New-Item -ItemType Directory -Path src/ShaderTools.LanguageServer/build/$(rid)
+
+  - script: dotnet-warp . --verbose --rid $(rid) --output build/$(rid)/ShaderTools.LanguageServer
     displayName: 'Build Language Server'
+    workingDirectory: 'src/ShaderTools.LanguageServer'
 
   - task: PublishPipelineArtifact@1
     displayName: Publish Artifact
     inputs:
       artifactName: LanguageServer-$(rid)
-      path: '$(rid)/ShaderTools.LanguageServer'
+      path: 'ShaderTools.LanguageServer'
 
 - job: VSCode_Extension_Windows_and_Package
   dependsOn: 'VSCode_Extension_NonWindows'
