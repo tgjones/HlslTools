@@ -113,19 +113,19 @@ jobs:
   steps:
 
   - task: DownloadPipelineArtifact@2
-    displayName: 'Download Windows LanguageServer binary'
+    displayName: 'Download Windows LSP binary'
     inputs:
       artifactName: LanguageServer-win-x64
       targetPath: 'src/ShaderTools.VSCode/bin/win-x64'
 
   - task: DownloadPipelineArtifact@2
-    displayName: 'Download macOS LanguageServer binary'
+    displayName: 'Download macOS LSP binary'
     inputs:
       artifactName: LanguageServer-osx-x64
       targetPath: 'src/ShaderTools.VSCode/bin/osx-x64'
 
   - task: DownloadPipelineArtifact@2
-    displayName: 'Download Linux LanguageServer binary'
+    displayName: 'Download Linux LSP binary'
     inputs:
       artifactName: LanguageServer-linux-x64
       targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
@@ -138,7 +138,9 @@ jobs:
     displayName: 'Install vsce'
     workingDirectory: 'src/ShaderTools.VSCode'
 
-  - script: vsce package
+  - powershell: New-Item -ItemType Directory -Path src/ShaderTools.VSCode/package
+
+  - script: vsce package -o src/ShaderTools.VSCode/package/HlslToolsVSCode.vsix
     displayName: 'Create VSIX'
     workingDirectory: 'src/ShaderTools.VSCode'
 
@@ -146,4 +148,4 @@ jobs:
     displayName: Publish Artifact
     inputs:
       artifactName: VSCode
-      path: 'src/ShaderTools.VSCode/*.vsix'
+      targetPath: 'src/ShaderTools.VSCode/package/HlslToolsVSCode.vsix'
