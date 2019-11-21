@@ -1,15 +1,10 @@
-# HLSL Tools for Visual Studio
+# HLSL Tools for Visual Studio [![Join the chat at https://gitter.im/tgjones/HlslTools](https://badges.gitter.im/tgjones/HlslTools.svg)](https://gitter.im/tgjones/HlslTools) [![Build Status](https://dev.azure.com/timjones/HlslTools/_apis/build/status/tgjones.HlslTools?branchName=master)](https://dev.azure.com/timjones/HlslTools/_build/latest?definitionId=3&branchName=master)
 
-[![Join the chat at https://gitter.im/tgjones/HlslTools](https://badges.gitter.im/tgjones/HlslTools.svg)](https://gitter.im/tgjones/HlslTools)
-
-*This extension is Visual Studio 2017 / 2019. [Go here for the Visual Studio Code extension](https://github.com/tgjones/HlslTools/tree/master/src/ShaderTools.VSCode).*
+*This extension is for Visual Studio 2017 / 2019. [Go here for the Visual Studio Code extension](https://github.com/tgjones/HlslTools/tree/master/src/ShaderTools.VSCode).*
 
 HLSL Tools is a 2017 / 2019 extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
 
-[![Build Status](https://dev.azure.com/timjones/HlslTools/_apis/build/status/tgjones.HlslTools?branchName=master)](https://dev.azure.com/timjones/HlslTools/_build/latest?definitionId=3&branchName=master)
-
-Download the extension at the [VS Gallery](https://visualstudiogallery.msdn.microsoft.com/75ddd3be-6eda-4433-a850-458b51186658) 
-or get the [nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-953d-3fdea1891737/).
+Download the extension at the [Visual Studio Marketplace](https://visualstudiogallery.msdn.microsoft.com/75ddd3be-6eda-4433-a850-458b51186658).
 
 See the [changelog](CHANGELOG.md) for changes and roadmap.
 

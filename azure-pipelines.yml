@@ -98,7 +98,7 @@ jobs:
       artifactName: LanguageServer-$(rid)
       path: 'src/ShaderTools.LanguageServer/build/$(rid)/ShaderTools.LanguageServer'
 
-- job: VSCode_Extension_Windows_and_Package
+- job: VSCode_Extension_Windows_and_Create_Package
   dependsOn: 'VSCode_Extension_NonWindows'
 
   pool:
@@ -131,3 +131,15 @@ jobs:
     inputs:
       artifactName: LanguageServer-linux-x64
       targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
+
+  - script: npm install
+    displayName: npm install
+
+  - script: vsce package
+    displayName: 'Create VSIX'
+
+  - task: PublishPipelineArtifact@1
+    displayName: Publish Artifact
+    inputs:
+      artifactName: VSCode
+      path: 'src/ShaderTools.VSCode/hlsltools-*.vsix'
