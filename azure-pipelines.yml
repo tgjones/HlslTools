@@ -140,7 +140,7 @@ jobs:
 
   - powershell: New-Item -ItemType Directory -Path src/ShaderTools.VSCode/package
 
-  - script: vsce package -o src/ShaderTools.VSCode/package/HlslToolsVSCode.vsix
+  - script: vsce package -o package/HlslToolsVSCode.vsix
     displayName: 'Create VSIX'
     workingDirectory: 'src/ShaderTools.VSCode'
 
