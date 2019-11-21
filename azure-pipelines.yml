@@ -136,7 +136,7 @@ jobs:
     displayName: npm install
     workingDirectory: 'src/ShaderTools.VSCode'
 
-  - script: sudo npm install -g vsce
+  - script: npm install -g vsce
     displayName: 'Install vsce package'
     workingDirectory: 'src/ShaderTools.VSCode'
 
