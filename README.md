@@ -2,11 +2,11 @@
 
 *This extension is for Visual Studio 2017 / 2019. [Go here for the Visual Studio Code extension](https://github.com/tgjones/HlslTools/tree/master/src/ShaderTools.VSCode).*
 
-HLSL Tools is a 2017 / 2019 extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
+HLSL Tools is a Visual Studio 2017 / 2019 extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
 
 Download the extension at the [Visual Studio Marketplace](https://visualstudiogallery.msdn.microsoft.com/75ddd3be-6eda-4433-a850-458b51186658).
 
-See the [changelog](CHANGELOG.md) for changes and roadmap.
+See the [changelog](CHANGELOG.md) for changes.
 
 ### Why use HLSL Tools?
 

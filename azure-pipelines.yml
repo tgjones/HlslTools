@@ -10,7 +10,7 @@ variables:
 
 jobs:
 
-- job: VS_Extension
+- job: VS
   
   strategy:
     matrix:
@@ -62,16 +62,22 @@ jobs:
       artifactName: VisualStudio
       path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
 
-- job: VSCode_Extension_NonWindows
+- job: VSCode_Build
 
   strategy:
     matrix:
+      Windows:
+        imageName: 'windows-2019'
+        rid: win-x64
+        binaryExtension: '.exe'
       macOS:
         imageName: 'macOS-latest'
         rid: osx-x64
+        binaryExtension: ''
       Linux:
         imageName: 'ubuntu-latest'
         rid: linux-x64
+        binaryExtension: ''
   
   pool:
     vmImage: $(imageName)
@@ -88,7 +94,7 @@ jobs:
 
   - powershell: New-Item -ItemType Directory -Path src/ShaderTools.LanguageServer/build/$(rid)
 
-  - script: dotnet-warp . --verbose --rid $(rid) --output build/$(rid)/ShaderTools.LanguageServer
+  - script: dotnet-warp . --verbose --rid $(rid) --output build/$(rid)/ShaderTools.LanguageServer$(binaryExtension)
     displayName: 'Build Language Server'
     workingDirectory: 'src/ShaderTools.LanguageServer'
 
@@ -96,29 +102,21 @@ jobs:
     displayName: Publish Artifact
     inputs:
       artifactName: LanguageServer-$(rid)
-      path: 'src/ShaderTools.LanguageServer/build/$(rid)/ShaderTools.LanguageServer'
+      path: 'src/ShaderTools.LanguageServer/build/$(rid)/ShaderTools.LanguageServer$(binaryExtension)'
 
-- job: VSCode_Extension_Windows_and_Create_Package
-  dependsOn: 'VSCode_Extension_NonWindows'
+- job: VSCode_Create_Package
+  dependsOn: 'VSCode_Build'
 
   pool:
     vmImage: 'windows-2019'
 
   steps:
 
-  - task: UseDotNet@2
-    displayName: 'Use .NET Core SDK'
+  - task: DownloadPipelineArtifact@2
+    displayName: 'Download Windows LanguageServer binary'
     inputs:
-      version: 2.1.x
-
-  - script: dotnet tool install --global dotnet-warp
-    displayName: 'Install dotnet-warp'
-
-  - powershell: New-Item -ItemType Directory -Path src/ShaderTools.VSCode/bin/win-x64
-
-  - script: dotnet-warp . --verbose --rid win-x64 --output ../ShaderTools.VSCode/bin/win-x64/ShaderTools.LanguageServer.exe
-    displayName: 'Build Language Server'
-    workingDirectory: 'src/ShaderTools.LanguageServer'
+      artifactName: LanguageServer-win-x64
+      targetPath: 'src/ShaderTools.VSCode/bin/win-x64'
 
   - task: DownloadPipelineArtifact@2
     displayName: 'Download macOS LanguageServer binary'
@@ -127,7 +125,7 @@ jobs:
       targetPath: 'src/ShaderTools.VSCode/bin/osx-x64'
 
   - task: DownloadPipelineArtifact@2
-    displayName: 'Download  Linux LanguageServer binary'
+    displayName: 'Download Linux LanguageServer binary'
     inputs:
       artifactName: LanguageServer-linux-x64
       targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
@@ -137,7 +135,7 @@ jobs:
     workingDirectory: 'src/ShaderTools.VSCode'
 
   - script: npm install -g vsce
-    displayName: 'Install vsce package'
+    displayName: 'Install vsce'
     workingDirectory: 'src/ShaderTools.VSCode'
 
   - script: vsce package
@@ -148,4 +146,4 @@ jobs:
     displayName: Publish Artifact
     inputs:
       artifactName: VSCode
-      path: 'src/ShaderTools.VSCode/hlsltools-*.vsix'
+      path: 'src/ShaderTools.VSCode/*.vsix'
