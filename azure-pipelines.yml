@@ -136,6 +136,10 @@ jobs:
     displayName: npm install
     workingDirectory: 'src/ShaderTools.VSCode'
 
+  - script: sudo npm install -g vsce
+    displayName: 'Install vsce package'
+    workingDirectory: 'src/ShaderTools.VSCode'
+
   - script: vsce package
     displayName: 'Create VSIX'
     workingDirectory: 'src/ShaderTools.VSCode'
