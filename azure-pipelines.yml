@@ -134,9 +134,11 @@ jobs:
 
   - script: npm install
     displayName: npm install
+    workingDirectory: 'src/ShaderTools.VSCode'
 
   - script: vsce package
     displayName: 'Create VSIX'
+    workingDirectory: 'src/ShaderTools.VSCode'
 
   - task: PublishPipelineArtifact@1
     displayName: Publish Artifact

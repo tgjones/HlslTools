@@ -1,17 +1,12 @@
-# Roadmap
-
-- [ ] If `#include`d file is open file in Visual Studio, use that instead of on-disk version
-- [ ] Keyword completion
-- [ ] Find all references
-- [ ] Peek definition
-- [ ] Light bulb suggestions
-
-Features that have a checkmark are complete and available for download in the
-[nightly build](http://vsixgallery.com/extension/7def6c01-a05e-42e6-953d-3fdea1891737/).
-
 # Changelog
 
-These are the changes to each version that has been released on the official Visual Studio extension gallery.
+## 1.1.300
+
+**2019-11-21**
+
+Note: v1.1.300 supports VS2019, VS2017, and VSCode. VS2015 is no longer supported.
+
+- [x] Add support for double-bracket annotation syntax [#174](https://github.com/tgjones/HlslTools/issues/174)
 
 ## 1.1.185
 
