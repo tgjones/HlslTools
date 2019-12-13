@@ -107,7 +107,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             if (node.Initializer != null)
                 VisitExpression(node.Initializer);
 
-            VisitExpression(node.Condition);
+            if (node.Condition != null)
+                VisitExpression(node.Condition);
 
             if (node.Incrementor != null)
                 VisitExpression(node.Incrementor);
