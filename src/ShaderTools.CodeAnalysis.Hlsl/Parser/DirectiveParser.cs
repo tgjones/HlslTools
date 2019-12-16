@@ -395,18 +395,24 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     break;
             }
 
-            // Might be function invocation. We only have one function in the preprocessor - "defined".
-            if (Current.Kind == SyntaxKind.OpenParenToken && expr.Kind == SyntaxKind.IdentifierName
+            // Check for `defined` usage.
+            if (expr.Kind == SyntaxKind.IdentifierName
                 && ((IdentifierNameSyntax) expr).Name.ContextualKind == SyntaxKind.DefinedKeyword)
             {
                 _lexer.ExpandMacros = false;
 
-                var openParen = Match(SyntaxKind.OpenParenToken);
+                var openParen = (Current.Kind == SyntaxKind.OpenParenToken)
+                    ? Match(SyntaxKind.OpenParenToken)
+                    : null;
+
                 var name = new IdentifierNameSyntax(NextToken());
 
                 _lexer.ExpandMacros = true;
 
-                var closeParen = Match(SyntaxKind.CloseParenToken);
+                var closeParen = (openParen != null)
+                    ? Match(SyntaxKind.CloseParenToken)
+                    : null;
+
                 expr = new FunctionInvocationExpressionSyntax((IdentifierNameSyntax) expr, new ArgumentListSyntax(
                     openParen,
                     new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { name }),

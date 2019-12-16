@@ -746,6 +746,24 @@ int a;
         }
 
         [Fact]
+        public void TestIfWithDefinedWithoutParenthesesOnDefined()
+        {
+            const string text = @"
+#define FOO
+#if defined FOO
+int a;
+#endif";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive, Text = "FOO" },
+                new DirectiveInfo { Kind = SyntaxKind.IfDirectiveTrivia, Status = NodeStatus.IsActive | NodeStatus.BranchTaken | NodeStatus.TrueValue },
+                new DirectiveInfo { Kind = SyntaxKind.EndIfDirectiveTrivia, Status = NodeStatus.IsActive });
+            VerifyDeclarations(node, new DeclarationInfo { Kind = SyntaxKind.VariableDeclarationStatement, Text = "a" });
+        }
+
+        [Fact]
         public void TestDirectiveAfterSingleLineComment()
         {
             const string text = @"
