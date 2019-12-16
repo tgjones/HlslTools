@@ -16,6 +16,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 
         public StructTypeSyntax Syntax { get; }
 
+        public bool IsAnonymous { get; }
+
         public override SyntaxTreeBase SourceTree => Syntax.SyntaxTree;
         public override ImmutableArray<SourceRange> Locations { get; }
         public override ImmutableArray<SyntaxNodeBase> DeclaringSyntaxNodes { get; }
@@ -27,6 +29,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
             BaseType = baseType;
             BaseInterfaces = baseInterfaces;
             Binder = binder;
+
+            IsAnonymous = syntax.Name == null;
 
             Locations = syntax.Name != null
                 ? ImmutableArray.Create(syntax.Name.SourceRange)

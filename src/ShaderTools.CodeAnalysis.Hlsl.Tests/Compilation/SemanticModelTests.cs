@@ -119,5 +119,32 @@ void main() {
             Assert.NotNull(variableSymbol.ValueType);
             Assert.Equal(typeAliasSymbol, variableSymbol.ValueType);
         }
+
+        [Fact]
+        public void SemanticModelForTypedefStruct()
+        {
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(@"
+typedef struct { int a; } MyStruct;
+typedef struct { int a; } MyStruct2;"));
+            var compilation = new Hlsl.Compilation.Compilation(syntaxTree);
+            var semanticModel = compilation.GetSemanticModel();
+
+            foreach (var diagnostic in semanticModel.GetDiagnostics())
+                _output.WriteLine(diagnostic.ToString());
+
+            Assert.Equal(0, semanticModel.GetDiagnostics().Count(x => x.Severity == DiagnosticSeverity.Error));
+
+            var typedefStatement = (TypedefStatementSyntax)syntaxTree.Root.ChildNodes[0];
+
+            var typeAliasSymbol = semanticModel.GetDeclaredSymbol(typedefStatement.Declarators[0]);
+            Assert.NotNull(typeAliasSymbol);
+            Assert.Equal("MyStruct", typeAliasSymbol.Name);
+
+            var typedefStatement2 = (TypedefStatementSyntax)syntaxTree.Root.ChildNodes[1];
+
+            var typeAliasSymbol2 = semanticModel.GetDeclaredSymbol(typedefStatement2.Declarators[0]);
+            Assert.NotNull(typeAliasSymbol2);
+            Assert.Equal("MyStruct2", typeAliasSymbol2.Name);
+        }
     }
 }

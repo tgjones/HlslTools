@@ -329,6 +329,32 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
         }
 
         [Fact]
+        public void TestGlobalDeclarationWithTypedefStructType()
+        {
+            var typeText = "struct { int a; }";
+            var typedefText = "typedef " + typeText;
+            var text = typedefText + " c;";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Equal(1, file.Declarations.Count);
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(0, file.GetDiagnostics().Count());
+
+            Assert.Equal(SyntaxKind.TypedefStatement, file.Declarations[0].Kind);
+            var ts = (TypedefStatementSyntax)file.Declarations[0];
+            Assert.NotNull(ts.Type);
+            Assert.Equal(typeText, ts.Type.ToString());
+            Assert.Equal(SyntaxKind.StructType, ts.Type.Kind);
+            Assert.Equal(1, ts.Declarators.Count);
+            var ds = ts.Declarators[0];
+            Assert.NotNull(ds.Identifier);
+            Assert.Equal("c", ds.Identifier.ToString());
+            Assert.NotNull(ts.SemicolonToken);
+            Assert.False(ts.SemicolonToken.IsMissing);
+        }
+
+        [Fact]
         public void TestGlobalFunctionDeclaration()
         {
             var text = "void Foo(int a);";

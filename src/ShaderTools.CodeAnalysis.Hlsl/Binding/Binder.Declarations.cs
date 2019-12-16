@@ -379,7 +379,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
 
             var structBinder = new Binder(_sharedBinderState, this);
             var structSymbol = new StructSymbol(declaration, parent, baseType, baseInterfaces.ToImmutableArray(), structBinder);
-            AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
+            if (!structSymbol.IsAnonymous)
+            {
+                AddSymbol(structSymbol, declaration.Name?.SourceRange ?? declaration.SourceRange);
+            }
 
             var members = new List<BoundNode>();
 
