@@ -62,10 +62,13 @@
     <Compile Include="Implementation\AbstractOleCommandTarget.Query.cs" />
     <Compile Include="Implementation\Extensions\SourceTextExtensions.cs" />
     <Compile Include="Implementation\Extensions\VsTextSpanExtensions.cs" />
+    <Compile Include="Implementation\F1Help\AbstractHelpContextService.cs" />
+    <Compile Include="Implementation\F1Help\IHelpContextService.cs" />
     <Compile Include="Implementation\StandaloneCommandFilter.cs" />
     <Compile Include="LanguageService\AbstractLanguageService.cs" />
     <Compile Include="LanguageService\AbstractLanguageService.IVsAutoOutliningClient.cs" />
     <Compile Include="LanguageService\AbstractLanguageService`2.cs" />
+    <Compile Include="LanguageService\AbstractLanguageService`2.IVsLanguageContextProvider.cs" />
     <Compile Include="LanguageService\AbstractLanguageService`2.IVsLanguageInfo.cs" />
     <Compile Include="LanguageService\AbstractLanguageService`2.VsCodeWindowManager.cs" />
     <Compile Include="LanguageService\AbstractPackage.cs" />

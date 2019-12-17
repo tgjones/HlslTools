@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Classification\HlslClassificationColorProvider.cs" />
     <Compile Include="HlslPackage.cs" />
+    <Compile Include="LanguageService\HlslHelpContextService.cs" />
     <Compile Include="LanguageService\HlslLanguageService.cs" />
     <Compile Include="Options\AdvancedOptionPage.cs" />
     <Compile Include="Options\AdvancedOptionPageControl.xaml.cs">
