@@ -944,14 +944,33 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             var hasHexModifier = false;
             var isPreprocessingNumber = false;
 
+            if (_charReader.Current == '0' && (_charReader.Peek() == 'x' || _charReader.Peek() == 'X'))
+            {
+                sb.Append(_charReader.Current);
+                NextChar();
+                sb.Append(_charReader.Current);
+                NextChar();
+
+                hasHexModifier = true;
+            }
+
             while (true)
             {
                 switch (_charReader.Current)
                 {
                     // dot
                     case '.':
-                        if (hasHexModifier || hasOctalPrefix)
+                        if (hasHexModifier || hasOctalPrefix || hasDotModifier)
                             goto ExitLoop;
+
+                        // Check if this dot precedes a swizzle.
+                        switch (_charReader.Peek())
+                        {
+                            case 'x':
+                            case 'r':
+                                goto ExitLoop;
+                        }
+
                         sb.Append(_charReader.Current);
                         NextChar();
                         hasDotModifier = true;
@@ -1021,13 +1040,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                             return;
                         }
                         goto ExitLoop;
-
-                    case 'X':
-                    case 'x':
-                        hasHexModifier = true;
-                        sb.Append(_charReader.Current);
-                        NextChar();
-                        break;
 
                     case '0':
                     case '1':

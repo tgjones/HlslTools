@@ -146,5 +146,21 @@ typedef struct { int a; } MyStruct2;"));
             Assert.NotNull(typeAliasSymbol2);
             Assert.Equal("MyStruct2", typeAliasSymbol2.Name);
         }
+
+        [Fact]
+        public void SemanticModelForScalarSwizzle()
+        {
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(@"
+float4 main() {
+    return 1.xxxx + 2.0f.xxxx + 2.5.xxxx;
+}"));
+            var compilation = new CodeAnalysis.Hlsl.Compilation.Compilation(syntaxTree);
+            var semanticModel = compilation.GetSemanticModel();
+
+            foreach (var diagnostic in semanticModel.GetDiagnostics())
+                _output.WriteLine(diagnostic.ToString());
+
+            Assert.Equal(0, semanticModel.GetDiagnostics().Count(x => x.Severity == DiagnosticSeverity.Error));
+        }
     }
 }
