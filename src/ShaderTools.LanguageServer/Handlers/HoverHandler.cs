@@ -53,7 +53,7 @@ namespace ShaderTools.LanguageServer.Handlers
             }
             else
             {
-                return null;
+                return new Hover();
             }
         }
 
