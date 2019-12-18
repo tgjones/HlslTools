@@ -201,7 +201,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             var paramList = new List<SyntaxNodeBase>();
             if (Current.Kind != SyntaxKind.CloseParenToken)
             {
-                paramList.Add(Match(SyntaxKind.IdentifierToken));
+                if (Current.Kind.IsKeyword())
+                {
+                    paramList.Add(NextToken().WithKind(SyntaxKind.IdentifierToken));
+                }
+                else
+                {
+                    paramList.Add(Match(SyntaxKind.IdentifierToken));
+                }
 
                 while (Current.Kind == SyntaxKind.CommaToken)
                 {
