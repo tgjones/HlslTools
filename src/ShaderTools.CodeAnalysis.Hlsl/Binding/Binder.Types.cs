@@ -52,6 +52,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                         var qualifiedName = (QualifiedNameSyntax) syntax;
                         return BindQualifiedType(qualifiedName);
                     }
+                case SyntaxKind.ModifiedType:
+                    {
+                        var modifiedType = (ModifiedTypeSyntax) syntax;
+                        return BindType(modifiedType.Type, parent);
+                    }
                 default:
                     throw new InvalidOperationException(syntax.Kind.ToString());
             }
@@ -285,6 +290,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             if (node.TemplateArgumentList != null)
             {
                 var valueTypeSyntax = (TypeSyntax) node.TemplateArgumentList.Arguments[0];
+                if (valueTypeSyntax is ModifiedTypeSyntax modifiedType)
+                {
+                    valueTypeSyntax = modifiedType.Type;
+                }
                 valueType = Bind(valueTypeSyntax, x => BindType(x, null)).TypeSymbol;
                 switch (valueTypeSyntax.Kind)
                 {
@@ -298,7 +307,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                         scalarType = TypeFacts.GetScalarType(((GenericVectorTypeSyntax) valueTypeSyntax).ScalarType);
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException();
+                        Diagnostics.ReportInvalidType(valueTypeSyntax);
+                        scalarType = ScalarType.Float;
+                        break;
                 }
             }
             else

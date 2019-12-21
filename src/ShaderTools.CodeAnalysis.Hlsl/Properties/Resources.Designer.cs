@@ -331,6 +331,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &apos;{0}&apos; is not allowed here..
+        /// </summary>
+        internal static string InvalidType {
+            get {
+                return ResourceManager.GetString("InvalidType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invocation of &apos;{0}&apos; requires parenthesis..
         /// </summary>
         internal static string InvocationRequiresParenthesis {

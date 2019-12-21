@@ -388,6 +388,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Min16UintKeyword:
                 case SyntaxKind.VoidKeyword:
                 case SyntaxKind.StringKeyword:
+                case SyntaxKind.SNormKeyword:
+                case SyntaxKind.UNormKeyword:
                     return true;
 
                 default:
@@ -444,6 +446,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Min16Uint2Keyword:
                 case SyntaxKind.Min16Uint3Keyword:
                 case SyntaxKind.Min16Uint4Keyword:
+                case SyntaxKind.SNormKeyword:
+                case SyntaxKind.UNormKeyword:
                     return true;
 
                 default:
@@ -632,6 +636,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Uint4x2Keyword:
                 case SyntaxKind.Uint4x3Keyword:
                 case SyntaxKind.Uint4x4Keyword:
+                case SyntaxKind.SNormKeyword:
+                case SyntaxKind.UNormKeyword:
                     return true;
 
                 default:
@@ -831,34 +837,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return PredefinedObjectType.VertexShader;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(kind), kind.ToString());
-            }
-        }
-
-        public static bool CanStartDeclaration(SyntaxToken token)
-        {
-            if (IsPredefinedType(token))
-                return true;
-
-            switch (token.Kind)
-            {
-                case SyntaxKind.ClassKeyword:
-                case SyntaxKind.ConstKeyword:
-                case SyntaxKind.ExportKeyword:
-                case SyntaxKind.ExternKeyword:
-                case SyntaxKind.InlineKeyword:
-                case SyntaxKind.InterfaceKeyword:
-                case SyntaxKind.StaticKeyword:
-                case SyntaxKind.SNormKeyword:
-                case SyntaxKind.UNormKeyword:
-                case SyntaxKind.StructKeyword:
-                case SyntaxKind.VolatileKeyword:
-                case SyntaxKind.IdentifierToken:
-                case SyntaxKind.TildeToken:
-                case SyntaxKind.OpenBracketToken:
-                    return true;
-
-                default:
-                    return false;
             }
         }
 

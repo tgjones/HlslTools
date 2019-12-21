@@ -65,5 +65,6 @@
         RetNoObjectRequired,
         RetObjectRequired,
         ReturnExpected,
+        InvalidType,
     }
 }

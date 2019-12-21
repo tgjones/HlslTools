@@ -291,4 +291,7 @@
   <data name="ReturnExpected" xml:space="preserve">
     <value>'{0}': not all code paths return a value.</value>
   </data>
+  <data name="InvalidType" xml:space="preserve">
+    <value>'{0}' is not allowed here.</value>
+  </data>
 </root>

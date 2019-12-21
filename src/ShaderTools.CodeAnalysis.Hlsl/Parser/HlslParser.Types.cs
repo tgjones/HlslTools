@@ -194,7 +194,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             if (Current.Kind == SyntaxKind.LessThanToken)
             {
                 var lessThan = Match(SyntaxKind.LessThanToken);
-                var type = ParseScalarOrVectorType();
+                var type = ParseModifiedType();
                 var greaterThan = Match(SyntaxKind.GreaterThanToken);
                 templateArgumentList = new TemplateArgumentListSyntax(lessThan,
                     new SeparatedSyntaxList<ExpressionSyntax>(new List<SyntaxNodeBase> { type }),
@@ -206,7 +206,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         private PredefinedObjectTypeSyntax ParseMultisampledTextureType(SyntaxToken token)
         {
             var lessThan = Match(SyntaxKind.LessThanToken);
-            var type = ParseScalarOrVectorType();
+            var type = ParseModifiedType();
 
             var arguments = new List<SyntaxNodeBase> { type };
             if (Current.Kind == SyntaxKind.CommaToken)
@@ -235,6 +235,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 new SeparatedSyntaxList<ExpressionSyntax>(arguments),
                 greaterThan);
             return new PredefinedObjectTypeSyntax(token, typeArgumentList);
+        }
+
+        private ModifiedTypeSyntax ParseModifiedType()
+        {
+            var modifiers = new List<SyntaxToken>();
+            ParseDeclarationModifiers(modifiers);
+
+            var type = ParseType(false);
+
+            return new ModifiedTypeSyntax(modifiers, type);
         }
 
         private NumericTypeSyntax ParseScalarOrVectorType()
@@ -279,8 +289,19 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         private ScalarTypeSyntax ParseScalarType(SyntaxToken token)
         {
             var tokens = new List<SyntaxToken> { token };
-            if (token.Kind == SyntaxKind.UnsignedKeyword)
-                tokens.Add(Match(SyntaxKind.IntKeyword));
+
+            switch (token.Kind)
+            {
+                case SyntaxKind.UnsignedKeyword:
+                    tokens.Add(Match(SyntaxKind.IntKeyword));
+                    break;
+
+                case SyntaxKind.SNormKeyword:
+                case SyntaxKind.UNormKeyword:
+                    tokens.Add(Match(SyntaxKind.IntKeyword));
+                    break;
+            }
+
             return new ScalarTypeSyntax(tokens);
         }
 

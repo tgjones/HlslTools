@@ -304,6 +304,31 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
         }
 
         [Fact]
+        public void TestGlobalDeclarationWithUnormFloatType()
+        {
+            var typeText = "Texture2D<unorm float4>";
+            var text = typeText + " c;";
+            var file = ParseFile(text);
+
+            Assert.NotNull(file);
+            Assert.Equal(1, file.Declarations.Count);
+            Assert.Equal(text, file.ToString());
+            Assert.Equal(0, file.GetDiagnostics().Count());
+
+            Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
+            var fs = (VariableDeclarationStatementSyntax)file.Declarations[0];
+            Assert.NotNull(fs.Declaration.Type);
+            Assert.Equal(typeText, fs.Declaration.Type.ToString());
+            Assert.Equal(SyntaxKind.PredefinedObjectType, fs.Declaration.Type.Kind);
+            Assert.Equal(1, fs.Declaration.Variables.Count);
+            Assert.NotNull(fs.Declaration.Variables[0].Identifier);
+            Assert.Equal("c", fs.Declaration.Variables[0].Identifier.ToString());
+            Assert.Null(fs.Declaration.Variables[0].Initializer);
+            Assert.NotNull(fs.SemicolonToken);
+            Assert.False(fs.SemicolonToken.IsMissing);
+        }
+
+        [Fact]
         public void TestGlobalDeclarationWithUnnamedStructType()
         {
             var typeText = "struct { int a; }";

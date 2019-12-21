@@ -267,6 +267,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Diagnostics
             diagnostics.Report(sourceRange, DiagnosticId.ImplicitTruncation, sourceType.Name, destinationType.Name);
         }
 
+        public static void ReportInvalidType(this ICollection<Diagnostic> diagnostics, TypeSyntax syntax)
+        {
+            diagnostics.Report(syntax.SourceRange, DiagnosticId.InvalidType, syntax.ToStringIgnoringMacroReferences());
+        }
+
         #endregion
     }
 }

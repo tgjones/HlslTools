@@ -477,6 +477,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         PredefinedObjectType,
         ArrayRankSpecifier,
         StructType,
+        ModifiedType,
 
         IdentifierDeclarationName,
         QualifiedDeclarationName,

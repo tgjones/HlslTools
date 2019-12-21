@@ -125,6 +125,11 @@
       <summary></summary>
     </TypeComment>
   </AbstractNode>
+  <Node Name="ModifiedTypeSyntax" Base="TypeSyntax">
+    <Kind Name="ModifiedType"/>
+    <Field Name="Modifiers" Type="List&lt;SyntaxToken&gt;" />
+    <Field Name="Type" Type="TypeSyntax" />
+  </Node>
 
   <Node Name="AnnotationsSyntax" Base="SyntaxNode">
     <TypeComment>
