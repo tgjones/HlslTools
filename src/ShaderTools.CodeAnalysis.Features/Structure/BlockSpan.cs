@@ -66,5 +66,6 @@ namespace ShaderTools.CodeAnalysis.Structure
         Member,
         Conditional,
         Loop,
+        PreprocessorRegion,
     }
 }

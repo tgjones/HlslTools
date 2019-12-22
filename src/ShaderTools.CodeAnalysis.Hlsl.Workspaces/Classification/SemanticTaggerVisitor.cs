@@ -201,11 +201,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Classification
             base.VisitSyntaxToken(node);
         }
 
-        public override void VisitSyntaxTrivia(SyntaxTrivia node)
-        {
-            base.VisitSyntaxTrivia(node);
-        }
-
         private static string GetClassificationType(Symbol symbol)
         {
             switch (symbol.Kind)

@@ -76,6 +76,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.Structure
                     return PredefinedStructureTagTypes.Conditional;
                 case BlockSpanType.Loop:
                     return PredefinedStructureTagTypes.Loop;
+                case BlockSpanType.PreprocessorRegion:
+                    return PredefinedStructureTagTypes.PreprocessorRegion;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(type));
             }

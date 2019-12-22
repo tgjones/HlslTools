@@ -143,6 +143,53 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Structure
             base.VisitForStatement(node);
         }
 
+        public override void VisitSyntaxToken(SyntaxToken node)
+        {
+            foreach (var trivia in node.LeadingTrivia)
+                Visit(trivia);
+
+            foreach (var trivia in node.TrailingTrivia)
+                Visit(trivia);
+
+            base.VisitSyntaxToken(node);
+        }
+
+        public override void VisitIfDirectiveTrivia(IfDirectiveTriviaSyntax node)
+        {
+            CreateBranchingDirectiveTag(node);
+        }
+
+        public override void VisitIfDefDirectiveTrivia(IfDefDirectiveTriviaSyntax node)
+        {
+            CreateBranchingDirectiveTag(node);
+        }
+
+        public override void VisitIfNDefDirectiveTrivia(IfNDefDirectiveTriviaSyntax node)
+        {
+            CreateBranchingDirectiveTag(node);
+        }
+
+        private void CreateBranchingDirectiveTag(BranchingDirectiveTriviaSyntax node)
+        {
+            if (!node.BranchTaken)
+            {
+                return;
+            }
+
+            if (node.BranchEnd == null)
+            {
+                return;
+            }
+
+            CreateTag(
+                BlockSpanType.PreprocessorRegion,
+                node.EndOfDirectiveToken,
+                node.BranchEnd.EndOfDirectiveToken,
+                node.HashToken,
+                node.EndOfDirectiveToken,
+                false);
+        }
+
         private void CreateTag(
             BlockSpanType type, 
             SyntaxToken startToken, 

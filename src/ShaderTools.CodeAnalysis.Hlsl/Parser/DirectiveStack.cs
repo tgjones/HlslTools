@@ -39,6 +39,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 return branching != null && branching.BranchTaken;
             }
         }
+
+        internal DirectiveTriviaSyntax BranchEnd
+        {
+            set
+            {
+                var branching = (BranchingDirectiveTriviaSyntax)Node;
+                branching.BranchEnd = value;
+            }
+        }
     }
 
     internal enum DefineState
@@ -144,12 +153,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             return prev != null && prev.Any() && (prev.Head.Kind.IsIfLikeDirective() || prev.Head.Kind == SyntaxKind.ElifDirectiveTrivia);
         }
 
-        public bool HasUnfinishedRegion()
-        {
-            var prev = GetPreviousIfElifElse(_directives);
-            return prev != null && prev.Any();
-        }
-
         public DirectiveStack Add(Directive directive)
         {
             switch (directive.Kind)
@@ -161,15 +164,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         goto default; // no matching if directive !! leave directive alone
                     }
 
-                    bool tmp;
-                    return new DirectiveStack(CompleteIf(_directives, out tmp));
+                    return new DirectiveStack(CompleteIf(directive.Node, _directives, out _));
                 default:
                     return new DirectiveStack(new ConsList<Directive>(directive, _directives != null ? _directives : ConsList<Directive>.Empty));
             }
         }
 
         // removes unfinished if & related directives from stack and leaves active branch directives
-        private static ConsList<Directive> CompleteIf(ConsList<Directive> stack, out bool include)
+        private static ConsList<Directive> CompleteIf(DirectiveTriviaSyntax branchEndSyntax, ConsList<Directive> stack, out bool include)
         {
             // if we get to the top, the default rule is to include anything that follows
             if (!stack.Any())
@@ -181,13 +183,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             // if we reach the #if directive, then we stop unwinding and start
             // rebuilding the stack w/o the #if/#elif/#else/#endif directives
             // only including content from sections that are considered included
-            if (stack.Head.Kind.IsIfLikeDirective())
+            var head = stack.Head;
+            if (head.Kind.IsIfLikeDirective())
             {
-                include = stack.Head.BranchTaken;
+                include = head.BranchTaken;
+                head.BranchEnd = branchEndSyntax;
                 return stack.Tail;
             }
 
-            var newStack = CompleteIf(stack.Tail, out include);
+            var newStack = CompleteIf(branchEndSyntax, stack.Tail, out include);
             switch (stack.Head.Kind)
             {
                 case SyntaxKind.ElifDirectiveTrivia:
@@ -197,7 +201,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 default:
                     if (include)
                     {
-                        newStack = new ConsList<Directive>(stack.Head, newStack);
+                        newStack = new ConsList<Directive>(head, newStack);
                     }
 
                     break;
