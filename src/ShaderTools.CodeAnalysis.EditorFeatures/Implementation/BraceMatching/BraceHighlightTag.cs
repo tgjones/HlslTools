@@ -7,7 +7,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.BraceMatching
         public static readonly BraceHighlightTag Tag = new BraceHighlightTag();
 
         private BraceHighlightTag()
-            : base("bracehighlight")
+            : base("brace matching")
         {
         }
     }
