@@ -26,8 +26,8 @@
     "url": "https://github.com/tgjones/HlslTools.git"
   },
   "bugs": {
-		"url": "https://github.com/tgjones/HlslTools/issues"
-	},
+    "url": "https://github.com/tgjones/HlslTools/issues"
+  },
   "main": "./out/main",
   "activationEvents": [
     "onLanguage:hlsl"
