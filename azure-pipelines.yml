@@ -108,7 +108,7 @@ jobs:
   dependsOn: 'VSCode_Build'
 
   pool:
-    vmImage: 'windows-2019'
+    vmImage: 'ubuntu-latest'
 
   steps:
 
