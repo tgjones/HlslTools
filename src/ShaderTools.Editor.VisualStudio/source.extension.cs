@@ -11,7 +11,7 @@ namespace ShaderTools.Editor.VisualStudio
         public const string Name = "HLSL Tools for Visual Studio";
         public const string Description = @"Enhanced support for editing HLSL in Visual Studio";
         public const string Language = "en-US";
-        public const string Version = "1.1.300";
+        public const string Version = "1.1.301";
         public const string Author = "Tim Jones";
         public const string Tags = "HLSL, shader, Direct3D";
     }

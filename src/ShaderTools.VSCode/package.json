@@ -1,7 +1,7 @@
 {
   "name": "hlsltools",
   "displayName": "HLSL Tools",
-  "version": "1.1.300",
+  "version": "1.1.301",
   "publisher": "TimGJones",
   "description": "Rich HLSL language support for Visual Studio Code",
   "engines": {
