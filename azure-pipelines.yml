@@ -130,11 +130,11 @@ jobs:
       artifactName: LanguageServer-linux-x64
       targetPath: 'src/ShaderTools.VSCode/bin/linux-x64'
 
-  - script: npm install
-    displayName: npm install
+  - script: npm ci
+    displayName: npm ci
     workingDirectory: 'src/ShaderTools.VSCode'
 
-  - script: npm install -g vsce
+  - script: sudo npm install -g vsce
     displayName: 'Install vsce'
     workingDirectory: 'src/ShaderTools.VSCode'
 
