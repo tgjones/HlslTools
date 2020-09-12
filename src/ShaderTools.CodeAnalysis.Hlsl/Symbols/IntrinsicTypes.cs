@@ -326,6 +326,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
         public static readonly IntrinsicObjectTypeSymbol PixelShader;
         public static readonly IntrinsicObjectTypeSymbol VertexShader;
 
+        // DXR Structs
+
+        public static readonly IntrinsicObjectTypeSymbol BuiltInTriangleIntersectionAttributes;
+        public static readonly IntrinsicObjectTypeSymbol RayDesc;
+        public static readonly IntrinsicObjectTypeSymbol RaytracingAccelerationStructure;
+
         public static readonly TypeSymbol[] AllTypes;
 
         static IntrinsicTypes()
@@ -1266,12 +1272,24 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 PredefinedObjectType.RasterizerOrderedByteAddressBuffer,
                 CreateRWByteAddressBufferMethods);
 
+            BuiltInTriangleIntersectionAttributes = new IntrinsicObjectTypeSymbol("BuiltInTriangleIntersectionAttributes", "Any hit and closest hit shaders invoked using fixed-function triangle intersection must use this structure for hit attributes.", PredefinedObjectType.BuiltInTriangleIntersectionAttributes);
+            RayDesc = new IntrinsicObjectTypeSymbol("RayDesc", "Passed to the TraceRay function to define the origin, direction, and extents of the ray.", PredefinedObjectType.RayDesc);
+            RaytracingAccelerationStructure = new IntrinsicObjectTypeSymbol("RaytracingAccelerationStructure", "A resource type that can be declared in HLSL and passed into TraceRay to indicate the top-level acceleration resource built using BuildRaytracingAccelerationStructure.", PredefinedObjectType.RaytracingAccelerationStructure);
+
+            BuiltInTriangleIntersectionAttributes.AddMember(new FieldSymbol("barycentrics", "The Barycentric coordinates of the hit location", BuiltInTriangleIntersectionAttributes, IntrinsicTypes.Float2));
+
+            RayDesc.AddMember(new FieldSymbol("Origin", "The origin of the ray.", RayDesc, IntrinsicTypes.Float3));
+            RayDesc.AddMember(new FieldSymbol("TMin", "The minimum extent of the ray.", RayDesc, IntrinsicTypes.Float));
+            RayDesc.AddMember(new FieldSymbol("Direction", "The direction of the ray.", RayDesc, IntrinsicTypes.Float3));
+            RayDesc.AddMember(new FieldSymbol("TMax", "The maximum extent of the ray.", RayDesc, IntrinsicTypes.Float));
+
             AllTypes = AllNumericTypes
                 .Cast<TypeSymbol>()
                 .Union(new[] { Sampler, Sampler1D, Sampler2D, Sampler3D, SamplerCube, SamplerState, SamplerComparisonState, LegacyTexture })
                 .Union(new[] { BlendState, DepthStencilState, RasterizerState })
                 .Union(new[] { GeometryShader, PixelShader, VertexShader })
                 .Union(new[] { ByteAddressBuffer, RWByteAddressBuffer, RasterizerOrderedByteAddressBuffer })
+                .Union(new[] { BuiltInTriangleIntersectionAttributes, RayDesc, RaytracingAccelerationStructure })
                 .ToArray();
         }
 
