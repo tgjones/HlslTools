@@ -64,6 +64,10 @@
 
         GeometryShader,
         PixelShader,
-        VertexShader
+        VertexShader,
+
+        BuiltInTriangleIntersectionAttributes,
+        RayDesc,
+        RaytracingAccelerationStructure
     }
 }
