@@ -14,9 +14,6 @@ jobs:
   
   strategy:
     matrix:
-      VS2017:
-        imageName: 'vs2017-win2016'
-        vsVersion: VS2017
       VS2019:
         imageName: 'windows-2019'
         vsVersion: VS2019
@@ -29,7 +26,7 @@ jobs:
   - task: NuGetToolInstaller@0
     displayName: 'Install NuGet'
     inputs:
-      versionSpec: '5.1.0'
+      versionSpec: '5.8.0'
 
   - task: DotNetCoreCLI@2
     displayName: 'Restore NuGet Packages (dotnet)'
