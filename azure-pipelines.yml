@@ -88,7 +88,7 @@ jobs:
 
   - powershell: New-Item -ItemType Directory -Path src/ShaderTools.LanguageServer/build/$(rid)
 
-  - script: dotnet publish --rid $(rid) --output build/$(rid) --configuration $(buildConfiguration)
+  - script: dotnet publish --runtime $(rid) --output build/$(rid) --configuration $(buildConfiguration)
     displayName: 'Build Language Server'
     workingDirectory: 'src/ShaderTools.LanguageServer'
 
