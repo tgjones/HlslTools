@@ -69,15 +69,12 @@ jobs:
       Windows:
         imageName: 'windows-2019'
         rid: win-x64
-        binaryExtension: '.exe'
       macOS:
         imageName: 'macOS-latest'
         rid: osx-x64
-        binaryExtension: ''
       Linux:
         imageName: 'ubuntu-latest'
         rid: linux-x64
-        binaryExtension: ''
   
   pool:
     vmImage: $(imageName)
@@ -87,14 +84,11 @@ jobs:
   - task: UseDotNet@2
     displayName: 'Use .NET Core SDK'
     inputs:
-      version: 2.1.x
-
-  - script: dotnet tool install --global dotnet-warp
-    displayName: 'Install dotnet-warp'
+      version: 5.0.x
 
   - powershell: New-Item -ItemType Directory -Path src/ShaderTools.LanguageServer/build/$(rid)
 
-  - script: dotnet-warp . --verbose --rid $(rid) --output build/$(rid)/ShaderTools.LanguageServer$(binaryExtension)
+  - script: dotnet publish --rid $(rid) --output build/$(rid) --configuration $(buildConfiguration)
     displayName: 'Build Language Server'
     workingDirectory: 'src/ShaderTools.LanguageServer'
 
@@ -102,7 +96,7 @@ jobs:
     displayName: Publish Artifact
     inputs:
       artifactName: LanguageServer-$(rid)
-      path: 'src/ShaderTools.LanguageServer/build/$(rid)/ShaderTools.LanguageServer$(binaryExtension)'
+      path: 'src/ShaderTools.LanguageServer/build/$(rid)'
 
 - job: VSCode_Create_Package
   dependsOn: 'VSCode_Build'
