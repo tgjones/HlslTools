@@ -2,26 +2,32 @@
 using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using ShaderTools.CodeAnalysis.NavigateTo;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class DocumentSymbolsHandler : IDocumentSymbolHandler
+    internal sealed class DocumentSymbolsHandler : DocumentSymbolHandlerBase
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly TextDocumentRegistrationOptions _registrationOptions;
+        private readonly DocumentSelector _documentSelector;
 
-        public DocumentSymbolsHandler(LanguageServerWorkspace workspace, TextDocumentRegistrationOptions registrationOptions)
+        public DocumentSymbolsHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _registrationOptions = registrationOptions;
+            _documentSelector = documentSelector;
         }
 
-        public TextDocumentRegistrationOptions GetRegistrationOptions() => _registrationOptions;
+        protected override DocumentSymbolRegistrationOptions CreateRegistrationOptions(DocumentSymbolCapability capability, ClientCapabilities clientCapabilities)
+        {
+            return new DocumentSymbolRegistrationOptions
+            {
+                DocumentSelector = _documentSelector,
+            };
+        }
 
-        public async Task<SymbolInformationOrDocumentSymbolContainer> Handle(DocumentSymbolParams request, CancellationToken token)
+        public override async Task<SymbolInformationOrDocumentSymbolContainer> Handle(DocumentSymbolParams request, CancellationToken token)
         {
             var document = _workspace.GetDocument(request.TextDocument.Uri);
 
@@ -37,7 +43,5 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return new SymbolInformationOrDocumentSymbolContainer(symbolsResult);
         }
-
-        public void SetCapability(DocumentSymbolCapability capability) { }
     }
 }

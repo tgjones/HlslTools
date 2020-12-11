@@ -121,7 +121,7 @@ namespace ShaderTools.CodeAnalysis
         {
             var directory = Path.GetDirectoryName(file.FilePath);
 
-            if (directory == null)
+            if (string.IsNullOrEmpty(directory))
                 return new ConfigFile();
 
             return ImmutableInterlocked.GetOrAdd(

@@ -3,27 +3,33 @@ using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class DocumentHighlightHandler : IDocumentHighlightHandler
+    internal sealed class DocumentHighlightHandler : DocumentHighlightHandlerBase
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly TextDocumentRegistrationOptions _registrationOptions;
+        private readonly DocumentSelector _documentSelector;
 
-        public DocumentHighlightHandler(LanguageServerWorkspace workspace, TextDocumentRegistrationOptions registrationOptions)
+        public DocumentHighlightHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _registrationOptions = registrationOptions;
+            _documentSelector = documentSelector;
         }
 
-        public TextDocumentRegistrationOptions GetRegistrationOptions() => _registrationOptions;
+        protected override DocumentHighlightRegistrationOptions CreateRegistrationOptions(DocumentHighlightCapability capability, ClientCapabilities clientCapabilities)
+        {
+            return new DocumentHighlightRegistrationOptions
+            {
+                DocumentSelector = _documentSelector
+            };
+        }
 
-        public async Task<DocumentHighlightContainer> Handle(DocumentHighlightParams request, CancellationToken token)
+        public override async Task<DocumentHighlightContainer> Handle(DocumentHighlightParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -57,7 +63,5 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return result;
         }
-
-        public void SetCapability(DocumentHighlightCapability capability) { }
     }
 }

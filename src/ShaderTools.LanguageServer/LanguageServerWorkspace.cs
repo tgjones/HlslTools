@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Host.Mef;
@@ -12,16 +12,14 @@ namespace ShaderTools.LanguageServer
     internal sealed class LanguageServerWorkspace : Workspace
     {
         private readonly IMefHostExportProvider _hostServices;
-        private readonly string _rootPath;
 
-        public LanguageServerWorkspace(MefHostServices hostServices, string rootPath)
+        public LanguageServerWorkspace(MefHostServices hostServices)
             : base(hostServices)
         {
             _hostServices = hostServices;
-            _rootPath = rootPath;
         }
 
-        public Document GetDocument(Uri uri)
+        public Document GetDocument(DocumentUri uri)
         {
             return CurrentDocuments.GetDocumentWithFilePath(Helpers.FromUri(uri));
         }
@@ -31,13 +29,13 @@ namespace ShaderTools.LanguageServer
             var document = GetDocument(textDocumentPositionParams.TextDocument.Uri);
 
             var documentPosition = document.SourceText.Lines.GetPosition(new LinePosition(
-                (int) textDocumentPositionParams.Position.Line,
-                (int) textDocumentPositionParams.Position.Character));
+                textDocumentPositionParams.Position.Line,
+                textDocumentPositionParams.Position.Character));
 
             return (document, documentPosition);
         }
 
-        public Document OpenDocument(Uri uri, string text, string languageId)
+        public Document OpenDocument(DocumentUri uri, string text, string languageId)
         {
             var filePath = Helpers.FromUri(uri);
 

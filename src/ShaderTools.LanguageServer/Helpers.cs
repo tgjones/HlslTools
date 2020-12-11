@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Text;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.NavigateTo;
@@ -13,16 +14,9 @@ namespace ShaderTools.LanguageServer
 {
     internal static class Helpers
     {
-        public static string FromUri(Uri uri)
+        public static string FromUri(DocumentUri uri)
         {
-            if (uri.Segments.Length > 1)
-            {
-                if (uri.Segments[1].IndexOf("%3a", StringComparison.OrdinalIgnoreCase) > -1)
-                {
-                    return FromUri(new Uri(uri.AbsoluteUri.Replace("%3a", ":").Replace("%3A", ":")));
-                }
-            }
-            return uri.LocalPath;
+            return uri.GetFileSystemPath();
         }
 
         public static Uri ToUri(string filePath)

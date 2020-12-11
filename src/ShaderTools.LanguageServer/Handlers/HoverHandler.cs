@@ -1,28 +1,34 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.QuickInfo;
 using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class HoverHandler : IHoverHandler
+    internal sealed class HoverHandler : HoverHandlerBase
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly TextDocumentRegistrationOptions _registrationOptions;
+        private readonly DocumentSelector _documentSelector;
 
-        public HoverHandler(LanguageServerWorkspace workspace, TextDocumentRegistrationOptions registrationOptions)
+        public HoverHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _registrationOptions = registrationOptions;
+            _documentSelector = documentSelector;
         }
 
-        public TextDocumentRegistrationOptions GetRegistrationOptions() => _registrationOptions;
+        protected override HoverRegistrationOptions CreateRegistrationOptions(HoverCapability capability, ClientCapabilities clientCapabilities)
+        {
+            return new HoverRegistrationOptions
+            {
+                DocumentSelector = _documentSelector
+            };
+        }
 
-        public async Task<Hover> Handle(HoverParams request, CancellationToken token)
+        public override async Task<Hover> Handle(HoverParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -56,7 +62,5 @@ namespace ShaderTools.LanguageServer.Handlers
                 return new Hover();
             }
         }
-
-        public void SetCapability(HoverCapability capability) { }
     }
 }

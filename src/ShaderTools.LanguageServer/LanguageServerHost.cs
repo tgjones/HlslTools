@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
+using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Server;
 using Serilog;
 using ShaderTools.CodeAnalysis;
@@ -20,10 +21,9 @@ namespace ShaderTools.LanguageServer
         private ILanguageServer _server;
 
         private readonly MefHostServices _exportProvider;
-        private LanguageServerWorkspace _workspace;
+        private readonly LanguageServerWorkspace _workspace;
         private DiagnosticNotifier _diagnosticNotifier;
 
-        private readonly LoggerFactory _loggerFactory;
         private readonly Serilog.Core.Logger _logger;
         private readonly LogLevel _minLogLevel;
 
@@ -35,6 +35,8 @@ namespace ShaderTools.LanguageServer
             _exportProvider = exportProvider;
             _logger = logger;
             _minLogLevel = minLogLevel;
+
+            _workspace = new LanguageServerWorkspace(_exportProvider);
         }
 
         public static async Task<LanguageServerHost> Create(
@@ -67,15 +69,6 @@ namespace ShaderTools.LanguageServer
 
         private async Task InitializeAsync(Stream input, Stream output)
         {
-            _server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(options => options
-                .WithInput(input)
-                .WithOutput(output)
-                .ConfigureLogging(x => x.AddSerilog(_logger).SetMinimumLevel(_minLogLevel).AddLanguageServer(_minLogLevel))
-                .OnInitialized(OnInitialized));
-
-            var diagnosticService = _workspace.Services.GetService<IDiagnosticService>();
-            _diagnosticNotifier = new DiagnosticNotifier(_server, diagnosticService);
-
             var documentSelector = new DocumentSelector(
                 LanguageNames.AllLanguages
                     .Select(x => new DocumentFilter
@@ -83,27 +76,24 @@ namespace ShaderTools.LanguageServer
                         Language = x.ToLowerInvariant()
                     }));
 
-            var registrationOptions = new TextDocumentRegistrationOptions
-            {
-                DocumentSelector = documentSelector
-            };
+            _server = await OmniSharp.Extensions.LanguageServer.Server.LanguageServer.From(options => options
+                .WithInput(input)
+                .WithOutput(output)
+                .ConfigureLogging(x => x
+                    .AddSerilog(_logger)
+                    .AddLanguageProtocolLogging()
+                    .SetMinimumLevel(_minLogLevel))
+                .AddHandler(new TextDocumentSyncHandler(_workspace, documentSelector))
+                .AddHandler(new CompletionHandler(_workspace, documentSelector))
+                .AddHandler(new DefinitionHandler(_workspace, documentSelector))
+                .AddHandler(new WorkspaceSymbolsHandler(_workspace))
+                .AddHandler(new DocumentHighlightHandler(_workspace, documentSelector))
+                .AddHandler(new DocumentSymbolsHandler(_workspace, documentSelector))
+                .AddHandler(new HoverHandler(_workspace, documentSelector))
+                .AddHandler(new SignatureHelpHandler(_workspace, documentSelector)));
 
-            _server.AddHandlers(
-                new TextDocumentSyncHandler(_workspace, registrationOptions),
-                new CompletionHandler(_workspace, registrationOptions),
-                new DefinitionHandler(_workspace, registrationOptions),
-                new WorkspaceSymbolsHandler(_workspace),
-                new DocumentHighlightHandler(_workspace, registrationOptions),
-                new DocumentSymbolsHandler(_workspace, registrationOptions),
-                new HoverHandler(_workspace, registrationOptions),
-                new SignatureHelpHandler(_workspace, registrationOptions));
-        }
-
-        private Task OnInitialized(ILanguageServer server, InitializeParams request, InitializeResult result)
-        {
-            _workspace = new LanguageServerWorkspace(_exportProvider, request.RootPath);
-
-            return Task.CompletedTask;
+            var diagnosticService = _workspace.Services.GetService<IDiagnosticService>();
+            _diagnosticNotifier = new DiagnosticNotifier(_server, diagnosticService);
         }
 
         public Task WaitForExit => _server.WaitForExit;
@@ -115,7 +105,6 @@ namespace ShaderTools.LanguageServer
             _server.Dispose();
 
             _logger.Dispose();
-            _loggerFactory.Dispose();
         }
     }
 }

@@ -3,8 +3,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using ShaderTools.CodeAnalysis;
 using ShaderTools.CodeAnalysis.Completion;
 using ShaderTools.CodeAnalysis.Shared.Extensions;
@@ -13,28 +13,33 @@ using CompletionList = OmniSharp.Extensions.LanguageServer.Protocol.Models.Compl
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class CompletionHandler : ICompletionHandler
+    internal sealed class CompletionHandler : CompletionHandlerBase
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly TextDocumentRegistrationOptions _registrationOptions;
+        private readonly DocumentSelector _documentSelector;
 
-        public CompletionHandler(LanguageServerWorkspace workspace, TextDocumentRegistrationOptions registrationOptions)
+        public CompletionHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _registrationOptions = registrationOptions;
+            _documentSelector = documentSelector;
         }
 
-        public CompletionRegistrationOptions GetRegistrationOptions()
+        protected override CompletionRegistrationOptions CreateRegistrationOptions(CompletionCapability capability, ClientCapabilities clientCapabilities)
         {
             return new CompletionRegistrationOptions
             {
-                DocumentSelector = _registrationOptions.DocumentSelector,
+                DocumentSelector = _documentSelector,
                 TriggerCharacters = new Container<string>(".", ":"),
                 ResolveProvider = false
             };
         }
 
-        public async Task<CompletionList> Handle(CompletionParams request, CancellationToken token)
+        public override Task<CompletionItem> Handle(CompletionItem request, CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public override async Task<CompletionList> Handle(CompletionParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -62,8 +67,6 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return completionItems;
         }
-
-        public void SetCapability(CompletionCapability capability) { }
 
         private static CompletionItem ConvertCompletionItem(Document document, Microsoft.CodeAnalysis.Completion.CompletionRules completionRules, CodeAnalysis.Completion.CompletionItem item)
         {

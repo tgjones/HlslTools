@@ -1,15 +1,14 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
-using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
+using OmniSharp.Extensions.LanguageServer.Protocol.Workspace;
 using ShaderTools.CodeAnalysis.NavigateTo;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class WorkspaceSymbolsHandler : IWorkspaceSymbolsHandler
+    internal sealed class WorkspaceSymbolsHandler : WorkspaceSymbolsHandlerBase
     {
         private readonly LanguageServerWorkspace _workspace;
 
@@ -18,7 +17,7 @@ namespace ShaderTools.LanguageServer.Handlers
             _workspace = workspace;
         }
 
-        public async Task<SymbolInformationContainer> Handle(WorkspaceSymbolParams request, CancellationToken token)
+        public override async Task<Container<SymbolInformation>> Handle(WorkspaceSymbolParams request, CancellationToken token)
         {
             var searchService = _workspace.Services.GetService<INavigateToSearchService>();
 
@@ -29,14 +28,12 @@ namespace ShaderTools.LanguageServer.Handlers
                 await Helpers.FindSymbolsInDocument(searchService, document, request.Query, token, symbols);
             }
 
-            return new SymbolInformationContainer(symbols);
+            return new Container<SymbolInformation>(symbols);
         }
 
-        public void SetCapability(WorkspaceSymbolCapability capability) { }
-
-        object IRegistration<object>.GetRegistrationOptions()
+        protected override WorkspaceSymbolRegistrationOptions CreateRegistrationOptions(WorkspaceSymbolCapability capability, ClientCapabilities clientCapabilities)
         {
-            return null;
+            return new WorkspaceSymbolRegistrationOptions();
         }
     }
 }

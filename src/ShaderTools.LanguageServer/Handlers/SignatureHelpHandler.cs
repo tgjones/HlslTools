@@ -1,33 +1,32 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using ShaderTools.LanguageServer.Services.SignatureHelp;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class SignatureHelpHandler : ISignatureHelpHandler
+    internal sealed class SignatureHelpHandler : SignatureHelpHandlerBase
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly TextDocumentRegistrationOptions _registrationOptions;
+        private readonly DocumentSelector _documentSelector;
 
-        public SignatureHelpHandler(LanguageServerWorkspace workspace, TextDocumentRegistrationOptions registrationOptions)
+        public SignatureHelpHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _registrationOptions = registrationOptions;
+            _documentSelector = documentSelector;
         }
 
-        public SignatureHelpRegistrationOptions GetRegistrationOptions()
+        protected override SignatureHelpRegistrationOptions CreateRegistrationOptions(SignatureHelpCapability capability, ClientCapabilities clientCapabilities)
         {
             return new SignatureHelpRegistrationOptions
             {
-                DocumentSelector = _registrationOptions.DocumentSelector,
-                TriggerCharacters = new Container<string>("(")
+                DocumentSelector = _documentSelector
             };
         }
 
-        public Task<SignatureHelp> Handle(SignatureHelpParams request, CancellationToken token)
+        public override Task<SignatureHelp> Handle(SignatureHelpParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -35,7 +34,5 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return signatureHelpService.GetResultAsync(document, position, token);
         }
-
-        public void SetCapability(SignatureHelpCapability capability) { }
     }
 }

@@ -1,41 +1,45 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
-using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server.Capabilities;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class TextDocumentSyncHandler : ITextDocumentSyncHandler 
+    internal sealed class TextDocumentSyncHandler : TextDocumentSyncHandlerBase 
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly TextDocumentRegistrationOptions _registrationOptions;
+        private readonly DocumentSelector _documentSelector;
 
-        public TextDocumentSyncKind Change { get; } = TextDocumentSyncKind.Incremental;
-
-        public TextDocumentSyncHandler(LanguageServerWorkspace workspace, TextDocumentRegistrationOptions registrationOptions)
+        public TextDocumentSyncHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _registrationOptions = registrationOptions;
+            _documentSelector = documentSelector;
         }
 
-        public TextDocumentChangeRegistrationOptions GetRegistrationOptions() => new TextDocumentChangeRegistrationOptions
+        protected override TextDocumentSyncRegistrationOptions CreateRegistrationOptions(SynchronizationCapability capability, ClientCapabilities clientCapabilities)
         {
-            DocumentSelector = _registrationOptions.DocumentSelector,
-            SyncKind = TextDocumentSyncKind.Incremental
-        };
-
-        public TextDocumentAttributes GetTextDocumentAttributes(Uri uri)
-        {
-            return new TextDocumentAttributes(uri, string.Empty);
+            return new TextDocumentSyncRegistrationOptions(TextDocumentSyncKind.Incremental)
+            {
+                DocumentSelector = _documentSelector,
+                Change = TextDocumentSyncKind.Incremental,
+            };
         }
 
-        public Task<Unit> Handle(DidChangeTextDocumentParams notification, CancellationToken cancellationToken)
+        public override TextDocumentAttributes GetTextDocumentAttributes(DocumentUri uri)
+        {
+            var document = _workspace.GetDocument(uri);
+
+            return new TextDocumentAttributes(
+                uri,
+                Helpers.ToLspLanguage(document.Language));
+        }
+
+        public override Task<Unit> Handle(DidChangeTextDocumentParams notification, CancellationToken cancellationToken)
         {
             var document = _workspace.GetDocument(notification.TextDocument.Uri);
 
@@ -55,7 +59,7 @@ namespace ShaderTools.LanguageServer.Handlers
             return Unit.Task;
         }
 
-        public Task<Unit> Handle(DidOpenTextDocumentParams notification, CancellationToken cancellationToken)
+        public override Task<Unit> Handle(DidOpenTextDocumentParams notification, CancellationToken cancellationToken)
         {
             _workspace.OpenDocument(
                 notification.TextDocument.Uri,
@@ -65,7 +69,7 @@ namespace ShaderTools.LanguageServer.Handlers
             return Unit.Task;
         }
 
-        public Task<Unit> Handle(DidCloseTextDocumentParams notification, CancellationToken cancellationToken)
+        public override Task<Unit> Handle(DidCloseTextDocumentParams notification, CancellationToken cancellationToken)
         {
             var document = _workspace.GetDocument(notification.TextDocument.Uri);
 
@@ -77,12 +81,6 @@ namespace ShaderTools.LanguageServer.Handlers
             return Unit.Task;
         }
 
-        public Task<Unit> Handle(DidSaveTextDocumentParams notification, CancellationToken cancellationToken) => Unit.Task;
-
-        public void SetCapability(SynchronizationCapability capability) { }
-
-        TextDocumentRegistrationOptions IRegistration<TextDocumentRegistrationOptions>.GetRegistrationOptions() => _registrationOptions;
-
-        TextDocumentSaveRegistrationOptions IRegistration<TextDocumentSaveRegistrationOptions>.GetRegistrationOptions() => new TextDocumentSaveRegistrationOptions();
+        public override Task<Unit> Handle(DidSaveTextDocumentParams notification, CancellationToken cancellationToken) => Unit.Task;
     }
 }

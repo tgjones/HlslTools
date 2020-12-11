@@ -4,6 +4,7 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
 using OmniSharp.Extensions.LanguageServer.Protocol.Server;
 using ShaderTools.CodeAnalysis;
@@ -65,7 +66,7 @@ namespace ShaderTools.LanguageServer
                     diagnosticsForThisFile = Array.Empty<OmniSharp.Extensions.LanguageServer.Protocol.Models.Diagnostic>();
                 }
 
-                _server.Document.PublishDiagnostics(new PublishDiagnosticsParams
+                _server.TextDocument.PublishDiagnostics(new PublishDiagnosticsParams
                 {
                     Uri = diagnosticUri,
                     Diagnostics = diagnosticsForThisFile
