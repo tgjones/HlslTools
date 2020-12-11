@@ -11,19 +11,13 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Update="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <AdditionalFiles Include="Syntax\Syntax.xml" />
   </ItemGroup>
-  <PropertyGroup>
-    <CodeGenerationRoslynVersion>0.6.1</CodeGenerationRoslynVersion>
-  </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\SyntaxGenerator\SyntaxGenerator.csproj" PrivateAssets="all" />
-    <PackageReference Include="CodeGeneration.Roslyn.BuildTime" Version="$(CodeGenerationRoslynVersion)" PrivateAssets="all" />
-    <DotNetCliToolReference Include="dotnet-codegen" Version="$(CodeGenerationRoslynVersion)" />
+    <ProjectReference Include="..\SyntaxGenerator\SyntaxGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
   </ItemGroup>
 </Project>

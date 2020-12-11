@@ -1,39 +1,25 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
-using CodeGeneration.Roslyn;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SyntaxGenerator.Model;
 using SyntaxGenerator.Writer;
 
 namespace SyntaxGenerator
 {
-    public class SyntaxCodeGenerator : IRichCodeGenerator
+    [Generator]
+    public class SyntaxCodeGenerator : ISourceGenerator
     {
-        private readonly string _syntaxFile;
-
-        public SyntaxCodeGenerator(AttributeData attributeData)
+        public void Initialize(GeneratorInitializationContext context)
         {
-            if (attributeData == null)
-                throw new ArgumentException(nameof(attributeData));
-
-            _syntaxFile = (string) attributeData.ConstructorArguments[0].Value;
+            // No initialization required
         }
 
-        public Task<SyntaxList<MemberDeclarationSyntax>> GenerateAsync(TransformationContext context, IProgress<Diagnostic> progress, CancellationToken cancellationToken)
+        public void Execute(GeneratorExecutionContext context)
         {
-            return Task.FromResult(new SyntaxList<MemberDeclarationSyntax>());
-        }
-
-        public Task<RichGenerationResult> GenerateRichAsync(TransformationContext context, IProgress<Diagnostic> progress, CancellationToken cancellationToken)
-        {
-            var fullSyntaxPath = Path.Combine(context.ProjectDirectory, _syntaxFile);
+            var fullSyntaxPath = context.AdditionalFiles[0].Path;
 
             FileStream fs = null;
 
@@ -44,8 +30,8 @@ namespace SyntaxGenerator
             catch (Exception ex) when (ex is DirectoryNotFoundException || ex is FileNotFoundException)
             {
                 var fnf = Diagnostic.Create("SCG_FileNotFound", "SyntaxCodeGenerator", $"The syntax file at {fullSyntaxPath} was not found.", DiagnosticSeverity.Error, DiagnosticSeverity.Error, true, 0);
-                progress.Report(fnf);
-                throw;
+                context.ReportDiagnostic(fnf);
+                return;
             }
 
             using (fs)
@@ -54,22 +40,13 @@ namespace SyntaxGenerator
                 var serializer = new XmlSerializer(typeof(Tree));
                 Tree tree = (Tree) serializer.Deserialize(reader);
 
-                cancellationToken.ThrowIfCancellationRequested();
+                context.CancellationToken.ThrowIfCancellationRequested();
 
                 var stringBuilder = new StringBuilder();
                 var writer = new StringWriter(stringBuilder);
                 SourceWriter.WriteAll(writer, tree);
 
-                var syntaxTree = CSharpSyntaxTree.ParseText(stringBuilder.ToString(), cancellationToken: cancellationToken);
-
-                var root = syntaxTree.GetCompilationUnitRoot();
-                var rgr = new RichGenerationResult
-                {
-                    Usings = root.Usings,
-                    Members = root.Members
-                };
-
-                return Task.FromResult(rgr);
+                context.AddSource("Syntax.generated.cs", stringBuilder.ToString());
             }
         }
     }
