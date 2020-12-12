@@ -93,7 +93,7 @@ export class SessionManager {
                 synchronize: {
                     configurationSection: LanguageIds
                 }
-            }
+            };
 
             this.languageServerClient =
                 new LanguageClient(

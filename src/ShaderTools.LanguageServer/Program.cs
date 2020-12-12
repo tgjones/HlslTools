@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -7,18 +8,12 @@ namespace ShaderTools.LanguageServer
 {
     internal static class Program
     {
-        /// <summary>
-        /// ShaderTools Language Server
-        /// </summary>
-        /// <param name="launchDebugger">Set whether to launch the debugger or not.</param>
-        /// <param name="logLevel">Logging level.</param>
-        /// <returns></returns>
-        public static async Task Main(bool launchDebugger = false, LogLevel logLevel = LogLevel.Warning)
+        public static async Task Main(string[] args)
         {
             // TODO: Make this an option.
             var logFilePath = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "ShaderTools");
 
-            if (launchDebugger)
+            if (args.Contains("--launch-debugger"))
             {
                 Debugger.Launch();
             }
@@ -30,12 +25,12 @@ namespace ShaderTools.LanguageServer
                     Console.OpenStandardInput(),
                     Console.OpenStandardOutput(),
                     logFilePath,
-                    logLevel);
+                    LogLevel.Warning);
             }
             catch (Exception ex)
             {
                 languageServerHost?.Dispose();
-                Console.Error.WriteLine(ex);
+                await Console.Error.WriteLineAsync(ex.ToString());
                 return;
             }
 
@@ -45,7 +40,7 @@ namespace ShaderTools.LanguageServer
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex);
+                await Console.Error.WriteLineAsync(ex.ToString());
                 return;
             }
             finally

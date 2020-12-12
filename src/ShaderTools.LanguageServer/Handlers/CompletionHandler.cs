@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -13,33 +14,23 @@ using CompletionList = OmniSharp.Extensions.LanguageServer.Protocol.Models.Compl
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class CompletionHandler : CompletionHandlerBase
+    internal sealed class CompletionHandler : ICompletionHandler
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly DocumentSelector _documentSelector;
+        private readonly CompletionRegistrationOptions _registrationOptions;
 
         public CompletionHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _documentSelector = documentSelector;
-        }
-
-        protected override CompletionRegistrationOptions CreateRegistrationOptions(CompletionCapability capability, ClientCapabilities clientCapabilities)
-        {
-            return new CompletionRegistrationOptions
+            _registrationOptions = new CompletionRegistrationOptions
             {
-                DocumentSelector = _documentSelector,
+                DocumentSelector = documentSelector,
                 TriggerCharacters = new Container<string>(".", ":"),
                 ResolveProvider = false
             };
         }
 
-        public override Task<CompletionItem> Handle(CompletionItem request, CancellationToken cancellationToken)
-        {
-            throw new NotSupportedException();
-        }
-
-        public override async Task<CompletionList> Handle(CompletionParams request, CancellationToken token)
+        public async Task<CompletionList> Handle(CompletionParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -162,5 +153,12 @@ namespace ShaderTools.LanguageServer.Handlers
                     throw new ArgumentOutOfRangeException(nameof(glyph));
             }
         }
+
+        CompletionRegistrationOptions IRegistration<CompletionRegistrationOptions>.GetRegistrationOptions()
+        {
+            return _registrationOptions;
+        }
+
+        void ICapability<CompletionCapability>.SetCapability(CompletionCapability capability) { }
     }
 }

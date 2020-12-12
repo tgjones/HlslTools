@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -9,26 +10,21 @@ using ShaderTools.CodeAnalysis.Shared.Extensions;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class DefinitionHandler : DefinitionHandlerBase
+    internal sealed class DefinitionHandler : IDefinitionHandler
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly DocumentSelector _documentSelector;
+        private readonly DefinitionRegistrationOptions _registrationOptions;
 
         public DefinitionHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _documentSelector = documentSelector;
-        }
-
-        protected override DefinitionRegistrationOptions CreateRegistrationOptions(DefinitionCapability capability, ClientCapabilities clientCapabilities)
-        {
-            return new DefinitionRegistrationOptions
+            _registrationOptions = new DefinitionRegistrationOptions
             {
-                DocumentSelector = _documentSelector
+                DocumentSelector = documentSelector
             };
         }
 
-        public override async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken token)
+        public async Task<LocationOrLocationLinks> Handle(DefinitionParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -54,5 +50,12 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return locations;
         }
+
+        DefinitionRegistrationOptions IRegistration<DefinitionRegistrationOptions>.GetRegistrationOptions()
+        {
+            return _registrationOptions;
+        }
+
+        void ICapability<DefinitionCapability>.SetCapability(DefinitionCapability capability) { }
     }
 }

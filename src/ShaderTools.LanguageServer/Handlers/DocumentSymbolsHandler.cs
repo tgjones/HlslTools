@@ -1,6 +1,7 @@
 ﻿using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -8,26 +9,21 @@ using ShaderTools.CodeAnalysis.NavigateTo;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class DocumentSymbolsHandler : DocumentSymbolHandlerBase
+    internal sealed class DocumentSymbolsHandler : IDocumentSymbolHandler
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly DocumentSelector _documentSelector;
+        private readonly DocumentSymbolRegistrationOptions _registrationOptions;
 
         public DocumentSymbolsHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _documentSelector = documentSelector;
-        }
-
-        protected override DocumentSymbolRegistrationOptions CreateRegistrationOptions(DocumentSymbolCapability capability, ClientCapabilities clientCapabilities)
-        {
-            return new DocumentSymbolRegistrationOptions
+            _registrationOptions = new DocumentSymbolRegistrationOptions
             {
-                DocumentSelector = _documentSelector,
+                DocumentSelector = documentSelector,
             };
         }
 
-        public override async Task<SymbolInformationOrDocumentSymbolContainer> Handle(DocumentSymbolParams request, CancellationToken token)
+        public async Task<SymbolInformationOrDocumentSymbolContainer> Handle(DocumentSymbolParams request, CancellationToken token)
         {
             var document = _workspace.GetDocument(request.TextDocument.Uri);
 
@@ -43,5 +39,12 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return new SymbolInformationOrDocumentSymbolContainer(symbolsResult);
         }
+
+        DocumentSymbolRegistrationOptions IRegistration<DocumentSymbolRegistrationOptions>.GetRegistrationOptions()
+        {
+            return _registrationOptions;
+        }
+
+        void ICapability<DocumentSymbolCapability>.SetCapability(DocumentSymbolCapability capability) { }
     }
 }

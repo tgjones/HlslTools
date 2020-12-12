@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -9,26 +10,21 @@ using Range = OmniSharp.Extensions.LanguageServer.Protocol.Models.Range;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class HoverHandler : HoverHandlerBase
+    internal sealed class HoverHandler : IHoverHandler
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly DocumentSelector _documentSelector;
+        private readonly HoverRegistrationOptions _registrationOptions;
 
         public HoverHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _documentSelector = documentSelector;
-        }
-
-        protected override HoverRegistrationOptions CreateRegistrationOptions(HoverCapability capability, ClientCapabilities clientCapabilities)
-        {
-            return new HoverRegistrationOptions
+            _registrationOptions = new HoverRegistrationOptions
             {
-                DocumentSelector = _documentSelector
+                DocumentSelector = documentSelector
             };
         }
 
-        public override async Task<Hover> Handle(HoverParams request, CancellationToken token)
+        public async Task<Hover> Handle(HoverParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -62,5 +58,9 @@ namespace ShaderTools.LanguageServer.Handlers
                 return new Hover();
             }
         }
+
+        HoverRegistrationOptions IRegistration<HoverRegistrationOptions>.GetRegistrationOptions() => _registrationOptions;
+
+        void ICapability<HoverCapability>.SetCapability(HoverCapability capability) { }
     }
 }

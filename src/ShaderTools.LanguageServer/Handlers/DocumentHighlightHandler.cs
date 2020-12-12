@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Threading;
 using System.Threading.Tasks;
+using OmniSharp.Extensions.LanguageServer.Protocol;
 using OmniSharp.Extensions.LanguageServer.Protocol.Client.Capabilities;
 using OmniSharp.Extensions.LanguageServer.Protocol.Document;
 using OmniSharp.Extensions.LanguageServer.Protocol.Models;
@@ -10,26 +11,21 @@ using ShaderTools.CodeAnalysis.ReferenceHighlighting;
 
 namespace ShaderTools.LanguageServer.Handlers
 {
-    internal sealed class DocumentHighlightHandler : DocumentHighlightHandlerBase
+    internal sealed class DocumentHighlightHandler : IDocumentHighlightHandler
     {
         private readonly LanguageServerWorkspace _workspace;
-        private readonly DocumentSelector _documentSelector;
+        private readonly DocumentHighlightRegistrationOptions _registrationOptions;
 
         public DocumentHighlightHandler(LanguageServerWorkspace workspace, DocumentSelector documentSelector)
         {
             _workspace = workspace;
-            _documentSelector = documentSelector;
-        }
-
-        protected override DocumentHighlightRegistrationOptions CreateRegistrationOptions(DocumentHighlightCapability capability, ClientCapabilities clientCapabilities)
-        {
-            return new DocumentHighlightRegistrationOptions
+            _registrationOptions = new DocumentHighlightRegistrationOptions
             {
-                DocumentSelector = _documentSelector
+                DocumentSelector = documentSelector
             };
         }
 
-        public override async Task<DocumentHighlightContainer> Handle(DocumentHighlightParams request, CancellationToken token)
+        public async Task<DocumentHighlightContainer> Handle(DocumentHighlightParams request, CancellationToken token)
         {
             var (document, position) = _workspace.GetLogicalDocument(request);
 
@@ -63,5 +59,12 @@ namespace ShaderTools.LanguageServer.Handlers
 
             return result;
         }
+
+        DocumentHighlightRegistrationOptions IRegistration<DocumentHighlightRegistrationOptions>.GetRegistrationOptions()
+        {
+            return _registrationOptions;
+        }
+
+        void ICapability<DocumentHighlightCapability>.SetCapability(DocumentHighlightCapability capability) { }
     }
 }
