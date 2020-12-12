@@ -1392,6 +1392,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 IntrinsicTypes.Float));
 
             allFunctions.AddRange(Create1(
+                "NonUniformResourceIndex",
+                "Marks an index as varying.",
+                IntrinsicTypes.AllNumericTypes,
+                "index", "The index."));
+
+            allFunctions.AddRange(Create1(
                 "normalize",
                 "Normalizes the specified floating-point vector according to x / length(x).",
                 IntrinsicTypes.AllFloatVectorTypes,
