@@ -178,5 +178,38 @@ void main()
 
             Assert.Equal(expectedMatchTypes, result);
         }
+
+        [Fact]
+        public void TestFunctionOverloadResolutionMultipleFunctionDeclarations()
+        {
+            var code = $@"
+void foo();
+void foo();
+
+void main()
+{{
+    foo();
+}}";
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(SourceText.From(code));
+            var syntaxTreeSource = syntaxTree.Root.ToFullString();
+            Assert.Equal(code, syntaxTreeSource);
+
+            var expression = (FunctionInvocationExpressionSyntax)syntaxTree.Root.ChildNodes
+                .OfType<FunctionDefinitionSyntax>()
+                .Where(x => x.Name.GetUnqualifiedName().Name.Text == "main")
+                .Select(x => ((ExpressionStatementSyntax)x.Body.Statements[0]).Expression)
+                .First();
+
+            var compilation = new CodeAnalysis.Hlsl.Compilation.Compilation(syntaxTree);
+            var semanticModel = compilation.GetSemanticModel();
+            var combinedDiagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToList();
+
+            foreach (var d in combinedDiagnostics)
+                Debug.WriteLine(d);
+
+            var invokedFunctionSymbol = (FunctionSymbol)semanticModel.GetSymbol(expression);
+
+            Assert.Equal("foo", invokedFunctionSymbol.Name);
+        }
     }
 }

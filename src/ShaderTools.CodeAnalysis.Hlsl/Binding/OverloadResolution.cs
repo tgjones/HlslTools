@@ -19,7 +19,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         {
             // >= 64 arguments will overflow the bitwise scoring system we use to compare arguments. So just give up...
             if (argumentTypes.Count >= (1 << Conversion.NumConversionBits))
-                return new OverloadResolutionResult<T>(null, null, Enumerable.Empty<OverloadResolutionCandidate<T>>());
+                return OverloadResolutionResult<T>.None;
 
             var candidates = new List<OverloadResolutionCandidate<T>>();
             foreach (var signature in signatures)

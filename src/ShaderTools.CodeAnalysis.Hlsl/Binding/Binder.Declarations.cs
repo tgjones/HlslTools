@@ -186,7 +186,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
 
             var boundReturnType = Bind(declaration.ReturnType, x => BindType(x, parent));
 
-            var functionSymbol = LocalSymbols.OfType<SourceFunctionSymbol>()
+            var functionSymbol = LocalSymbols
+                .SelectMany(x => x.Value)
+                .OfType<SourceFunctionSymbol>()
                 .FirstOrDefault(x => SyntaxFacts.HaveMatchingSignatures(
                     x.DefinitionSyntax as FunctionSyntax ?? x.DeclarationSyntaxes[0],
                     declaration));
