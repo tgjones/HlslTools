@@ -97,6 +97,7 @@ export class SessionManager {
 
             this.languageServerClient =
                 new LanguageClient(
+                    'hlsl-client',
                     'HLSL Tools Language Client',
                     serverOptions,
                     clientOptions);
