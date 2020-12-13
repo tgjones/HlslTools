@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.CodeAnalysis.Options;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -75,6 +76,45 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation.Options
                         value = subKey.GetValue(key, defaultValue: (bool) optionKey.Option.DefaultValue ? 1 : 0).Equals(1);
                         return true;
                     }
+                    else if (optionKey.Option.Type.IsEnum)
+                    {
+                        var untypedValue = subKey.GetValue(key, defaultValue: optionKey.Option.DefaultValue);
+                        switch (untypedValue)
+                        {
+                            case string stringValue:
+                                {
+                                    // Due to a previous bug we were accidentally serializing enums as strings. 
+                                    // Gracefully convert those back.
+                                    try
+                                    {
+                                        value = Enum.Parse(optionKey.Option.Type, stringValue);
+                                        return true;
+                                    }
+                                    catch (ArgumentException)
+                                    {
+                                        value = null;
+                                        return false;
+                                    }
+                                }
+
+                            case long longValue:
+                                value = longValue;
+                                return true;
+
+                            case int intValue:
+                                value = intValue;
+                                return true;
+
+                            default:
+                                if (untypedValue.GetType() == optionKey.Option.Type)
+                                {
+                                    // Only true if subKey.GetValue returned the default value
+                                    value = untypedValue;
+                                    return true;
+                                }
+                                throw new Exception("Enum value serialized as unexpected type:" + untypedValue.GetType());
+                        }
+                    }
                     else
                     {
                         // Otherwise we can just store normally
@@ -106,6 +146,19 @@ namespace ShaderTools.VisualStudio.LanguageServices.Implementation.Options
                     if (optionKey.Option.Type == typeof(bool))
                     {
                         subKey.SetValue(key, (bool) value ? 1 : 0, RegistryValueKind.DWord);
+                        return true;
+                    }
+                    else if (optionKey.Option.Type.IsEnum)
+                    {
+                        // If the enum is larger than an int, store as a QWord
+                        if (Marshal.SizeOf(Enum.GetUnderlyingType(optionKey.Option.Type)) > Marshal.SizeOf(typeof(int)))
+                        {
+                            subKey.SetValue(key, (long)value, RegistryValueKind.QWord);
+                        }
+                        else
+                        {
+                            subKey.SetValue(key, (int)value, RegistryValueKind.DWord);
+                        }
                         return true;
                     }
                     else
