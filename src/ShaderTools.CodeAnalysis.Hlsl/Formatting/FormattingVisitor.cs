@@ -287,21 +287,29 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         {
             Visit(node.Left);
 
-            switch (_options.Spacing.BinaryOperatorSpaces)
+            FormatTokenSpacing(node.OperatorToken, _options.Spacing.BinaryOperatorSpaces);
+
+            Visit(node.Right);
+        }
+
+        private void FormatTokenSpacing(SyntaxToken token, InsertSpaceOption spaceOption)
+        {
+            switch (spaceOption)
             {
-                case BinaryOperatorSpaces.RemoveSpaces:
-                    FormatToken(node.OperatorToken, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
+                case InsertSpaceOption.RemoveSpaces:
+                    FormatToken(token, LeadingFormattingOperation.RemoveLeadingWhitespace, TrailingFormattingOperation.RemoveTrailingWhitespace);
                     break;
 
-                case BinaryOperatorSpaces.InsertSpaces:
-                    FormatToken(node.OperatorToken, LeadingFormattingOperation.EnsureLeadingWhitespace, TrailingFormattingOperation.EnsureTrailingWhitespace);
+                case InsertSpaceOption.InsertSpaces:
+                    FormatToken(token, LeadingFormattingOperation.EnsureLeadingWhitespace, TrailingFormattingOperation.EnsureTrailingWhitespace);
+                    break;
+
+                case InsertSpaceOption.DoNotChange:
                     break;
 
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
-            Visit(node.Right);
         }
 
         public override void VisitBlock(BlockSyntax node)
@@ -411,10 +419,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         {
             FormatToken(node.ConstantBufferKeyword, LeadingFormattingOperation.EnsureLeadingNewline, TrailingFormattingOperation.EnsureTrailingWhitespace);
 
-            FormatToken(node.Name,
-                trailing: node.Register != null
-                    ? TrailingFormattingOperation.RemoveTrailingWhitespace
-                    : (TrailingFormattingOperation?) null);
+            FormatToken(node.Name);
 
             if (node.Register != null)
                 Visit(node.Register);
@@ -1257,7 +1262,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         {
             FormatToken(node.Identifier, 
                 LeadingFormattingOperation.EnsureLeadingWhitespace,
-                !(node.Initializer is StateInitializerSyntax)
+                (!(node.Initializer is StateInitializerSyntax) && node.Qualifiers.Count == 0)
                     ? TrailingFormattingOperation.RemoveTrailingWhitespace
                     : (TrailingFormattingOperation?) null);
 
@@ -1327,6 +1332,23 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
             if (shouldIndent)
                 Dedent();
+        }
+
+        private void FormatColonToken(SyntaxToken colonToken, InsertSpaceOption spaceBefore, bool spaceAfter)
+        {
+            Debug.Assert(colonToken.Kind == SyntaxKind.ColonToken);
+
+            FormatToken(colonToken,
+                spaceBefore switch
+                {
+                    InsertSpaceOption.RemoveSpaces => LeadingFormattingOperation.RemoveLeadingWhitespace,
+                    InsertSpaceOption.InsertSpaces => LeadingFormattingOperation.EnsureLeadingWhitespace,
+                    InsertSpaceOption.DoNotChange => null,
+                    _ => throw new InvalidOperationException()
+                },
+                spaceAfter
+                    ? TrailingFormattingOperation.EnsureTrailingWhitespace
+                    : TrailingFormattingOperation.RemoveTrailingWhitespace);
         }
 
         private void FormatColonToken(SyntaxToken colonToken, bool spaceBefore, bool spaceAfter)

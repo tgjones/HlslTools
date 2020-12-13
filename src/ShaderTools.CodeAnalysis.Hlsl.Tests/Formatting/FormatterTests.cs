@@ -1314,7 +1314,7 @@ cbuffer  cbPerObject : register(b0 )
                 Spacing = new SpacingOptions
                 {
                     InsertSpacesWithinParenthesesOfRegisterOrPackOffsetQualifiers = false,
-                    InsertSpaceBeforeColonForSemanticOrRegisterOrPackOffset = false,
+                    InsertSpaceBeforeColonForSemanticOrRegisterOrPackOffset = InsertSpaceOption.RemoveSpaces,
                     InsertSpaceAfterColonForSemanticOrRegisterOrPackOffset = false
                 }
             };
@@ -1336,7 +1336,7 @@ cbuffer cbPerObject:register(b0)
                 Spacing = new SpacingOptions
                 {
                     InsertSpacesWithinParenthesesOfRegisterOrPackOffsetQualifiers = true,
-                    InsertSpaceBeforeColonForSemanticOrRegisterOrPackOffset = true,
+                    InsertSpaceBeforeColonForSemanticOrRegisterOrPackOffset = InsertSpaceOption.InsertSpaces,
                     InsertSpaceAfterColonForSemanticOrRegisterOrPackOffset = true
                 }
             };
@@ -1534,7 +1534,7 @@ void main(int x, int y)
             {
                 Spacing = new SpacingOptions
                 {
-                    BinaryOperatorSpaces = BinaryOperatorSpaces.InsertSpaces
+                    BinaryOperatorSpaces = InsertSpaceOption.InsertSpaces
                 }
             };
             AssertFormat(before, @"
@@ -1547,7 +1547,7 @@ void main(int x, int y)
             {
                 Spacing = new SpacingOptions
                 {
-                    BinaryOperatorSpaces = BinaryOperatorSpaces.RemoveSpaces
+                    BinaryOperatorSpaces = InsertSpaceOption.RemoveSpaces
                 }
             };
             AssertFormat(before, @"

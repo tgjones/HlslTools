@@ -187,10 +187,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
           storageLocations: new OptionStorageLocation[] {
                 new LocalUserProfileStorageLocation(RegistryPath + nameof(SpaceAfterColonInBaseTypeDeclaration))});
 
-        public static Option<bool> SpaceBeforeColonInSemanticOrRegisterOrPackOffset { get; } = new Option<bool>(
+        public static Option<InsertSpaceOption> SpaceBeforeColonInSemanticOrRegisterOrPackOffset { get; } = new Option<InsertSpaceOption>(
           nameof(HlslFormattingOptions),
           nameof(SpaceBeforeColonInSemanticOrRegisterOrPackOffset),
-          defaultValue: true,
+          defaultValue: InsertSpaceOption.InsertSpaces,
           storageLocations: new OptionStorageLocation[] {
                 new LocalUserProfileStorageLocation(RegistryPath + nameof(SpaceBeforeColonInSemanticOrRegisterOrPackOffset))});
 
@@ -243,10 +243,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
           storageLocations: new OptionStorageLocation[] {
                 new LocalUserProfileStorageLocation(RegistryPath + nameof(SpaceAfterSemicolonsInForStatement))});
 
-        public static Option<BinaryOperatorSpaces> BinaryOperatorSpaces { get; } = new Option<BinaryOperatorSpaces>(
+        public static Option<InsertSpaceOption> BinaryOperatorSpaces { get; } = new Option<InsertSpaceOption>(
           nameof(HlslFormattingOptions),
           nameof(BinaryOperatorSpaces),
-          defaultValue: Formatting.BinaryOperatorSpaces.InsertSpaces,
+          defaultValue: Formatting.InsertSpaceOption.InsertSpaces,
           storageLocations: new OptionStorageLocation[] {
                 new LocalUserProfileStorageLocation(RegistryPath + nameof(BinaryOperatorSpaces))});
     }

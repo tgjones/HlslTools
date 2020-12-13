@@ -21,7 +21,6 @@
             </StackPanel>
         </DataTemplate>
 
-
         <DataTemplate DataType="{x:Type options:HeaderItemViewModel}">
             <TextBlock Text="{Binding Header}" Focusable="False"/>
         </DataTemplate>
@@ -37,6 +36,18 @@
                                         Margin="20, 0, 0, 0">
                     <TextBlock Text="{Binding Description}" Foreground="{Binding Path=Foreground, RelativeSource={RelativeSource AncestorType={x:Type ListViewItem}}}"/>
                 </RadioButton>
+            </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate DataType="{x:Type options:AbstractEnumRadioButtonsViewModel}">
+            <StackPanel Orientation="Vertical" Margin="20, 0, 0, 0">
+                <TextBlock Text="{Binding Description}" Focusable="False" />
+                <ListView x:Name="RadioButtons"
+                          SelectionMode="Single" 
+                          PreviewKeyDown="Options_PreviewKeyDown"
+                          SelectionChanged="Options_SelectionChanged"
+                          BorderThickness="0" Padding="0"
+                          ItemsSource="{Binding Items}"/>
             </StackPanel>
         </DataTemplate>
     </options:AbstractOptionPageControl.Resources>

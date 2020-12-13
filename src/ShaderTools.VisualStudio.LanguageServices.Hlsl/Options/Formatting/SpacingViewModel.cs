@@ -79,7 +79,7 @@ class cHemiAmbientLight : cAmbientLight
 struct VertexInput
 {
     float3 position : POSITION;
-    float3 normal : NORMAL;
+    float3 normal   : NORMAL;
 };
 
 cbuffer cbPerObject : register( b0 )
@@ -141,7 +141,7 @@ int main(int x, int y)
 
             Items.Add(new CheckBoxOptionViewModel(HlslFormattingOptions.SpaceBeforeColonInBaseTypeDeclaration, "Insert space before colon for base or interface in type declaration", BaseTypePreview, this, Options));
             Items.Add(new CheckBoxOptionViewModel(HlslFormattingOptions.SpaceAfterColonInBaseTypeDeclaration, "Insert space after colon for base or interface in type declaration", BaseTypePreview, this, Options));
-            Items.Add(new CheckBoxOptionViewModel(HlslFormattingOptions.SpaceBeforeColonInSemanticOrRegisterOrPackOffset, "Insert space before colon for semantic or register or packoffset", SemanticPreview, this, Options));
+            Items.Add(new EnumRadioButtonsViewModel<InsertSpaceOption>("Insert space before colon for semantic or register or packoffset", SemanticPreview, "spacebeforecolon", HlslFormattingOptions.SpaceBeforeColonInSemanticOrRegisterOrPackOffset, this, Options));
             Items.Add(new CheckBoxOptionViewModel(HlslFormattingOptions.SpaceAfterColonInSemanticOrRegisterOrPackOffset, "Insert space after colon for semantic or register or packoffset", SemanticPreview, this, Options));
             Items.Add(new CheckBoxOptionViewModel(HlslFormattingOptions.SpaceBeforeComma, "Insert space before comma", CommaDotPreview, this, Options));
             Items.Add(new CheckBoxOptionViewModel(HlslFormattingOptions.SpaceAfterComma, "Insert space after comma", CommaDotPreview, this, Options));
@@ -152,8 +152,8 @@ int main(int x, int y)
 
             Items.Add(new HeaderItemViewModel { Header = "Set spacing for operators" });
 
-            Items.Add(new RadioButtonViewModel<BinaryOperatorSpaces>("Remove spaces before and after binary operators", BinaryOperatorSpacesPreview, "binaryspaces", BinaryOperatorSpaces.RemoveSpaces, HlslFormattingOptions.BinaryOperatorSpaces, this, Options));
-            Items.Add(new RadioButtonViewModel<BinaryOperatorSpaces>("Insert space before and after binary operators", BinaryOperatorSpacesPreview, "binaryspaces", BinaryOperatorSpaces.InsertSpaces, HlslFormattingOptions.BinaryOperatorSpaces, this, Options));
+            Items.Add(new RadioButtonViewModel<InsertSpaceOption>("Remove spaces before and after binary operators", BinaryOperatorSpacesPreview, "binaryspaces", InsertSpaceOption.RemoveSpaces, HlslFormattingOptions.BinaryOperatorSpaces, this, Options));
+            Items.Add(new RadioButtonViewModel<InsertSpaceOption>("Insert space before and after binary operators", BinaryOperatorSpacesPreview, "binaryspaces", InsertSpaceOption.InsertSpaces, HlslFormattingOptions.BinaryOperatorSpaces, this, Options));
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel;
 
 namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 {
@@ -36,7 +37,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
 
         public bool InsertSpaceBeforeColonForBaseOrInterfaceInTypeDeclaration { get; set; } = true;
         public bool InsertSpaceAfterColonForBaseOrInterfaceInTypeDeclaration { get; set; } = true;
-        public bool InsertSpaceBeforeColonForSemanticOrRegisterOrPackOffset { get; set; } = true;
+        public InsertSpaceOption InsertSpaceBeforeColonForSemanticOrRegisterOrPackOffset { get; set; } = InsertSpaceOption.InsertSpaces;
         public bool InsertSpaceAfterColonForSemanticOrRegisterOrPackOffset { get; set; } = true;
         public bool InsertSpaceBeforeComma { get; set; }
         public bool InsertSpaceAfterComma { get; set; } = true;
@@ -45,7 +46,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         public bool InsertSpaceBeforeSemicolonInForStatement { get; set; }
         public bool InsertSpaceAfterSemicolonInForStatement { get; set; } = true;
 
-        public BinaryOperatorSpaces BinaryOperatorSpaces { get; set; } = BinaryOperatorSpaces.InsertSpaces;
+        public InsertSpaceOption BinaryOperatorSpaces { get; set; } = InsertSpaceOption.InsertSpaces;
     }
 
     public class NewLinesOptions
@@ -96,9 +97,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Formatting
         DoNotMove
     }
 
-    public enum BinaryOperatorSpaces
+    public enum InsertSpaceOption
     {
-        RemoveSpaces,
-        InsertSpaces
+        [Description("Remove spaces")]
+        RemoveSpaces = 0,
+
+        [Description("Insert spaces")]
+        InsertSpaces = 1,
+
+        [Description("Do not change")]
+        DoNotChange = 2,
     }
 }

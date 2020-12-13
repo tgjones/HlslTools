@@ -78,12 +78,14 @@
     <Compile Include="Notification\VSNotificationServiceFactory.cs" />
     <Compile Include="Options\EditorconfigOptions.cs" />
     <Compile Include="Options\UI\AbstractCheckBoxViewModel.cs" />
+    <Compile Include="Options\UI\AbstractEnumRadioButtonsViewModel.cs" />
     <Compile Include="Options\UI\AbstractOptionPage.cs" />
     <Compile Include="Options\UI\AbstractOptionPageControl.cs" />
     <Compile Include="Options\LanguageSettingsPersister.cs" />
     <Compile Include="Options\LocalUserRegistryOptionPersister.cs" />
     <Compile Include="Options\UI\AbstractRadioButtonViewModel.cs" />
     <Compile Include="Options\UI\CheckBoxOptionViewModel.cs" />
+    <Compile Include="Options\UI\EnumRadioButtonsViewModel.cs" />
     <Compile Include="Options\UI\HeaderItemViewModel.cs" />
     <Compile Include="Options\UI\OptionBinding.cs" />
     <Compile Include="Options\UI\OptionLogger.cs" />
