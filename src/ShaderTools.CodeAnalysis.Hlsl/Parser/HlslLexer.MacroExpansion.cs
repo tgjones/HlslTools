@@ -14,9 +14,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
     {
         private readonly Stack<DefineDirectiveTriviaSyntax> _currentlyExpandingMacros = new Stack<DefineDirectiveTriviaSyntax>();
 
-        private bool TryExpandMacro(SyntaxToken token, IMacroExpansionLexer lexer, out List<SyntaxToken> expandedTokens)
+        private bool TryExpandMacro(
+            SyntaxToken token, 
+            IMacroExpansionLexer lexer, 
+            out List<SyntaxToken> expandedTokens,
+            out MacroReference macroReference)
         {
             expandedTokens = null;
+            macroReference = null;
 
             // First, check if this token might be a macro.
             DefineDirectiveTriviaSyntax directive;
@@ -27,7 +32,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             if (_currentlyExpandingMacros.Contains(directive))
                 return false;
 
-            MacroReference macroReference;
             List<SyntaxToken> macroBody;
             SyntaxToken lastToken;
             switch (directive.Kind)
@@ -85,6 +89,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     throw new ArgumentOutOfRangeException();
             }
 
+            var localMacroReference = macroReference;
             switch (_mode)
             {
                 case LexerMode.Syntax:
@@ -109,8 +114,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                             .Select((x, i) =>
                             {
                                 var result = x
-                                    .WithOriginalMacroReference(macroReference, i == 0)
-                                    .WithSpan(macroReference.SourceRange, macroReference.FileSpan);
+                                    .WithOriginalMacroReference(localMacroReference, i == 0)
+                                    .WithSpan(localMacroReference.SourceRange, localMacroReference.FileSpan);
                                 if (i == 0)
                                     result = result.WithLeadingTrivia(token.LeadingTrivia);
                                 if (i == localExpandedTokens.Count - 1)
@@ -125,7 +130,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
                 case LexerMode.Directive: // If we're in the middle of parsing a directive, don't expand macro references.
                     expandedTokens = macroBody
-                        .Select((x, i) => x.WithOriginalMacroReference(macroReference, i == 0).WithSpan(macroReference.SourceRange, macroReference.FileSpan))
+                        .Select((x, i) => x.WithOriginalMacroReference(localMacroReference, i == 0).WithSpan(localMacroReference.SourceRange, localMacroReference.FileSpan))
                         .ToList();
                     break;
 
@@ -144,7 +149,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             while ((token = lexer.GetNextToken()) != null)
             {
                 List<SyntaxToken> expandedTokens;
-                if (TryExpandMacro(token, lexer, out expandedTokens))
+                if (TryExpandMacro(token, lexer, out expandedTokens, out _))
                     result.AddRange(expandedTokens);
                 else
                     result.Add(token);

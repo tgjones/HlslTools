@@ -223,6 +223,23 @@ float g = FOO(3, 4);
         }
 
         [Fact]
+        public void TestEmptyFunctionLikeDefine()
+        {
+            const string text = @"
+#define FOO(a)
+FOO(1)
+";
+            var node = Parse(text);
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
+
+            Assert.Equal(1, node.ChildNodes.Count);
+            Assert.Equal(SyntaxKind.EndOfFileToken, ((SyntaxNode)node.ChildNodes[0]).Kind);
+        }
+
+        [Fact]
         public void TestNestedFunctionLikeDefines()
         {
             const string text = @"

@@ -139,7 +139,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             if (token.Kind == SyntaxKind.IdentifierToken && ExpandMacros)
             {
                 List<SyntaxToken> expandedTokens;
-                if (TryExpandMacro(token, new BaseMacroExpansionLexer(this), out expandedTokens))
+                if (TryExpandMacro(token, new BaseMacroExpansionLexer(this), out expandedTokens, out var macroReference))
                 {
                     if (expandedTokens.Count == 0) // Can happen for macros with empty body.
                     {
@@ -148,9 +148,29 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         token = Lex(mode);
 
                         var leadingTrivia = new List<SyntaxNode>();
-                        leadingTrivia.AddRange(originalToken.LeadingTrivia);
-                        leadingTrivia.Add(new SyntaxTrivia(SyntaxKind.EmptyExpandedMacroTrivia, originalToken.Text, originalToken.SourceRange, originalToken.FileSpan, ImmutableArray<Diagnostic>.Empty));
-                        leadingTrivia.AddRange(originalToken.TrailingTrivia);
+
+                        void VisitNode(SyntaxNode nodeToVisit)
+                        {
+                            if (nodeToVisit is SyntaxToken tokenToVisit)
+                            {
+                                leadingTrivia.AddRange(tokenToVisit.LeadingTrivia);
+                                leadingTrivia.Add(new SyntaxTrivia(SyntaxKind.EmptyExpandedMacroTrivia, tokenToVisit.Text, macroReference.SourceRange, macroReference.FileSpan, ImmutableArray<Diagnostic>.Empty));
+                                leadingTrivia.AddRange(tokenToVisit.TrailingTrivia);
+                            }
+                            else
+                            {
+                                foreach (var childToVisit in nodeToVisit.ChildNodes)
+                                {
+                                    VisitNode((SyntaxNode)childToVisit);
+                                }
+                            }
+                        }
+
+                        foreach (var originalNode in macroReference.OriginalNodes)
+                        {
+                            VisitNode(originalNode);
+                        }
+                        
                         leadingTrivia.AddRange(token.LeadingTrivia);
                         token = token.WithLeadingTrivia(leadingTrivia.ToImmutableArray());
                     }
