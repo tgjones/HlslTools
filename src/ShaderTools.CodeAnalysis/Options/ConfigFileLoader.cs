@@ -31,6 +31,13 @@ namespace ShaderTools.CodeAnalysis.Options
                 foreach (var preprocessorDefinition in configFile.HlslPreprocessorDefinitions)
                     hlslPreprocessorDefinitions[preprocessorDefinition.Key] = preprocessorDefinition.Value;
 
+            var hlslVirtualDirectoryMappings = new Dictionary<string, string>();
+            foreach (var configFile in configFiles.Reverse())
+                foreach (var virtualDirectoryMapping in configFile.HlslVirtualDirectoryMappings)
+                    hlslVirtualDirectoryMappings[virtualDirectoryMapping.Key] = virtualDirectoryMapping.Value
+                        .Replace('/', Path.DirectorySeparatorChar)
+                        .Replace('\\', Path.DirectorySeparatorChar);
+
             return new ConfigFile
             {
                 HlslPreprocessorDefinitions = hlslPreprocessorDefinitions,
@@ -38,7 +45,9 @@ namespace ShaderTools.CodeAnalysis.Options
                 HlslAdditionalIncludeDirectories = configFiles
                     .SelectMany(x => x.GetAbsoluteHlslAdditionalIncludeDirectories())
                     .Distinct()
-                    .ToList()
+                    .ToList(),
+
+                HlslVirtualDirectoryMappings = hlslVirtualDirectoryMappings,
             };
         }
 

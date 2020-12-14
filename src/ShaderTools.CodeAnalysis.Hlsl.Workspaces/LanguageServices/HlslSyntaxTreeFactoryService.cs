@@ -30,6 +30,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.LanguageServices
 
             options.AdditionalIncludeDirectories.AddRange(configFile.HlslAdditionalIncludeDirectories);
 
+            foreach (var kvp in configFile.HlslVirtualDirectoryMappings)
+                options.VirtualDirectoryMappings.Add(kvp.Key, kvp.Value);
+
             return SyntaxFactory.ParseSyntaxTree(
                 file,
                 options,

@@ -125,9 +125,8 @@ but may be of interest to language nerds, so it's included in the main extension
 
 ### Custom preprocessor definitions and additional include directories
 
-HLSL Tools will, by default, only use the directory containing the source file to search for `#include` files.
-
-You can customise this, and add additional preprocessor definitions, by creating a file named `shadertoolsconfig.json`:
+HLSL Tools has a built-in preprocessor to handle `#define` and `#include` directives. The behavior
+of this preprocessor can be customised by creating a file named `shadertoolsconfig.json`:
 
 ``` json
 {
@@ -140,9 +139,20 @@ You can customise this, and add additional preprocessor definitions, by creating
     "C:\\Code\\MyDirectoryB",
     ".",
     "..\\RelativeDirectory"
-  ]
+  ],
+  "hlsl.virtualDirectoryMappings": {
+    "/Project": "C:\\MyProject\\Shaders"
+  }
 }
 ```
+
+* `hlsl.preprocessorDefinitions`: It's normal for additional preprocessor definitions to be defined
+  as part of a project build. In some cases, the shader won't compile correcty without these. To handle
+  this, you can add those additional preprocessor definitions here.
+* `hlsl.additionalIncludeDirectories`: HLSL Tools will, by default, only use the directory containing 
+  the source file to search for `#include` files. Additional include directories can be added here.
+* `hlsl.virtualDirectoryMappings`: Use this to configure the virtual directory mappings required by
+  Unreal Engine. The virtual directory (`/Project` in the example above) must start with a forward slash or backslash.
 
 HLSL Tools will look for a file named `shadertoolsconfig.json` in the directory of an opened file,
 and in every parent directory. A search for `shadertoolsconfig.json` files will stop when the drive

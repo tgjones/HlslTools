@@ -6,5 +6,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl
     {
         public Dictionary<string, string> PreprocessorDefines { get; } = new Dictionary<string, string>();
         public List<string> AdditionalIncludeDirectories { get; } = new List<string>();
+        public Dictionary<string, string> VirtualDirectoryMappings { get; } = new Dictionary<string, string>();
     }
 }

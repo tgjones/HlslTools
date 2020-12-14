@@ -50,6 +50,21 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                 .Replace('/', Path.DirectorySeparatorChar)
                 .Replace('\\', Path.DirectorySeparatorChar);
 
+            // Resolve virtual directory mappings.
+            if (includeFilename.StartsWith(Path.DirectorySeparatorChar.ToString()))
+            {
+                var secondSeparatorIndex = includeFilename.IndexOf(Path.DirectorySeparatorChar, 1);
+                if (secondSeparatorIndex != -1)
+                {
+                    var virtualDirectory = includeFilename.Substring(0, secondSeparatorIndex);
+                    var remainingPath = includeFilename.Substring(virtualDirectory.Length + 1);
+                    if (_parserOptions.VirtualDirectoryMappings.TryGetValue(virtualDirectory, out var realDirectory))
+                    {
+                        includeFilename = Path.Combine(realDirectory, remainingPath);
+                    }
+                }
+            }
+
             // Check for invalid path chars.
             if (includeFilename.Any(x => Path.GetInvalidPathChars().Contains(x)))
                 return null;

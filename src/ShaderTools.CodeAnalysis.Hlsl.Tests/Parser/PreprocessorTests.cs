@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
 using ShaderTools.CodeAnalysis.Hlsl.Diagnostics;
@@ -942,10 +943,44 @@ float foo;
 DECL(i, 2);
 float bar;
 ";
-            var node = Parse(text, new InMemoryFileSystem(new Dictionary<string, string>
+            var node = Parse(text, null, new InMemoryFileSystem(new Dictionary<string, string>
             {
                 { "foo.hlsl", fooText }
             }));
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
+        }
+
+        [Fact]
+        public void TestIncludeVirtualPath()
+        {
+            const string fooText = @"
+#define DECL(n, v) int n = v
+";
+            const string text = @"
+float foo;
+#define FOO
+#include ""/Project/foo.hlsl""
+DECL(i, 2);
+float bar;
+";
+            var node = Parse(
+                text,
+                new HlslParseOptions
+                {
+                    VirtualDirectoryMappings =
+                    {
+                        { Path.DirectorySeparatorChar + "Project", "test" }
+                    }
+                },
+                new InMemoryFileSystem(new Dictionary<string, string>
+                {
+                    { Path.Combine("test", "foo.hlsl"), fooText }
+                }));
 
             TestRoundTripping(node, text);
             VerifyDirectivesSpecial(node,
@@ -960,7 +995,7 @@ float bar;
             const string text = @"
 #include <foo.hlsl>
 ";
-            var node = Parse(text, new InMemoryFileSystem(new Dictionary<string, string>()));
+            var node = Parse(text, null, new InMemoryFileSystem(new Dictionary<string, string>()));
 
             TestRoundTripping(node, text, false);
             VerifyErrorCode(node, DiagnosticId.IncludeNotFound);
@@ -1009,9 +1044,9 @@ float bar;
             return SyntaxFactory.ParseAllTokens(new SourceFile(SourceText.From(text)));
         }
 
-        private static CompilationUnitSyntax Parse(string text, IIncludeFileSystem fileSystem = null)
+        private static CompilationUnitSyntax Parse(string text, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null)
         {
-            return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text), "__Root__.hlsl"), fileSystem);
+            return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text), "__Root__.hlsl"), options, fileSystem);
         }
 
         private static void TestRoundTripping(CompilationUnitSyntax node, string text, bool disallowErrors = true)

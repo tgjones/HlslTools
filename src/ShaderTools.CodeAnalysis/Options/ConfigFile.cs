@@ -20,6 +20,9 @@ namespace ShaderTools.CodeAnalysis.Options
         [DataMember(Name = "hlsl.additionalIncludeDirectories")]
         public List<string> HlslAdditionalIncludeDirectories { get; set; } = new List<string>();
 
+        [DataMember(Name = "hlsl.virtualDirectoryMappings")]
+        public Dictionary<string, string> HlslVirtualDirectoryMappings { get; set; } = new Dictionary<string, string>();
+
         [OnDeserialized]
         private void OnDeserialized(StreamingContext c)
         {
@@ -28,6 +31,9 @@ namespace ShaderTools.CodeAnalysis.Options
 
             if (HlslAdditionalIncludeDirectories == null)
                 HlslAdditionalIncludeDirectories = new List<string>();
+
+            if (HlslVirtualDirectoryMappings == null)
+                HlslVirtualDirectoryMappings = new Dictionary<string, string>();
         }
 
         /// <summary>
