@@ -286,7 +286,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 IntrinsicTypes.Uint));
 
             allFunctions.Add(Create0(
-                "InstanceId",
+                "InstanceID",
                 "The user-provided identifier for the instance on the bottom-level acceleration structure instance within the top-level structure.",
                 IntrinsicTypes.Uint));
 
