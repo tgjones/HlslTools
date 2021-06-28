@@ -330,6 +330,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 "Returns the value passed as the HitKind parameter to ReportHit.",
                 IntrinsicTypes.Uint));
 
+            allFunctions.AddRange(Create2(
+                "SetMeshOutputCounts",
+                "At the beginning of the shader the implementation internally sets a count of vertices and primitives to be exported from a threadgroup to 0. It means that if a mesh shader returns without calling this function, it will not output any mesh. This function sets the actual number of outputs from the threadgroup.",
+                new[] { IntrinsicTypes.Uint },
+                "numVertices", "The number of vertices.",
+                "numPrimitives", "The number of primitives.",
+                new[] { IntrinsicTypes.Void }));
+
             return allFunctions;
         }
     }

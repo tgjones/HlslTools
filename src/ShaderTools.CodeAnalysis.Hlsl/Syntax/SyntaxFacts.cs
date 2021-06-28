@@ -189,6 +189,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return "if";
                 case SyntaxKind.IncludeKeyword:
                     return "include";
+                case SyntaxKind.IndicesKeyword:
+                    return "indices";
                 case SyntaxKind.InKeyword:
                     return "in";
                 case SyntaxKind.InlineKeyword:
@@ -219,8 +221,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return "pack_matrix";
                 case SyntaxKind.PackoffsetKeyword:
                     return "packoffset";
+                case SyntaxKind.PayloadKeyword:
+                    return "payload";
                 case SyntaxKind.PragmaKeyword:
                     return "pragma";
+                case SyntaxKind.PrimitivesKeyword:
+                    return "primitives";
                 case SyntaxKind.RegisterKeyword:
                     return "register";
                 case SyntaxKind.ReturnKeyword:
@@ -243,6 +249,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return "undef";
                 case SyntaxKind.UNormKeyword:
                     return "unorm";
+                case SyntaxKind.VerticesKeyword:
+                    return "vertices";
                 case SyntaxKind.VoidKeyword:
                     return "void";
                 case SyntaxKind.VolatileKeyword:
@@ -1248,6 +1256,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Half4x3Keyword:
                 case SyntaxKind.Half4x4Keyword:
                 case SyntaxKind.IfKeyword:
+                case SyntaxKind.IndicesKeyword:
                 case SyntaxKind.InKeyword:
                 case SyntaxKind.InlineKeyword:
                 case SyntaxKind.InoutKeyword:
@@ -1392,10 +1401,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.OutputPatchKeyword:
                 case SyntaxKind.PackoffsetKeyword:
                 case SyntaxKind.PassKeyword:
+                case SyntaxKind.PayloadKeyword:
                 case SyntaxKind.PixelShaderKeyword:
                 case SyntaxKind.PointKeyword:
                 case SyntaxKind.PointStreamKeyword:
                 case SyntaxKind.PreciseKeyword:
+                case SyntaxKind.PrimitivesKeyword:
                 case SyntaxKind.RasterizerOrderedBufferKeyword:
                 case SyntaxKind.RasterizerOrderedByteAddressBufferKeyword:
                 case SyntaxKind.RasterizerOrderedStructuredBufferKeyword:
@@ -1479,6 +1490,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Uint4x4Keyword:
                 case SyntaxKind.VectorKeyword:
                 case SyntaxKind.VertexShaderKeyword:
+                case SyntaxKind.VerticesKeyword:
                 case SyntaxKind.VolatileKeyword:
                 case SyntaxKind.VoidKeyword:
                 case SyntaxKind.WhileKeyword:
@@ -2360,6 +2372,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return SyntaxKind.PixelShaderKeyword;
                 case "VertexShader":
                     return SyntaxKind.VertexShaderKeyword;
+                case "indices":
+                    return SyntaxKind.IndicesKeyword;
+                case "vertices":
+                    return SyntaxKind.VerticesKeyword;
+                case "payload":
+                    return SyntaxKind.PayloadKeyword;
+                case "primitives":
+                    return SyntaxKind.PrimitivesKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -2505,6 +2525,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     switch (token.ContextualKind)
                     {
                         case SyntaxKind.LineKeyword:
+                        case SyntaxKind.IndicesKeyword:
+                        case SyntaxKind.PayloadKeyword:
+                        case SyntaxKind.PrimitivesKeyword:
+                        case SyntaxKind.VerticesKeyword:
                             return true;
 
                         default:
