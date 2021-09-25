@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
@@ -46,24 +47,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
         {
             SourceText text;
 
+            // Resolve virtual directory mappings.
+            includeFilename = MapIncludeWithVirtualDirectoryToRealPath(includeFilename, _parserOptions.VirtualDirectoryMappings) ?? includeFilename;
+
             includeFilename = includeFilename
                 .Replace('/', Path.DirectorySeparatorChar)
                 .Replace('\\', Path.DirectorySeparatorChar);
-
-            // Resolve virtual directory mappings.
-            if (includeFilename.StartsWith(Path.DirectorySeparatorChar.ToString()))
-            {
-                var secondSeparatorIndex = includeFilename.IndexOf(Path.DirectorySeparatorChar, 1);
-                if (secondSeparatorIndex != -1)
-                {
-                    var virtualDirectory = includeFilename.Substring(0, secondSeparatorIndex);
-                    var remainingPath = includeFilename.Substring(virtualDirectory.Length + 1);
-                    if (_parserOptions.VirtualDirectoryMappings.TryGetValue(virtualDirectory, out var realDirectory))
-                    {
-                        includeFilename = Path.Combine(realDirectory, remainingPath);
-                    }
-                }
-            }
 
             // Check for invalid path chars.
             if (includeFilename.Any(x => Path.GetInvalidPathChars().Contains(x)))
@@ -98,6 +87,58 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                 var testFilename = Path.Combine(includeDirectory, includeFilename);
                 if (_fileSystem.TryGetFile(testFilename, out text))
                     return new SourceFile(text, currentFile, testFilename);
+            }
+
+            return null;
+        }
+
+        private bool IncludeIsUsingVirtualDirectory(string includeFileName)
+        {
+            if (!includeFileName.StartsWith("/"))
+            {
+                return false;
+            }
+
+            if (includeFileName.Contains(".."))
+            {
+                return false;
+            }
+
+            if (includeFileName.Contains("\\"))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private string GetDirectoryName(string path)
+        {
+            var index = path.LastIndexOf(Path.AltDirectorySeparatorChar);
+            return path.Substring(0, index > 0 ? index : 0);
+        }
+
+        private string MapIncludeWithVirtualDirectoryToRealPath(string includeFilename, Dictionary<string, string> virtualDirectoryMappings)
+        {
+            if (!IncludeIsUsingVirtualDirectory(includeFilename))
+            {
+                return null;
+            }
+
+            var parentVirtualDirectoryPath = GetDirectoryName(includeFilename);
+            var relativeVirtualDirectoryPath = Path.GetFileName(includeFilename);
+
+            while (!string.IsNullOrEmpty(parentVirtualDirectoryPath))
+            {
+                if (virtualDirectoryMappings.TryGetValue(parentVirtualDirectoryPath, out string realDirectory))
+                {
+                    return Path.Combine(realDirectory, relativeVirtualDirectoryPath);
+                }
+                else
+                {
+                    relativeVirtualDirectoryPath = Path.Combine(Path.GetFileName(parentVirtualDirectoryPath), relativeVirtualDirectoryPath);
+                    parentVirtualDirectoryPath = GetDirectoryName(parentVirtualDirectoryPath);
+                }
             }
 
             return null;
