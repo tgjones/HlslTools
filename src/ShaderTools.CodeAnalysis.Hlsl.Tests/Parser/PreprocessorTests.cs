@@ -974,7 +974,7 @@ float bar;
                 {
                     VirtualDirectoryMappings =
                     {
-                        { Path.AltDirectorySeparatorChar + "Project", "test" }
+                        { Path.DirectorySeparatorChar + "Project", "test" }
                     }
                 },
                 new InMemoryFileSystem(new Dictionary<string, string>
