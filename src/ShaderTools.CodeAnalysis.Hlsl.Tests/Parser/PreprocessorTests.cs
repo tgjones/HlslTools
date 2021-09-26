@@ -514,7 +514,7 @@ Texture2D MyTex < TEX_COMP_FULL(dxt5, true) >;
             Assert.Equal(SyntaxKind.EqualsValueClause, annotation1.Declaration.Variables[0].Initializer.Kind);
             Assert.Equal(SyntaxKind.StringLiteralExpression, ((EqualsValueClauseSyntax) annotation1.Declaration.Variables[0].Initializer).Value.Kind);
             Assert.Equal(1, ((StringLiteralExpressionSyntax)((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens.Count);
-            Assert.Equal("\"dxt5\"", ((StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax) annotation1.Declaration.Variables[0].Initializer).Value).Tokens[0].Text);
+            Assert.Equal("\"dxt5\"", ((StringLiteralExpressionSyntax) ((EqualsValueClauseSyntax)annotation1.Declaration.Variables[0].Initializer).Value).Tokens[0].Text);
 
             var annotation2 = varDeclStatement.Declaration.Variables[0].Annotations.Annotations[1];
             Assert.Equal(SyntaxKind.PredefinedScalarType, annotation2.Declaration.Type.Kind);
