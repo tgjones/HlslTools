@@ -974,7 +974,7 @@ float bar;
                 {
                     VirtualDirectoryMappings =
                     {
-                        { Path.DirectorySeparatorChar + "Project", "test" }
+                        { Path.AltDirectorySeparatorChar + "Project", "test" }
                     }
                 },
                 new InMemoryFileSystem(new Dictionary<string, string>
@@ -1035,6 +1035,102 @@ float bar;
                 new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"warning(once: 1000)" },
                 new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"pack_matrix(row_major)" },
                 new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive, Text = @"something custom" });
+        }
+
+        [Fact]
+        public void HandlesVirtualDirectoryMapping_IncludeIsInRootOfVirtualDirectory_IncludeHandledSuccessfully()
+        {
+            var includedFileContents = "int Get() { return 42; }";
+
+            var virtualMapping = "/Virtual";
+            var realDirectory = "C:\\Real";
+            var includeDirective = $"{virtualMapping}/Include.hlsl";
+            var realIncludePath = $"{realDirectory}\\Include.hlsl";
+
+            var sourceFileContents = $"#include \"{ includeDirective }\"";
+
+            var sourceFile = new SourceFile(SourceText.From(sourceFileContents));
+
+            var mockFileSystem = new InMemoryFileSystem(new Dictionary<string, string> { { realIncludePath, includedFileContents } });
+
+            var options = new HlslParseOptions
+            {
+                VirtualDirectoryMappings =
+                {
+                    { virtualMapping, realDirectory }
+                }
+            };
+
+            var includeResolver = new IncludeFileResolver(mockFileSystem, options);
+
+            var parsedSource = includeResolver.OpenInclude(includeDirective, sourceFile);
+
+            Assert.Equal(includedFileContents, parsedSource.Text.ToString());
+        }
+
+        [Fact]
+        public void HandlesVirtualDirectoryMapping_IncludeIsInChildDirectoryOfVirtualDirectory_IncludeHandledSuccessfully()
+        {
+            var includedFileContents = "int Get() { return 42; }";
+
+            var virtualMapping = "/Virutal";
+            var realDirectory = "C:\\Real";
+            var includeDirective = $"{virtualMapping}/Child/Child2/Child3/Include.hlsl";
+            var realIncludePath = $"{realDirectory}\\Child\\Child2\\Child3\\Include.hlsl";
+
+            var sourceFileContents = $"#include \"{ includeDirective }\"";
+
+            var sourceFile = new SourceFile(SourceText.From(sourceFileContents));
+
+            var mockFileSystem = new InMemoryFileSystem(new Dictionary<string, string> { { realIncludePath, includedFileContents } });
+
+            var options = new HlslParseOptions
+            {
+                VirtualDirectoryMappings =
+                {
+                    { virtualMapping, realDirectory }
+                }
+            };
+
+            var includeResolver = new IncludeFileResolver(mockFileSystem, options);
+
+            var parsedSource = includeResolver.OpenInclude(includeDirective, sourceFile);
+
+            Assert.Equal(includedFileContents, parsedSource.Text.ToString());
+        }
+
+        [Theory]
+        [InlineData("\\Virtual")]
+        [InlineData("/Virtual\\Root")]
+        [InlineData("..\\Virtual")]
+        [InlineData("../Virtual")]
+        public void HandlesVirtualDirectoryMapping_IncludeDirectiveIsInvalid_IncludeNotHandled(string virtualMapping)
+        {
+            var includedFileContents = "int Get() { return 42; }";
+
+            var realDirectory = "C:\\Real";
+            var includeDirective = $"{virtualMapping}/Include.hlsl";
+            var realIncludePath = $"{realDirectory}\\Include.hlsl";
+
+            var sourceFileContents = $"#include \"{ includeDirective }\"";
+
+            var sourceFile = new SourceFile(SourceText.From(sourceFileContents));
+
+            var mockFileSystem = new InMemoryFileSystem(new Dictionary<string, string> { { realIncludePath, includedFileContents } });
+
+            var options = new HlslParseOptions
+            {
+                VirtualDirectoryMappings =
+                {
+                    { virtualMapping, realDirectory }
+                }
+            };
+
+            var includeResolver = new IncludeFileResolver(mockFileSystem, options);
+
+            var parsedSource = includeResolver.OpenInclude(includeDirective, sourceFile);
+
+            Assert.Null(parsedSource);
         }
 
         #region Test helpers

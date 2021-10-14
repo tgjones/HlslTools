@@ -17,7 +17,7 @@ namespace ShaderTools.VisualStudio.LanguageServices
     internal sealed class ShaderToolsPackage : AbstractPackage
     {
         // Updated by build process.
-        public const string Version = "1.1.302";
+        public const string Version = "1.1.303";
 
         private VisualStudioWorkspace _workspace;
 
