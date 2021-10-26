@@ -1999,8 +1999,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     break;
             }
 
-            var indexType = GetTextureIndexType(textureType);
-            yield return new IndexerSymbol("[]", "Returns a resource variable.", parent, indexType, valueType);
+            switch (textureType)
+            {
+                case PredefinedObjectType.TextureCube:
+                case PredefinedObjectType.TextureCubeArray:
+                    break;
+                default:
+                    var indexType = GetTextureIndexType(textureType);
+                    yield return new IndexerSymbol("[]", "Returns a resource variable.", parent, indexType, valueType);
+                    break;
+            }
         }
 
         private static TypeSymbol GetTextureIntLocationType(PredefinedObjectType textureType)
@@ -2064,7 +2072,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 case PredefinedObjectType.RasterizerOrderedTexture3D:
                     return Uint3;
                 default:
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException(nameof(textureType), textureType, $"{textureType} is not a supported texture type");
             }
         }
 
