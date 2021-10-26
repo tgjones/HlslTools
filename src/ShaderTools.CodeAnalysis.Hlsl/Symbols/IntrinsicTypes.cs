@@ -1999,15 +1999,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     break;
             }
 
-            switch (textureType)
-            {
-                case PredefinedObjectType.Buffer:
-                    yield return new IndexerSymbol("[]", "", parent, Uint, valueType);
-                    break;
-                case PredefinedObjectType.Texture2D:
-                    yield return new IndexerSymbol("[]", "", parent, Uint2, valueType);
-                    break;
-            }
+            var indexType = GetTextureIndexType(textureType);
+            yield return new IndexerSymbol("[]", "Returns a resource variable.", parent, indexType, valueType);
         }
 
         private static TypeSymbol GetTextureIntLocationType(PredefinedObjectType textureType)
@@ -2058,10 +2051,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 case PredefinedObjectType.RWTexture1DArray:
                 case PredefinedObjectType.RasterizerOrderedTexture1DArray:
                 case PredefinedObjectType.Texture2D:
+                case PredefinedObjectType.Texture2DMS:
                 case PredefinedObjectType.RWTexture2D:
                 case PredefinedObjectType.RasterizerOrderedTexture2D:
                     return Uint2;
                 case PredefinedObjectType.Texture2DArray:
+                case PredefinedObjectType.Texture2DMSArray:
                 case PredefinedObjectType.RWTexture2DArray:
                 case PredefinedObjectType.RasterizerOrderedTexture2DArray:
                 case PredefinedObjectType.Texture3D:
