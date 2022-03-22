@@ -471,7 +471,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(ast);
         }
 
-        private static IEnumerable<object> GetInProgressMethodCode()
+        public static IEnumerable<object[]> GetInProgressMethodCode()
         {
             const string code = @"void main()
 {

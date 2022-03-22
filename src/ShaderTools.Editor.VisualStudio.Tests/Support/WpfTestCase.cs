@@ -118,6 +118,10 @@ namespace ShaderTools.Editor.VisualStudio.Tests.Support
             get { return testCase.UniqueID; }
         }
 
+        public Exception InitializationException => testCase.InitializationException;
+
+        public int Timeout => testCase.Timeout;
+
         public void Deserialize(IXunitSerializationInfo info)
         {
             testCase = info.GetValue<IXunitTestCase>("InnerTestCase");
