@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.CodeAnalysis.Editor.Host;
+using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Editor.Properties;
 using ShaderTools.CodeAnalysis.Editor.Shared.Extensions;
 using ShaderTools.CodeAnalysis.Editor.Shared.Tagging;
@@ -29,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
     {
         private readonly INavigationBarPresenter _presenter;
         private readonly ITextBuffer _subjectBuffer;
-        private readonly IWaitIndicator _waitIndicator;
+        private readonly IUIThreadOperationExecutor _uiThreadOperationExecutor;
         private readonly IAsynchronousOperationListener _asyncListener;
         private readonly WorkspaceRegistration _workspaceRegistration;
 
@@ -46,12 +46,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
         public NavigationBarController(
             INavigationBarPresenter presenter,
             ITextBuffer subjectBuffer,
-            IWaitIndicator waitIndicator,
+            IUIThreadOperationExecutor uiThreadOperationExecutor,
             IAsynchronousOperationListener asyncListener)
         {
             _presenter = presenter;
             _subjectBuffer = subjectBuffer;
-            _waitIndicator = waitIndicator;
+            _uiThreadOperationExecutor = uiThreadOperationExecutor;
             _asyncListener = asyncListener;
             _workspaceRegistration = Workspace.GetWorkspaceRegistration(subjectBuffer.AsTextContainer());
             _workspaceRegistration.WorkspaceChanged += OnWorkspaceRegistrationChanged;
@@ -180,11 +180,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
             AssertIsForeground();
 
             // Refresh the drop downs to their full information
-            _waitIndicator.Wait(
+            _uiThreadOperationExecutor.Execute(
                 EditorFeaturesResources.Navigation_Bars,
                 EditorFeaturesResources.Refreshing_navigation_bars,
-                allowCancel: true,
-                action: context => UpdateDropDownsSynchronously(context.CancellationToken));
+                allowCancellation: true,
+                showProgress: false,
+                action: context => UpdateDropDownsSynchronously(context.UserCancellationToken));
         }
 
         private void UpdateDropDownsSynchronously(CancellationToken cancellationToken)
@@ -287,11 +288,12 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
         {
             AssertIsForeground();
 
-            _waitIndicator.Wait(
+            _uiThreadOperationExecutor.Execute(
                 EditorFeaturesResources.Navigation_Bars,
                 EditorFeaturesResources.Refreshing_navigation_bars,
-                allowCancel: true,
-                action: context => ProcessItemSelectionSynchronously(e.Item, context.CancellationToken));
+                allowCancellation: true,
+                showProgress: false,
+                action: context => ProcessItemSelectionSynchronously(e.Item, context.UserCancellationToken));
         }
 
         /// <summary>

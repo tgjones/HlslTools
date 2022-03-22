@@ -61,11 +61,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.LanguageService
             // First, acquire any services we need throughout our lifetime.
             this.GetServices();
 
-            var componentModel = this.Package.ComponentModel;
-
-            // Start off a background task to prime some components we'll need for editing
-            VsTaskLibraryHelper.CreateAndStartTask(VsTaskLibraryHelper.ServiceInstance, VsTaskRunContext.BackgroundThread,
-                () => PrimeLanguageServiceComponentsOnBackground(componentModel));
+            var _ = this.Package.ComponentModel;
 
             // Next, make any connections to these services.
             this.ConnectToServices();
@@ -147,16 +143,6 @@ namespace ShaderTools.VisualStudio.LanguageServices.LanguageService
         protected virtual void Uninitialize()
         {
             
-        }
-
-        private void PrimeLanguageServiceComponentsOnBackground(IComponentModel componentModel)
-        {
-            var formatter = this.Workspace.Services.GetLanguageServices(ShaderToolsLanguageName).GetService<ISyntaxFormattingService>();
-            if (formatter != null)
-            {
-                // TODO
-                //formatter.GetDefaultFormattingRules();
-            }
         }
 
         protected abstract string ContentTypeName { get; }

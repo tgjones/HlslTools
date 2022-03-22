@@ -4,6 +4,7 @@ using System;
 using System.Windows.Media;
 using Microsoft.VisualStudio.Core.Imaging;
 using Microsoft.VisualStudio.Imaging;
+using Microsoft.VisualStudio.Imaging.Interop;
 using Microsoft.VisualStudio.Language.Intellisense;
 
 namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
@@ -90,6 +91,16 @@ namespace ShaderTools.CodeAnalysis.Editor.Shared.Extensions
         public static ImageId GetImageId(this Glyph glyph)
         {
             return new ImageId(KnownImageIds.ImageCatalogGuid, GetKnownImageId(glyph));
+        }
+
+        public static ImageMoniker GetImageMoniker(this Glyph glyph)
+        {
+            var imageId = glyph.GetImageId();
+            return new ImageMoniker()
+            {
+                Guid = imageId.Guid,
+                Id = imageId.Id
+            };
         }
 
         private static int GetKnownImageId(Glyph glyph)

@@ -3,7 +3,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="3.1.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShaderTools.Utilities\ShaderTools.Utilities.csproj" />

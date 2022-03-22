@@ -16,7 +16,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderTools.VisualStudio.LanguageServices</RootNamespace>
     <AssemblyName>ShaderTools.VisualStudio.LanguageServices</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>false</IncludeDebugSymbolsInVSIXContainer>
@@ -111,9 +111,6 @@
     <Compile Include="Utilities\Extensions\ServiceProviderExtensions.cs" />
     <Compile Include="Utilities\IComEventSink.cs" />
     <Compile Include="Utilities\VisualStudioLogger.cs" />
-    <Compile Include="Utilities\VisualStudioWaitContext.Callback.cs" />
-    <Compile Include="Utilities\VisualStudioWaitContext.cs" />
-    <Compile Include="Utilities\VisualStudioWaitIndicator.cs" />
     <Compile Include="Workspace\VisualStudioDocumentNavigationService.cs" />
     <Compile Include="Workspace\VisualStudioDocumentTrackingService.cs" />
     <Compile Include="Workspace\VisualStudioWorkspace.cs" />

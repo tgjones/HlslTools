@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using Microsoft.VisualStudio.Text;
-using ShaderTools.CodeAnalysis.Editor.Host;
+using Microsoft.VisualStudio.Utilities;
 using ShaderTools.CodeAnalysis.Shared.TestHooks;
 
 namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
@@ -12,15 +12,15 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
     [Export(typeof(INavigationBarControllerFactoryService))]
     internal class NavigationBarControllerFactoryService : INavigationBarControllerFactoryService
     {
-        private readonly IWaitIndicator _waitIndicator;
+        private readonly IUIThreadOperationExecutor _uIThreadOperationExecutor;
         private readonly AggregateAsynchronousOperationListener _asyncListener;
 
         [ImportingConstructor]
         public NavigationBarControllerFactoryService(
-            IWaitIndicator waitIndicator,
+            IUIThreadOperationExecutor uIThreadOperationExecutor,
             [ImportMany] IEnumerable<Lazy<IAsynchronousOperationListener, FeatureMetadata>> asyncListeners)
         {
-            _waitIndicator = waitIndicator;
+            _uIThreadOperationExecutor = uIThreadOperationExecutor;
             _asyncListener = new AggregateAsynchronousOperationListener(asyncListeners, FeatureAttribute.NavigationBar);
         }
 
@@ -29,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Implementation.NavigationBar
             return new NavigationBarController(
                 presenter,
                 textBuffer,
-                _waitIndicator,
+                _uIThreadOperationExecutor,
                 _asyncListener);
         }
     }

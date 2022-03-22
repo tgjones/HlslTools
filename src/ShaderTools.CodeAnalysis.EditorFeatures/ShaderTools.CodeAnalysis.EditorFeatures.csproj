@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net461</TargetFramework>
+    <TargetFramework>net472</TargetFramework>
     <RootNamespace>ShaderTools.CodeAnalysis.Editor</RootNamespace>
   </PropertyGroup>
 
@@ -11,7 +11,7 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Xaml" />
     <Reference Include="WindowsBase" />
-    <PackageReference Include="Madskristensen.VisualStudio.SDK" Version="15.8.81-pre" />
+    <PackageReference Include="Microsoft.VisualStudio.SDK" Version="16.9.31025.194" />
   </ItemGroup>
 
   <ItemGroup>

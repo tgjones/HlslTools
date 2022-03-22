@@ -47,7 +47,7 @@ namespace ShaderTools.VisualStudio.LanguageServices.NavigationBar
                 int hresult = vsShell.GetProperty((int) __VSSPROPID.VSSPROPID_ObjectMgrTypesImgList, out var varImageList);
                 if (ErrorHandler.Succeeded(hresult) && varImageList != null)
                 {
-                    _imageList = (IntPtr) (int) varImageList;
+                    _imageList = (IntPtr) Convert.ToInt64(varImageList);
                 }
             }
 

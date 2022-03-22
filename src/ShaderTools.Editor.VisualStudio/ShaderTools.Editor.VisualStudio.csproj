@@ -16,7 +16,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ShaderTools.Editor.VisualStudio</RootNamespace>
     <AssemblyName>ShaderTools.Editor.VisualStudio</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,16 +38,6 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.15\ShaderTools.CodeAnalysis.EditorFeatures.15.csproj">
-      <Project>{bb11a52f-0a3f-42c3-bb6e-355cc2b447da}</Project>
-      <Name>ShaderTools.CodeAnalysis.EditorFeatures.15</Name>
-      <IncludeOutputGroupsInVSIX>BuiltProjectOutputGroup%3bBuiltProjectOutputGroupDependencies%3bGetCopyToOutputDirectoryItems%3bSatelliteDllsProjectOutputGroup%3b</IncludeOutputGroupsInVSIX>
-      <IncludeOutputGroupsInVSIXLocalOnly>DebugSymbolsProjectOutputGroup%3b</IncludeOutputGroupsInVSIXLocalOnly>
-    </ProjectReference>
-    <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures.16\ShaderTools.CodeAnalysis.EditorFeatures.16.csproj">
-      <Project>{5fe74e58-34c9-4e68-8c9c-f919d2206be8}</Project>
-      <Name>ShaderTools.CodeAnalysis.EditorFeatures.16</Name>
-    </ProjectReference>
     <ProjectReference Include="..\ShaderTools.CodeAnalysis.EditorFeatures\ShaderTools.CodeAnalysis.EditorFeatures.csproj">
       <Project>{c9467a05-4901-4d20-acce-62506f3239d3}</Project>
       <Name>ShaderTools.CodeAnalysis.EditorFeatures</Name>
