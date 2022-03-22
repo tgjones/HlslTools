@@ -1,6 +1,6 @@
 # HLSL Tools for VS Code [![Join the chat at https://gitter.im/tgjones/HlslTools](https://badges.gitter.im/tgjones/HlslTools.svg)](https://gitter.im/tgjones/HlslTools)
 
-*This extension is for Visual Studio Code. [Go here for the Visual Studio 2017 / 2019 extension](https://marketplace.visualstudio.com/items?itemName=TimGJones.HLSLToolsforVisualStudio).*
+*This extension is for Visual Studio Code. [Go here for the Visual Studio 2019 / 2022 extension](https://marketplace.visualstudio.com/items?itemName=TimGJones.HLSLToolsforVisualStudio).*
 
 HLSL Tools provides enhanced support for editing High Level Shading Language (HLSL) files in VS Code.
 

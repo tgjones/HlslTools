@@ -1,8 +1,8 @@
 # HLSL Tools for Visual Studio [![Join the chat at https://gitter.im/tgjones/HlslTools](https://badges.gitter.im/tgjones/HlslTools.svg)](https://gitter.im/tgjones/HlslTools) [![Build Status](https://dev.azure.com/timjones/HlslTools/_apis/build/status/tgjones.HlslTools?branchName=master)](https://dev.azure.com/timjones/HlslTools/_build/latest?definitionId=3&branchName=master)
 
-*This extension is for Visual Studio 2017 / 2019. [Go here for the Visual Studio Code extension](https://github.com/tgjones/HlslTools/tree/master/src/ShaderTools.VSCode).*
+*This extension is for Visual Studio 2019 / 2022. [Go here for the Visual Studio Code extension](https://github.com/tgjones/HlslTools/tree/master/src/ShaderTools.VSCode).*
 
-HLSL Tools is a Visual Studio 2017 / 2019 extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
+HLSL Tools is a Visual Studio 2019 / 2022 extension that provides enhanced support for editing High Level Shading Language (HLSL) files.
 
 Download the extension at the [Visual Studio Marketplace](https://visualstudiogallery.msdn.microsoft.com/75ddd3be-6eda-4433-a850-458b51186658).
 
@@ -13,7 +13,7 @@ See the [changelog](CHANGELOG.md) for changes.
 Since Visual Studio 2012, Visual Studio has shipped with basic support for editing HLSL files.
 In addition to that basic feature set, HLSL Tools includes many more navigational and editing features:
 
-| VS2017 / VS2019      | VS2017 / VS2019 with HLSL Tools |
+| VS2019 / VS2022      | VS2019 / VS2022 with HLSL Tools |
 | -------------------- | ------------------------------- |
 | Syntax highlighting  | Syntax highlighting             |
 | Automatic formatting | Automatic formatting            |
