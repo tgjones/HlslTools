@@ -14,9 +14,9 @@ jobs:
   
   strategy:
     matrix:
-      VS2019:
-        imageName: 'windows-2019'
-        vsVersion: VS2019
+      VS2022:
+        imageName: 'windows-2022'
+        vsVersion: VS2022
   
   pool:
     vmImage: $(imageName)
@@ -54,7 +54,7 @@ jobs:
       
   - task: PublishPipelineArtifact@1
     displayName: Publish Artifact
-    condition: and(succeeded(), eq(variables['vsVersion'], 'VS2019'))
+    condition: and(succeeded(), eq(variables['vsVersion'], 'VS2022'))
     inputs:
       artifactName: VisualStudio
       path: 'src/ShaderTools.Editor.VisualStudio/bin/$(buildConfiguration)/ShaderTools.Editor.VisualStudio.vsix'
