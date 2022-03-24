@@ -45,12 +45,8 @@ jobs:
       solution: '$(solution)'
       configuration: $(buildConfiguration)
 
-  - task: DotNetCoreCLI@2
+  - task: VSTest@2
     displayName: Test
-    inputs:
-      command: test
-      projects: '**/*Tests/*.csproj'
-      arguments: '--configuration $(buildConfiguration)'
       
   - task: PublishPipelineArtifact@1
     displayName: Publish Artifact
