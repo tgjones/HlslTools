@@ -50,7 +50,7 @@ jobs:
     inputs:
       command: test
       projects: |
-        '**/*Tests/*.csproj'
+        **/*Tests/*.csproj
         !src/ShaderTools.Editor.VisualStudio.Tests/ShaderTools.Editor.VisualStudio.Tests.csproj
       arguments: '--configuration $(buildConfiguration)'
       
