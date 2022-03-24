@@ -45,8 +45,14 @@ jobs:
       solution: '$(solution)'
       configuration: $(buildConfiguration)
 
-  - task: VSTest@2
+  - task: DotNetCoreCLI@2
     displayName: Test
+    inputs:
+      command: test
+      projects: |
+        '**/*Tests/*.csproj'
+        !src/ShaderTools.Editor.VisualStudio.Tests/ShaderTools.Editor.VisualStudio.Tests.csproj
+      arguments: '--configuration $(buildConfiguration)'
       
   - task: PublishPipelineArtifact@1
     displayName: Publish Artifact
