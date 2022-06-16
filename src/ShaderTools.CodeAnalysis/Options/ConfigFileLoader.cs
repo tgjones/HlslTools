@@ -33,10 +33,15 @@ namespace ShaderTools.CodeAnalysis.Options
 
             var hlslVirtualDirectoryMappings = new Dictionary<string, string>();
             foreach (var configFile in configFiles.Reverse())
+            {
+                var configFileDir = Path.GetDirectoryName(configFile.FileName);
                 foreach (var virtualDirectoryMapping in configFile.HlslVirtualDirectoryMappings)
-                    hlslVirtualDirectoryMappings[virtualDirectoryMapping.Key] = virtualDirectoryMapping.Value
-                        .Replace('/', Path.DirectorySeparatorChar)
-                        .Replace('\\', Path.DirectorySeparatorChar);
+                {
+                    var key = CalculateFullPath(configFileDir, virtualDirectoryMapping.Key);
+                    var value = CalculateFullPath(configFileDir, virtualDirectoryMapping.Value);
+                    hlslVirtualDirectoryMappings[key] = value;
+                }
+            }
 
             return new ConfigFile
             {
@@ -49,6 +54,23 @@ namespace ShaderTools.CodeAnalysis.Options
 
                 HlslVirtualDirectoryMappings = hlslVirtualDirectoryMappings,
             };
+        }
+
+        private static string CalculateFullPath(string basePath, string path)
+        {
+            var result = path
+                .Replace('/', Path.DirectorySeparatorChar)
+                .Replace('\\', Path.DirectorySeparatorChar);
+            if (!Path.IsPathRooted(result))
+            {
+                result = Path.GetFullPath(Path.Combine(basePath, result));
+            }
+            else
+            {
+                // Even if result is a rooted path, we still need to add drive letter and normalize the path
+                result = Path.GetFullPath(result);
+            }
+            return result;
         }
 
         private static IEnumerable<ConfigFile> GetConfigFiles(string initialDirectory)

@@ -47,9 +47,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
         {
             SourceText text;
 
-            // Resolve virtual directory mappings.
-            includeFilename = MapIncludeWithVirtualDirectoryToRealPath(includeFilename, _parserOptions.VirtualDirectoryMappings) ?? includeFilename;
-
             includeFilename = includeFilename
                 .Replace('/', Path.DirectorySeparatorChar)
                 .Replace('\\', Path.DirectorySeparatorChar);
@@ -60,11 +57,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
 
             // If path is rooted, open it directly.
             if (Path.IsPathRooted(includeFilename))
-            {
-                if (_fileSystem.TryGetFile(includeFilename, out text))
-                    return new SourceFile(text, currentFile, includeFilename);
-                return null;
-            }
+                return OpenFileConsideringVirtualDirectory(includeFilename, currentFile);
 
             // Look through the hierarchy of files that included currentFile, to see if any of their
             // directories contain the include.
@@ -77,6 +70,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                     var testFilename = Path.Combine(rootFileDirectory, includeFilename);
                     if (_fileSystem.TryGetFile(testFilename, out text))
                         return new SourceFile(text, currentFile, testFilename);
+                    var file = OpenFileConsideringVirtualDirectory(testFilename, currentFile);
+                    if (file != null)
+                        return file;
                 }
                 fileToCheck = fileToCheck.IncludedBy;
             }
@@ -85,47 +81,39 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             foreach (var includeDirectory in _parserOptions.AdditionalIncludeDirectories)
             {
                 var testFilename = Path.Combine(includeDirectory, includeFilename);
-                if (_fileSystem.TryGetFile(testFilename, out text))
-                    return new SourceFile(text, currentFile, testFilename);
+                var file = OpenFileConsideringVirtualDirectory(testFilename, currentFile);
+                if (file != null)
+                    return file;
             }
 
             return null;
         }
 
-        private bool IncludeIsUsingVirtualDirectory(string includeFileName)
+        private SourceFile OpenFileConsideringVirtualDirectory(string includeFilename, SourceFile currentFile)
         {
-            if (!includeFileName.StartsWith("/"))
-            {
-                return false;
-            }
+            // Even if includeFilename is a rooted path, we still need to add drive letter and normalize the path
+            includeFilename = Path.GetFullPath(includeFilename);
 
-            if (includeFileName.Contains(".."))
-            {
-                return false;
-            }
+            // Resolve virtual directory mappings.
+            includeFilename = MapIncludeWithVirtualDirectoryToRealPath(includeFilename, _parserOptions.VirtualDirectoryMappings) ?? includeFilename;
 
-            if (includeFileName.Contains("\\"))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private string GetDirectoryName(string path)
-        {
-            var index = path.LastIndexOf(Path.AltDirectorySeparatorChar);
-            return path.Substring(0, index > 0 ? index : 0);
-        }
-
-        private string MapIncludeWithVirtualDirectoryToRealPath(string includeFilename, Dictionary<string, string> virtualDirectoryMappings)
-        {
-            if (!IncludeIsUsingVirtualDirectory(includeFilename))
+            SourceText text;
+            if (!_fileSystem.TryGetFile(includeFilename, out text))
             {
                 return null;
             }
 
-            var parentVirtualDirectoryPath = GetDirectoryName(includeFilename);
+            return new SourceFile(text, currentFile, includeFilename);
+        }
+
+        private string MapIncludeWithVirtualDirectoryToRealPath(string includeFilename, Dictionary<string, string> virtualDirectoryMappings)
+        {
+            if (!Path.IsPathRooted(includeFilename))
+            {
+                return null;
+            }
+
+            var parentVirtualDirectoryPath = Path.GetDirectoryName(includeFilename);
             var relativeVirtualDirectoryPath = Path.GetFileName(includeFilename);
 
             while (!string.IsNullOrEmpty(parentVirtualDirectoryPath))
@@ -137,7 +125,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                 else
                 {
                     relativeVirtualDirectoryPath = Path.Combine(Path.GetFileName(parentVirtualDirectoryPath), relativeVirtualDirectoryPath);
-                    parentVirtualDirectoryPath = GetDirectoryName(parentVirtualDirectoryPath);
+                    parentVirtualDirectoryPath = Path.GetDirectoryName(parentVirtualDirectoryPath);
                 }
             }
 
