@@ -50,7 +50,23 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     var macroArguments = new MacroArgumentsParser(lexer).ParseArgumentList();
                     ExpandMacros = true;
 
-                    if (macroArguments.Arguments.Count != functionLikeDefine.Parameters.Parameters.Count)
+                    var functionParameters = functionLikeDefine.Parameters.Parameters;
+
+                    if (functionParameters.Count > 0 && functionParameters.Last().Kind == SyntaxKind.EllipsisToken)
+                    {
+                        // Variadic Arguments
+                        if (macroArguments.Arguments.Count < functionParameters.Count - 1)
+                        {
+                            expandedTokens = new List<SyntaxToken>
+                            {
+                                token
+                                    .WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, token.SourceRange, (int) DiagnosticId.NotEnoughMacroParameters, token.Text))
+                                    .WithTrailingTrivia(new[] { macroArguments })
+                            };
+                            return true;
+                        }
+                    }
+                    else if (macroArguments.Arguments.Count != functionParameters.Count)
                     {
                         expandedTokens = new List<SyntaxToken>
                         {
@@ -212,6 +228,26 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                                 }
                             }
                             goto default;
+                        }
+
+                    case SyntaxKind.VariadicArgumentKeyword:
+                        {
+                            if (parameterList.Parameters.Count > 0 && parameterList.Parameters.Last().Kind == SyntaxKind.EllipsisToken)
+                            {
+                                int vaStart = parameterList.Parameters.Count - 1;
+                                for (int parameterIndex = vaStart; parameterIndex < expandedArguments.Count; parameterIndex++)
+                                {
+                                    result.AddRange(expandedArguments[parameterIndex]);
+                                }
+                            }
+                            else
+                            {
+                                result.Add(
+                                    token
+                                        .WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, token.SourceRange, 
+                                            (int)DiagnosticId.NoVariadicArgumentParameter, token.Text)));
+                            }
+                            break;
                         }
 
                     // Potentially replacement parameter with argument tokens.

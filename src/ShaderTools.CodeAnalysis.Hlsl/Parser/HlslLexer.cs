@@ -670,8 +670,24 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         ReadNumber();
                     else
                     {
-                        _kind = SyntaxKind.DotToken;
                         NextChar();
+                        if (_charReader.Current == '.')
+                        {
+                            NextChar();
+                            if (_charReader.Current == '.')
+                            {
+                                _kind = SyntaxKind.EllipsisToken;
+                                NextChar();
+                            }
+                            else
+                            {
+                                _kind = SyntaxKind.DotDotToken;
+                            }
+                        }
+                        else
+                        {
+                            _kind = SyntaxKind.DotToken;
+                        }
                     }
                     break;
 
