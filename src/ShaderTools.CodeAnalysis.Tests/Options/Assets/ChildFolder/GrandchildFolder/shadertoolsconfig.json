@@ -6,5 +6,14 @@
   "hlsl.additionalIncludeDirectories": [
     "../Bar",
     "..\\Foo"
-  ]
+  ],
+
+  "hlsl.virtualDirectoryMappings": {
+    "../Bar": "D:/read_full",
+    "..\\Foo": "File",
+    "C:/FULL": "\\Root",
+    "hello": "../PARENT",
+    "/world": ".\\THIS",
+    "D:\\One/Drive": "C:/Another\\Drive"
+  }
 }
