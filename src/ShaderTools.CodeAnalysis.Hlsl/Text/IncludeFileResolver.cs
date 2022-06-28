@@ -89,21 +89,41 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             return null;
         }
 
-        private SourceFile OpenFileConsideringVirtualDirectory(string includeFilename, SourceFile currentFile)
+        private static string RemoveDriveLetter(string path)
         {
-            // Even if includeFilename is a rooted path, we still need to add drive letter and normalize the path
-            includeFilename = Path.GetFullPath(includeFilename);
+            return Path.DirectorySeparatorChar + path.Substring(Path.GetPathRoot(path).Length);
+        }
 
+        private SourceFile TryOpenFileConsideringVirtualDirectory(string includeFileFulllPath, SourceFile currentFile)
+        {
             // Resolve virtual directory mappings.
-            includeFilename = MapIncludeWithVirtualDirectoryToRealPath(includeFilename, _parserOptions.VirtualDirectoryMappings) ?? includeFilename;
+            includeFileFulllPath = MapIncludeWithVirtualDirectoryToRealPath(includeFileFulllPath, _parserOptions.VirtualDirectoryMappings) ?? includeFileFulllPath;
 
             SourceText text;
-            if (!_fileSystem.TryGetFile(includeFilename, out text))
+            if (!_fileSystem.TryGetFile(includeFileFulllPath, out text))
             {
                 return null;
             }
 
-            return new SourceFile(text, currentFile, includeFilename);
+            return new SourceFile(text, currentFile, includeFileFulllPath);
+        }
+
+        private SourceFile OpenFileConsideringVirtualDirectory(string includeFilename, SourceFile currentFile)
+        {
+            // Normalize the path
+            var normalizedPath = Path.GetFullPath(includeFilename);
+            var pathRoot = Path.GetPathRoot(includeFilename);
+            if (pathRoot.Length == 1 && pathRoot[0] == Path.DirectorySeparatorChar)
+            {
+                // if includeFilename is an absolute path without drive letter, then normalize path should not contain drive letter
+                includeFilename = RemoveDriveLetter(normalizedPath);
+                var result = TryOpenFileConsideringVirtualDirectory(includeFilename, currentFile);
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+            return TryOpenFileConsideringVirtualDirectory(normalizedPath, currentFile);
         }
 
         private string MapIncludeWithVirtualDirectoryToRealPath(string includeFilename, Dictionary<string, string> virtualDirectoryMappings)

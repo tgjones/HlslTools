@@ -37,9 +37,13 @@ namespace ShaderTools.CodeAnalysis.Options
                 var configFileDir = Path.GetDirectoryName(configFile.FileName);
                 foreach (var virtualDirectoryMapping in configFile.HlslVirtualDirectoryMappings)
                 {
-                    var key = CalculateFullPath(configFileDir, virtualDirectoryMapping.Key);
+                    var originalKey = virtualDirectoryMapping.Key;
+                    var key = CalculateFullPath(configFileDir, originalKey);
                     var value = CalculateFullPath(configFileDir, virtualDirectoryMapping.Value);
                     hlslVirtualDirectoryMappings[key] = value;
+                    // If originalKey is a rooted path without drive letter, add normalized rooted path without drive letter
+                    if (Path.IsPathRooted(originalKey) && Path.GetPathRoot(originalKey).Length == 1)
+                        hlslVirtualDirectoryMappings[RemoveDriveLetter(key)] = value;
                 }
             }
 
@@ -54,6 +58,11 @@ namespace ShaderTools.CodeAnalysis.Options
 
                 HlslVirtualDirectoryMappings = hlslVirtualDirectoryMappings,
             };
+        }
+
+        private static string RemoveDriveLetter(string path)
+        {
+            return Path.DirectorySeparatorChar + path.Substring(Path.GetPathRoot(path).Length);
         }
 
         private static string CalculateFullPath(string basePath, string path)

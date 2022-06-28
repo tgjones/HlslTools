@@ -32,6 +32,7 @@ namespace ShaderTools.CodeAnalysis.Tests.Options
                 configFile.HlslAdditionalIncludeDirectories);
 
             var root = Path.GetPathRoot(workingDirectory);
+            var pathSeparator = Path.DirectorySeparatorChar.ToString();
             Assert.Equal(
                 new Dictionary<string, string>
                 {
@@ -40,6 +41,7 @@ namespace ShaderTools.CodeAnalysis.Tests.Options
                     { Path.GetFullPath("C:/FULL"), Path.Combine(root, "Root") },
                     { Path.Combine(workingDirectory, "ChildFolder", "GrandchildFolder", "hello"), Path.Combine(workingDirectory, "ChildFolder", "PARENT") },
                     { Path.Combine(root, "world"), Path.Combine(workingDirectory, "ChildFolder", "GrandchildFolder", "THIS") },
+                    { Path.Combine(pathSeparator, "world"), Path.Combine(workingDirectory, "ChildFolder", "GrandchildFolder", "THIS") },
                     { Path.GetFullPath("D:/One/Drive"), Path.GetFullPath("C:/Another/Drive") },
                 },
                 configFile.HlslVirtualDirectoryMappings);

@@ -974,7 +974,7 @@ float bar;
                 {
                     VirtualDirectoryMappings =
                     {
-                        { "C:\\Project", "C:\\test" }
+                        { "\\Project", "C:\\test" }
                     }
                 },
                 new InMemoryFileSystem(new Dictionary<string, string>
