@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+    - master
+  pull_request:  
+
+jobs:
+  vs:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Install .NET 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: '6.0.x'
+
+    - name: Restore NuGet packages (dotnet)
+      run: dotnet restore src/ShaderTools.sln
+
+    - name: Restore NuGet packages (nuget)
+      run: nuget restore src/ShaderTools.sln
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Build
+      run: msbuild src/ShaderTools.sln /p:Configuration=Release
+
+    - name: Test
+      run: |
+        dotnet test --configuration Release src/ShaderTools.CodeAnalysis.Tests/ShaderTools.CodeAnalysis.Tests.csproj
+        dotnet test --configuration Release src/ShaderTools.CodeAnalysis.Hlsl.Tests/ShaderTools.CodeAnalysis.Hlsl.Tests.csproj
+        dotnet test --configuration Release src/ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests/ShaderTools.CodeAnalysis.Hlsl.EditorFeatures.Tests.csproj
+        dotnet test --configuration Release src/ShaderTools.CodeAnalysis.Hlsl.Features.Tests/ShaderTools.CodeAnalysis.Hlsl.Features.Tests.csproj
+        dotnet test --configuration Release src/ShaderTools.CodeAnalysis.ShaderLab.Tests/ShaderTools.CodeAnalysis.ShaderLab.Tests.csproj
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: VisualStudio
+        path: 'src/ShaderTools.Editor.VisualStudio/bin/Release/ShaderTools.Editor.VisualStudio.vsix'
