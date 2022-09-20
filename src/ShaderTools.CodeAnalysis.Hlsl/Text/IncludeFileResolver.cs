@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
 using Microsoft.CodeAnalysis.Text;
@@ -48,7 +47,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             SourceText text;
 
             // Resolve virtual directory mappings.
-            includeFilename = MapIncludeWithVirtualDirectoryToRealPath(includeFilename, _parserOptions.VirtualDirectoryMappings) ?? includeFilename;
+            includeFilename = MapIncludeWithVirtualDirectoryToRealPath(includeFilename);
 
             includeFilename = includeFilename
                 .Replace('/', Path.DirectorySeparatorChar)
@@ -92,56 +91,19 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             return null;
         }
 
-        private bool IncludeIsUsingVirtualDirectory(string includeFileName)
+        private string MapIncludeWithVirtualDirectoryToRealPath(string includeFilename)
         {
-            if (!includeFileName.StartsWith("/"))
+            foreach (var kvp in _parserOptions.VirtualDirectoryMappings)
             {
-                return false;
-            }
-
-            if (includeFileName.Contains(".."))
-            {
-                return false;
-            }
-
-            if (includeFileName.Contains("\\"))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
-        private string GetDirectoryName(string path)
-        {
-            var index = path.LastIndexOf(Path.AltDirectorySeparatorChar);
-            return path.Substring(0, index > 0 ? index : 0);
-        }
-
-        private string MapIncludeWithVirtualDirectoryToRealPath(string includeFilename, Dictionary<string, string> virtualDirectoryMappings)
-        {
-            if (!IncludeIsUsingVirtualDirectory(includeFilename))
-            {
-                return null;
-            }
-
-            var parentVirtualDirectoryPath = GetDirectoryName(includeFilename);
-            var relativeVirtualDirectoryPath = Path.GetFileName(includeFilename);
-
-            while (!string.IsNullOrEmpty(parentVirtualDirectoryPath))
-            {
-                if (virtualDirectoryMappings.TryGetValue(parentVirtualDirectoryPath, out string realDirectory))
+                if (includeFilename.StartsWith(kvp.Key))
                 {
-                    return Path.Combine(realDirectory, relativeVirtualDirectoryPath);
-                }
-                else
-                {
-                    relativeVirtualDirectoryPath = Path.Combine(Path.GetFileName(parentVirtualDirectoryPath), relativeVirtualDirectoryPath);
-                    parentVirtualDirectoryPath = GetDirectoryName(parentVirtualDirectoryPath);
+                    var virtualDirectory = includeFilename.Substring(0, kvp.Key.Length);
+                    var remainingPath = includeFilename.Substring(virtualDirectory.Length + 1);
+                    return Path.Combine(kvp.Value, remainingPath);
                 }
             }
 
-            return null;
+            return includeFilename;
         }
     }
 }
