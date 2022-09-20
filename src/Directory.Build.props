@@ -2,7 +2,7 @@
   <PropertyGroup>
     <SdkVersion>16.10.31321.278</SdkVersion>
     <SystemCollectionsImmutableVersion>1.5.0</SystemCollectionsImmutableVersion>
-    <BuildToolsVersion>17.0.5232</BuildToolsVersion>
+    <BuildToolsVersion>17.3.2094</BuildToolsVersion>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 </Project>
