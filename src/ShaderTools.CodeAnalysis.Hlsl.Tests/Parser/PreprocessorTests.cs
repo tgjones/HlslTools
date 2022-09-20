@@ -990,6 +990,40 @@ float bar;
         }
 
         [Fact]
+        public void TestIncludeRelativeVirtualPath()
+        {
+            const string fooText = @"
+#define DECL(n, v) int n = v
+";
+            const string text = @"
+float foo;
+#define FOO
+#include ""Packages/com.mypackage/Shaders/foo.hlsl""
+DECL(i, 2);
+float bar;
+";
+            var node = Parse(
+                text,
+                new HlslParseOptions
+                {
+                    VirtualDirectoryMappings =
+                    {
+                        { "Packages/com.mypackage", "test" }
+                    }
+                },
+                new InMemoryFileSystem(new Dictionary<string, string>
+                {
+                    { Path.Combine("test", "Shaders", "foo.hlsl"), fooText }
+                }));
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.FunctionLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
+        }
+
+        [Fact]
         public void TestNegMissingInclude()
         {
             const string text = @"
@@ -1073,7 +1107,7 @@ float bar;
         {
             var includedFileContents = "int Get() { return 42; }";
 
-            var virtualMapping = "/Virutal";
+            var virtualMapping = "/Virtual";
             var realDirectory = "C:\\Real";
             var includeDirective = $"{virtualMapping}/Child/Child2/Child3/Include.hlsl";
             var realIncludePath = $"{realDirectory}\\Child\\Child2\\Child3\\Include.hlsl";
@@ -1104,7 +1138,7 @@ float bar;
         [InlineData("/Virtual\\Root")]
         [InlineData("..\\Virtual")]
         [InlineData("../Virtual")]
-        public void HandlesVirtualDirectoryMapping_IncludeDirectiveIsInvalid_IncludeNotHandled(string virtualMapping)
+        public void HandlesVirtualDirectoryMapping_IncludeDirectiveIsNotForwardSlash_IncludeHandled(string virtualMapping)
         {
             var includedFileContents = "int Get() { return 42; }";
 
@@ -1130,7 +1164,7 @@ float bar;
 
             var parsedSource = includeResolver.OpenInclude(includeDirective, sourceFile);
 
-            Assert.Null(parsedSource);
+            Assert.Equal(includedFileContents, parsedSource.Text.ToString());
         }
 
         #region Test helpers
