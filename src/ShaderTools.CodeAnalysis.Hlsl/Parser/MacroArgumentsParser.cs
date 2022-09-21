@@ -39,6 +39,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                             parenStack--;
                             currentArg.Add(NextToken());
                             break;
+                        case SyntaxKind.EllipsisToken:
+                            arguments.Add(Match(SyntaxKind.EllipsisToken));
+                            currentArg.Add(NextToken());
+                            break;
                         case SyntaxKind.CommaToken:
                             if (CommaIsSeparatorStack.Peek() == false)
                                 goto default;
