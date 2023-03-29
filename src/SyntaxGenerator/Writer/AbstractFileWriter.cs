@@ -286,6 +286,8 @@ namespace SyntaxGenerator.Writer
                 case "ushort":
                 case "int":
                 case "uint":
+                case "int64_t":
+                case "uint64_t":
                 case "long":
                 case "ulong":
                 case "double":

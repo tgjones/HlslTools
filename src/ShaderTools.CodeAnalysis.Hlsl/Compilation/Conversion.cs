@@ -142,21 +142,25 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                         return ConversionTypes.IntToFloatConversion;
                     break;
                 case ScalarType.Int:
+                case ScalarType.Int64_t:
                 case ScalarType.Min16Int:
                 case ScalarType.Min12Int:
                     switch (parameterScalarType)
                     {
                         case ScalarType.Uint:
+                        case ScalarType.Uint64_t:
                         case ScalarType.Min16Uint:
                             return ConversionTypes.SignedToUnsigned;
                     }
                     break;
                 case ScalarType.Uint:
+                case ScalarType.Uint64_t:
                 case ScalarType.Min16Uint:
                     switch (parameterScalarType)
                     {
                         case ScalarType.Int:
-                        case ScalarType.Min16Int:
+						case ScalarType.Int64_t:
+						case ScalarType.Min16Int:
                         case ScalarType.Min12Int:
                             return ConversionTypes.UnsignedToSigned;
                     }

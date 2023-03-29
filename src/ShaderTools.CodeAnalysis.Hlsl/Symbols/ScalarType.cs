@@ -7,6 +7,8 @@
         Bool,
         Int,
         Uint,
+        Int64_t,
+		Uint64_t,
         Half,
         Float,
         Double,

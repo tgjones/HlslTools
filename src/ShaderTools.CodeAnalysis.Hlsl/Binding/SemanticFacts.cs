@@ -78,6 +78,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 case ScalarType.Bool:
                 case ScalarType.Int:
                 case ScalarType.Uint:
+                case ScalarType.Int64_t:
+                case ScalarType.Uint64_t:
                 case ScalarType.Min16Int:
                 case ScalarType.Min12Int:
                 case ScalarType.Min16Uint:
