@@ -38,9 +38,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 		Int,
 		Uint,
 		Int64_t,
+		Int16_t,
 		Uint64_t,
+		Uint16_t,
 
 		Half,
+		Float16_t,
 		Float,
 		Double,
 
@@ -201,8 +204,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 		public static IntrinsicScalarTypeSymbol Uint { get { return BaseTypes[(int)EIntrinsicBaseType.Uint].baseSymbol; } }
 		public static IntrinsicScalarTypeSymbol Int64_t { get { return BaseTypes[(int)EIntrinsicBaseType.Int64_t].baseSymbol; } }
 		public static IntrinsicScalarTypeSymbol Uint64_t { get { return BaseTypes[(int)EIntrinsicBaseType.Uint64_t].baseSymbol; } }
+		public static IntrinsicScalarTypeSymbol Int16_t { get { return BaseTypes[(int)EIntrinsicBaseType.Int16_t].baseSymbol; } }
+		public static IntrinsicScalarTypeSymbol Uint16_t { get { return BaseTypes[(int)EIntrinsicBaseType.Uint16_t].baseSymbol; } }
 
 		public static IntrinsicScalarTypeSymbol Half { get { return BaseTypes[(int)EIntrinsicBaseType.Half].baseSymbol; } }
+		public static IntrinsicScalarTypeSymbol Float16_t { get { return BaseTypes[(int)EIntrinsicBaseType.Float16_t].baseSymbol; } }
 		public static IntrinsicScalarTypeSymbol Float { get { return BaseTypes[(int)EIntrinsicBaseType.Float].baseSymbol; } }
 		public static IntrinsicScalarTypeSymbol Double { get { return BaseTypes[(int)EIntrinsicBaseType.Double].baseSymbol; } }
 
@@ -336,9 +342,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "int", desc = "32-bit signed integer", type = ScalarType.Int });
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "uint", desc = "32-bit unsigned integer", type = ScalarType.Uint });
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "int64_t", desc = "64-bit signed integer", type = ScalarType.Int64_t });
+			typeDescs.Add(new IntrinsicTypeDesc{ name = "int16_t", desc = "16-bit signed integer", type = ScalarType.Int16_t });
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "uint64_t", desc = "64-bit unsigned integer", type = ScalarType.Uint64_t });
+			typeDescs.Add(new IntrinsicTypeDesc{ name = "uint16_t", desc = "16-bit unsigned integer", type = ScalarType.Uint16_t });
 
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "half", desc = "16-bit floating point", type = ScalarType.Half });
+			typeDescs.Add(new IntrinsicTypeDesc{ name = "float16_t", desc = "16-bit floating point", type = ScalarType.Float16_t });
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "float", desc = "32-bit floating point", type = ScalarType.Float });
 			typeDescs.Add(new IntrinsicTypeDesc{ name = "double", desc = "64-bit floating point", type = ScalarType.Double });
 
@@ -356,6 +365,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Uint].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Uint64_t].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Int64_t].All)
+				.Union(BaseTypes[(int)EIntrinsicBaseType.Uint16_t].All)
+				.Union(BaseTypes[(int)EIntrinsicBaseType.Int16_t].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Min16Int].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Min12Int].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Min16Uint].All)
@@ -365,6 +376,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
 				BaseTypes[(int)EIntrinsicBaseType.Float].All
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Double].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Half].All)
+				.Union(BaseTypes[(int)EIntrinsicBaseType.Float16_t].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Min16Float].All)
 				.Union(BaseTypes[(int)EIntrinsicBaseType.Min10Float].All)
 				.ToArray();

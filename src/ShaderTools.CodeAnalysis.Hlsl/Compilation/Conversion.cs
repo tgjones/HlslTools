@@ -87,6 +87,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                     switch (parameterScalarType)
                     {
                         case ScalarType.Half:
+                        case ScalarType.Float16_t:
                         case ScalarType.Min10Float:
                         case ScalarType.Min16Float:
                             return ConversionTypes.FloatTruncation;
@@ -94,6 +95,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                             return ConversionTypes.FloatPromotion;
                     }
                     break;
+                case ScalarType.Float16_t:
                 case ScalarType.Half:
                     switch (parameterScalarType)
                     {
@@ -122,6 +124,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                         case ScalarType.Double:
                             return ConversionTypes.FloatPromotion;
                         case ScalarType.Half:
+                        case ScalarType.Float16_t:
                         case ScalarType.Min10Float:
                             return ConversionTypes.FloatTruncation;
                     }
@@ -130,6 +133,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                     switch (parameterScalarType)
                     {
                         case ScalarType.Half:
+                        case ScalarType.Float16_t:
                         case ScalarType.Float:
                         case ScalarType.Double:
                         case ScalarType.Min16Float:
@@ -143,23 +147,27 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                     break;
                 case ScalarType.Int:
                 case ScalarType.Int64_t:
+                case ScalarType.Int16_t:
                 case ScalarType.Min16Int:
                 case ScalarType.Min12Int:
                     switch (parameterScalarType)
                     {
                         case ScalarType.Uint:
                         case ScalarType.Uint64_t:
+                        case ScalarType.Uint16_t:
                         case ScalarType.Min16Uint:
                             return ConversionTypes.SignedToUnsigned;
                     }
                     break;
                 case ScalarType.Uint:
                 case ScalarType.Uint64_t:
+                case ScalarType.Uint16_t:
                 case ScalarType.Min16Uint:
                     switch (parameterScalarType)
                     {
                         case ScalarType.Int:
 						case ScalarType.Int64_t:
+						case ScalarType.Int16_t:
 						case ScalarType.Min16Int:
                         case ScalarType.Min12Int:
                             return ConversionTypes.UnsignedToSigned;

@@ -80,6 +80,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 case ScalarType.Uint:
                 case ScalarType.Int64_t:
                 case ScalarType.Uint64_t:
+                case ScalarType.Int16_t:
+                case ScalarType.Uint16_t:
                 case ScalarType.Min16Int:
                 case ScalarType.Min12Int:
                 case ScalarType.Min16Uint:
@@ -94,6 +96,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             switch (scalarType)
             {
                 case ScalarType.Half:
+                case ScalarType.Float16_t:
                 case ScalarType.Float:
                 case ScalarType.Double:
                 case ScalarType.Min16Float:
