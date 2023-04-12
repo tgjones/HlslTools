@@ -111,6 +111,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Compilation
                     switch (parameterScalarType)
                     {
                         case ScalarType.Half:
+                        case ScalarType.Float16_t:
                         case ScalarType.Float:
                         case ScalarType.Min16Float:
                         case ScalarType.Min10Float:
