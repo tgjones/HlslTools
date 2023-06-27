@@ -9,3 +9,7 @@ export function activate(context: vscode.ExtensionContext): void {
     context.subscriptions.push(sessionManager = new SessionManager());
     sessionManager.start();
 }
+
+export function deactivate(): Promise<void> {
+    return sessionManager.stop();
+}
