@@ -35,7 +35,7 @@ export class SessionManager {
         this.startEditorServices();
     }
 
-    public stop() {
+    public stop(): Promise<void> {
         if (this.sessionStatus === SessionStatus.Failed) {
             // Before moving further, clear out the client and process if
             // the process is already dead (i.e. it crashed)
@@ -44,13 +44,17 @@ export class SessionManager {
 
         this.sessionStatus = SessionStatus.Stopping;
 
+        var promise = Promise.resolve();
+
         // Close the language server client
         if (this.languageServerClient !== undefined) {
-            this.languageServerClient.stop();
+            promise = this.languageServerClient.stop();
             this.languageServerClient = undefined;
         }
 
         this.sessionStatus = SessionStatus.NotStarted;
+        
+        return promise;
     }
 
     public dispose() : void {
