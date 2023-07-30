@@ -100,7 +100,17 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                     return new BoundScalarType(IntrinsicTypes.Int);
                 case ScalarType.Uint:
                     return new BoundScalarType(IntrinsicTypes.Uint);
-                case ScalarType.Half:
+                case ScalarType.Int64_t:
+                    return new BoundScalarType(IntrinsicTypes.Int64_t);
+                case ScalarType.Uint64_t:
+                    return new BoundScalarType(IntrinsicTypes.Uint64_t);
+                case ScalarType.Int16_t:
+                    return new BoundScalarType(IntrinsicTypes.Int16_t);
+                case ScalarType.Uint16_t:
+                    return new BoundScalarType(IntrinsicTypes.Uint16_t);
+                case ScalarType.Float16_t:
+					return new BoundScalarType(IntrinsicTypes.Float16_t);
+				case ScalarType.Half:
                     return new BoundScalarType(IntrinsicTypes.Half);
                 case ScalarType.Float:
                     return new BoundScalarType(IntrinsicTypes.Float);

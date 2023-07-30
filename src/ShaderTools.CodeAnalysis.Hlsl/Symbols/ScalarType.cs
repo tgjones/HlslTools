@@ -5,9 +5,16 @@
         Void,
 
         Bool,
+
         Int,
         Uint,
+        Int64_t,
+        Int16_t,
+		Uint64_t,
+		Uint16_t,
+
         Half,
+        Float16_t,
         Float,
         Double,
 

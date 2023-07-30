@@ -201,6 +201,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return "interface";
                 case SyntaxKind.IntKeyword:
                     return "int";
+                case SyntaxKind.Int64_tKeyword:
+                    return "int64_t";
+                case SyntaxKind.Int16_tKeyword:
+                    return "int16_t";
                 case SyntaxKind.LineKeyword:
                     return "line";
                 case SyntaxKind.MessageKeyword:
@@ -245,6 +249,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return "true";
                 case SyntaxKind.UintKeyword:
                     return "uint";
+                case SyntaxKind.Uint64_tKeyword:
+                    return "uint64_t";
+                case SyntaxKind.Uint16_tKeyword:
+                    return "uint16_t";
                 case SyntaxKind.UndefKeyword:
                     return "undef";
                 case SyntaxKind.UNormKeyword:
@@ -383,10 +391,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             {
                 case SyntaxKind.BoolKeyword:
                 case SyntaxKind.IntKeyword:
+                case SyntaxKind.Int64_tKeyword:
+                case SyntaxKind.Int16_tKeyword:
                 case SyntaxKind.UnsignedKeyword: // Needs to be followed by IntKeyword
                 case SyntaxKind.DwordKeyword:
                 case SyntaxKind.UintKeyword:
+                case SyntaxKind.Uint64_tKeyword:
+                case SyntaxKind.Uint16_tKeyword:
                 case SyntaxKind.HalfKeyword:
+                case SyntaxKind.Float16_tKeyword:
                 case SyntaxKind.FloatKeyword:
                 case SyntaxKind.DoubleKeyword:
                 case SyntaxKind.Min16FloatKeyword:
@@ -418,14 +431,34 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Half2Keyword:
                 case SyntaxKind.Half3Keyword:
                 case SyntaxKind.Half4Keyword:
+                case SyntaxKind.Float16_t1Keyword:
+                case SyntaxKind.Float16_t2Keyword:
+                case SyntaxKind.Float16_t3Keyword:
+                case SyntaxKind.Float16_t4Keyword:
                 case SyntaxKind.Int1Keyword:
                 case SyntaxKind.Int2Keyword:
                 case SyntaxKind.Int3Keyword:
                 case SyntaxKind.Int4Keyword:
+                case SyntaxKind.Int64_t1Keyword:
+                case SyntaxKind.Int64_t2Keyword:
+                case SyntaxKind.Int64_t3Keyword:
+                case SyntaxKind.Int64_t4Keyword:
+                case SyntaxKind.Int16_t1Keyword:
+                case SyntaxKind.Int16_t2Keyword:
+                case SyntaxKind.Int16_t3Keyword:
+                case SyntaxKind.Int16_t4Keyword:
                 case SyntaxKind.Uint1Keyword:
                 case SyntaxKind.Uint2Keyword:
                 case SyntaxKind.Uint3Keyword:
                 case SyntaxKind.Uint4Keyword:
+                case SyntaxKind.Uint64_t1Keyword:
+                case SyntaxKind.Uint64_t2Keyword:
+                case SyntaxKind.Uint64_t3Keyword:
+                case SyntaxKind.Uint64_t4Keyword:
+                case SyntaxKind.Uint16_t1Keyword:
+                case SyntaxKind.Uint16_t2Keyword:
+                case SyntaxKind.Uint16_t3Keyword:
+                case SyntaxKind.Uint16_t4Keyword:
                 case SyntaxKind.Float1Keyword:
                 case SyntaxKind.Float2Keyword:
                 case SyntaxKind.Float3Keyword:
@@ -532,6 +565,22 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Half4x2Keyword:
                 case SyntaxKind.Half4x3Keyword:
                 case SyntaxKind.Half4x4Keyword:
+                case SyntaxKind.Float16_t1x1Keyword:
+                case SyntaxKind.Float16_t1x2Keyword:
+                case SyntaxKind.Float16_t1x3Keyword:
+                case SyntaxKind.Float16_t1x4Keyword:
+                case SyntaxKind.Float16_t2x1Keyword:
+                case SyntaxKind.Float16_t2x2Keyword:
+                case SyntaxKind.Float16_t2x3Keyword:
+                case SyntaxKind.Float16_t2x4Keyword:
+                case SyntaxKind.Float16_t3x1Keyword:
+                case SyntaxKind.Float16_t3x2Keyword:
+                case SyntaxKind.Float16_t3x3Keyword:
+                case SyntaxKind.Float16_t3x4Keyword:
+                case SyntaxKind.Float16_t4x1Keyword:
+                case SyntaxKind.Float16_t4x2Keyword:
+                case SyntaxKind.Float16_t4x3Keyword:
+                case SyntaxKind.Float16_t4x4Keyword:
                 case SyntaxKind.Int1x1Keyword:
                 case SyntaxKind.Int1x2Keyword:
                 case SyntaxKind.Int1x3Keyword:
@@ -548,6 +597,38 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Int4x2Keyword:
                 case SyntaxKind.Int4x3Keyword:
                 case SyntaxKind.Int4x4Keyword:
+                case SyntaxKind.Int64_t1x1Keyword:
+                case SyntaxKind.Int64_t1x2Keyword:
+                case SyntaxKind.Int64_t1x3Keyword:
+                case SyntaxKind.Int64_t1x4Keyword:
+                case SyntaxKind.Int64_t2x1Keyword:
+                case SyntaxKind.Int64_t2x2Keyword:
+                case SyntaxKind.Int64_t2x3Keyword:
+                case SyntaxKind.Int64_t2x4Keyword:
+                case SyntaxKind.Int64_t3x1Keyword:
+                case SyntaxKind.Int64_t3x2Keyword:
+                case SyntaxKind.Int64_t3x3Keyword:
+                case SyntaxKind.Int64_t3x4Keyword:
+                case SyntaxKind.Int64_t4x1Keyword:
+                case SyntaxKind.Int64_t4x2Keyword:
+                case SyntaxKind.Int64_t4x3Keyword:
+                case SyntaxKind.Int64_t4x4Keyword:
+                case SyntaxKind.Int16_t1x1Keyword:
+                case SyntaxKind.Int16_t1x2Keyword:
+                case SyntaxKind.Int16_t1x3Keyword:
+                case SyntaxKind.Int16_t1x4Keyword:
+                case SyntaxKind.Int16_t2x1Keyword:
+                case SyntaxKind.Int16_t2x2Keyword:
+                case SyntaxKind.Int16_t2x3Keyword:
+                case SyntaxKind.Int16_t2x4Keyword:
+                case SyntaxKind.Int16_t3x1Keyword:
+                case SyntaxKind.Int16_t3x2Keyword:
+                case SyntaxKind.Int16_t3x3Keyword:
+                case SyntaxKind.Int16_t3x4Keyword:
+                case SyntaxKind.Int16_t4x1Keyword:
+                case SyntaxKind.Int16_t4x2Keyword:
+                case SyntaxKind.Int16_t4x3Keyword:
+                case SyntaxKind.Int16_t4x4Keyword:
                 case SyntaxKind.Min10Float1x1Keyword:
                 case SyntaxKind.Min10Float1x2Keyword:
                 case SyntaxKind.Min10Float1x3Keyword:
@@ -644,6 +725,38 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Uint4x2Keyword:
                 case SyntaxKind.Uint4x3Keyword:
                 case SyntaxKind.Uint4x4Keyword:
+                case SyntaxKind.Uint64_t1x1Keyword:
+                case SyntaxKind.Uint64_t1x2Keyword:
+                case SyntaxKind.Uint64_t1x3Keyword:
+                case SyntaxKind.Uint64_t1x4Keyword:
+                case SyntaxKind.Uint64_t2x1Keyword:
+                case SyntaxKind.Uint64_t2x2Keyword:
+                case SyntaxKind.Uint64_t2x3Keyword:
+                case SyntaxKind.Uint64_t2x4Keyword:
+                case SyntaxKind.Uint64_t3x1Keyword:
+                case SyntaxKind.Uint64_t3x2Keyword:
+                case SyntaxKind.Uint64_t3x3Keyword:
+                case SyntaxKind.Uint64_t3x4Keyword:
+                case SyntaxKind.Uint64_t4x1Keyword:
+                case SyntaxKind.Uint64_t4x2Keyword:
+                case SyntaxKind.Uint64_t4x3Keyword:
+                case SyntaxKind.Uint64_t4x4Keyword:
+                case SyntaxKind.Uint16_t1x1Keyword:
+                case SyntaxKind.Uint16_t1x2Keyword:
+                case SyntaxKind.Uint16_t1x3Keyword:
+                case SyntaxKind.Uint16_t1x4Keyword:
+                case SyntaxKind.Uint16_t2x1Keyword:
+                case SyntaxKind.Uint16_t2x2Keyword:
+                case SyntaxKind.Uint16_t2x3Keyword:
+                case SyntaxKind.Uint16_t2x4Keyword:
+                case SyntaxKind.Uint16_t3x1Keyword:
+                case SyntaxKind.Uint16_t3x2Keyword:
+                case SyntaxKind.Uint16_t3x3Keyword:
+                case SyntaxKind.Uint16_t3x4Keyword:
+                case SyntaxKind.Uint16_t4x1Keyword:
+                case SyntaxKind.Uint16_t4x2Keyword:
+                case SyntaxKind.Uint16_t4x3Keyword:
+                case SyntaxKind.Uint16_t4x4Keyword:
                 case SyntaxKind.SNormKeyword:
                 case SyntaxKind.UNormKeyword:
                     return true;
@@ -1255,6 +1368,27 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Half4x2Keyword:
                 case SyntaxKind.Half4x3Keyword:
                 case SyntaxKind.Half4x4Keyword:
+				case SyntaxKind.Float16_tKeyword:
+				case SyntaxKind.Float16_t1Keyword:
+				case SyntaxKind.Float16_t2Keyword:
+				case SyntaxKind.Float16_t3Keyword:
+				case SyntaxKind.Float16_t4Keyword:
+				case SyntaxKind.Float16_t1x1Keyword:
+                case SyntaxKind.Float16_t1x2Keyword:
+                case SyntaxKind.Float16_t1x3Keyword:
+                case SyntaxKind.Float16_t1x4Keyword:
+                case SyntaxKind.Float16_t2x1Keyword:
+                case SyntaxKind.Float16_t2x2Keyword:
+                case SyntaxKind.Float16_t2x3Keyword:
+                case SyntaxKind.Float16_t2x4Keyword:
+                case SyntaxKind.Float16_t3x1Keyword:
+                case SyntaxKind.Float16_t3x2Keyword:
+                case SyntaxKind.Float16_t3x3Keyword:
+                case SyntaxKind.Float16_t3x4Keyword:
+                case SyntaxKind.Float16_t4x1Keyword:
+                case SyntaxKind.Float16_t4x2Keyword:
+                case SyntaxKind.Float16_t4x3Keyword:
+                case SyntaxKind.Float16_t4x4Keyword:
                 case SyntaxKind.IfKeyword:
                 case SyntaxKind.IndicesKeyword:
                 case SyntaxKind.InKeyword:
@@ -1282,6 +1416,48 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Int4x2Keyword:
                 case SyntaxKind.Int4x3Keyword:
                 case SyntaxKind.Int4x4Keyword:
+                case SyntaxKind.Int64_tKeyword:
+                case SyntaxKind.Int64_t1Keyword:
+                case SyntaxKind.Int64_t2Keyword:
+                case SyntaxKind.Int64_t3Keyword:
+                case SyntaxKind.Int64_t4Keyword:
+                case SyntaxKind.Int64_t1x1Keyword:
+                case SyntaxKind.Int64_t1x2Keyword:
+                case SyntaxKind.Int64_t1x3Keyword:
+                case SyntaxKind.Int64_t1x4Keyword:
+                case SyntaxKind.Int64_t2x1Keyword:
+                case SyntaxKind.Int64_t2x2Keyword:
+                case SyntaxKind.Int64_t2x3Keyword:
+                case SyntaxKind.Int64_t2x4Keyword:
+                case SyntaxKind.Int64_t3x1Keyword:
+                case SyntaxKind.Int64_t3x2Keyword:
+                case SyntaxKind.Int64_t3x3Keyword:
+                case SyntaxKind.Int64_t3x4Keyword:
+                case SyntaxKind.Int64_t4x1Keyword:
+                case SyntaxKind.Int64_t4x2Keyword:
+                case SyntaxKind.Int64_t4x3Keyword:
+                case SyntaxKind.Int64_t4x4Keyword:
+                case SyntaxKind.Int16_tKeyword:
+                case SyntaxKind.Int16_t1Keyword:
+                case SyntaxKind.Int16_t2Keyword:
+                case SyntaxKind.Int16_t3Keyword:
+                case SyntaxKind.Int16_t4Keyword:
+                case SyntaxKind.Int16_t1x1Keyword:
+                case SyntaxKind.Int16_t1x2Keyword:
+                case SyntaxKind.Int16_t1x3Keyword:
+                case SyntaxKind.Int16_t1x4Keyword:
+                case SyntaxKind.Int16_t2x1Keyword:
+                case SyntaxKind.Int16_t2x2Keyword:
+                case SyntaxKind.Int16_t2x3Keyword:
+                case SyntaxKind.Int16_t2x4Keyword:
+                case SyntaxKind.Int16_t3x1Keyword:
+                case SyntaxKind.Int16_t3x2Keyword:
+                case SyntaxKind.Int16_t3x3Keyword:
+                case SyntaxKind.Int16_t3x4Keyword:
+                case SyntaxKind.Int16_t4x1Keyword:
+                case SyntaxKind.Int16_t4x2Keyword:
+                case SyntaxKind.Int16_t4x3Keyword:
+                case SyntaxKind.Int16_t4x4Keyword:
                 case SyntaxKind.InterfaceKeyword:
                 case SyntaxKind.LineKeyword:
                 case SyntaxKind.LineAdjKeyword:
@@ -1488,6 +1664,48 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Uint4x2Keyword:
                 case SyntaxKind.Uint4x3Keyword:
                 case SyntaxKind.Uint4x4Keyword:
+                case SyntaxKind.Uint64_tKeyword:
+                case SyntaxKind.Uint64_t1Keyword:
+                case SyntaxKind.Uint64_t2Keyword:
+                case SyntaxKind.Uint64_t3Keyword:
+                case SyntaxKind.Uint64_t4Keyword:
+                case SyntaxKind.Uint64_t1x1Keyword:
+                case SyntaxKind.Uint64_t1x2Keyword:
+                case SyntaxKind.Uint64_t1x3Keyword:
+                case SyntaxKind.Uint64_t1x4Keyword:
+                case SyntaxKind.Uint64_t2x1Keyword:
+                case SyntaxKind.Uint64_t2x2Keyword:
+                case SyntaxKind.Uint64_t2x3Keyword:
+                case SyntaxKind.Uint64_t2x4Keyword:
+                case SyntaxKind.Uint64_t3x1Keyword:
+                case SyntaxKind.Uint64_t3x2Keyword:
+                case SyntaxKind.Uint64_t3x3Keyword:
+                case SyntaxKind.Uint64_t3x4Keyword:
+                case SyntaxKind.Uint64_t4x1Keyword:
+                case SyntaxKind.Uint64_t4x2Keyword:
+                case SyntaxKind.Uint64_t4x3Keyword:
+                case SyntaxKind.Uint64_t4x4Keyword:
+                case SyntaxKind.Uint16_tKeyword:
+                case SyntaxKind.Uint16_t1Keyword:
+                case SyntaxKind.Uint16_t2Keyword:
+                case SyntaxKind.Uint16_t3Keyword:
+                case SyntaxKind.Uint16_t4Keyword:
+                case SyntaxKind.Uint16_t1x1Keyword:
+                case SyntaxKind.Uint16_t1x2Keyword:
+                case SyntaxKind.Uint16_t1x3Keyword:
+                case SyntaxKind.Uint16_t1x4Keyword:
+                case SyntaxKind.Uint16_t2x1Keyword:
+                case SyntaxKind.Uint16_t2x2Keyword:
+                case SyntaxKind.Uint16_t2x3Keyword:
+                case SyntaxKind.Uint16_t2x4Keyword:
+                case SyntaxKind.Uint16_t3x1Keyword:
+                case SyntaxKind.Uint16_t3x2Keyword:
+                case SyntaxKind.Uint16_t3x3Keyword:
+                case SyntaxKind.Uint16_t3x4Keyword:
+                case SyntaxKind.Uint16_t4x1Keyword:
+                case SyntaxKind.Uint16_t4x2Keyword:
+                case SyntaxKind.Uint16_t4x3Keyword:
+                case SyntaxKind.Uint16_t4x4Keyword:
                 case SyntaxKind.VectorKeyword:
                 case SyntaxKind.VertexShaderKeyword:
                 case SyntaxKind.VerticesKeyword:
@@ -1875,6 +2093,48 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return SyntaxKind.Half4x3Keyword;
                 case "half4x4":
                     return SyntaxKind.Half4x4Keyword;
+                case "float16_t":
+                    return SyntaxKind.Float16_tKeyword;
+                case "float16_t1":
+                    return SyntaxKind.Float16_t1Keyword;
+                case "float16_t2":
+                    return SyntaxKind.Float16_t2Keyword;
+                case "float16_t3":
+                    return SyntaxKind.Float16_t3Keyword;
+                case "float16_t4":
+                    return SyntaxKind.Float16_t4Keyword;
+                case "float16_t1x1":
+                    return SyntaxKind.Float16_t1x1Keyword;
+                case "float16_t1x2":
+                    return SyntaxKind.Float16_t1x2Keyword;
+                case "float16_t1x3":
+                    return SyntaxKind.Float16_t1x3Keyword;
+                case "float16_t1x4":
+                    return SyntaxKind.Float16_t1x4Keyword;
+                case "float16_t2x1":
+                    return SyntaxKind.Float16_t2x1Keyword;
+                case "float16_t2x2":
+                    return SyntaxKind.Float16_t2x2Keyword;
+                case "float16_t2x3":
+                    return SyntaxKind.Float16_t2x3Keyword;
+                case "float16_t2x4":
+                    return SyntaxKind.Float16_t2x4Keyword;
+                case "float16_t3x1":
+                    return SyntaxKind.Float16_t3x1Keyword;
+                case "float16_t3x2":
+                    return SyntaxKind.Float16_t3x2Keyword;
+                case "float16_t3x3":
+                    return SyntaxKind.Float16_t3x3Keyword;
+                case "float16_t3x4":
+                    return SyntaxKind.Float16_t3x4Keyword;
+                case "float16_t4x1":
+                    return SyntaxKind.Float16_t4x1Keyword;
+                case "float16_t4x2":
+                    return SyntaxKind.Float16_t4x2Keyword;
+                case "float16_t4x3":
+                    return SyntaxKind.Float16_t4x3Keyword;
+                case "float16_t4x4":
+                    return SyntaxKind.Float16_t4x4Keyword;
                 case "if":
                     return SyntaxKind.IfKeyword;
                 case "in":
@@ -1927,6 +2187,90 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return SyntaxKind.Int4x3Keyword;
                 case "int4x4":
                     return SyntaxKind.Int4x4Keyword;
+                case "int64_t":
+                    return SyntaxKind.Int64_tKeyword;
+                case "int64_t1":
+                    return SyntaxKind.Int64_t1Keyword;
+                case "int64_t2":
+                    return SyntaxKind.Int64_t2Keyword;
+                case "int64_t3":
+                    return SyntaxKind.Int64_t3Keyword;
+                case "int64_t4":
+                    return SyntaxKind.Int64_t4Keyword;
+                case "int64_t1x1":
+                    return SyntaxKind.Int64_t1x1Keyword;
+                case "int64_t1x2":
+                    return SyntaxKind.Int64_t1x2Keyword;
+                case "int64_t1x3":
+                    return SyntaxKind.Int64_t1x3Keyword;
+                case "int64_t1x4":
+                    return SyntaxKind.Int64_t1x4Keyword;
+                case "int64_t2x1":
+                    return SyntaxKind.Int64_t2x1Keyword;
+                case "int64_t2x2":
+                    return SyntaxKind.Int64_t2x2Keyword;
+                case "int64_t2x3":
+                    return SyntaxKind.Int64_t2x3Keyword;
+                case "int64_t2x4":
+                    return SyntaxKind.Int64_t2x4Keyword;
+                case "int64_t3x1":
+                    return SyntaxKind.Int64_t3x1Keyword;
+                case "int64_t3x2":
+                    return SyntaxKind.Int64_t3x2Keyword;
+                case "int64_t3x3":
+                    return SyntaxKind.Int64_t3x3Keyword;
+                case "int64_t3x4":
+                    return SyntaxKind.Int64_t3x4Keyword;
+                case "int64_t4x1":
+                    return SyntaxKind.Int64_t4x1Keyword;
+                case "int64_t4x2":
+                    return SyntaxKind.Int64_t4x2Keyword;
+                case "int64_t4x3":
+                    return SyntaxKind.Int64_t4x3Keyword;
+                case "int64_t4x4":
+                    return SyntaxKind.Int64_t4x4Keyword;
+                case "int16_t":
+                    return SyntaxKind.Int16_tKeyword;
+                case "int16_t1":
+                    return SyntaxKind.Int16_t1Keyword;
+                case "int16_t2":
+                    return SyntaxKind.Int16_t2Keyword;
+                case "int16_t3":
+                    return SyntaxKind.Int16_t3Keyword;
+                case "int16_t4":
+                    return SyntaxKind.Int16_t4Keyword;
+                case "int16_t1x1":
+                    return SyntaxKind.Int16_t1x1Keyword;
+                case "int16_t1x2":
+                    return SyntaxKind.Int16_t1x2Keyword;
+                case "int16_t1x3":
+                    return SyntaxKind.Int16_t1x3Keyword;
+                case "int16_t1x4":
+                    return SyntaxKind.Int16_t1x4Keyword;
+                case "int16_t2x1":
+                    return SyntaxKind.Int16_t2x1Keyword;
+                case "int16_t2x2":
+                    return SyntaxKind.Int16_t2x2Keyword;
+                case "int16_t2x3":
+                    return SyntaxKind.Int16_t2x3Keyword;
+                case "int16_t2x4":
+                    return SyntaxKind.Int16_t2x4Keyword;
+                case "int16_t3x1":
+                    return SyntaxKind.Int16_t3x1Keyword;
+                case "int16_t3x2":
+                    return SyntaxKind.Int16_t3x2Keyword;
+                case "int16_t3x3":
+                    return SyntaxKind.Int16_t3x3Keyword;
+                case "int16_t3x4":
+                    return SyntaxKind.Int16_t3x4Keyword;
+                case "int16_t4x1":
+                    return SyntaxKind.Int16_t4x1Keyword;
+                case "int16_t4x2":
+                    return SyntaxKind.Int16_t4x2Keyword;
+                case "int16_t4x3":
+                    return SyntaxKind.Int16_t4x3Keyword;
+                case "int16_t4x4":
+                    return SyntaxKind.Int16_t4x4Keyword;
                 case "interface":
                     return SyntaxKind.InterfaceKeyword;
                 case "lineadj":
@@ -2328,6 +2672,90 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return SyntaxKind.Uint4x3Keyword;
                 case "uint4x4":
                     return SyntaxKind.Uint4x4Keyword;
+                case "uint64_t":
+                    return SyntaxKind.Uint64_tKeyword;
+                case "uint64_t1":
+                    return SyntaxKind.Uint64_t1Keyword;
+                case "uint64_t2":
+                    return SyntaxKind.Uint64_t2Keyword;
+                case "uint64_t3":
+                    return SyntaxKind.Uint64_t3Keyword;
+                case "uint64_t4":
+                    return SyntaxKind.Uint64_t4Keyword;
+                case "uint64_t1x1":
+                    return SyntaxKind.Uint64_t1x1Keyword;
+                case "uint64_t1x2":
+                    return SyntaxKind.Uint64_t1x2Keyword;
+                case "uint64_t1x3":
+                    return SyntaxKind.Uint64_t1x3Keyword;
+                case "uint64_t1x4":
+                    return SyntaxKind.Uint64_t1x4Keyword;
+                case "uint64_t2x1":
+                    return SyntaxKind.Uint64_t2x1Keyword;
+                case "uint64_t2x2":
+                    return SyntaxKind.Uint64_t2x2Keyword;
+                case "uint64_t2x3":
+                    return SyntaxKind.Uint64_t2x3Keyword;
+                case "uint64_t2x4":
+                    return SyntaxKind.Uint64_t2x4Keyword;
+                case "uint64_t3x1":
+                    return SyntaxKind.Uint64_t3x1Keyword;
+                case "uint64_t3x2":
+                    return SyntaxKind.Uint64_t3x2Keyword;
+                case "uint64_t3x3":
+                    return SyntaxKind.Uint64_t3x3Keyword;
+                case "uint64_t3x4":
+                    return SyntaxKind.Uint64_t3x4Keyword;
+                case "uint64_t4x1":
+                    return SyntaxKind.Uint64_t4x1Keyword;
+                case "uint64_t4x2":
+                    return SyntaxKind.Uint64_t4x2Keyword;
+                case "uint64_t4x3":
+                    return SyntaxKind.Uint64_t4x3Keyword;
+                case "uint64_t4x4":
+                    return SyntaxKind.Uint64_t4x4Keyword;
+                case "uint16_t":
+                    return SyntaxKind.Uint16_tKeyword;
+                case "uint16_t1":
+                    return SyntaxKind.Uint16_t1Keyword;
+                case "uint16_t2":
+                    return SyntaxKind.Uint16_t2Keyword;
+                case "uint16_t3":
+                    return SyntaxKind.Uint16_t3Keyword;
+                case "uint16_t4":
+                    return SyntaxKind.Uint16_t4Keyword;
+                case "uint16_t1x1":
+                    return SyntaxKind.Uint16_t1x1Keyword;
+                case "uint16_t1x2":
+                    return SyntaxKind.Uint16_t1x2Keyword;
+                case "uint16_t1x3":
+                    return SyntaxKind.Uint16_t1x3Keyword;
+                case "uint16_t1x4":
+                    return SyntaxKind.Uint16_t1x4Keyword;
+                case "uint16_t2x1":
+                    return SyntaxKind.Uint16_t2x1Keyword;
+                case "uint16_t2x2":
+                    return SyntaxKind.Uint16_t2x2Keyword;
+                case "uint16_t2x3":
+                    return SyntaxKind.Uint16_t2x3Keyword;
+                case "uint16_t2x4":
+                    return SyntaxKind.Uint16_t2x4Keyword;
+                case "uint16_t3x1":
+                    return SyntaxKind.Uint16_t3x1Keyword;
+                case "uint16_t3x2":
+                    return SyntaxKind.Uint16_t3x2Keyword;
+                case "uint16_t3x3":
+                    return SyntaxKind.Uint16_t3x3Keyword;
+                case "uint16_t3x4":
+                    return SyntaxKind.Uint16_t3x4Keyword;
+                case "uint16_t4x1":
+                    return SyntaxKind.Uint16_t4x1Keyword;
+                case "uint16_t4x2":
+                    return SyntaxKind.Uint16_t4x2Keyword;
+                case "uint16_t4x3":
+                    return SyntaxKind.Uint16_t4x3Keyword;
+                case "uint16_t4x4":
+                    return SyntaxKind.Uint16_t4x4Keyword;
                 case "vector":
                     return SyntaxKind.VectorKeyword;
                 case "volatile":

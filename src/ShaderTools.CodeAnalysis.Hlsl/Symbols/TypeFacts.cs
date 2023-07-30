@@ -243,6 +243,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     {
                         case ScalarType.Min16Float:
                         case ScalarType.Half:
+                        case ScalarType.Float16_t:
                         case ScalarType.Float:
                         case ScalarType.Double:
                             return true;
@@ -250,6 +251,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     break;
                 case ScalarType.Min16Float:
                 case ScalarType.Half:
+                case ScalarType.Float16_t:
                     switch (left)
                     {
                         case ScalarType.Float:
@@ -279,20 +281,28 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 case ScalarType.Min12Int:
                 case ScalarType.Min16Int:
                 case ScalarType.Int:
+                case ScalarType.Int64_t:
+                case ScalarType.Int16_t:
                     switch (right)
                     {
                         case ScalarType.Min16Uint:
                         case ScalarType.Uint:
+                        case ScalarType.Uint64_t:
+                        case ScalarType.Uint16_t:
                             return false;
                     }
                     break;
                 case ScalarType.Min16Uint:
                 case ScalarType.Uint:
+                case ScalarType.Uint64_t:
+                case ScalarType.Uint16_t:
                     switch (right)
                     {
                         case ScalarType.Min12Int:
                         case ScalarType.Min16Int:
                         case ScalarType.Int:
+                        case ScalarType.Int64_t:
+                        case ScalarType.Int16_t:
                             return false;
                     }
                     break;
@@ -329,8 +339,18 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     return ScalarType.Int;
                 case SyntaxKind.UintKeyword:
                     return ScalarType.Uint;
+                case SyntaxKind.Int64_tKeyword:
+                    return ScalarType.Int64_t;
+                case SyntaxKind.Uint64_tKeyword:
+                    return ScalarType.Uint64_t;
+                case SyntaxKind.Int16_tKeyword:
+                    return ScalarType.Int16_t;
+                case SyntaxKind.Uint16_tKeyword:
+                    return ScalarType.Uint16_t;
                 case SyntaxKind.HalfKeyword:
                     return ScalarType.Half;
+                case SyntaxKind.Float16_tKeyword:
+                    return ScalarType.Float16_t;
                 case SyntaxKind.FloatKeyword:
                     return ScalarType.Float;
                 case SyntaxKind.DoubleKeyword:
@@ -383,6 +403,38 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     return Tuple.Create(ScalarType.Uint, 3);
                 case SyntaxKind.Uint4Keyword:
                     return Tuple.Create(ScalarType.Uint, 4);
+                case SyntaxKind.Int64_t1Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 1);
+                case SyntaxKind.Int64_t2Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 2);
+                case SyntaxKind.Int64_t3Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 3);
+                case SyntaxKind.Int64_t4Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 4);
+                case SyntaxKind.Uint64_t1Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 1);
+                case SyntaxKind.Uint64_t2Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 2);
+                case SyntaxKind.Uint64_t3Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 3);
+                case SyntaxKind.Uint64_t4Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 4);
+                case SyntaxKind.Int16_t1Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 1);
+                case SyntaxKind.Int16_t2Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 2);
+                case SyntaxKind.Int16_t3Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 3);
+                case SyntaxKind.Int16_t4Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 4);
+                case SyntaxKind.Uint16_t1Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 1);
+                case SyntaxKind.Uint16_t2Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 2);
+                case SyntaxKind.Uint16_t3Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 3);
+                case SyntaxKind.Uint16_t4Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 4);
                 case SyntaxKind.Half1Keyword:
                     return Tuple.Create(ScalarType.Half, 1);
                 case SyntaxKind.Half2Keyword:
@@ -391,6 +443,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     return Tuple.Create(ScalarType.Half, 3);
                 case SyntaxKind.Half4Keyword:
                     return Tuple.Create(ScalarType.Half, 4);
+                case SyntaxKind.Float16_t1Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 1);
+                case SyntaxKind.Float16_t2Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 2);
+                case SyntaxKind.Float16_t3Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 3);
+                case SyntaxKind.Float16_t4Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 4);
                 case SyntaxKind.Float1Keyword:
                     return Tuple.Create(ScalarType.Float, 1);
                 case SyntaxKind.Float2Keyword:
@@ -558,6 +618,138 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                 case SyntaxKind.Uint4x4Keyword:
                     return Tuple.Create(ScalarType.Uint, 4, 4);
 
+                case SyntaxKind.Int64_t1x1Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 1, 1);
+                case SyntaxKind.Int64_t1x2Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 1, 2);
+                case SyntaxKind.Int64_t1x3Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 1, 3);
+                case SyntaxKind.Int64_t1x4Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 1, 4);
+                case SyntaxKind.Int64_t2x1Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 2, 1);
+                case SyntaxKind.Int64_t2x2Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 2, 2);
+                case SyntaxKind.Int64_t2x3Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 2, 3);
+                case SyntaxKind.Int64_t2x4Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 2, 4);
+                case SyntaxKind.Int64_t3x1Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 3, 1);
+                case SyntaxKind.Int64_t3x2Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 3, 2);
+                case SyntaxKind.Int64_t3x3Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 3, 3);
+                case SyntaxKind.Int64_t3x4Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 3, 4);
+                case SyntaxKind.Int64_t4x1Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 4, 1);
+                case SyntaxKind.Int64_t4x2Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 4, 2);
+                case SyntaxKind.Int64_t4x3Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 4, 3);
+                case SyntaxKind.Int64_t4x4Keyword:
+                    return Tuple.Create(ScalarType.Int64_t, 4, 4);
+
+                case SyntaxKind.Uint64_t1x1Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 1, 1);
+                case SyntaxKind.Uint64_t1x2Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 1, 2);
+                case SyntaxKind.Uint64_t1x3Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 1, 3);
+                case SyntaxKind.Uint64_t1x4Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 1, 4);
+                case SyntaxKind.Uint64_t2x1Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 2, 1);
+                case SyntaxKind.Uint64_t2x2Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 2, 2);
+                case SyntaxKind.Uint64_t2x3Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 2, 3);
+                case SyntaxKind.Uint64_t2x4Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 2, 4);
+                case SyntaxKind.Uint64_t3x1Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 3, 1);
+                case SyntaxKind.Uint64_t3x2Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 3, 2);
+                case SyntaxKind.Uint64_t3x3Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 3, 3);
+                case SyntaxKind.Uint64_t3x4Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 3, 4);
+                case SyntaxKind.Uint64_t4x1Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 4, 1);
+                case SyntaxKind.Uint64_t4x2Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 4, 2);
+                case SyntaxKind.Uint64_t4x3Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 4, 3);
+                case SyntaxKind.Uint64_t4x4Keyword:
+                    return Tuple.Create(ScalarType.Uint64_t, 4, 4);
+
+                case SyntaxKind.Int16_t1x1Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 1, 1);
+                case SyntaxKind.Int16_t1x2Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 1, 2);
+                case SyntaxKind.Int16_t1x3Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 1, 3);
+                case SyntaxKind.Int16_t1x4Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 1, 4);
+                case SyntaxKind.Int16_t2x1Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 2, 1);
+                case SyntaxKind.Int16_t2x2Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 2, 2);
+                case SyntaxKind.Int16_t2x3Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 2, 3);
+                case SyntaxKind.Int16_t2x4Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 2, 4);
+                case SyntaxKind.Int16_t3x1Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 3, 1);
+                case SyntaxKind.Int16_t3x2Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 3, 2);
+                case SyntaxKind.Int16_t3x3Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 3, 3);
+                case SyntaxKind.Int16_t3x4Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 3, 4);
+                case SyntaxKind.Int16_t4x1Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 4, 1);
+                case SyntaxKind.Int16_t4x2Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 4, 2);
+                case SyntaxKind.Int16_t4x3Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 4, 3);
+                case SyntaxKind.Int16_t4x4Keyword:
+                    return Tuple.Create(ScalarType.Int16_t, 4, 4);
+
+                case SyntaxKind.Uint16_t1x1Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 1, 1);
+                case SyntaxKind.Uint16_t1x2Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 1, 2);
+                case SyntaxKind.Uint16_t1x3Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 1, 3);
+                case SyntaxKind.Uint16_t1x4Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 1, 4);
+                case SyntaxKind.Uint16_t2x1Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 2, 1);
+                case SyntaxKind.Uint16_t2x2Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 2, 2);
+                case SyntaxKind.Uint16_t2x3Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 2, 3);
+                case SyntaxKind.Uint16_t2x4Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 2, 4);
+                case SyntaxKind.Uint16_t3x1Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 3, 1);
+                case SyntaxKind.Uint16_t3x2Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 3, 2);
+                case SyntaxKind.Uint16_t3x3Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 3, 3);
+                case SyntaxKind.Uint16_t3x4Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 3, 4);
+                case SyntaxKind.Uint16_t4x1Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 4, 1);
+                case SyntaxKind.Uint16_t4x2Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 4, 2);
+                case SyntaxKind.Uint16_t4x3Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 4, 3);
+                case SyntaxKind.Uint16_t4x4Keyword:
+                    return Tuple.Create(ScalarType.Uint16_t, 4, 4);
+
                 case SyntaxKind.Half1x1Keyword:
                     return Tuple.Create(ScalarType.Half, 1, 1);
                 case SyntaxKind.Half1x2Keyword:
@@ -590,6 +782,39 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     return Tuple.Create(ScalarType.Half, 4, 3);
                 case SyntaxKind.Half4x4Keyword:
                     return Tuple.Create(ScalarType.Half, 4, 4);
+
+                case SyntaxKind.Float16_t1x1Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 1, 1);
+                case SyntaxKind.Float16_t1x2Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 1, 2);
+                case SyntaxKind.Float16_t1x3Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 1, 3);
+                case SyntaxKind.Float16_t1x4Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 1, 4);
+                case SyntaxKind.Float16_t2x1Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 2, 1);
+                case SyntaxKind.Float16_t2x2Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 2, 2);
+                case SyntaxKind.Float16_t2x3Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 2, 3);
+                case SyntaxKind.Float16_t2x4Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 2, 4);
+                case SyntaxKind.Float16_t3x1Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 3, 1);
+                case SyntaxKind.Float16_t3x2Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 3, 2);
+                case SyntaxKind.Float16_t3x3Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 3, 3);
+                case SyntaxKind.Float16_t3x4Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 3, 4);
+                case SyntaxKind.Float16_t4x1Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 4, 1);
+                case SyntaxKind.Float16_t4x2Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 4, 2);
+                case SyntaxKind.Float16_t4x3Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 4, 3);
+                case SyntaxKind.Float16_t4x4Keyword:
+                    return Tuple.Create(ScalarType.Float16_t, 4, 4);
 
                 case SyntaxKind.Float1x1Keyword:
                     return Tuple.Create(ScalarType.Float, 1, 1);
