@@ -20,7 +20,7 @@ int foo;";
             var semanticModel = compilation.GetSemanticModel();
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
-            Assert.Equal(1, diagnostics.Length);
+            Assert.Single(diagnostics);
             Assert.Equal(DiagnosticId.SymbolRedefined, (DiagnosticId) diagnostics[0].Descriptor.Code);
         }
 
@@ -35,7 +35,7 @@ void foo();";
             var semanticModel = compilation.GetSemanticModel();
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
-            Assert.Equal(1, diagnostics.Length);
+            Assert.Single(diagnostics);
             Assert.Equal(DiagnosticId.SymbolRedefined, (DiagnosticId) diagnostics[0].Descriptor.Code);
         }
 
@@ -52,7 +52,7 @@ void main()
             var semanticModel = compilation.GetSemanticModel();
             var diagnostics = syntaxTree.GetDiagnostics().Concat(semanticModel.GetDiagnostics()).ToImmutableArray();
 
-            Assert.Equal(1, diagnostics.Length);
+            Assert.Single(diagnostics);
             Assert.Equal(DiagnosticId.UndeclaredVariable, (DiagnosticId) diagnostics[0].Descriptor.Code);
         }
     }

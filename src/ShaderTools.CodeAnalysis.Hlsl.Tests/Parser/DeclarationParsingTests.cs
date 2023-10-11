@@ -396,15 +396,15 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
             var fs = (VariableDeclarationStatementSyntax)file.Declarations[0];
             Assert.NotNull(fs.Declaration.Type);
             Assert.Equal(typeText, fs.Declaration.Type.ToString());
-            Assert.Equal(1, fs.Declaration.Variables.Count);
+            Assert.Single(fs.Declaration.Variables);
             Assert.NotNull(fs.Declaration.Variables[0].Identifier);
             Assert.Equal("c", fs.Declaration.Variables[0].Identifier.ToString());
             Assert.Null(fs.Declaration.Variables[0].Initializer);
@@ -420,16 +420,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
             var fs = (VariableDeclarationStatementSyntax)file.Declarations[0];
             Assert.NotNull(fs.Declaration.Type);
             Assert.Equal(typeText, fs.Declaration.Type.ToString());
             Assert.Equal(SyntaxKind.PredefinedObjectType, fs.Declaration.Type.Kind);
-            Assert.Equal(1, fs.Declaration.Variables.Count);
+            Assert.Single(fs.Declaration.Variables);
             Assert.NotNull(fs.Declaration.Variables[0].Identifier);
             Assert.Equal("c", fs.Declaration.Variables[0].Identifier.ToString());
             Assert.Null(fs.Declaration.Variables[0].Initializer);
@@ -445,16 +445,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
             var fs = (VariableDeclarationStatementSyntax)file.Declarations[0];
             Assert.NotNull(fs.Declaration.Type);
             Assert.Equal(typeText, fs.Declaration.Type.ToString());
             Assert.Equal(SyntaxKind.StructType, fs.Declaration.Type.Kind);
-            Assert.Equal(1, fs.Declaration.Variables.Count);
+            Assert.Single(fs.Declaration.Variables);
             Assert.NotNull(fs.Declaration.Variables[0].Identifier);
             Assert.Equal("c", fs.Declaration.Variables[0].Identifier.ToString());
             Assert.Null(fs.Declaration.Variables[0].Initializer);
@@ -471,16 +471,16 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.TypedefStatement, file.Declarations[0].Kind);
             var ts = (TypedefStatementSyntax)file.Declarations[0];
             Assert.NotNull(ts.Type);
             Assert.Equal(typeText, ts.Type.ToString());
             Assert.Equal(SyntaxKind.StructType, ts.Type.Kind);
-            Assert.Equal(1, ts.Declarators.Count);
+            Assert.Single(ts.Declarators);
             var ds = ts.Declarators[0];
             Assert.NotNull(ds.Identifier);
             Assert.Equal("c", ds.Identifier.ToString());
@@ -495,9 +495,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.FunctionDeclaration, file.Declarations[0].Kind);
             var fs = (FunctionDeclarationSyntax)file.Declarations[0];
@@ -506,7 +506,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal("Foo", fs.Name.ToString());
             Assert.NotNull(fs.ParameterList.OpenParenToken);
             Assert.False(fs.ParameterList.OpenParenToken.IsMissing);
-            Assert.Equal(1, fs.ParameterList.Parameters.Count);
+            Assert.Single(fs.ParameterList.Parameters);
             var fp = fs.ParameterList.Parameters[0];
             Assert.Equal("int", fp.Type.ToString());
             Assert.Equal("a", fp.Declarator.Identifier.ToString());
@@ -523,20 +523,20 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
             var fs = (FunctionDefinitionSyntax)file.Declarations[0];
-            Assert.Equal(1, fs.Modifiers.Count);
+            Assert.Single(fs.Modifiers);
             Assert.Equal(SyntaxKind.InlineKeyword, fs.Modifiers[0].Kind);
             Assert.NotNull(fs.ReturnType);
             Assert.Equal("void", fs.ReturnType.ToString());
             Assert.Equal("Foo", fs.Name.ToString());
             Assert.NotNull(fs.ParameterList.OpenParenToken);
             Assert.False(fs.ParameterList.OpenParenToken.IsMissing);
-            Assert.Equal(1, fs.ParameterList.Parameters.Count);
+            Assert.Single(fs.ParameterList.Parameters);
             var fp = fs.ParameterList.Parameters[0];
             Assert.Equal("int", fp.Type.ToString());
             Assert.Equal("a", fp.Declarator.Identifier.ToString());
@@ -544,7 +544,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.False(fs.ParameterList.CloseParenToken.IsMissing);
             Assert.NotNull(fs.Body);
             Assert.NotNull(fs.Body.OpenBraceToken);
-            Assert.Equal(1, fs.Body.Statements.Count);
+            Assert.Single(fs.Body.Statements);
             Assert.NotNull(fs.Body.CloseBraceToken);
             Assert.Null(fs.SemicolonToken);
         }
@@ -556,20 +556,20 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(0, file.GetDiagnostics().Count());
+            Assert.Empty(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
             var fs = (FunctionDefinitionSyntax)file.Declarations[0];
-            Assert.Equal(1, fs.Modifiers.Count);
+            Assert.Single(fs.Modifiers);
             Assert.Equal(SyntaxKind.ExportKeyword, fs.Modifiers[0].Kind);
             Assert.NotNull(fs.ReturnType);
             Assert.Equal("void", fs.ReturnType.ToString());
             Assert.Equal("Foo", fs.Name.ToString());
             Assert.NotNull(fs.ParameterList.OpenParenToken);
             Assert.False(fs.ParameterList.OpenParenToken.IsMissing);
-            Assert.Equal(1, fs.ParameterList.Parameters.Count);
+            Assert.Single(fs.ParameterList.Parameters);
             var fp = fs.ParameterList.Parameters[0];
             Assert.Equal("int", fp.Type.ToString());
             Assert.Equal("a", fp.Declarator.Identifier.ToString());
@@ -577,7 +577,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.False(fs.ParameterList.CloseParenToken.IsMissing);
             Assert.NotNull(fs.Body);
             Assert.NotNull(fs.Body.OpenBraceToken);
-            Assert.Equal(1, fs.Body.Statements.Count);
+            Assert.Single(fs.Body.Statements);
             Assert.NotNull(fs.Body.CloseBraceToken);
             Assert.Null(fs.SemicolonToken);
         }
@@ -589,7 +589,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
             Assert.Empty(file.GetDiagnostics());
 
@@ -597,7 +597,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var fs = (VariableDeclarationStatementSyntax)file.Declarations[0];
             Assert.NotNull(fs.Declaration.Type);
             Assert.Equal("SamplerState", fs.Declaration.Type.ToString());
-            Assert.Equal(1, fs.Declaration.Variables.Count);
+            Assert.Single(fs.Declaration.Variables);
             Assert.Equal("MySamplerState", fs.Declaration.Variables[0].Identifier.Text);
             Assert.Equal(SyntaxKind.StateInitializer, fs.Declaration.Variables[0].Initializer.Kind);
             var init = (StateInitializerSyntax) fs.Declaration.Variables[0].Initializer;
@@ -634,17 +634,17 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var file = ParseFile(text);
 
             Assert.NotNull(file);
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
             Assert.Equal(text, file.ToString());
-            Assert.Equal(1, file.GetDiagnostics().Count());
+            Assert.Single(file.GetDiagnostics());
 
             Assert.Equal(SyntaxKind.TechniqueDeclaration, file.Declarations[0].Kind);
             var fs = (TechniqueSyntax)file.Declarations[0];
             Assert.False(fs.TechniqueKeyword.IsMissing);
             Assert.Null(fs.Name);
-            Assert.Equal(1, fs.Passes.Count);
+            Assert.Single(fs.Passes);
             Assert.Equal("Pass1", fs.Passes[0].Name.Text);
-            Assert.Equal(0, fs.Passes[0].Statements.Count);
+            Assert.Empty(fs.Passes[0].Statements);
 
             Assert.NotNull(fs.SemicolonToken);
         }
@@ -658,11 +658,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(file);
             Assert.Empty(file.GetDiagnostics());
             Assert.Equal(text, file.ToString());
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
 
             Assert.Equal(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
             var fd = (FunctionDefinitionSyntax)file.Declarations[0];
-            Assert.Equal(1, fd.Attributes.Count);
+            Assert.Single(fd.Attributes);
         }
 
         [Fact]
@@ -674,11 +674,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(file);
             Assert.Empty(file.GetDiagnostics());
             Assert.Equal(text, file.ToString());
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
 
             Assert.Equal(SyntaxKind.FunctionDefinition, file.Declarations[0].Kind);
             var fd = (FunctionDefinitionSyntax)file.Declarations[0];
-            Assert.Equal(1, fd.ParameterList.Parameters[0].Attributes.Count);
+            Assert.Single(fd.ParameterList.Parameters[0].Attributes);
         }
 
         [Fact]
@@ -690,11 +690,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(file);
             Assert.Empty(file.GetDiagnostics());
             Assert.Equal(text, file.ToString());
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
 
             Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[0].Kind);
             var fd = (VariableDeclarationStatementSyntax)file.Declarations[0];
-            Assert.Equal(1, fd.Attributes.Count);
+            Assert.Single(fd.Attributes);
         }
 
         [Fact]
@@ -706,7 +706,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(file);
             Assert.Empty(file.GetDiagnostics());
             Assert.Equal(text, file.ToString());
-            Assert.Equal(1, file.Declarations.Count);
+            Assert.Single(file.Declarations);
 
             Assert.Equal(SyntaxKind.TypeDeclarationStatement, file.Declarations[0].Kind);
             var fd = (TypeDeclarationStatementSyntax)file.Declarations[0];
@@ -714,7 +714,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var st = (StructTypeSyntax)fd.Type;
             Assert.Equal(SyntaxKind.VariableDeclarationStatement, st.Members[0].Kind);
             var vd = (VariableDeclarationStatementSyntax)st.Members[0];
-            Assert.Equal(1, vd.Attributes.Count);
+            Assert.Single(vd.Attributes);
         }
 
         [Fact]
@@ -730,7 +730,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
             Assert.Equal(SyntaxKind.VariableDeclarationStatement, file.Declarations[1].Kind);
             var fd = (VariableDeclarationStatementSyntax)file.Declarations[1];
-            Assert.Equal(1, fd.Attributes.Count);
+            Assert.Single(fd.Attributes);
         }
 
         private static CompilationUnitSyntax ParseFile(string text)
