@@ -140,7 +140,7 @@ float b;
             };
             var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(code), "__Root__.hlsl"), options);
 
-            Assert.Equal(1, syntaxTree.GetDiagnostics().Count());
+            Assert.Single(syntaxTree.GetDiagnostics());
         }
 
         private static SyntaxTree CreateSyntaxTree()

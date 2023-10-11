@@ -46,7 +46,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.False(structDefinitionSyntax.StructKeyword.IsMissing);
             Assert.False(structDefinitionSyntax.Name.IsMissing);
             Assert.False(structDefinitionSyntax.OpenBraceToken.IsMissing);
-            Assert.Equal(1, structDefinitionSyntax.OpenBraceToken.LeadingTrivia.Length);
+            Assert.Single(structDefinitionSyntax.OpenBraceToken.LeadingTrivia);
             Assert.False(structDefinitionSyntax.CloseBraceToken.IsMissing);
 
             Assert.False(typeDeclarationSyntax.SemicolonToken.IsMissing);
@@ -68,7 +68,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.False(structDefinitionSyntax.StructKeyword.IsMissing);
             Assert.False(structDefinitionSyntax.Name.IsMissing);
             Assert.False(structDefinitionSyntax.OpenBraceToken.IsMissing);
-            Assert.Equal(1, structDefinitionSyntax.OpenBraceToken.LeadingTrivia.Length);
+            Assert.Single(structDefinitionSyntax.OpenBraceToken.LeadingTrivia);
             Assert.False(structDefinitionSyntax.CloseBraceToken.IsMissing);
 
             Assert.False(typeDeclarationSyntax.SemicolonToken.IsMissing);
@@ -87,7 +87,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.TypeDeclarationStatement);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
             var eof = (SyntaxToken) ast.ChildNodes[1];
-            Assert.Equal(1, eof.LeadingTrivia.Length);
+            Assert.Single(eof.LeadingTrivia);
             Assert.Equal("b", eof.LeadingTrivia[0].ToString());
         }
 
@@ -114,7 +114,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(ast);
             Assert.Equal(1, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.EndOfFileToken);
-            Assert.Equal(1, ((SyntaxToken)ast.ChildNodes[0]).LeadingTrivia.Length);
+            Assert.Single(((SyntaxToken)ast.ChildNodes[0]).LeadingTrivia);
         }
 
         [Fact]
@@ -199,7 +199,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var sd = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.False(sd.Declaration.IsMissing);
             Assert.Equal("SamplerState", sd.Declaration.Type.ToString());
-            Assert.Equal(1, sd.Declaration.Variables.Count);
+            Assert.Single(sd.Declaration.Variables);
             Assert.Equal("s", sd.Declaration.Variables[0].Identifier.ToString());
             Assert.Equal(SyntaxKind.StateInitializer, sd.Declaration.Variables[0].Initializer.Kind);
 
@@ -288,9 +288,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.False(sd.ParameterList.Parameters.GetSeparator(0).ContainsDiagnostics);
             Assert.False(sd.ParameterList.Parameters[1].ContainsDiagnostics);
             Assert.True(sd.ParameterList.Parameters.GetSeparator(1).ContainsDiagnostics);
-            Assert.Equal(1, ((SyntaxToken) sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia.Length);
+            Assert.Single(((SyntaxToken) sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia);
             Assert.Equal(SyntaxKind.SkippedTokensTrivia, ((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0].Kind);
-            Assert.Equal(1, ((SkippedTokensTriviaSyntax)((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens.Count);
+            Assert.Single(((SkippedTokensTriviaSyntax)((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens);
             Assert.Equal(SyntaxKind.IdentifierToken, ((SkippedTokensTriviaSyntax)((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens[0].Kind);
             Assert.Equal("b", ((SkippedTokensTriviaSyntax) ((SyntaxToken)sd.ParameterList.Parameters.GetSeparator(1)).LeadingTrivia[0]).Tokens[0].Text);
             Assert.False(sd.ParameterList.Parameters[2].ContainsDiagnostics);
@@ -317,7 +317,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.False(sd.ParameterList.Parameters.GetSeparator(0).ContainsDiagnostics);
             Assert.True(sd.ParameterList.Parameters[1].ContainsDiagnostics);
             Assert.False(sd.ParameterList.Parameters[1].Type.ContainsDiagnostics);
-            Assert.Equal(1, sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia.Length);
+            Assert.Single(sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia);
             Assert.Equal(SyntaxKind.SkippedTokensTrivia, sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia[0].Kind);
             Assert.Equal(SyntaxKind.IntKeyword, ((SkippedTokensTriviaSyntax) sd.ParameterList.Parameters[1].Declarator.Identifier.LeadingTrivia[0]).Tokens[0].Kind);
             Assert.False(sd.ParameterList.Parameters.GetSeparator(1).ContainsDiagnostics);
@@ -346,7 +346,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var sd = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.Equal(1, sd.Declaration.Variables.Count);
+            Assert.Single(sd.Declaration.Variables);
             Assert.Equal(SyntaxKind.EqualsValueClause, sd.Declaration.Variables[0].Initializer.Kind);
             var initializer = (EqualsValueClauseSyntax) sd.Declaration.Variables[0].Initializer;
             Assert.False(initializer.EqualsToken.IsMissing);
@@ -368,7 +368,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal("main", sd.Name.ToString());
             Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
             Assert.Empty(sd.ParameterList.Parameters);
-            Assert.Equal(1, sd.Body.Statements.Count);
+            Assert.Single(sd.Body.Statements);
             Assert.Equal(SyntaxKind.ForStatement, sd.Body.Statements[0].Kind);
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
             Assert.NotNull(forStatement.Initializer);
@@ -395,7 +395,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal("main", sd.Name.ToString());
             Assert.False(sd.ParameterList.OpenParenToken.IsMissing);
             Assert.Empty(sd.ParameterList.Parameters);
-            Assert.Equal(1, sd.Body.Statements.Count);
+            Assert.Single(sd.Body.Statements);
             Assert.Equal(SyntaxKind.ForStatement, sd.Body.Statements[0].Kind);
             var forStatement = (ForStatementSyntax) sd.Body.Statements[0];
             Assert.NotNull(forStatement.Initializer);
@@ -416,8 +416,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
             Assert.Equal("float", vds.Declaration.Type.ToString());
             Assert.True(vds.Declaration.Variables[0].Identifier.IsMissing);
-            Assert.Equal(1, vds.Declaration.Variables[0].Identifier.Diagnostics.Length);
-            Assert.Equal(1, vds.SemicolonToken.LeadingTrivia.Length);
+            Assert.Single(vds.Declaration.Variables[0].Identifier.Diagnostics);
+            Assert.Single(vds.SemicolonToken.LeadingTrivia);
             Assert.Equal(SyntaxKind.SkippedTokensTrivia, vds.SemicolonToken.LeadingTrivia[0].Kind);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.VariableDeclarationStatement);
             AssertNodeKind(ast.ChildNodes[2], SyntaxKind.EndOfFileToken);
@@ -435,8 +435,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal("int", vds.Declaration.Type.ToString());
             Assert.False(vds.Declaration.Variables[0].Identifier.IsMissing);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
-            Assert.Equal(1, ast.ChildNodes[1].Diagnostics.Length);
-            Assert.Equal(1, ((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia.Length);
+            Assert.Single(ast.ChildNodes[1].Diagnostics);
+            Assert.Single(((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia);
             Assert.Equal(SyntaxKind.SkippedTokensTrivia, ((SyntaxToken) ast.ChildNodes[1]).LeadingTrivia[0].Kind);
         }
 
@@ -449,10 +449,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal(2, ast.ChildNodes.Count);
             AssertNodeKind(ast.ChildNodes[0], SyntaxKind.VariableDeclarationStatement);
             var vds = (VariableDeclarationStatementSyntax)ast.ChildNodes[0];
-            Assert.Equal(1, vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia.Length);
+            Assert.Single(vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia);
             Assert.Equal(SyntaxKind.SkippedTokensTrivia, vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0].Kind);
             Assert.Equal(4, ((SkippedTokensTriviaSyntax) vds.Declaration.Type.GetFirstTokenInDescendants().LeadingTrivia[0]).Tokens.Count);
-            Assert.Equal(1, vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics.Length);
+            Assert.Single(vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics);
             Assert.Equal("Unexpected token '4'.", vds.Declaration.Type.GetFirstTokenInDescendants().Diagnostics[0].Message);
             AssertNodeKind(ast.ChildNodes[1], SyntaxKind.EndOfFileToken);
         }

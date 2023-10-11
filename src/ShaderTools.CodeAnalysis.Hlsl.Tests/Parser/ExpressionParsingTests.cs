@@ -17,7 +17,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal(SyntaxKind.IdentifierName, expr.Kind);
             Assert.False(((IdentifierNameSyntax)expr).Name.IsMissing);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
         }
 
         [Fact]
@@ -29,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.ParenthesizedExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
         }
 
         [Theory]
@@ -43,7 +43,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             var opKind = SyntaxFacts.GetLiteralExpression(kind);
             Assert.Equal(opKind, expr.Kind);
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var us = (LiteralExpressionSyntax)expr;
             Assert.NotNull(us.Token);
             Assert.Equal(kind, us.Token.Kind);
@@ -57,9 +57,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.StringLiteralExpression, expr.Kind);
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var us = (StringLiteralExpressionSyntax)expr;
-            Assert.Equal(us.Tokens.Count, 1);
+            Assert.Single(us.Tokens);
             Assert.Equal(SyntaxKind.StringLiteralToken, us.Tokens[0].Kind);
         }
 
@@ -71,7 +71,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.NumericLiteralExpression, expr.Kind);
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var us = (LiteralExpressionSyntax)expr;
             Assert.NotNull(us.Token);
             Assert.Equal(SyntaxKind.IntegerLiteralToken, us.Token.Kind);
@@ -93,7 +93,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var opKind = SyntaxFacts.GetPrefixUnaryExpression(kind);
             Assert.Equal(opKind, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var us = (PrefixUnaryExpressionSyntax)expr;
             Assert.NotNull(us.OperatorToken);
             Assert.Equal(kind, us.OperatorToken.Kind);
@@ -114,7 +114,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var opKind = SyntaxFacts.GetPostfixUnaryExpression(kind);
             Assert.Equal(opKind, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var us = (PostfixUnaryExpressionSyntax)expr;
             Assert.NotNull(us.OperatorToken);
             Assert.Equal(kind, us.OperatorToken.Kind);
@@ -151,7 +151,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var opKind = SyntaxFacts.GetBinaryExpression(kind);
             Assert.Equal(opKind, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var b = (BinaryExpressionSyntax)expr;
             Assert.NotNull(b.OperatorToken);
             Assert.Equal(kind, b.OperatorToken.Kind);
@@ -182,7 +182,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             var opKind = SyntaxFacts.GetAssignmentExpression(kind);
             Assert.Equal(opKind, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var b = (AssignmentExpressionSyntax)expr;
             Assert.NotNull(b.OperatorToken);
             Assert.Equal(kind, b.OperatorToken.Kind);
@@ -201,7 +201,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
             Assert.NotNull(expr);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var e = (FieldAccessExpressionSyntax)expr;
             Assert.NotNull(e.DotToken);
             Assert.Equal(kind, e.DotToken.Kind);
@@ -220,7 +220,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.ConditionalExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var ts = (ConditionalExpressionSyntax)expr;
             Assert.NotNull(ts.QuestionToken);
             Assert.NotNull(ts.ColonToken);
@@ -240,7 +240,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.CastExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (CastExpressionSyntax)expr;
             Assert.NotNull(cs.OpenParenToken);
             Assert.NotNull(cs.CloseParenToken);
@@ -261,7 +261,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.CastExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (CastExpressionSyntax) expr;
             Assert.NotNull(cs.OpenParenToken);
             Assert.NotNull(cs.CloseParenToken);
@@ -270,7 +270,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(cs.Type);
             Assert.NotNull(cs.Expression);
             Assert.Equal("uint", cs.Type.ToString());
-            Assert.Equal(1, cs.ArrayRankSpecifiers.Count);
+            Assert.Single(cs.ArrayRankSpecifiers);
             Assert.Equal("[a]", cs.ArrayRankSpecifiers[0].ToString());
             Assert.Equal("b", cs.Expression.ToString());
         }
@@ -284,7 +284,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.CastExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (CastExpressionSyntax) expr;
             Assert.NotNull(cs.OpenParenToken);
             Assert.NotNull(cs.CloseParenToken);
@@ -293,7 +293,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(cs.Type);
             Assert.NotNull(cs.Expression);
             Assert.Equal("uint", cs.Type.ToString());
-            Assert.Equal(1, cs.ArrayRankSpecifiers.Count);
+            Assert.Single(cs.ArrayRankSpecifiers);
             Assert.Equal("[4]", cs.ArrayRankSpecifiers[0].ToString());
             Assert.Equal("b", cs.Expression.ToString());
         }
@@ -307,14 +307,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.NumericConstructorInvocationExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (NumericConstructorInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
             Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
             Assert.NotNull(cs.Type);
-            Assert.Equal(1, cs.ArgumentList.Arguments.Count);
+            Assert.Single(cs.ArgumentList.Arguments);
             Assert.Equal("int", cs.Type.ToString());
             Assert.Equal("b", cs.ArgumentList.Arguments[0].ToString());
         }
@@ -328,14 +328,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.FunctionInvocationExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (FunctionInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
             Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
             Assert.NotNull(cs.Name);
-            Assert.Equal(0, cs.ArgumentList.Arguments.Count);
+            Assert.Empty(cs.ArgumentList.Arguments);
             Assert.Equal(SyntaxKind.IdentifierName, cs.Name.Kind);
             Assert.Equal("a", ((IdentifierNameSyntax) cs.Name).Name.Text);
         }
@@ -349,14 +349,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.MethodInvocationExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (MethodInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
             Assert.False(cs.ArgumentList.OpenParenToken.IsMissing);
             Assert.False(cs.ArgumentList.CloseParenToken.IsMissing);
             Assert.NotNull(cs.Name);
-            Assert.Equal(0, cs.ArgumentList.Arguments.Count);
+            Assert.Empty(cs.ArgumentList.Arguments);
             Assert.Equal("a", cs.Target.ToString());
             Assert.NotNull(cs.DotToken);
             Assert.Equal("b", cs.Name.Text);
@@ -371,7 +371,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.FunctionInvocationExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (FunctionInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
@@ -394,7 +394,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.MethodInvocationExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var cs = (MethodInvocationExpressionSyntax)expr;
             Assert.NotNull(cs.ArgumentList.OpenParenToken);
             Assert.NotNull(cs.ArgumentList.CloseParenToken);
@@ -419,7 +419,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.NotNull(expr);
             Assert.Equal(SyntaxKind.ElementAccessExpression, expr.Kind);
             Assert.Equal(text, expr.ToString());
-            Assert.Equal(0, expr.GetDiagnostics().Count());
+            Assert.Empty(expr.GetDiagnostics());
             var ea = (ElementAccessExpressionSyntax)expr;
             Assert.NotNull(ea.OpenBracketToken);
             Assert.NotNull(ea.CloseBracketToken);
@@ -473,7 +473,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
             foreach (var diagnostic in expression.GetDiagnostics())
                 Debug.WriteLine(diagnostic.ToString());
-            Assert.Equal(0, expression.GetDiagnostics().Count());
+            Assert.Empty(expression.GetDiagnostics());
             Assert.Equal(text, expression.ToString());
 
             return (ExpressionSyntax) expression;
