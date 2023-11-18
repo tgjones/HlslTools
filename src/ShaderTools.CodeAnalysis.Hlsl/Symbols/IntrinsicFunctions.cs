@@ -1993,6 +1993,31 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Symbols
                     new ParameterSymbol("outputDecl0", "A string defining which shader outputs in stream 0 are streamed out.", f, IntrinsicTypes.String)
                 }));
 
+            allFunctions.AddRange(Create2(
+                "and",
+                "Logically ANDs the two operands. Equivalent to the boolean AND operator (&&) except it doesn't short-circuit.",
+                IntrinsicTypes.AllNumericTypes,
+                "x", "The first operand.",
+                "y", "The second operand.",
+                IntrinsicTypes.AllNumericTypes.Select(nt => nt.GetNumericTypeWithScalarType(ScalarType.Bool)).ToArray()));
+
+            allFunctions.AddRange(Create2(
+                "or",
+                "Logically ORs the two operands. Equivalent to the boolean OR operator (||) except it doesn't short-circuit.",
+                IntrinsicTypes.AllNumericTypes,
+                "x", "The first operand.",
+                "y", "The second operand.",
+                IntrinsicTypes.AllNumericTypes.Select(nt => nt.GetNumericTypeWithScalarType(ScalarType.Bool)).ToArray()));
+
+            allFunctions.AddRange(Create3(
+                "select",
+                "Returns the second parameter if the condition is true, or the third parameter if the condition is false. Equivalent to the ternary operator (?:) except it doesn't short-circuit.",
+                IntrinsicTypes.AllNumericTypes,
+                "condition", "The condition that determines which value to return.",
+                "t", "The value to return if condition is true.",
+                "f", "The value to return if condition is false.",
+                overrideParameterTypes1: IntrinsicTypes.AllNumericTypes.Select(nt => nt.GetNumericTypeWithScalarType(ScalarType.Bool)).ToArray()));
+
             AllFunctions = allFunctions;
         }
 
