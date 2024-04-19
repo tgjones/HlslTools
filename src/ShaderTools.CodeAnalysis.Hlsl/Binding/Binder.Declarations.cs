@@ -97,9 +97,17 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             var enclosingNamespace = LookupEnclosingNamespace();
             var namespaceSymbol = new NamespaceSymbol(declaration, enclosingNamespace);
 
-            AddSymbol(namespaceSymbol, declaration.Name.SourceRange);
+            // the same as LookupNamespaceOrClass but only for namespace
+            var previousNamespaceSymbol = LookupSymbols<NamespaceSymbol>(declaration.Name).FirstOrDefault();
 
-            var namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
+            AddSymbol(namespaceSymbol, declaration.Name.SourceRange, true);
+
+            NamespaceBinder namespaceBinder;
+            if (previousNamespaceSymbol != null)
+                namespaceBinder = previousNamespaceSymbol.Binder as NamespaceBinder;
+            else
+                namespaceBinder = new NamespaceBinder(_sharedBinderState, this, namespaceSymbol);
+
             namespaceSymbol.Binder = namespaceBinder;
 
             var boundDeclarations = namespaceBinder.BindTopLevelDeclarations(declaration.Declarations, namespaceSymbol);

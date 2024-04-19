@@ -41,7 +41,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                     return BindPrefixUnaryExpression((PrefixUnaryExpressionSyntax) node);
                 case SyntaxKind.PostDecrementExpression:
                 case SyntaxKind.PostIncrementExpression:
-                    return BindPostfixUnaryExpression((PostfixUnaryExpressionSyntax)node);
+                    return BindPostfixUnaryExpression((PostfixUnaryExpressionSyntax) node);
                 case SyntaxKind.AddExpression:
                 case SyntaxKind.MultiplyExpression:
                 case SyntaxKind.SubtractExpression:
@@ -258,13 +258,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         private BoundExpression BindAssignmentExpression(AssignmentExpressionSyntax node)
         {
             // TODO: Need to apply similar overload resolution as BindBinaryExpression.
-            var operatorKind = (node.Kind != SyntaxKind.SimpleAssignmentExpression) 
-                ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(node.Kind) 
+            var operatorKind = (node.Kind != SyntaxKind.SimpleAssignmentExpression)
+                ? (BinaryOperatorKind?) SyntaxFacts.GetBinaryOperatorKind(node.Kind)
                 : null;
 
             return new BoundAssignmentExpression(
-                Bind(node.Left, BindExpression), 
-                operatorKind, 
+                Bind(node.Left, BindExpression),
+                operatorKind,
                 Bind(node.Right, BindExpression));
         }
 
@@ -514,7 +514,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                     throw new InvalidOperationException();
             }
 
-            var result = (containerSymbol?.Binder ?? this).LookupFunction(actualName, argumentTypes);
+            OverloadResolutionResult<FunctionSymbolSignature> result;
+            if (containerSymbol != null && containerSymbol.Binder != null)
+                result = containerSymbol.Binder.LookupFunction(containerSymbol, actualName, argumentTypes);
+            else
+                result = LookupFunction(actualName, argumentTypes);
 
             if (result.Best == null)
             {

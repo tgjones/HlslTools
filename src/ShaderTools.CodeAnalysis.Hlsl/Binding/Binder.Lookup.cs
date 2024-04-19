@@ -142,12 +142,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                         return null;
                     }
 
-                    if (containers.Length > 1)
+                    if (containers.Length > 1 && containers.Any(x => x is StructSymbol))
                         Diagnostics.ReportAmbiguousType(((IdentifierNameSyntax) name).Name, containers);
 
-                    Bind((IdentifierNameSyntax) name, x => new BoundName(containers.First()));
+                    // only the Last namespace container has all members
+                    Bind((IdentifierNameSyntax) name, x => new BoundName(containers.Last()));
 
-                    return containers.First();
+                    return containers.Last();
                 case SyntaxKind.QualifiedName:
                     var qualifiedName = (QualifiedNameSyntax) name;
                     var leftContainer = LookupContainer(qualifiedName.Left);
@@ -164,6 +165,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
             if (container == null)
                 return null;
 
+            // the same as LookupNamespaceOrClass but for container
             var members = container.LookupMembers<NamespaceSymbol>(name.Text)
                 .Cast<ContainerSymbol>()
                 .Union(container.LookupMembers<StructSymbol>(name.Text))
@@ -175,10 +177,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                 return null;
             }
 
-            if (members.Length > 1)
+            if (members.Length > 1 && members.Any(x => x is StructSymbol))
                 Diagnostics.ReportAmbiguousType(name, members);
 
-            return members.First();
+            // only the Last namespace container has all members
+            return members.Last();
         }
 
         private ContainerSymbol LookupContainer(DeclarationNameSyntax name)
@@ -194,12 +197,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
                         return null;
                     }
 
-                    if (containers.Length > 1)
+                    if (containers.Length > 1 && containers.Any(x => x is StructSymbol))
                         Diagnostics.ReportAmbiguousType(((IdentifierDeclarationNameSyntax) name).Name, containers);
 
-                    Bind((IdentifierDeclarationNameSyntax) name, x => new BoundName(containers.First()));
+                    // only the Last namespace container has all members
+                    Bind((IdentifierDeclarationNameSyntax) name, x => new BoundName(containers.Last()));
 
-                    return containers.First();
+                    return containers.Last();
                 case SyntaxKind.QualifiedDeclarationName:
                     var qualifiedName = (QualifiedDeclarationNameSyntax) name;
                     var leftContainer = LookupContainer(qualifiedName.Left);
@@ -240,6 +244,13 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Binding
         {
             var signatures = from f in LookupSymbols<FunctionSymbol>(name)
                              where name.Text == f.Name
+                             select new FunctionSymbolSignature(f);
+            return OverloadResolution.Perform(signatures, argumentTypes);
+        }
+
+        private OverloadResolutionResult<FunctionSymbolSignature> LookupFunction(ContainerSymbol container, SyntaxToken name, ImmutableArray<TypeSymbol> argumentTypes)
+        {
+            var signatures = from f in container.LookupMembers<FunctionSymbol>(name.Text)
                              select new FunctionSymbolSignature(f);
             return OverloadResolution.Perform(signatures, argumentTypes);
         }
