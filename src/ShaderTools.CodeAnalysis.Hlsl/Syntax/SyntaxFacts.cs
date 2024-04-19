@@ -1368,12 +1368,12 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.Half4x2Keyword:
                 case SyntaxKind.Half4x3Keyword:
                 case SyntaxKind.Half4x4Keyword:
-				case SyntaxKind.Float16_tKeyword:
-				case SyntaxKind.Float16_t1Keyword:
-				case SyntaxKind.Float16_t2Keyword:
-				case SyntaxKind.Float16_t3Keyword:
-				case SyntaxKind.Float16_t4Keyword:
-				case SyntaxKind.Float16_t1x1Keyword:
+                case SyntaxKind.Float16_tKeyword:
+                case SyntaxKind.Float16_t1Keyword:
+                case SyntaxKind.Float16_t2Keyword:
+                case SyntaxKind.Float16_t3Keyword:
+                case SyntaxKind.Float16_t4Keyword:
+                case SyntaxKind.Float16_t1x1Keyword:
                 case SyntaxKind.Float16_t1x2Keyword:
                 case SyntaxKind.Float16_t1x3Keyword:
                 case SyntaxKind.Float16_t1x4Keyword:
@@ -2854,6 +2854,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return SyntaxKind.PackMatrixKeyword;
                 case "warning":
                     return SyntaxKind.WarningKeyword;
+                case "__VA_ARGS__":
+                    return SyntaxKind.VariadicArgumentKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -2880,6 +2882,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.MessageKeyword:
                 case SyntaxKind.PackMatrixKeyword:
                 case SyntaxKind.WarningKeyword:
+                case SyntaxKind.VariadicArgumentKeyword:
                     return true;
 
                 default:

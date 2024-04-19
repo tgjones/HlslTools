@@ -15,8 +15,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         private readonly Stack<DefineDirectiveTriviaSyntax> _currentlyExpandingMacros = new Stack<DefineDirectiveTriviaSyntax>();
 
         private bool TryExpandMacro(
-            SyntaxToken token, 
-            IMacroExpansionLexer lexer, 
+            SyntaxToken token,
+            IMacroExpansionLexer lexer,
             out List<SyntaxToken> expandedTokens,
             out MacroReference macroReference)
         {
@@ -38,7 +38,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             {
                 case SyntaxKind.FunctionLikeDefineDirectiveTrivia:
                     // For function-like macros, check for, and expand, macro arguments.
-                    var functionLikeDefine = (FunctionLikeDefineDirectiveTriviaSyntax)directive;
+                    var functionLikeDefine = (FunctionLikeDefineDirectiveTriviaSyntax) directive;
 
                     // ... check to see if the next token is an open paren.
                     if (lexer.Peek(_mode).Kind != SyntaxKind.OpenParenToken)
@@ -50,7 +50,23 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     var macroArguments = new MacroArgumentsParser(lexer).ParseArgumentList();
                     ExpandMacros = true;
 
-                    if (macroArguments.Arguments.Count != functionLikeDefine.Parameters.Parameters.Count)
+                    var functionParameters = functionLikeDefine.Parameters.Parameters;
+
+                    if (functionParameters.Count > 0 && functionParameters.Last().Kind == SyntaxKind.EllipsisToken)
+                    {
+                        // Variadic Arguments
+                        if (macroArguments.Arguments.Count < functionParameters.Count - 1)
+                        {
+                            expandedTokens = new List<SyntaxToken>
+                            {
+                                token
+                                    .WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, token.SourceRange, (int) DiagnosticId.NotEnoughMacroParameters, token.Text))
+                                    .WithTrailingTrivia(new[] { macroArguments })
+                            };
+                            return true;
+                        }
+                    }
+                    else if (macroArguments.Arguments.Count != functionParameters.Count)
                     {
                         expandedTokens = new List<SyntaxToken>
                         {
@@ -61,7 +77,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         return true;
                     }
 
-                    var functionLikeDefineDirective = (FunctionLikeDefineDirectiveTriviaSyntax)directive;
+                    var functionLikeDefineDirective = (FunctionLikeDefineDirectiveTriviaSyntax) directive;
                     macroReference = new FunctionLikeMacroReference(token, macroArguments, functionLikeDefineDirective);
 
                     // Expand arguments.
@@ -80,7 +96,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     break;
 
                 case SyntaxKind.ObjectLikeDefineDirectiveTrivia:
-                    macroReference = new ObjectLikeMacroReference(token, (ObjectLikeDefineDirectiveTriviaSyntax)directive);
+                    macroReference = new ObjectLikeMacroReference(token, (ObjectLikeDefineDirectiveTriviaSyntax) directive);
                     macroBody = directive.MacroBody;
                     lastToken = token;
                     break;
@@ -195,6 +211,19 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                     continue;
                 }
 
+                if (token.ContextualKind == SyntaxKind.VariadicArgumentKeyword && parameters.Count > 0 && parameters.Last().Kind == SyntaxKind.EllipsisToken)
+                {
+                    var separator = SyntaxFactory.ParseToken(",");
+                    int vaStart = parameters.Count - 1;
+                    for (int parameterIndex = vaStart; parameterIndex < expandedArguments.Count; parameterIndex++)
+                    {
+                        if (parameterIndex > vaStart)
+                            result.Add(separator);
+                        result.AddRange(expandedArguments[parameterIndex]);
+                    }
+                    continue;
+                }
+
                 switch (token.Kind)
                 {
                     // Potentially stringify.
@@ -202,6 +231,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         {
                             if (i < macroBody.Count - 1 && macroBody[i + 1].Kind.IsIdentifierOrKeyword())
                             {
+                                if (macroBody[i + 1].ContextualKind == SyntaxKind.VariadicArgumentKeyword && parameters.Count > 0 && parameters.Last().Kind == SyntaxKind.EllipsisToken)
+                                {
+                                    var stringifiedText = "\"" + string.Join(", ", originalArguments.Skip(parameters.Count - 1).Select(x => x.ToString(true))) + "\"";
+                                    result.Add(SyntaxFactory.ParseToken(stringifiedText));
+                                    i++;
+                                    break;
+                                }
+
                                 var parameterIndex = FindParameterIndex(parameters, macroBody[i + 1]);
                                 if (parameterIndex != -1)
                                 {

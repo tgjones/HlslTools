@@ -457,6 +457,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         Uint16_t4x2Keyword,
         Uint16_t4x3Keyword,
         Uint16_t4x4Keyword,
+        VariadicArgumentKeyword,
         VectorKeyword,
         VertexShaderKeyword,
         VerticesKeyword,
@@ -518,6 +519,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
         EqualsEqualsToken,
         ExclamationEqualsToken,
         DotToken,
+        DotDotToken,
+        EllipsisToken,
         HashToken,
         HashHashToken,
 

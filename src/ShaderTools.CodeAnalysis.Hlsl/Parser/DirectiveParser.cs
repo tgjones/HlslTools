@@ -205,6 +205,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 {
                     paramList.Add(NextToken().WithKind(SyntaxKind.IdentifierToken));
                 }
+                else if (Current.Kind == SyntaxKind.EllipsisToken)
+                {
+                    paramList.Add(Match(SyntaxKind.EllipsisToken));
+                }
                 else
                 {
                     paramList.Add(Match(SyntaxKind.IdentifierToken));
@@ -216,6 +220,10 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
                     switch (Current.Kind)
                     {
+                        case SyntaxKind.EllipsisToken:
+                            paramList.Add(Match(SyntaxKind.EllipsisToken));
+                            break;
+
                         case SyntaxKind.IdentifierToken:
                             paramList.Add(Match(SyntaxKind.IdentifierToken));
                             break;
