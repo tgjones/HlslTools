@@ -156,7 +156,7 @@ float baz;
 
             const string text = @"
 float foo;
-#include <foo.hlsl>
+#include ""foo.hlsl""
 DECL(i, 2);
 float bar;
 ";

@@ -64,7 +64,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             _rootFile = file;
 
             _includeFileResolver = new IncludeFileResolver(
-                includeFileSystem ?? new DummyFileSystem(), 
+                includeFileSystem ?? new DummyFileSystem(),
                 options ?? new HlslParseOptions());
 
             _directives = DirectiveStack.Empty;
@@ -161,7 +161,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                             {
                                 foreach (var childToVisit in nodeToVisit.ChildNodes)
                                 {
-                                    VisitNode((SyntaxNode)childToVisit);
+                                    VisitNode((SyntaxNode) childToVisit);
                                 }
                             }
                         }
@@ -170,7 +170,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                         {
                             VisitNode(originalNode);
                         }
-                        
+
                         leadingTrivia.AddRange(token.LeadingTrivia);
                         token = token.WithLeadingTrivia(leadingTrivia.ToImmutableArray());
                     }
@@ -203,7 +203,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             _diagnostics.Clear();
             while (true)
             {
-                _leadingTrivia.Clear();                
+                _leadingTrivia.Clear();
                 _start = _charReader.Position;
                 ReadTrivia(_leadingTrivia, isTrailing: false);
                 var newLeadingTrivia = _leadingTrivia.ToImmutableArray();
@@ -321,7 +321,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 SourceFile include;
                 try
                 {
-                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().File);
+                    include = _includeFileResolver.OpenInclude(includeFilename, _includeStack.Peek().File, includeDirective.IsAngled);
                     if (include == null)
                     {
                         includeDirective = includeDirective.WithDiagnostic(Diagnostic.Create(HlslMessageProvider.Instance, includeDirective.SourceRange, (int) DiagnosticId.IncludeNotFound, includeFilename));
@@ -1273,7 +1273,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
                 checked
                 {
-                    val += (long)(c * Math.Pow(8, j));
+                    val += (long) (c * Math.Pow(8, j));
                 }
             }
 
@@ -1303,7 +1303,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
             _kind = SyntaxFacts.GetKeywordKind(text);
 
             _contextualKind = (_mode == LexerMode.Directive)
-                ? SyntaxFacts.GetPreprocessorKeywordKind(text) 
+                ? SyntaxFacts.GetPreprocessorKeywordKind(text)
                 : SyntaxFacts.GetContextualKeywordKind(text);
 
             switch (_kind)

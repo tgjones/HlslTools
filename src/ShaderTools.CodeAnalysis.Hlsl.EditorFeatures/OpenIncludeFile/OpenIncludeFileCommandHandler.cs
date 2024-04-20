@@ -59,7 +59,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
 
             var currentFile = ((SyntaxTree) syntaxTree).File;
 
-            var include = includeFileResolver.OpenInclude(includeDirectiveTrivia.TrimmedFilename, currentFile);
+            var include = includeFileResolver.OpenInclude(includeDirectiveTrivia.TrimmedFilename, currentFile, includeDirectiveTrivia.IsAngled);
 
             if (include == null)
             {
@@ -67,7 +67,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
                 errorMessage.AppendLine($"Cannot open source file '{includeDirectiveTrivia.TrimmedFilename}'.");
                 errorMessage.AppendLine();
                 errorMessage.AppendLine("Searched paths:");
-                foreach (var includeDirectory in includeFileResolver.GetSearchDirectories(includeDirectiveTrivia.TrimmedFilename, currentFile))
+                foreach (var includeDirectory in includeFileResolver.GetSearchDirectories(includeDirectiveTrivia.TrimmedFilename, currentFile, includeDirectiveTrivia.IsAngled))
                 {
                     errorMessage.AppendLine(includeDirectory);
                 }
@@ -75,8 +75,8 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
                 context.OperationContext.TakeOwnership();
                 var notificationService = workspace.Services.GetService<INotificationService>();
                 notificationService.SendNotification(
-                    errorMessage.ToString(), 
-                    title: "Open Include File", 
+                    errorMessage.ToString(),
+                    title: "Open Include File",
                     severity: NotificationSeverity.Information);
 
                 return true;
@@ -84,7 +84,7 @@ namespace ShaderTools.CodeAnalysis.Editor.Hlsl.OpenIncludeFile
 
             var documentNavigationService = workspace.Services.GetRequiredService<IDocumentNavigationService>();
             documentNavigationService.TryNavigateToSpan(
-                workspace, 
+                workspace,
                 document.Id,
                 new SourceFileSpan(include, new TextSpan(0, 0)));
 

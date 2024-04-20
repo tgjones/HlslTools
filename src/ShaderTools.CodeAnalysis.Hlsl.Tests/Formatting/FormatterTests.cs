@@ -162,7 +162,7 @@ void main()
 # define  BAZ(a ,  b)  a   +  b
 
 
-# include  <include.hlsli> 
+# include  ""include.hlsli"" 
 
 # undef  FOO  
 
@@ -189,7 +189,7 @@ void main()
 #define  BAZ(a ,  b)  a   +  b
 
 
-#include  <include.hlsli> 
+#include  ""include.hlsli"" 
 
 #undef  FOO  
 
@@ -1760,7 +1760,7 @@ RWBuffer<uint> BoundingBox _ : register(u2);
 ");
         }
 
-        private static void AssertFormat(string unformattedText, string expectedNewText, 
+        private static void AssertFormat(string unformattedText, string expectedNewText,
             TextSpan? textSpan = null, FormattingOptions options = null,
             Dictionary<string, string> includes = null,
             bool allowSyntaxErrors = false)

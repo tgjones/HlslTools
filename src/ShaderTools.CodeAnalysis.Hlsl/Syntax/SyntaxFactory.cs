@@ -54,7 +54,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                         lexer.FileSegments);
                 });
 
-            Debug.WriteLine(DateTime.Now +  " - Finished parsing");
+            Debug.WriteLine(DateTime.Now + " - Finished parsing");
 
             return result;
         }
@@ -64,11 +64,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
             return new HlslLexer(new SourceFile(SourceText.From(text))).Lex(LexerMode.Syntax);
         }
 
-        public static IReadOnlyList<SyntaxToken> ParseAllTokens(SourceFile file, IIncludeFileSystem fileSystem = null)
+        public static IReadOnlyList<SyntaxToken> ParseAllTokens(SourceFile file, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null)
         {
             var tokens = new List<SyntaxToken>();
 
-            var lexer = new HlslLexer(file, includeFileSystem: fileSystem);
+            var lexer = new HlslLexer(file, options, fileSystem);
             SyntaxToken token;
             do
             {

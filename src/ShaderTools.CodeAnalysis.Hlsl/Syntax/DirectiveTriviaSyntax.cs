@@ -27,5 +27,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
     public sealed partial class IncludeDirectiveTriviaSyntax : DirectiveTriviaSyntax
     {
         public string TrimmedFilename => Filename.Text.TrimStart('<', '"').TrimEnd('>', '"');
+        public bool IsAngled => Filename.Text.StartsWith("<");
     }
 }

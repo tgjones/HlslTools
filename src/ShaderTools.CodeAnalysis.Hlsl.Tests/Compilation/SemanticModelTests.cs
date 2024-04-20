@@ -26,10 +26,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Compilation
         [HlslTestSuiteData]
         public void CanGetSemanticModel(string testFile)
         {
+            var options = new HlslParseOptions();
+            if (testFile.StartsWith("TestSuite\\Shaders\\Nvidia"))
+                options.AdditionalIncludeDirectories.Add("TestSuite\\Shaders\\Nvidia");
+
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(sourceCode), testFile), fileSystem: new TestFileSystem());
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(sourceCode), testFile), options, fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree);
 
             // Get semantic model.
@@ -134,13 +138,13 @@ typedef struct { int a; } MyStruct2;"));
 
             Assert.Equal(0, semanticModel.GetDiagnostics().Count(x => x.Severity == DiagnosticSeverity.Error));
 
-            var typedefStatement = (TypedefStatementSyntax)syntaxTree.Root.ChildNodes[0];
+            var typedefStatement = (TypedefStatementSyntax) syntaxTree.Root.ChildNodes[0];
 
             var typeAliasSymbol = semanticModel.GetDeclaredSymbol(typedefStatement.Declarators[0]);
             Assert.NotNull(typeAliasSymbol);
             Assert.Equal("MyStruct", typeAliasSymbol.Name);
 
-            var typedefStatement2 = (TypedefStatementSyntax)syntaxTree.Root.ChildNodes[1];
+            var typedefStatement2 = (TypedefStatementSyntax) syntaxTree.Root.ChildNodes[1];
 
             var typeAliasSymbol2 = semanticModel.GetDeclaredSymbol(typedefStatement2.Declarators[0]);
             Assert.NotNull(typeAliasSymbol2);

@@ -16,18 +16,23 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Formatting
         [HlslTestSuiteData]
         public void CanFormatAndReformat(string testFile)
         {
+            var options = new HlslParseOptions();
+            if (testFile.StartsWith("TestSuite\\Shaders\\Nvidia"))
+                options.AdditionalIncludeDirectories.Add("TestSuite\\Shaders\\Nvidia");
+
             // Arrange.
             var sourceCode = File.ReadAllText(testFile);
-            var syntaxTree1 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(sourceCode), testFile), fileSystem: new TestFileSystem());
+            var syntaxTree1 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(sourceCode), testFile), options, fileSystem: new TestFileSystem());
+            SyntaxTreeUtility.CheckForParseErrors(syntaxTree1);
 
             // Format.
             var formattedCode1 = FormatCode(sourceCode, syntaxTree1);
-            var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(formattedCode1), testFile), fileSystem: new TestFileSystem());
+            var syntaxTree2 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(formattedCode1), testFile), options, fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree2);
 
             // Format again.
             var formattedCode2 = FormatCode(formattedCode1, syntaxTree2);
-            var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(formattedCode2), testFile), fileSystem: new TestFileSystem());
+            var syntaxTree3 = SyntaxFactory.ParseSyntaxTree(new SourceFile(SourceText.From(formattedCode2), testFile), options, fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree3);
 
             Assert.Equal(formattedCode1, formattedCode2);

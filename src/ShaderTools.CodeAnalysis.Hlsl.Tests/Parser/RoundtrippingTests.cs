@@ -14,13 +14,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
         [HlslTestSuiteData]
         public void CanBuildSyntaxTree(string testFile)
         {
+            var options = new HlslParseOptions();
+            if (testFile.StartsWith("TestSuite\\Shaders\\Nvidia"))
+                options.AdditionalIncludeDirectories.Add("TestSuite\\Shaders\\Nvidia");
+
             var sourceCode = File.ReadAllText(testFile);
 
             // Build syntax tree.
-            var syntaxTree = SyntaxFactory.ParseSyntaxTree(
-                new CodeAnalysis.Text.SourceFile(SourceText.From(sourceCode), testFile),
-                fileSystem: new TestFileSystem());
-
+            var syntaxTree = SyntaxFactory.ParseSyntaxTree(new CodeAnalysis.Text.SourceFile(SourceText.From(sourceCode), testFile), options, fileSystem: new TestFileSystem());
             SyntaxTreeUtility.CheckForParseErrors(syntaxTree);
 
             // Check roundtripping.

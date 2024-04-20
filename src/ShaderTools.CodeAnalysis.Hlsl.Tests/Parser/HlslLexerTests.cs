@@ -29,7 +29,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal(1, allTokens[0].TrailingTrivia.Length);
             Assert.Equal(new SourceRange(new SourceLocation(1), 1), allTokens[0].TrailingTrivia[0].SourceRange);
             Assert.Equal(SyntaxKind.WhitespaceTrivia, allTokens[0].TrailingTrivia[0].Kind);
-            Assert.Equal(" ", ((SyntaxTrivia)allTokens[0].TrailingTrivia[0]).Text);
+            Assert.Equal(" ", ((SyntaxTrivia) allTokens[0].TrailingTrivia[0]).Text);
 
             Assert.Equal(new SourceRange(new SourceLocation(2), 1), allTokens[1].SourceRange);
             Assert.Equal(new SourceRange(new SourceLocation(2), 3), allTokens[1].FullSourceRange);
@@ -37,21 +37,21 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
             Assert.Equal(2, allTokens[1].TrailingTrivia.Length);
             Assert.Equal(new SourceRange(new SourceLocation(3), 1), allTokens[1].TrailingTrivia[0].SourceRange);
             Assert.Equal(SyntaxKind.WhitespaceTrivia, allTokens[1].TrailingTrivia[0].Kind);
-            Assert.Equal(" ", ((SyntaxTrivia)allTokens[0].TrailingTrivia[0]).Text);
+            Assert.Equal(" ", ((SyntaxTrivia) allTokens[0].TrailingTrivia[0]).Text);
             Assert.Equal(new SourceRange(new SourceLocation(4), 1), allTokens[1].TrailingTrivia[1].SourceRange);
             Assert.Equal(SyntaxKind.EndOfLineTrivia, allTokens[1].TrailingTrivia[1].Kind);
-            Assert.Equal("\n", ((SyntaxTrivia)allTokens[1].TrailingTrivia[1]).Text);
+            Assert.Equal("\n", ((SyntaxTrivia) allTokens[1].TrailingTrivia[1]).Text);
 
             Assert.Equal(new SourceRange(new SourceLocation(6), 1), allTokens[2].SourceRange);
             Assert.Equal(new SourceRange(new SourceLocation(5), 4), allTokens[2].FullSourceRange);
             Assert.Equal(1, allTokens[2].LeadingTrivia.Length);
             Assert.Equal(new SourceRange(new SourceLocation(5), 1), allTokens[2].LeadingTrivia[0].SourceRange);
             Assert.Equal(SyntaxKind.WhitespaceTrivia, allTokens[2].LeadingTrivia[0].Kind);
-            Assert.Equal(" ", ((SyntaxTrivia)allTokens[2].LeadingTrivia[0]).Text);
+            Assert.Equal(" ", ((SyntaxTrivia) allTokens[2].LeadingTrivia[0]).Text);
             Assert.Equal(1, allTokens[2].TrailingTrivia.Length);
             Assert.Equal(new SourceRange(new SourceLocation(7), 2), allTokens[2].TrailingTrivia[0].SourceRange);
             Assert.Equal(SyntaxKind.WhitespaceTrivia, allTokens[2].TrailingTrivia[0].Kind);
-            Assert.Equal("  ", ((SyntaxTrivia)allTokens[2].TrailingTrivia[0]).Text);
+            Assert.Equal("  ", ((SyntaxTrivia) allTokens[2].TrailingTrivia[0]).Text);
 
             Assert.Equal(SyntaxKind.EndOfFileToken, allTokens[3].Kind);
             Assert.Equal(new SourceRange(new SourceLocation(9), 0), allTokens[3].SourceRange);
@@ -125,7 +125,11 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Tests.Parser
 
         private static IReadOnlyList<SyntaxToken> LexAllTokens(SourceFile file, IIncludeFileSystem fileSystem = null)
         {
-            return SyntaxFactory.ParseAllTokens(file, fileSystem);
+            var options = new HlslParseOptions();
+            if (file.FilePath != null && file.FilePath.StartsWith("TestSuite\\Shaders\\Nvidia"))
+                options.AdditionalIncludeDirectories.Add("TestSuite\\Shaders\\Nvidia");
+
+            return SyntaxFactory.ParseAllTokens(file, options, fileSystem);
         }
 
         private static SyntaxToken LexToken(string text)

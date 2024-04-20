@@ -17,20 +17,23 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             _parserOptions = parserOptions;
         }
 
-        public ImmutableArray<string> GetSearchDirectories(string includeFilename, SourceFile currentFile)
+        public ImmutableArray<string> GetSearchDirectories(string includeFilename, SourceFile currentFile, bool isAngled)
         {
             var result = ImmutableArray.CreateBuilder<string>();
 
-            // Look through the hierarchy of files that included currentFile, to see if any of their
-            // directories contain the include.
-            var fileToCheck = currentFile;
-            while (fileToCheck != null)
+            if (!isAngled)
             {
-                if (fileToCheck.FilePath != null)
+                // Look through the hierarchy of files that included currentFile, to see if any of their
+                // directories contain the include.
+                var fileToCheck = currentFile;
+                while (fileToCheck != null)
                 {
-                    result.Add(Path.GetDirectoryName(fileToCheck.FilePath));
+                    if (fileToCheck.FilePath != null)
+                    {
+                        result.Add(Path.GetDirectoryName(fileToCheck.FilePath));
+                    }
+                    fileToCheck = fileToCheck.IncludedBy;
                 }
-                fileToCheck = fileToCheck.IncludedBy;
             }
 
             // Then try additional include directories.
@@ -42,7 +45,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
             return result.ToImmutable();
         }
 
-        public SourceFile OpenInclude(string includeFilename, SourceFile currentFile)
+        public SourceFile OpenInclude(string includeFilename, SourceFile currentFile, bool isAngled)
         {
             SourceText text;
 
@@ -65,19 +68,22 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Text
                 return null;
             }
 
-            // Look through the hierarchy of files that included currentFile, to see if any of their
-            // directories contain the include.
-            var fileToCheck = currentFile;
-            while (fileToCheck != null)
+            if (!isAngled)
             {
-                if (fileToCheck.FilePath != null)
+                // Look through the hierarchy of files that included currentFile, to see if any of their
+                // directories contain the include.
+                var fileToCheck = currentFile;
+                while (fileToCheck != null)
                 {
-                    var rootFileDirectory = Path.GetDirectoryName(fileToCheck.FilePath);
-                    var testFilename = Path.Combine(rootFileDirectory, includeFilename);
-                    if (_fileSystem.TryGetFile(testFilename, out text))
-                        return new SourceFile(text, currentFile, testFilename);
+                    if (fileToCheck.FilePath != null)
+                    {
+                        var rootFileDirectory = Path.GetDirectoryName(fileToCheck.FilePath);
+                        var testFilename = Path.Combine(rootFileDirectory, includeFilename);
+                        if (_fileSystem.TryGetFile(testFilename, out text))
+                            return new SourceFile(text, currentFile, testFilename);
+                    }
+                    fileToCheck = fileToCheck.IncludedBy;
                 }
-                fileToCheck = fileToCheck.IncludedBy;
             }
 
             // Then try additional include directories.
