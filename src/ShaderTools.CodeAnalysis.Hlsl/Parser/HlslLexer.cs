@@ -17,12 +17,14 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
     public sealed partial class HlslLexer : ILexer
     {
         private readonly IIncludeFileResolver _includeFileResolver;
+        private readonly HashSet<string> _includeOnceList = new HashSet<string>();
         private readonly List<SyntaxNode> _leadingTrivia = new List<SyntaxNode>();
         private readonly List<SyntaxNode> _trailingTrivia = new List<SyntaxNode>();
         private readonly List<Diagnostic> _diagnostics = new List<Diagnostic>();
 
         private LexerMode _mode;
         public bool ExpandMacros { get; set; }
+        public void ApplyPragmaOnceDirective() { _includeOnceList.Add(File.FilePath); }
 
         private List<SyntaxToken> _expandedMacroTokens;
         private int _expandedMacroIndex;
@@ -338,7 +340,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
                 if (include != null)
                 {
                     triviaList.Add(includeDirective);
-                    PushIncludeContext(include);
+                    if (!_includeOnceList.Contains(include.FilePath))
+                        PushIncludeContext(include);
                     return false;
                 }
             }

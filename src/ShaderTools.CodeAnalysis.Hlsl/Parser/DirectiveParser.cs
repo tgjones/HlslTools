@@ -293,6 +293,9 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
             var eod = ParseEndOfDirective(false);
 
+            if (body.Count > 0 && body.First().ContextualKind == SyntaxKind.OnceKeyword)
+                _lexer.ApplyPragmaOnceDirective();
+
             return new PragmaDirectiveTriviaSyntax(hash, keyword, body, eod, isActive);
         }
 

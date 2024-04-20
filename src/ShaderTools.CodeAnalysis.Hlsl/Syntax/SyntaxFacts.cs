@@ -219,6 +219,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return "min16int";
                 case SyntaxKind.Min16UintKeyword:
                     return "min16uint";
+                case SyntaxKind.OnceKeyword:
+                    return "once";
                 case SyntaxKind.OutKeyword:
                     return "out";
                 case SyntaxKind.PackMatrixKeyword:
@@ -2854,6 +2856,8 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                     return SyntaxKind.PackMatrixKeyword;
                 case "warning":
                     return SyntaxKind.WarningKeyword;
+                case "once":
+                    return SyntaxKind.OnceKeyword;
                 default:
                     return SyntaxKind.IdentifierToken;
             }
@@ -2880,6 +2884,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Syntax
                 case SyntaxKind.MessageKeyword:
                 case SyntaxKind.PackMatrixKeyword:
                 case SyntaxKind.WarningKeyword:
+                case SyntaxKind.OnceKeyword:
                     return true;
 
                 default:

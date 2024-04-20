@@ -1072,6 +1072,66 @@ float bar;
         }
 
         [Fact]
+        public void TestPragmaOnce()
+        {
+            const string fooText = @"
+#pragma once
+#define FOO
+float foo = 1.0f;
+";
+            const string barText = @"
+#define BAR
+#include <foo.hlsl>
+#include ""foo.hlsl""
+float bar = 2.0f;
+#pragma once 1
+#pragma once : s
+#pragma once()
+#pragma once
+";
+            const string text = @"
+#include <foo.hlsl>
+#include ""foo.hlsl""
+#include ""bar.hlsl""
+#include <foo.hlsl>
+#include ""foo.hlsl""
+#include ""bar.hlsl""
+float rawr = 3.0f;
+#define RAWR
+";
+            var node = Parse(
+                text,
+                new HlslParseOptions
+                {
+                    AdditionalIncludeDirectories = { "test" }
+                },
+                new InMemoryFileSystem(new Dictionary<string, string>
+                {
+                    { Path.Combine("test", "foo.hlsl"), fooText },
+                    { Path.Combine("test2", "bar.hlsl"), barText }
+                }), Path.Combine("test2", "__Root__.hlsl"));
+
+            TestRoundTripping(node, text);
+            VerifyDirectivesSpecial(node,
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.PragmaDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.IncludeDirectiveTrivia, Status = NodeStatus.IsActive },
+                new DirectiveInfo { Kind = SyntaxKind.ObjectLikeDefineDirectiveTrivia, Status = NodeStatus.IsActive });
+        }
+
+        [Fact]
         public void HandlesVirtualDirectoryMapping_IncludeIsInRootOfVirtualDirectory_IncludeHandledSuccessfully()
         {
             var includedFileContents = "int Get() { return 42; }";
@@ -1174,9 +1234,9 @@ float bar;
             return SyntaxFactory.ParseAllTokens(new SourceFile(SourceText.From(text)));
         }
 
-        private static CompilationUnitSyntax Parse(string text, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null)
+        private static CompilationUnitSyntax Parse(string text, HlslParseOptions options = null, IIncludeFileSystem fileSystem = null, string filePath = "__Root__.hlsl")
         {
-            return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text), "__Root__.hlsl"), options, fileSystem);
+            return SyntaxFactory.ParseCompilationUnit(new SourceFile(SourceText.From(text), filePath), options, fileSystem);
         }
 
         private static void TestRoundTripping(CompilationUnitSyntax node, string text, bool disallowErrors = true)
