@@ -21,7 +21,6 @@
         AlreadyDefined,
         BadDirectivePlacement,
         EndOfPreprocessorLineExpected,
-        MissingPreprocessorFile,
         IncludeNotFound,
         IncludeUnexpectedError,
         NotEnoughMacroParameters,

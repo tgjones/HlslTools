@@ -213,9 +213,6 @@
   <data name="MethodOverloadResolutionFailure" xml:space="preserve">
     <value>No overload for method '{0}' takes {1} arguments.</value>
   </data>
-  <data name="MissingPreprocessorFile" xml:space="preserve">
-    <value>Quoted file name, single-line comment or end-of-line expected.</value>
-  </data>
   <data name="NotEnoughMacroParameters" xml:space="preserve">
     <value>Not enough actual parameters for macro '{0}'.</value>
   </data>

@@ -24,7 +24,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
         {
             _kind = SyntaxKind.BadToken;
             _contextualKind = SyntaxKind.BadToken;
-
+            _value = null;
             _diagnostics.Clear();
             _start = _charReader.Position;
 
@@ -82,7 +82,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Parser
 
             LexDirectiveTrailingTrivia(trailingTrivia, kind, isEndOfLine);
 
-            var token = new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), fileSpan, text, _value, 
+            var token = new SyntaxToken(kind, _contextualKind, false, MakeAbsolute(span), fileSpan, text, _value,
                 ImmutableArray<SyntaxNode>.Empty, trailingTrivia.ToImmutableArray(),
                 diagnostics, null, false);
 

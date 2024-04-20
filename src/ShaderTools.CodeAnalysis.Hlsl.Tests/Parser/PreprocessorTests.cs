@@ -874,13 +874,19 @@ int a;
         public void TestLine()
         {
             const string text = @"
+#line 190
 #line 3 ""a\path\to.hlsl""
-";
+#line 8
+
+#line 30";
             var node = Parse(text);
 
             TestRoundTripping(node, text);
             VerifyDirectivesSpecial(node,
-                new DirectiveInfo { Kind = SyntaxKind.LineDirectiveTrivia, Status = NodeStatus.IsActive, Number = 3, Text = @"a\path\to.hlsl" });
+                new DirectiveInfo { Kind = SyntaxKind.LineDirectiveTrivia, Status = NodeStatus.IsActive, Number = 190 },
+                new DirectiveInfo { Kind = SyntaxKind.LineDirectiveTrivia, Status = NodeStatus.IsActive, Number = 3, Text = @"a\path\to.hlsl" },
+                new DirectiveInfo { Kind = SyntaxKind.LineDirectiveTrivia, Status = NodeStatus.IsActive, Number = 8 },
+                new DirectiveInfo { Kind = SyntaxKind.LineDirectiveTrivia, Status = NodeStatus.IsActive, Number = 30 });
         }
 
         [Fact]
@@ -1305,36 +1311,12 @@ float bar;
                     case SyntaxKind.LineDirectiveTrivia:
                         var ld = dt as LineDirectiveTriviaSyntax;
 
-                        // default number = 0 - no number
-                        if (exp.Number == -1)
-                        {
-                            Assert.Equal(SyntaxKind.LineKeyword, ld.LineKeyword.Kind);
-                            Assert.Equal(SyntaxKind.DefaultKeyword, ld.Line.Kind);
-                        }
-                        else if (exp.Number == -2)
-                        {
-                            Assert.Equal(SyntaxKind.LineKeyword, ld.LineKeyword.Kind);
-                            //Assert.Equal(SyntaxKind.HiddenKeyword, ld.Line.Kind);
-                        }
-                        else if (exp.Number == 0)
-                        {
-                            Assert.Equal(String.Empty, ld.Line.Text);
-                        }
-                        else if (exp.Number > 0)
-                        {
-                            Assert.Equal(exp.Number, ld.Line.Value); // Number
-                            Assert.Equal(exp.Number, Int32.Parse(ld.Line.Text));
-                        }
+                        Assert.True(exp.Number >= 0);
+                        Assert.Equal(exp.Number, ld.Line.Value); // Number
+                        Assert.Equal(exp.Number, Int32.Parse(ld.Line.Text));
 
-                        if (null == exp.Text)
-                        {
-                            Assert.Equal(SyntaxKind.None, ld.File.Kind);
-                        }
-                        else
-                        {
-                            Assert.NotEqual(SyntaxKind.None, ld.File.Kind);
-                            Assert.Equal(exp.Text, ld.File.Value);
-                        }
+                        Assert.NotEqual(SyntaxKind.None, ld.File.Kind);
+                        Assert.Equal(exp.Text, ld.File.Value);
 
                         break;
                 } // switch

@@ -19,7 +19,7 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -363,15 +363,6 @@ namespace ShaderTools.CodeAnalysis.Hlsl.Properties {
         internal static string MethodOverloadResolutionFailure {
             get {
                 return ResourceManager.GetString("MethodOverloadResolutionFailure", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Quoted file name, single-line comment or end-of-line expected..
-        /// </summary>
-        internal static string MissingPreprocessorFile {
-            get {
-                return ResourceManager.GetString("MissingPreprocessorFile", resourceCulture);
             }
         }
         
